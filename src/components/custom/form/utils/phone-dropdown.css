@@ -1,0 +1,22 @@
+/* Base item */
+.phone-dropdown-item {
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+}
+
+/* Hover */
+.phone-dropdown-item:hover {
+  background-color: #683ab676;
+}
+
+/* Focus (keyboard / arrow) */
+.phone-dropdown-item.focused {
+  background-color: transparent;
+}
+
+/* Selected */
+.phone-dropdown-item.selected {
+  color: #673ab6;
+  font-weight: 500;
+}

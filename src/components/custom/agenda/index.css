@@ -1,0 +1,316 @@
+/* === GLOBAL BASE STYLES === */
+.fc {
+  font-family: "Inter", "Roboto", sans-serif;
+  font-size: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 25px;
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+}
+.fc-theme-standard .fc-scrollgrid {
+  border: none !important;
+}
+.fc .fc-toolbar {
+  padding: 12px 16px;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  border-bottom: none;
+}
+
+.fc .fc-button-group,
+.fc .fc-button {
+  display: none !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 30px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.fc .fc-col-header-cell {
+  font-weight: 500;
+  padding: 10px 0;
+  border-bottom: none !important;
+}
+
+.fc .fc-daygrid-day {
+  background-color: transparent;
+  padding: 8px;
+  border-left: none !important;
+}
+
+.fc .fc-daygrid-day:hover {
+  cursor: pointer;
+}
+
+.fc .fc-daygrid-day-number {
+  display: block;
+  text-align: center;
+  padding: 8px;
+  font-weight: 500;
+  margin: 0 auto;
+}
+
+.fc .fc-day-today {
+  border-top: 3px solid;
+}
+
+.fc .fc-event {
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.fc .fc-event-title {
+  white-space: normal;
+}
+
+/* Scrollbar */
+.fc-scroller::-webkit-scrollbar {
+  width: 6px;
+}
+.fc-scroller::-webkit-scrollbar-thumb {
+  background-color: #c0c0c0;
+  border-radius: 3px;
+}
+.fc-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fc .fc-scrollgrid-section > * {
+  border: none !important;
+}
+
+/* === TIME GRID (Day/Week View) === */
+.fc-timegrid {
+  background-color: transparent;
+}
+
+.fc-timegrid-now-indicator-arrow {
+  display: none;
+}
+.fc-timegrid-now-indicator-line {
+  border: 4px solid #e53e3e;
+  z-index: 10;
+  position: relative;
+}
+
+/* Cercle au début de la ligne */
+.fc-timegrid-now-indicator-line::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  width: 20px;
+  height: 20px;
+  background-color: red; /* Même rouge que la ligne */
+  border-radius: 50%;
+  z-index: 11;
+}
+
+.fc-timegrid-slot {
+  background-color: transparent;
+  padding: 6px 12px !important;
+}
+
+.fc-timegrid-slot-label {
+  font-weight: 600;
+  color: #888;
+  padding: 8px;
+  background: transparent;
+}
+
+.fc-timegrid-axis {
+  font-weight: 600;
+  color: #888;
+  background-color: transparent;
+  border: none !important;
+}
+
+.fc-timegrid-event {
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 13px;
+  background-color: #3182ce;
+  color: white;
+}
+
+/* === Multimonths view === */
+.fc-multimonth {
+  border: none !important;
+}
+
+.fc-multimonth-header {
+  margin: 0 !important;
+}
+/* 1. Réduire les noms de jour à une lettre (L, M, M, J, V, S, D) */
+.fc-multimonth .fc-col-header-cell-cushion {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.fc-multimonth .fc-col-header-cell-cushion::after {
+  content: attr(data-letter);
+  display: inline;
+}
+
+.fc-multimonth .fc-col-header-cell-cushion {
+  visibility: hidden;
+  position: relative;
+}
+
+.fc-multimonth .fc-col-header-cell-cushion::after {
+  visibility: visible;
+  position: absolute;
+  border: none;
+  top: 0;
+  left: 0;
+}
+
+.fc .fc-multimonth-daygrid {
+  background: transparent;
+}
+
+.fc .fc-multimonth-title {
+  font-size: 1.2em;
+  font-weight: 700;
+  padding: 1em 0px;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.fc-multimonth-month td,
+.fc-multimonth-month th {
+  border: none !important;
+  padding: 14px !important;
+  margin: auto;
+}
+
+/* === LIGHT THEME === */
+.calendar-light .fc {
+  background-color: #fff;
+  color: #3c4043;
+}
+
+.calendar-light .fc-toolbar {
+  background-color: #f1f3f4;
+}
+
+.calendar-light .fc-toolbar-title {
+  color: #202124;
+}
+
+.calendar-light .fc-col-header-cell {
+  color: #5f6368;
+}
+
+.calendar-light .fc-daygrid-day-number {
+  color: #3c4043;
+}
+
+.calendar-light .fc-day-today {
+  border-top-color: #4285f4;
+  background: white;
+}
+
+.calendar-light .fc-button {
+  border-color: #dadce0;
+  color: #3c4043;
+}
+
+.calendar-light .fc-button:hover {
+  background-color: #e8f0fe;
+  border-color: #d2e3fc;
+  color: #1967d2;
+}
+
+.calendar-light .fc-button.fc-button-active {
+  background-color: #d2e3fc;
+  color: #174ea6;
+}
+
+.calendar-light .fc-event {
+  background-color: #3182ce;
+  color: white;
+}
+
+/* === DARK THEME === */
+.calendar-dark .fc {
+  background-color: transparent;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.calendar-dark .fc-toolbar {
+  background-color: #2a2d2f;
+}
+
+.calendar-dark .fc-toolbar-title {
+  color: white;
+}
+
+.calendar-dark .fc-scrollgrid,
+.calendar-dark .fc-scrollgrid td,
+.calendar-dark .fc-scrollgrid th {
+  border-color: #333537;
+}
+
+.calendar-dark .fc-col-header-cell {
+  background-color: transparent;
+  color: white;
+}
+
+.calendar-dark .fc-daygrid-day-number {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.calendar-dark .fc-day-today {
+  border-top-color: #63b3ed;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.calendar-dark .fc-button {
+  border-color: #4a4d52;
+  color: white;
+}
+
+.calendar-dark .fc-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #63b3ed;
+}
+
+.calendar-dark .fc-button.fc-button-active {
+  background-color: #63b3ed;
+  color: black;
+}
+
+.calendar-dark .fc-event {
+  background-color: #63b3ed;
+  color: white;
+}
+
+.calendar-dark .fc-timegrid-axis {
+  background-color: transparent;
+  border-left: none !important;
+  color: #bbb;
+}
+
+.calendar-dark .fc-timegrid-event {
+  background-color: #63b3ed;
+  color: #1a1a1a;
+}
+
+/* 3. Fond transparent en mode dark */
+.calendar-dark .fc-multimonth {
+  background-color: transparent !important;
+}
+
+.calendar-dark .fc-multimonth .fc-scrollgrid {
+  background-color: transparent !important;
+}

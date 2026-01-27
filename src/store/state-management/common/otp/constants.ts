@@ -1,0 +1,4 @@
+export enum OTP_KEYS {
+  GENERATE_OTP = "GENERATE_OTP",
+  VALIDATE_OTP = "VALIDATE_OTP",
+}
