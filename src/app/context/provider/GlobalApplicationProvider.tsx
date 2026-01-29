@@ -5,14 +5,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { QUERIES } from "rise-core-frontend";
 import { applicationContext } from "_context/global-state";
 import { AppContext } from "_context/app.context";
-import { SessionProvider } from "next-auth/react";
 
 export default function GlobalApplicationProvider({
   children,
-  session,
 }: {
   children: ReactNode;
-  session: any;
 }) {
   return (
     <QueryClientProvider client={QUERIES.queryClient}>
@@ -21,7 +18,7 @@ export default function GlobalApplicationProvider({
         buttonPosition={"bottom-right"}
       />
       <AppContext.Provider value={applicationContext}>
-        <SessionProvider session={session}>{children}</SessionProvider>
+        {children}
       </AppContext.Provider>
     </QueryClientProvider>
   );

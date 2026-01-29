@@ -31,8 +31,8 @@ export const useIsActive = () => {
     if (!pathname || !link) return false;
 
     // Cas particulier pour la racine modules
-    if (link === ROOT_URL.SALON || link === ROOT_URL.BO) {
-      return pathname === ROOT_URL.SALON || pathname === ROOT_URL.BO;
+    if (link === ROOT_URL.DASHBOARD || link === ROOT_URL.BO) {
+      return pathname === ROOT_URL.DASHBOARD || pathname === ROOT_URL.BO;
     }
     // Actif si on est sur le lien exact ou une sous-route
     return pathname === link || pathname.startsWith(`${link}/`);

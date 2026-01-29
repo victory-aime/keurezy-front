@@ -10,16 +10,14 @@ import { HiOutlineMail } from "react-icons/hi";
 import { UserModule } from "_store/state-management";
 import { ProfileForm } from "../components/ProfileForm";
 import { MODELS } from "_types/index";
-import { useSession } from "next-auth/react";
 import { useAuth } from "_hooks/useAuth";
 import { PasswordIndicator } from "_component/PasswordIndicator";
-import { PostLoginChallenge } from "../../../../challenge-handler/PostLoginChallenge";
 import { DisabledAccount } from "_modules/dashboard/profile/components/DisabledAccount";
-import { ProviderKeys } from "_constants/StorageKeys";
+import { useAuthContext } from "_context/auth-context";
 
 export const ProfileInfo = () => {
   const { t } = useTranslation();
-  const { data: session } = useSession();
+  const { session } = useAuthContext();
   const { logout } = useAuth();
   const [manualTrigger, setManualTrigger] = useState(false);
   const [pending, setPending] = useState(false);
@@ -32,7 +30,7 @@ export const ProfileInfo = () => {
 
   const { data: currentUser, isLoading: userDataLoading } =
     UserModule.getUserInfo({
-      params: { userId: session?.user_id },
+      params: { userId: session?.user.id },
       queryOptions: { enabled: pending },
     });
 
@@ -103,22 +101,21 @@ export const ProfileInfo = () => {
                   />
                 </VStack>
               </ProfileForm>
-              {session?.provider === ProviderKeys.GOOGLE ? null : (
-                <ProfileForm
-                  title="PROFILE.SECURITY.PASSWORD"
-                  description="PROFILE.SECURITY.PASSWORD_DESC"
-                >
-                  <FormTextInput
-                    name="newPassword"
-                    label="PROFILE.NEW_PASSWORD"
-                    placeholder="PROFILE.NEW_PASSWORD"
-                    type="password"
-                    autoComplete="off"
-                    onChangeFunction={(e: any) => setPassword(e?.target.value)}
-                  />
-                  <PasswordIndicator password={password} />
-                </ProfileForm>
-              )}
+
+              <ProfileForm
+                title="PROFILE.SECURITY.PASSWORD"
+                description="PROFILE.SECURITY.PASSWORD_DESC"
+              >
+                <FormTextInput
+                  name="newPassword"
+                  label="PROFILE.NEW_PASSWORD"
+                  placeholder="PROFILE.NEW_PASSWORD"
+                  type="password"
+                  autoComplete="off"
+                  onChangeFunction={(e: any) => setPassword(e?.target.value)}
+                />
+                <PasswordIndicator password={password} />
+              </ProfileForm>
 
               <ProfileForm
                 title="PROFILE.2MFA"
@@ -175,24 +172,6 @@ export const ProfileInfo = () => {
         //callback={onActivateDisabledUser}
         data={currentUser?.email}
         //isLoading={activateDisabledUserPending}
-      />
-      <PostLoginChallenge
-        user={currentUser}
-        manualTrigger={manualTrigger}
-        onSuccess={async () => {
-          if (pendingValues) {
-            const request = {
-              ...pendingValues,
-              email: pendingValues.email.toLowerCase(),
-              password: password || undefined,
-            };
-            // await onUpdateUserInfo({
-            //   payload: request,
-            //   params: currentUser?.id,
-            // });
-            setPassword(null);
-          }
-        }}
       />
     </>
   );

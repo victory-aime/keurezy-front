@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { SelectLanguages } from "_component/SelectLanguages";
 import { FlagImagesIcon } from "_component/flag/FlagImages";
 import { UserModule } from "_store/state-management";
-import { PostLoginChallenge } from "../../challenge-handler/PostLoginChallenge";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 export const Header = ({ onShowSidebar, session }: SideBarProps) => {
@@ -31,12 +30,12 @@ export const Header = ({ onShowSidebar, session }: SideBarProps) => {
    * Le hook DOIT être appelé à chaque rendu
    * → jamais undefined
    */
-  const userId = session?.user_id ?? "";
+  const userId = session?.user?.id ?? "";
 
   const { data: user, isLoading } = UserModule.getUserInfo({
     params: { userId },
     queryOptions: {
-      enabled: Boolean(userId),
+      enabled: false,
     },
   });
 
@@ -67,7 +66,7 @@ export const Header = ({ onShowSidebar, session }: SideBarProps) => {
             {isMobile ? <RxHamburgerMenu onClick={onShowSidebar} /> : null}
             <Image
               alt={"test"}
-              src={user?.picture! ?? "https://avatar.iran.liara.run/public"}
+              src={session?.user?.image}
               boxSize={"60px"}
               borderRadius={"7px"}
             />
@@ -86,8 +85,6 @@ export const Header = ({ onShowSidebar, session }: SideBarProps) => {
         onChange={() => setOpenSelectLanguage(false)}
         language="fr"
       />
-
-      {user && <PostLoginChallenge user={user} />}
     </Flex>
   );
 };

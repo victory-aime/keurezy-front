@@ -8,11 +8,9 @@ import { Session } from "next-auth";
 
 export const Container = ({
   children,
-  session,
 }: {
   children: React.ReactNode;
   sidebarToggle: boolean;
-  session: Session | null;
 }) => {
   return (
     <Flex

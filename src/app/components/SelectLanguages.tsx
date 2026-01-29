@@ -14,7 +14,6 @@ import { FlagImagesIcon } from "./flag/FlagImages";
 import { FlagKeys } from "_assets/images/flag";
 import { hexToRGB } from "_theme/colors";
 import { listLanguages } from "_constants/languages";
-import { useSession } from "next-auth/react";
 
 interface IProps extends ModalOpenProps {
   language: string;
@@ -22,7 +21,6 @@ interface IProps extends ModalOpenProps {
 
 export const SelectLanguages: FC<IProps> = ({ onChange, isOpen, language }) => {
   const { t, i18n } = useTranslation();
-  const { data: session } = useSession();
   const [selectLanguage, setSelectLanguage] = useState<string>(i18n.language);
   const [fallbackLoad, setFallbackLoad] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);

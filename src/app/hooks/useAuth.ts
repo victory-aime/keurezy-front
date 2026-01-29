@@ -1,11 +1,10 @@
 import { useRouter } from "next/navigation";
-import { signIn, signOut } from "next-auth/react";
 import { APP_ROUTES } from "_config/routes";
-import { sessionLogout } from "_hooks/logout";
 import { useGlobalLoader } from "_context/loaderContext";
-import { ProviderKeys, StorageKey } from "_constants/StorageKeys";
+import { ProviderKeys } from "_constants/StorageKeys";
 import { handleApiError } from "_utils/handleApiError";
 import { handleApiSuccess } from "_utils/handleApiSuccess";
+import { authClient } from "../lib/auth-client";
 
 export const useAuth = () => {
   const router = useRouter();
@@ -14,11 +13,7 @@ export const useAuth = () => {
   const logout = async () => {
     try {
       showLoader();
-      localStorage.removeItem(StorageKey.OTP_REQUIRED);
-      await sessionLogout().then(() => {});
-
-      await signOut({ redirect: false });
-
+      await authClient.signOut();
       router.replace(APP_ROUTES.AUTH.SIGN_IN);
     } finally {
       hideLoader();
@@ -29,53 +24,42 @@ export const useAuth = () => {
     email,
     password,
     callbackUrl,
-    otpRequired = false,
     providerType,
   }: {
-    email: string;
-    password: string;
+    email?: string;
+    password?: string;
     callbackUrl?: string;
-    otpRequired?: boolean;
-    providerType?: (typeof ProviderKeys)[keyof typeof ProviderKeys];
+    providerType?: "google";
   }) => {
     try {
-      if (otpRequired) {
-        localStorage.setItem(StorageKey.OTP_REQUIRED, "true");
-      }
-
       if (providerType === ProviderKeys.GOOGLE) {
-        const result = await signIn(ProviderKeys.GOOGLE, {
-          redirect: false,
-          callbackUrl: callbackUrl ?? APP_ROUTES.HOME,
+        const result = await authClient.signIn.social({
+          provider: providerType,
+          callbackURL: callbackUrl,
         });
         if (result?.error) {
           handleApiError({
-            status: result.status,
-            message: result.error,
+            status: result.error.status,
+            message: result.error.message!,
           });
           return;
-        }
-        if (result?.ok && result.url) {
-          handleApiSuccess({ status: 200, message: "Connexion réussie" });
-          router.replace(result.url);
         }
       } else {
-        const result = await signIn(ProviderKeys.CREDENTIALS, {
-          email,
-          password,
-          redirect: false,
-          callbackUrl: callbackUrl ?? APP_ROUTES.HOME,
+        const result = await authClient.signIn.email({
+          email: email!,
+          password: password!,
+          callbackURL: callbackUrl ?? APP_ROUTES.HOME,
         });
-        if (result?.error) {
+        if (result.error) {
           handleApiError({
-            status: result.status,
-            message: result.error,
+            status: result.error.status,
+            message: result.error.message!,
           });
           return;
         }
-        if (result?.ok && result.url) {
+        if (result?.data.url) {
           handleApiSuccess({ status: 200, message: "Connexion réussie" });
-          router.replace(result.url);
+          router.replace(result.data.url);
         }
       }
     } catch (error) {
@@ -83,5 +67,36 @@ export const useAuth = () => {
     }
   };
 
-  return { logout, login, isLoading };
+  const signUp = async ({
+    name,
+    email,
+    password,
+  }: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
+    try {
+      const result = await authClient.signUp.email({
+        name,
+        email,
+        password,
+      });
+      if (result.error) {
+        handleApiError({
+          status: result.error.status,
+          message: result.error.message!,
+        });
+        return;
+      }
+      if (result?.data.token) {
+        handleApiSuccess({ status: 200, message: "Compte créé avec success" });
+        router.back();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return { logout, login, signUp, isLoading };
 };

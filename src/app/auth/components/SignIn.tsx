@@ -4,21 +4,11 @@ import {
   BaseButton,
   BaseText,
   CheckboxForm,
-  FloatSwitchColorMode,
   FormTextInput,
 } from "_components/custom";
 import { APP_ROUTES } from "_config/routes";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  Flex,
-  VStack,
-  HStack,
-  Box,
-  Center,
-  Card,
-  Text,
-  Separator,
-} from "@chakra-ui/react";
+import { Flex, VStack, HStack, Box, Separator } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "_hooks/useAuth";
 import { Formik, FormikValues } from "formik";
@@ -32,7 +22,7 @@ import { FcGoogle } from "react-icons/fc";
 export const SignIn = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const callbackUrl = useSearchParams()?.get("callbackUrl") || APP_ROUTES.ROOT;
+  const callbackUrl = useSearchParams()?.get("callbackUrl") || APP_ROUTES.HOME;
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const [initialValues, setInitialValues] = useState({
@@ -71,7 +61,6 @@ export const SignIn = () => {
       email: values.email,
       password: values.password,
       callbackUrl,
-      otpRequired: true,
     });
   };
 
@@ -83,15 +72,8 @@ export const SignIn = () => {
       <Formik
         initialValues={initialValues}
         enableReinitialize
-        onSubmit={async (values, actions) => {
+        onSubmit={async (values) => {
           await handleSubmit(values).then(() => setIsLoading(false));
-          actions.resetForm({
-            values: {
-              password: "",
-              email: values.email,
-              rememberMe: false,
-            },
-          });
         }}
         validationSchema={VALIDATION.AUTH.loginValidationSchema}
       >
@@ -165,7 +147,7 @@ export const SignIn = () => {
               colorType={"secondary"}
               leftIcon={<FcGoogle />}
               onClick={async () => {
-                await login({ providerType: "google" });
+                await login({ providerType: "google", callbackUrl });
               }}
             >
               Se connecter avec Google

@@ -4,8 +4,6 @@ import React from "react";
 import "react-day-picker/dist/style.css";
 import "react-international-phone/style.css";
 import "_components/custom/agenda/index.css";
-import { getServerSession } from "next-auth";
-import { authOptions } from "_authOptions/auth/[...nextauth]/route";
 import GlobalApplicationProvider from "_context/provider/GlobalApplicationProvider";
 import { ThemeProvider } from "_components/ui/provider";
 import { LoaderProvider } from "_context/loaderContext";
@@ -32,12 +30,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
-
   return (
     <html lang="en" suppressHydrationWarning suppressContentEditableWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <GlobalApplicationProvider session={session}>
+        <GlobalApplicationProvider>
           <ThemeProvider>
             <LoaderProvider>
               <Toaster />
