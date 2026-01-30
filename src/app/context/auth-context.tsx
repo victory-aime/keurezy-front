@@ -2,6 +2,10 @@
 
 import { createContext, useContext, ReactNode } from "react";
 import { authClient } from "../lib/auth-client";
+import { useRouter } from "next/navigation";
+import { APP_ROUTES } from "_config/routes";
+import { SessionErrorModal } from "../auth/components/ErrorModal";
+import { isExpired } from "../helpers/expire-token";
 
 interface AuthContextType {
   session: {
@@ -21,8 +25,18 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthContextProvider({ children }: { children: ReactNode }) {
   const { data: session, isPending: isLoading } = authClient.useSession();
+  const router = useRouter();
+
+  if (!isLoading && !session) {
+    router.push(APP_ROUTES.AUTH.SIGN_IN);
+    return null;
+  }
+
+  if (isExpired(session?.session?.expiresAt!)) {
+    return <SessionErrorModal />;
+  }
 
   return (
     <AuthContext.Provider value={{ session, isLoading }}>

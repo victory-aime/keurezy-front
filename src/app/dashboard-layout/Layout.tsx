@@ -7,13 +7,11 @@ import { Sidebar } from "./sidebar";
 import { layoutStyle } from "./styles";
 import { Container } from "./container/Container";
 import { useAuthContext } from "_context/auth-context";
-import { useRouter } from "next/navigation";
-import { APP_ROUTES } from "_config/routes";
+import { InitializeApp } from "_context/provider/initialize-app";
 
 export const Layout: FunctionComponent<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const router = useRouter();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -35,13 +33,8 @@ export const Layout: FunctionComponent<{
     [isSidebarOpen],
   );
 
-  if (!session) {
-    router.push(APP_ROUTES.AUTH.SIGN_IN);
-    return null;
-  }
-
   return (
-    <>
+    <InitializeApp session={session}>
       <Sidebar
         sideToggled={isSidebarOpen}
         onShowSidebar={toggleSidebar}
@@ -55,6 +48,6 @@ export const Layout: FunctionComponent<{
         />
         <Container sidebarToggle={isSidebarOpen}>{children}</Container>
       </Box>
-    </>
+    </InitializeApp>
   );
 };

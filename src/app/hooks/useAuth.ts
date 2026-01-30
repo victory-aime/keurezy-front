@@ -6,6 +6,14 @@ import { handleApiError } from "_utils/handleApiError";
 import { handleApiSuccess } from "_utils/handleApiSuccess";
 import { authClient } from "../lib/auth-client";
 
+interface AuthTypes {
+  name?: string;
+  email?: string;
+  password?: string;
+  callbackUrl?: string;
+  providerType?: string;
+}
+
 export const useAuth = () => {
   const router = useRouter();
   const { showLoader, hideLoader, isLoading } = useGlobalLoader();
@@ -25,12 +33,7 @@ export const useAuth = () => {
     password,
     callbackUrl,
     providerType,
-  }: {
-    email?: string;
-    password?: string;
-    callbackUrl?: string;
-    providerType?: "google";
-  }) => {
+  }: AuthTypes) => {
     try {
       if (providerType === ProviderKeys.GOOGLE) {
         const result = await authClient.signIn.social({
@@ -67,20 +70,12 @@ export const useAuth = () => {
     }
   };
 
-  const signUp = async ({
-    name,
-    email,
-    password,
-  }: {
-    name: string;
-    email: string;
-    password: string;
-  }) => {
+  const signUp = async ({ name, email, password }: AuthTypes) => {
     try {
       const result = await authClient.signUp.email({
-        name,
-        email,
-        password,
+        name: name!,
+        email: email!,
+        password: password!,
       });
       if (result.error) {
         handleApiError({

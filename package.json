@@ -47,7 +47,7 @@
     "react-i18next": "^16.5.3",
     "react-icons": "^5.5.0",
     "react-international-phone": "^4.7.0",
-    "rise-core-frontend": "4.3.2-alpha.0",
+    "rise-core-frontend": "^4.4.0",
     "yup": "^1.7.1"
   },
   "devDependencies": {

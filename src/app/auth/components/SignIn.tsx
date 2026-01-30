@@ -24,6 +24,7 @@ export const SignIn = () => {
   const router = useRouter();
   const callbackUrl = useSearchParams()?.get("callbackUrl") || APP_ROUTES.HOME;
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setGoogleIsLoading] = useState(false);
   const { login } = useAuth();
   const [initialValues, setInitialValues] = useState({
     email: "",
@@ -60,6 +61,14 @@ export const SignIn = () => {
     await login({
       email: values.email,
       password: values.password,
+      callbackUrl,
+    });
+  };
+
+  const handleGoogleLogin = async () => {
+    setGoogleIsLoading(true);
+    await login({
+      providerType: "google",
       callbackUrl,
     });
   };
@@ -145,9 +154,10 @@ export const SignIn = () => {
               variant={"outline"}
               width={"full"}
               colorType={"secondary"}
+              isLoading={isGoogleLoading}
               leftIcon={<FcGoogle />}
               onClick={async () => {
-                await login({ providerType: "google", callbackUrl });
+                await handleGoogleLogin().then(() => setIsLoading(false));
               }}
             >
               Se connecter avec Google

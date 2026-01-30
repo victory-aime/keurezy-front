@@ -1,7 +1,6 @@
-export default function isTokenExpiringSoon(expiresAt?: number) {
-  if (!expiresAt) return true;
+export function isExpired(expiresAt: string | Date): boolean {
+  const expirationDate =
+    typeof expiresAt === "string" ? new Date(expiresAt) : expiresAt;
 
-  const now = Math.floor(Date.now() / 1000);
-  const buffer = 60;
-  return expiresAt - now < buffer;
+  return new Date() >= expirationDate;
 }

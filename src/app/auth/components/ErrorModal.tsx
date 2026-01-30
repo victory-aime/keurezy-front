@@ -8,18 +8,17 @@ import { VariablesColors } from "_theme/variables";
 import { useAuth } from "_hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "_config/routes";
-import { signOut } from "next-auth/react";
 
 export const SessionErrorModal = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { isLoading } = useAuth();
+  const { isLoading, logout } = useAuth();
 
   const handleReconnect = () => {
     router.push(APP_ROUTES.AUTH.SIGN_IN);
   };
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: APP_ROUTES.AUTH.SIGN_IN });
+    await logout();
   };
 
   return (

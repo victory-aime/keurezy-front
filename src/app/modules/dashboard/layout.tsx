@@ -1,5 +1,5 @@
 import { Layout } from "../../dashboard-layout/Layout";
-import { AuthProvider } from "_context/auth-context";
+import { AuthContextProvider } from "_context/auth-context";
 
 export default async function DashboardLayout({
   children,
@@ -7,8 +7,8 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <AuthProvider>
+    <AuthContextProvider>
       <Layout>{children}</Layout>
-    </AuthProvider>
+    </AuthContextProvider>
   );
 }

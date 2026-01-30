@@ -30,12 +30,11 @@ export const Header = ({ onShowSidebar, session }: SideBarProps) => {
    * Le hook DOIT être appelé à chaque rendu
    * → jamais undefined
    */
-  const userId = session?.user?.id ?? "";
 
   const { data: user, isLoading } = UserModule.getUserInfo({
-    params: { userId },
+    params: { userId: session?.user?.id },
     queryOptions: {
-      enabled: false,
+      enabled: !!session?.user?.id,
     },
   });
 
@@ -66,7 +65,7 @@ export const Header = ({ onShowSidebar, session }: SideBarProps) => {
             {isMobile ? <RxHamburgerMenu onClick={onShowSidebar} /> : null}
             <Image
               alt={"test"}
-              src={session?.user?.image}
+              src={user?.image!}
               boxSize={"60px"}
               borderRadius={"7px"}
             />

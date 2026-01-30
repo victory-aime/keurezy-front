@@ -17,8 +17,11 @@ export default function Home() {
 
     if (!session) {
       router.push(APP_ROUTES.AUTH.SIGN_IN);
-    } else if (session?.session?.token) {
-      router.push(roleToDashboardMap["USER"]);
+    } else if (
+      session?.session?.token &&
+      roleToDashboardMap[session?.user?.role]
+    ) {
+      router.push(roleToDashboardMap[session?.user?.role]);
     } else {
       router.replace("/unauthorized");
     }

@@ -4,7 +4,7 @@ export interface IUser {
   id?: string;
   name?: string;
   firstName?: string;
-  picture?: string;
+  image?: string;
   phone?: string;
   email?: string;
   role?: UserRole | undefined;

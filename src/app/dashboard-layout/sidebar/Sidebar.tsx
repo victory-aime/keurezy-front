@@ -32,7 +32,9 @@ export const Sidebar = ({
   });
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const sidebarLinks = MENU_BY_ROLE["USER"];
+  const sidebarLinks = session?.user?.role
+    ? MENU_BY_ROLE[session?.user?.role] || []
+    : [];
   const { logout, isLoading } = useAuth();
 
   // const permissionsLink = useCallback(() => {
