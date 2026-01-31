@@ -48,11 +48,22 @@ export const useAuth = () => {
           return;
         }
       } else {
-        const result = await authClient.signIn.email({
-          email: email!,
-          password: password!,
-          callbackURL: callbackUrl ?? APP_ROUTES.HOME,
-        });
+        const result = await authClient.signIn.email(
+          {
+            email: email!,
+            password: password!,
+            //callbackURL: callbackUrl ?? APP_ROUTES.HOME,
+          },
+          {
+            async onSuccess(context) {
+              if (context.data.twoFactorRedirect) {
+                router.replace(APP_ROUTES.AUTH._2FA);
+              } else {
+                router.push(callbackUrl);
+              }
+            },
+          },
+        );
         if (result.error) {
           handleApiError({
             status: result.error.status,

@@ -29,10 +29,10 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   const { data: session, isPending: isLoading } = authClient.useSession();
   const router = useRouter();
 
-  if (!isLoading && !session) {
-    router.push(APP_ROUTES.AUTH.SIGN_IN);
-    return null;
-  }
+  // if (!isLoading && !session) {
+  //   router.replace(APP_ROUTES.AUTH.SIGN_IN);
+  //   return null;
+  // }
 
   if (isExpired(session?.session?.expiresAt!)) {
     return <SessionErrorModal />;

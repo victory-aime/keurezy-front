@@ -7,7 +7,7 @@ interface TextInputProps extends HTMLChakraProps<"input"> {
   required?: boolean;
   isReadOnly?: boolean;
   isDisabled?: boolean;
-  infoMessage?: string;
+  infoMessage?: string | null;
   helperMessage?: string;
   useFullAmountMask?: boolean;
   rightAccessory?: React.ReactNode;
@@ -85,6 +85,7 @@ interface SwitchProps extends HTMLChakraProps<"switch"> {
   description?: string;
   isLoading?: boolean;
   isReadOnly?: boolean;
+  onCheckedChange?: (value: boolean) => void;
 }
 
 interface FormColorPickerProps extends TextInputProps {}

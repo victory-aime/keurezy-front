@@ -4,6 +4,7 @@ export const APP_ROUTES = {
   AUTH: {
     SIGN_IN: "/auth/signin",
     SIGN_UP: "/auth/signup",
+    _2FA: "/auth/totp",
     RESET_PASSWORD: "/auth/reset-password",
     RESET_PASSWORD_OTP: "/auth/reset-password-otp",
   },

@@ -1,9 +1,17 @@
 import { createAuthClient } from "better-auth/react";
-import { inferAdditionalFields } from "better-auth/client/plugins";
+import {
+  inferAdditionalFields,
+  twoFactorClient,
+} from "better-auth/client/plugins";
+import { APP_ROUTES } from "_config/routes";
 
 export const authClient = createAuthClient({
-  basePath: process.env.BASE_AUTH_CLIENT_URL!,
   plugins: [
+    twoFactorClient({
+      onTwoFactorRedirect() {
+        window.location.href = APP_ROUTES.AUTH._2FA;
+      },
+    }),
     inferAdditionalFields({
       user: {
         role: {

@@ -54,7 +54,9 @@ const BaseModal = ({
           {icon && (
             <BaseIcon
               borderRadius={"7px"}
-              color={modalType === "alertdialog" ? "red" : iconBackgroundColor}
+              color={
+                modalType === "alertdialog" ? "red.500" : iconBackgroundColor
+              }
             >
               {icon}
             </BaseIcon>
@@ -109,9 +111,9 @@ const BaseModal = ({
             </DialogFooter>
           ) : null}
         </DialogBody>
-        <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>
-          <Image src={logoSrc} alt={"logo"} width={"60px"} />
-        </Flex>
+        {/*<Flex alignItems={"flex-end"} justifyContent={"flex-end"}>*/}
+        {/*  <Image src={logoSrc} alt={"logo"} width={"60px"} />*/}
+        {/*</Flex>*/}
       </DialogContent>
     </DialogRoot>
   );

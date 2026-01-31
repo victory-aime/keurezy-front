@@ -13,6 +13,7 @@ export const FormSwitch: FC<SwitchProps> = ({
   description = "",
   isLoading,
   isReadOnly,
+  onCheckedChange,
 }) => {
   const { t } = useTranslation();
   const fieldHookConfig = {
@@ -36,7 +37,10 @@ export const FormSwitch: FC<SwitchProps> = ({
       <Switch.Root
         name={name}
         checked={field.value}
-        onCheckedChange={handleCheckedChange}
+        onCheckedChange={async (e) => {
+          await handleCheckedChange(e);
+          onCheckedChange?.(e.checked);
+        }}
         colorPalette={"green"}
         size={"md"}
         disabled={isLoading || isReadOnly}

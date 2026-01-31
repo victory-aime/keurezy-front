@@ -2,8 +2,17 @@
 
 import { Card, Center } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import { ReactNode } from "react";
 
-export const AuthBoxContainer = ({ children, title, description }: any) => {
+export const AuthBoxContainer = ({
+  children,
+  title,
+  description,
+}: {
+  children: ReactNode;
+  title: string;
+  description: string;
+}) => {
   const { t } = useTranslation();
   return (
     <Center
