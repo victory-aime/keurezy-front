@@ -15,14 +15,17 @@ import { useAuthContext } from "_context/auth-context";
 import { ENUM } from "_types/";
 import { ProviderKeys } from "_constants/StorageKeys";
 import { Recap2FAModal } from "_modules/dashboard/profile/components/Recap2FAModal";
-import { useTotp } from "../../../../lib/totp";
+import { useTotp } from "_hooks/useTotp";
 import { TotpQrCode } from "_modules/dashboard/profile/components/TotpQrCode";
 
 export const ProfileInfo = () => {
   const { t } = useTranslation();
   const { session } = useAuthContext();
   const { enableTotp, disableTotp, isLoading } = useTotp();
-  const [totpData, setTotpData] = useState<string | null>(null);
+  const [totpData, setTotpData] = useState<{
+    totpURI: string;
+    backupCodes: string[];
+  }>({ totpURI: "", backupCodes: [] });
   const [openTotp, setOpenTotp] = useState<boolean>(false);
   const [refetchUserInfo, setResetUserInfo] = useState(false);
   const [open2FA, setOpen2FA] = useState(false);

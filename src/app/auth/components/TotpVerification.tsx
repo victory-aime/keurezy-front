@@ -1,85 +1,107 @@
 "use client";
 
-import { Formik, FormikValues } from "formik";
-import { BaseButton, FormOtpInput } from "_components/custom";
-import React, { useState } from "react";
-import { Flex, useBreakpointValue, VStack } from "@chakra-ui/react";
+import { Formik, FormikHelpers, FormikValues } from "formik";
+import { BaseButton, BaseText, FormOtpInput } from "_components/custom";
+import React from "react";
+import { Box, VStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { authClient } from "../../lib/auth-client";
 import { APP_ROUTES } from "_config/routes";
 import { useRouter } from "next/navigation";
 import { AuthBoxContainer } from "./AuthBoxContainer";
-import { handleApiError } from "_utils/handleApiError";
+import { useAuth } from "_hooks/useAuth";
+import { useTotp } from "_hooks/useTotp";
+import { VALIDATION } from "_types/";
 
 export const TotpVerification = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const responsiveMode = useBreakpointValue({
-    base: true,
-    sm: true,
-    md: true,
-    lg: false,
-  });
-  const [isLoading, setIsLoading] = useState(false);
+  const { logout, isLoading: logoutLoading } = useAuth();
+  const { verifyTotp, isLoading } = useTotp();
 
-  const onSubmit = async (value: FormikValues) => {
+  const handleValidateTotp = async (
+    values: FormikValues,
+    formikHelpers: FormikHelpers<FormikValues>,
+  ) => {
     try {
-      setIsLoading(true);
-      const { data } = await authClient.twoFactor.verifyTotp({
-        code: value?.totpCode.join(""),
-      });
-      if (data?.token) {
+      const result = await verifyTotp(values.totpCode.join(""));
+      if (!result || "status" in result) {
+        if (result?.status === 401 || result?.status === 400) {
+          formikHelpers?.setFieldError("totpCode", "Code invalide ou expiré");
+        } else {
+          formikHelpers?.setFieldError(
+            "totpCode",
+            result?.message ?? "Une erreur est survenue",
+          );
+        }
+        return;
+      }
+      if (result.token) {
         router.replace(APP_ROUTES.HOME);
       }
-    } catch (e) {
-      console.log("error", e);
-      handleApiError({
-        status: 400,
-        message: "Impossible de verifier le code fournie veuillez ressayer",
-      });
-    } finally {
-      setIsLoading(false);
+    } catch (error) {
+      formikHelpers?.setFieldError("totpCode", t("COMMON.SERVER_ERROR"));
     }
   };
 
   return (
-    <Formik initialValues={{ otpCode: "" }} onSubmit={onSubmit}>
+    <Formik
+      enableReinitialize
+      initialValues={{ totpCode: Array(6).fill("") }}
+      onSubmit={async (values, formikHelpers) =>
+        await handleValidateTotp(
+          values,
+          formikHelpers as FormikHelpers<FormikValues>,
+        )
+      }
+      validationSchema={VALIDATION.TOTP_VALIDATION.totpValidationSchema}
+    >
       {({ handleSubmit }) => (
         <AuthBoxContainer
-          title={"FORM.RESET_PASSWORD"}
-          description={"FORM.RESET_PASSWORD_OTP_DESC"}
+          title={"Confirmer votre compte"}
+          description={
+            <BaseText>
+              Vous n'avez pas de compte ?{" "}
+              <Box
+                as="span"
+                cursor="pointer"
+                color="primary.500"
+                onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
+              >
+                S'inscrire
+              </Box>
+            </BaseText>
+          }
         >
           <VStack gap={3} width={"full"}>
-            <FormOtpInput name="totpCode" isDisabled={isLoading} />
-            <Flex
-              gap={4}
-              alignItems={"center"}
-              justifyContent={"center"}
-              flexDir={"row-reverse"}
-              mt={"20px"}
+            <FormOtpInput
+              name="totpCode"
+              isDisabled={isLoading}
+              onChangeFunction={handleSubmit}
+            />
+            <BaseText color={"gray.400"}>
+              Veuillez saisir le code affiche sur votre application
+              d'authentification
+            </BaseText>
+
+            <BaseButton
+              width={"full"}
+              onClick={() => handleSubmit()}
+              colorType={"primary"}
+              isLoading={isLoading}
+              disabled={isLoading || logoutLoading}
             >
-              <BaseButton
-                withGradient
-                width={"full"}
-                colorType={"success"}
-                onClick={() => handleSubmit()}
-                isLoading={isLoading}
-                disabled={isLoading}
-                p={responsiveMode ? "15px" : 0}
-              >
-                {t("COMMON.VALIDATE")}
-              </BaseButton>
-              <BaseButton
-                withGradient
-                width={"full"}
-                variant={"outline"}
-                colorType={"success"}
-                onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
-                p={responsiveMode ? "15px" : 0}
-              >
-                {t("COMMON.BACK")}
-              </BaseButton>
-            </Flex>
+              Continue
+            </BaseButton>
+            <BaseButton
+              width={"full"}
+              variant={"outline"}
+              colorType={"danger"}
+              onClick={logout}
+              isLoading={logoutLoading}
+              disabled={isLoading || logoutLoading}
+            >
+              {t("COMMON.LOGOUT")}
+            </BaseButton>
           </VStack>
         </AuthBoxContainer>
       )}

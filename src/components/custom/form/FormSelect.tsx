@@ -1,3 +1,4 @@
+"use client";
 import { Field, Flex, Input } from "@chakra-ui/react";
 import {
   SelectContent,

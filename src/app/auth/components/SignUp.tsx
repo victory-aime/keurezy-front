@@ -6,31 +6,50 @@ import { useRouter } from "next/navigation";
 import { VStack, Box } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "_hooks/useAuth";
-import { Formik, FormikValues } from "formik";
-import { VALIDATION } from "_types/index";
-import { useState } from "react";
+import { Formik } from "formik";
+import { VALIDATION } from "_types/";
+import React, { useState } from "react";
 import { CiMail, CiUser } from "react-icons/ci";
 import { AuthBoxContainer } from "./AuthBoxContainer";
+import { PasswordIndicator } from "_component/PasswordIndicator";
 
 export const SignUp = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const { signUp } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (values: FormikValues) => {
+  const isValidPassword = (password: string) => {
+    return VALIDATION.AUTH.passwordValidations(password)?.every((v) => v.test);
+  };
+
+  const handleSubmit = async (values: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
     setIsLoading(true);
-    await signUp({
-      name: values.name,
-      email: values.email,
-      password: values.password,
-    });
+    await signUp(values)
+      .catch((error) => console.log("error", error))
+      .finally(() => setIsLoading(false));
   };
 
   return (
     <AuthBoxContainer
-      title={"FORM.LOGIN_TITLE"}
-      description={"FORM.LOGIN_DESC"}
+      title="FORM.LOGIN_TITLE"
+      description={
+        <BaseText>
+          Vous avez déjà un compte ?{" "}
+          <Box
+            as="span"
+            cursor="pointer"
+            color="primary.500"
+            onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
+          >
+            {t("COMMON.LOGIN")}
+          </Box>
+        </BaseText>
+      }
     >
       <Formik
         initialValues={{
@@ -38,67 +57,45 @@ export const SignUp = () => {
           email: "",
           password: "",
         }}
+        validationSchema={VALIDATION.AUTH.createUserValidationSchema}
+        validateOnBlur={false}
+        onSubmit={handleSubmit}
         enableReinitialize
-        onSubmit={async (values) => {
-          await handleSubmit(values).then(() => {
-            setIsLoading(false);
-          });
-        }}
-        validationSchema={VALIDATION.AUTH.loginValidationSchema}
       >
         {({ values, handleSubmit }) => (
-          <VStack width="full" mt={"20px"} gap={5}>
+          <VStack width="full" gap={5}>
             <FormTextInput
               name="name"
               required
-              label={"PROFILE.NAME"}
-              placeholder={"FORM.NAME_PLACEHOLDER"}
-              value={values.name}
+              placeholder="FORM.NAME_PLACEHOLDER"
               leftAccessory={<CiUser />}
             />
             <FormTextInput
               name="email"
-              type={"email"}
+              type="email"
               required
-              label={"PROFILE.EMAIL"}
-              placeholder={"FORM.EMAIL_PLACEHOLDER"}
-              value={values.email}
+              placeholder="FORM.EMAIL_PLACEHOLDER"
               leftAccessory={<CiMail />}
             />
             <FormTextInput
               name="password"
-              required
               type="password"
-              label={"FORM.PASSWORD"}
-              placeholder={"FORM.PASSWORD_PLACEHOLDER"}
-              value={values.password}
+              required
+              placeholder="FORM.PASSWORD_PLACEHOLDER"
+              autoComplete="new-password"
             />
 
+            <PasswordIndicator password={values.password} />
+
             <BaseButton
-              mt={4}
               withGradient
+              width="full"
               isLoading={isLoading}
-              colorType={"primary"}
-              onClick={() => {
-                handleSubmit();
-              }}
+              disabled={!isValidPassword(values.password)}
+              onClick={() => handleSubmit()}
             >
               {t("COMMON.SIGN_UP")}
             </BaseButton>
-
-            <BaseText>
-              Vous avez deja un compte ?{" "}
-              <Box
-                as="span"
-                textDecoration="underline"
-                cursor="pointer"
-                color="primary.500"
-                fontWeight="bold"
-                onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
-              >
-                {t("COMMON.LOGIN")}
-              </Box>
-            </BaseText>
           </VStack>
         )}
       </Formik>

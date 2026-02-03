@@ -1,10 +1,33 @@
 import { useCallback, useState } from "react";
-import { authClient } from "./auth-client";
+import { authClient } from "../lib/auth-client";
 import { handleApiSuccess } from "_utils/handleApiSuccess";
 import { handleApiError } from "_utils/handleApiError";
 
 export const useTotp = () => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const verifyTotp = async (totpCode: string) => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await authClient.twoFactor.verifyTotp({
+        code: totpCode,
+      });
+      if (error) {
+        return {
+          status: error.status,
+          message: error.statusText ?? "Code de vérification invalide",
+        };
+      }
+      return data;
+    } catch (e) {
+      return {
+        status: 500,
+        message: "Erreur inattendue",
+      };
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const enable = useCallback(async (password: string) => {
     try {
@@ -50,6 +73,7 @@ export const useTotp = () => {
   return {
     enableTotp: enable,
     disableTotp: disable,
+    verifyTotp,
     isLoading,
   };
 };

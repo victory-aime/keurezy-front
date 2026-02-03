@@ -1,3 +1,4 @@
+"use client";
 import { Box, CheckboxGroup, Flex, Menu } from "@chakra-ui/react";
 import React, { memo, useEffect } from "react";
 import { useTranslation } from "react-i18next";

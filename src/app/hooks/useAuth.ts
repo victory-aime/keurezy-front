@@ -52,14 +52,13 @@ export const useAuth = () => {
           {
             email: email!,
             password: password!,
-            //callbackURL: callbackUrl ?? APP_ROUTES.HOME,
           },
           {
             async onSuccess(context) {
               if (context.data.twoFactorRedirect) {
                 router.replace(APP_ROUTES.AUTH._2FA);
               } else {
-                router.push(callbackUrl);
+                router.push(callbackUrl!);
               }
             },
           },

@@ -1,3 +1,4 @@
+"use client";
 import { Steps } from "@chakra-ui/react";
 import React, { FC, useEffect, useState } from "react";
 import { StepperProps } from "./interface/stepper";

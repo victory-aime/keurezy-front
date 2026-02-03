@@ -29,7 +29,7 @@ export const handleApiError = (response: {
       toastStatus = ToastStatus.INFO;
       break;
     case 500:
-      description = "Service Error";
+      description = response?.message || "Service Error";
       toastStatus = ToastStatus.ERROR;
       break;
     default:

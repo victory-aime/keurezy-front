@@ -16,14 +16,14 @@ export default function Home() {
     if (isPending) return;
 
     if (!session) {
-      router.push(APP_ROUTES.AUTH.SIGN_IN);
+      router.push(APP_ROUTES.PROTECTED);
     } else if (
       session?.session?.token &&
       roleToDashboardMap[session?.user?.role]
     ) {
       router.push(roleToDashboardMap[session?.user?.role]);
     } else {
-      router.replace("/unauthorized");
+      router.replace(APP_ROUTES.PROTECTED);
     }
   }, [session, isPending, router]);
 

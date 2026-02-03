@@ -46,11 +46,11 @@ export const FormOtpInput: FC<OtpInputProps> = ({
         otp
         count={count}
         value={field.value || ["", "", "", "", "", ""]}
-        onValueChange={(e) => {
-          setValue(e.value);
+        onValueChange={async (e) => {
+          await setValue(e.value);
         }}
-        onValueComplete={(e) => {
-          setValue(e.value);
+        onValueComplete={async (e) => {
+          await setValue(e.value);
           onChangeFunction?.(e.value?.join(""));
         }}
         size="xl"
@@ -65,20 +65,19 @@ export const FormOtpInput: FC<OtpInputProps> = ({
                 key={index}
                 index={index}
                 borderRadius={8}
-                bg={field.value?.[index] ? "white" : hexToRGB("lighter", 0.15)}
+                bg={field.value?.[index] ? "white" : hexToRGB("lighter", 0.4)}
                 borderColor={
                   field.value?.[index]
                     ? isError
                       ? "red"
-                      : "primary.800"
-                    : "lighter.500"
+                      : "tertiary.500"
+                    : "bg.muted"
                 }
                 borderWidth={1.5}
                 animation={isError ? "shake" : undefined}
                 color={"black"}
-                fontWeight={"bold"}
                 boxShadow={field.value?.[index] ? "lg" : "none"}
-                placeholder="-"
+                placeholder="."
               />
             ))}
           </Group>

@@ -5,7 +5,7 @@
 export const VariablesColors = {
   primary: "#673ab6", // colors.primary[500]
   secondary: "#e7b008", // colors.secondary[500] (violet)
-  tertiary: "#E6A600", // colors.tertiary[500]
+  tertiary: "#00B3A8", // colors.tertiary[500]
   danger: "#d11b38", // colors.danger[500]
   success: "#17b5a8", // colors.success[500]
   warning: "#ffc107", // colors.warning[500]

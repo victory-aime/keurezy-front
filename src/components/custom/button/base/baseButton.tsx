@@ -83,7 +83,7 @@ const BaseButton: FC<ButtonBaseProps> = ({
               cursor: "not-allowed",
               borderColor: "gray.300",
             }}
-            borderRadius="7px"
+            borderRadius={"12px"}
             padding="20px"
             loading={isLoading}
             disabled={isLoading}
@@ -119,7 +119,7 @@ const BaseButton: FC<ButtonBaseProps> = ({
               cursor: "not-allowed",
               borderColor: "gray.300",
             }}
-            borderRadius="7px"
+            borderRadius={"12px"}
             padding="20px"
             loading={isLoading}
             disabled={isLoading}
@@ -152,7 +152,7 @@ const BaseButton: FC<ButtonBaseProps> = ({
             cursor: "not-allowed",
             borderColor: "gray.300",
           }}
-          borderRadius="7px"
+          borderRadius={"12px"}
           padding="20px"
           loading={isLoading}
           disabled={isLoading}

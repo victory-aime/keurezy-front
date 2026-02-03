@@ -1,3 +1,4 @@
+"use client";
 import { For, HStack, Flex, Box } from "@chakra-ui/react";
 import { RadioCard } from "@chakra-ui/react";
 import { FC, useState } from "react";

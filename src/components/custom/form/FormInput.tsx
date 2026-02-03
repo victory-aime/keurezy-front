@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { useField, useFormikContext } from "formik";
 import { Input, Field, Flex, InputGroup } from "@chakra-ui/react";
@@ -138,17 +139,17 @@ const FormTextInput = ({
               }
             }}
             placeholder={t(placeholder)}
-            borderRadius={customRadius ?? "7px"}
+            borderRadius={customRadius ?? "12px"}
             border={"1px solid"}
-            borderColor={isError ? "red.500" : "bg.muted"}
+            borderColor={isError ? "red.500" : "inherit"}
             _focus={{ borderColor: "primary.500" }}
             _placeholder={{ color: isError ? "red.500" : "gray.400" }}
             size={"lg"}
             variant={"outline"}
-            bg={"bg.muted"}
+            //bg={"bg.muted"}
             readOnly={isReadOnly}
             disabled={isDisabled}
-            fontSize={{ base: "16px", md: "12px" }}
+            fontSize={{ base: "16px", md: "14px" }}
             height={height}
             autoCapitalize="none"
             autoCorrect="off"

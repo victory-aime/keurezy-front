@@ -9,7 +9,8 @@ export type variantColorType =
   | "success"
   | "warning"
   | "info"
-  | "purple";
+  | "purple"
+  | "neutral";
 
 export interface VariantColorStyle {
   bg?: string;
