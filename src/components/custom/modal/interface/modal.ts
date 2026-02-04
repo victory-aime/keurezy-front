@@ -21,6 +21,7 @@ interface ModalProps extends DialogRootProps {
   isLoading?: boolean;
   disabled?: boolean;
   children: ReactNode;
+  animateConfetti?: boolean;
   ref?: React.Ref<HTMLDivElement> | undefined;
 }
 

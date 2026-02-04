@@ -24,6 +24,7 @@ export interface ButtonBaseProps extends ButtonProps {
   withGradient?: boolean;
   colorType?: variantColorType;
   isLoading?: boolean;
+  isDisabled?: boolean;
   rightIcon?: ReactNode;
   leftIcon?: ReactNode;
 }

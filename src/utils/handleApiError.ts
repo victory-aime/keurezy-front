@@ -21,7 +21,7 @@ export const handleApiError = (response: {
       toastStatus = ToastStatus.ERROR;
       break;
     case 403:
-      description = "Forbidden";
+      description = response?.message || "Forbidden";
       toastStatus = ToastStatus.WARNING;
       break;
     case 404:

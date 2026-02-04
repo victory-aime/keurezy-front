@@ -76,7 +76,7 @@ export const useAuth = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log("error catch", error);
     }
   };
 
@@ -94,12 +94,9 @@ export const useAuth = () => {
         });
         return;
       }
-      if (result?.data.token) {
-        handleApiSuccess({ status: 200, message: "Compte créé avec success" });
-        router.back();
-      }
+      return result;
     } catch (error) {
-      console.log(error);
+      console.log("error signUp", error);
     }
   };
 

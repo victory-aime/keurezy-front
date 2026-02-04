@@ -17,9 +17,15 @@ import { VariablesColors } from "_theme/variables";
 interface Spinner extends SpinnerProps {
   loader: boolean;
   showText?: boolean;
+  text?: string;
 }
 
-export const Loader = ({ loader, showText = false, ...rest }: Spinner) => {
+export const Loader = ({
+  loader,
+  showText = false,
+  text,
+  ...rest
+}: Spinner) => {
   const { t } = useTranslation();
   return (
     loader && (
@@ -36,7 +42,9 @@ export const Loader = ({ loader, showText = false, ...rest }: Spinner) => {
           }}
         />
         {showText && (
-          <BaseText color={"primary.500"}>{t("COMMON.LOADING_TEXT")}</BaseText>
+          <BaseText color={"primary.500"}>
+            {text ? text : t("COMMON.LOADING_TEXT")}
+          </BaseText>
         )}
       </VStack>
     )

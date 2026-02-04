@@ -13,7 +13,7 @@ export const AuthBoxContainer = ({
 }: {
   children: ReactNode;
   title: string;
-  description: ReactNode;
+  description?: ReactNode;
 }) => {
   const { t } = useTranslation();
 
@@ -70,11 +70,7 @@ export const AuthBoxContainer = ({
         //boxShadow={{ base: "none", md: "0 20px 40px rgba(0,0,0,0.15)" }}
         zIndex={1}
       >
-        <Card.Header
-          display={{ base: "none", md: "flex" }}
-          alignItems="center"
-          gap={3}
-        >
+        <Card.Header alignItems="center" gap={3}>
           <Image
             src="/assets/svg/my-immo.svg"
             width={45}

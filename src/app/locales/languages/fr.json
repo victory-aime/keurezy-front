@@ -180,6 +180,7 @@
     "EMAIL_UPDATE_INFO": "Vous avez modifié votre adresse e-mail. Lors de votre prochaine connexion, un lien de vérification vous sera envoyé à cette nouvelle adresse pour valider le changement.",
     "PHONE": "Téléphone",
     "NEW_PASSWORD": "Nouveau mot de passe",
+    "CONFIRM_NEW_PASSWORD": "Confirmer votre mot de passe",
     "2MFA": "Authentification à deux facteurs",
     "2MFA_DESC": "Assurez la sécurité de votre compte en activant la fonction 2FA en utilisant un code d'accès temporaire à usage unique (TOTP) qui sera envoye a votre addresse e-mail",
     "ENABLED_2MFA": "Activer l'authentification (TOTP)",

@@ -14,11 +14,11 @@ export const handleApiSuccess = (response: {
   switch (statusCode) {
     case 200:
       description = response?.message || "Success";
-      toastStatus = ToastStatus.INFO;
+      toastStatus = ToastStatus.SUCCESS;
       break;
     case 201:
-      description = response?.message || "Created";
-      toastStatus = ToastStatus.SUCCESS;
+      description = response?.message || "Info";
+      toastStatus = ToastStatus.INFO;
       break;
     case 204:
       description = "No content";

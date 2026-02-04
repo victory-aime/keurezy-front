@@ -12,12 +12,15 @@ import React, { useState } from "react";
 import { CiMail, CiUser } from "react-icons/ci";
 import { AuthBoxContainer } from "./AuthBoxContainer";
 import { PasswordIndicator } from "_component/PasswordIndicator";
+import { authClient } from "../../lib/auth-client";
+import { SendEmailRecap } from "./SendEmailRecap";
 
 export const SignUp = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { signUp } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [openModalLink, setOpenModalLink] = useState(false);
 
   const isValidPassword = (password: string) => {
     return VALIDATION.AUTH.passwordValidations(password)?.every((v) => v.test);
@@ -30,6 +33,16 @@ export const SignUp = () => {
   }) => {
     setIsLoading(true);
     await signUp(values)
+      .then(async (result) => {
+        if (result?.data?.user) {
+          await authClient
+            .sendVerificationEmail({
+              email: result?.data?.user?.email,
+              callbackURL: APP_ROUTES.AUTH.VERIFIED_EMAIL,
+            })
+            .then(() => setOpenModalLink(true));
+        }
+      })
       .catch((error) => console.log("error", error))
       .finally(() => setIsLoading(false));
   };
@@ -62,7 +75,7 @@ export const SignUp = () => {
         onSubmit={handleSubmit}
         enableReinitialize
       >
-        {({ values, handleSubmit }) => (
+        {({ values, handleSubmit, isValid }) => (
           <VStack width="full" gap={5}>
             <FormTextInput
               name="name"
@@ -91,7 +104,7 @@ export const SignUp = () => {
               withGradient
               width="full"
               isLoading={isLoading}
-              disabled={!isValidPassword(values.password)}
+              isDisabled={!isValidPassword(values.password) || !isValid}
               onClick={() => handleSubmit()}
             >
               {t("COMMON.SIGN_UP")}
@@ -99,6 +112,14 @@ export const SignUp = () => {
           </VStack>
         )}
       </Formik>
+      <SendEmailRecap
+        onChange={() => {
+          router.back();
+          setOpenModalLink(false);
+        }}
+        isOpen={openModalLink}
+        data={{ title: "Encore une dernière étape 👋" }}
+      />
     </AuthBoxContainer>
   );
 };

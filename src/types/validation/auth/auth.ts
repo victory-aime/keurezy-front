@@ -24,9 +24,20 @@ export const createUserValidationSchema = Yup.object().shape({
   password: Yup.string().required("Le mot de passe est obligatoire"),
 });
 
-export const resetPasswordValidationSchema = Yup.object().shape({
+export const resetPasswordInitRequestValidationSchema = Yup.object().shape({
   email: Yup.string()
     .trim()
     .email("Adresse e-mail invalide")
     .required("Veuillez renseigner votre adresse e-mail"),
+});
+
+export const resetPasswordValidationSchema = Yup.object().shape({
+  newPassword: Yup.string()
+    .trim()
+    .required("Veuillez renseigner le nouveau mot de passe"),
+
+  confirmPassword: Yup.string()
+    .trim()
+    .oneOf([Yup.ref("newPassword")], "Les mots de passe ne correspondent pas")
+    .required("Veuillez confirmer le mot de passe"),
 });

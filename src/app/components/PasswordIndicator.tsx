@@ -1,5 +1,5 @@
 import { Flex, HStack, VStack } from "@chakra-ui/react";
-import { VALIDATION } from "_types/index";
+import { VALIDATION } from "_types/";
 import { CiCircleCheck } from "react-icons/ci";
 import { VariablesColors } from "_theme/variables";
 import { RiErrorWarningLine } from "react-icons/ri";
@@ -11,6 +11,7 @@ export const PasswordIndicator = ({
 }: {
   password: string | null;
 }) => {
+  const validations = VALIDATION.AUTH.passwordValidations(password ?? "");
   return (
     <VStack align="start" width="full" gap={2} mt={2}>
       <Flex gap={1} alignItems={"center"}>
@@ -19,24 +20,28 @@ export const PasswordIndicator = ({
           Votre mot de passe doit contenir :
         </BaseText>
       </Flex>
-      {VALIDATION.AUTH.passwordValidations(password as string)?.map(
-        (item, index) => (
+
+      {validations?.map((item, index) => {
+        const isValid = item.test;
+
+        return (
           <HStack key={index}>
-            {item?.test ? (
+            {isValid ? (
               <CiCircleCheck color={VariablesColors.primary} />
             ) : (
               <RiErrorWarningLine color={VariablesColors.gray400} />
             )}
+
             <BaseText
-              color={item.test ? "primary.500" : "gray.400"}
-              weight={item.test ? TextWeight.Bold : TextWeight.Regular}
+              color={isValid ? "primary.500" : "gray.400"}
+              weight={isValid ? TextWeight.Bold : TextWeight.Regular}
               variant={TextVariant.S}
             >
               {item.label}
             </BaseText>
           </HStack>
-        ),
-      )}
+        );
+      })}
     </VStack>
   );
 };

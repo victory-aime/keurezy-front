@@ -46,6 +46,7 @@ const BaseButton: FC<ButtonBaseProps> = ({
   rightIcon,
   colorType = "primary",
   isLoading = false,
+  isDisabled = false,
   leftIcon,
   variant = "solid",
   ...rest
@@ -86,7 +87,7 @@ const BaseButton: FC<ButtonBaseProps> = ({
             borderRadius={"12px"}
             padding="20px"
             loading={isLoading}
-            disabled={isLoading}
+            disabled={isLoading || isDisabled}
             loadingText={t("COMMON.LOADING_TEXT")}
             spinner={<LoadingDots />}
             spinnerPlacement="end"
@@ -122,7 +123,7 @@ const BaseButton: FC<ButtonBaseProps> = ({
             borderRadius={"12px"}
             padding="20px"
             loading={isLoading}
-            disabled={isLoading}
+            disabled={isLoading || isDisabled}
             loadingText={t("COMMON.LOADING_TEXT")}
             spinner={<LoadingDots />}
             spinnerPlacement="end"
@@ -155,7 +156,7 @@ const BaseButton: FC<ButtonBaseProps> = ({
           borderRadius={"12px"}
           padding="20px"
           loading={isLoading}
-          disabled={isLoading}
+          disabled={isLoading || isDisabled}
           loadingText={t("COMMON.LOADING_TEXT")}
           spinner={<LoadingDots />}
           spinnerPlacement="end"

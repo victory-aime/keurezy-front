@@ -1,7 +1,7 @@
 export const passwordValidations = (password = "") => [
   {
     label: "Au moins 12 caractères",
-    test: password.length >= 12,
+    test: password?.length >= 12,
   },
   {
     label: "Une lettre majuscule (A-Z)",
