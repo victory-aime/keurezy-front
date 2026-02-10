@@ -1,3 +1,10 @@
+import { AuthContextProvider } from "_context/auth-context";
+import { UserLayout } from "./layout/Layout";
+
 export default function PublicPage() {
-  return "Public page";
+  return (
+    <AuthContextProvider>
+      <UserLayout />
+    </AuthContextProvider>
+  );
 }

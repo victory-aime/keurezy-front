@@ -12,7 +12,6 @@ import { TbRestore } from "react-icons/tb";
 import { ActionButtonsProps, BaseTooltip, Loader } from "_components/custom";
 import { PiEyeLight } from "react-icons/pi";
 import { GrMoney } from "react-icons/gr";
-import { ButtonHoverAction } from "./ButtonHoverAction";
 
 export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
   return (
@@ -57,13 +56,17 @@ export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
             );
           case "edit":
             return (
-              <ButtonHoverAction
-                key={index}
-                label={"COMMON.EDIT"}
-                icon={<MdEdit />}
-                bg="info.500"
-                {...commonProps}
-              />
+              <BaseTooltip message={"COMMON.EDIT"} key={index} show>
+                <IconButton
+                  size={"sm"}
+                  aria-label="Supprimer"
+                  color="white"
+                  bgColor="info.500"
+                  {...commonProps}
+                >
+                  {isLoading ? <Loader loader size={"xs"} /> : <MdEdit />}
+                </IconButton>
+              </BaseTooltip>
             );
           case "view":
             return (

@@ -36,7 +36,7 @@ export const TotpVerification = () => {
         return;
       }
       if (result.token) {
-        router.replace(APP_ROUTES.HOME);
+        router.replace(APP_ROUTES.REDIRECT);
       }
     } catch (error) {
       formikHelpers?.setFieldError("totpCode", t("COMMON.SERVER_ERROR"));

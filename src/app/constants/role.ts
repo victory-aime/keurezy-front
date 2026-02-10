@@ -1,8 +1,10 @@
-import { BO_ROUTES } from "_modules/dashboard/back-office/routes";
-import { DASHBOARD_ROUTES } from "_modules/dashboard/routes";
+import { APP_ROUTES } from "_config/routes";
+import { BO_ROUTES } from "../dashboard/back-office/routes";
+import { DASHBOARD_ROUTES } from "../dashboard/routes";
 
 const roleToDashboardMap: Record<string, string> = {
-  USER: DASHBOARD_ROUTES.HOME,
+  USER: APP_ROUTES.ROOT,
+  IMMO_OWNER: DASHBOARD_ROUTES.HOME,
   ADMIN: BO_ROUTES.DASHBOARD,
 };
 

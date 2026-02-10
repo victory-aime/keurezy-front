@@ -1,0 +1,29 @@
+"use client";
+
+import { Flex } from "@chakra-ui/react";
+import { Suspense } from "react";
+import { BaseContainer } from "_components/custom";
+import { GlobalLoader } from "_components/custom/loader/Loader";
+
+export const Container = ({
+  children,
+}: {
+  children: React.ReactNode;
+  sidebarToggle: boolean;
+}) => {
+  return (
+    <Flex
+      h="100%"
+      width="100%"
+      ps={{ base: 5, md: "20px" }}
+      pe={{ base: 5, md: "33px" }}
+      pb={{ base: "1rem", xl: "4rem" }}
+    >
+      <Suspense fallback={<GlobalLoader loader />}>
+        <BaseContainer mt={"30px"} p={0} border={"none"} position={"relative"}>
+          {children}
+        </BaseContainer>
+      </Suspense>
+    </Flex>
+  );
+};

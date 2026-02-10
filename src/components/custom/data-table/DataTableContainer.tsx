@@ -229,14 +229,14 @@ export const DataTableContainer: FC<TableProps> = ({
           >
             {t("COMMON.DELETE")}
           </BaseButton>
-          <BaseButton
-            colorType={"secondary"}
-            p={"2"}
-            variant={"outline"}
-            onClick={handleShareActionBar}
-          >
-            {t("COMMON.SHARE")}
-          </BaseButton>
+          {/*<BaseButton*/}
+          {/*  colorType={"secondary"}*/}
+          {/*  p={"2"}*/}
+          {/*  variant={"outline"}*/}
+          {/*  onClick={handleShareActionBar}*/}
+          {/*>*/}
+          {/*  {t("COMMON.SHARE")}*/}
+          {/*</BaseButton>*/}
           <ActionBar.CloseTrigger asChild>
             <CloseButton size="sm" onClick={() => setSelection([])} />
           </ActionBar.CloseTrigger>

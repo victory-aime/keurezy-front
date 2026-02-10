@@ -66,7 +66,7 @@ export const BaseDrawer: React.FC<DrawerProps> = ({
       lazyMount
     >
       <DrawerBackdrop />
-      <DrawerContent height={"full"} bgColor={drawerColor}>
+      <DrawerContent height={"full"} width={"full"} bgColor={drawerColor}>
         <DrawerHeader
           display={"flex"}
           alignItems={"center"}

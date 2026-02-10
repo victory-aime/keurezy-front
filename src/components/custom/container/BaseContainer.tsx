@@ -139,6 +139,7 @@ export const BaseContainer = ({
             gap={4}
             width={"full"}
             alignItems={"flex-end"}
+            justifyContent={"flex-end"}
             mt={{ base: "30px", md: "0" }}
           >
             {isForm && formComponent}

@@ -114,7 +114,7 @@ export const SignUp = () => {
       </Formik>
       <SendEmailRecap
         onChange={() => {
-          router.back();
+          router.push(APP_ROUTES.AUTH.SIGN_IN);
           setOpenModalLink(false);
         }}
         isOpen={openModalLink}

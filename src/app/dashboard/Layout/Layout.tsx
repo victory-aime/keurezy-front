@@ -1,0 +1,53 @@
+"use client";
+
+import { Box } from "@chakra-ui/react";
+import React, { FunctionComponent, useMemo, useState } from "react";
+import { Header } from "./header";
+import { Sidebar } from "./sidebar";
+import { layoutStyle } from "./styles";
+import { Container } from "./container/Container";
+import { useAuthContext } from "_context/auth-context";
+import { InitializeApp } from "_context/provider/initialize-app";
+
+export const Layout: FunctionComponent<{
+  children: React.ReactNode;
+}> = ({ children }) => {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
+  const { session, user, isLoading } = useAuthContext();
+
+  const toggledLayoutStyle = useMemo(
+    () => ({
+      ...layoutStyle,
+      ml: {
+        md: isSidebarOpen ? "220px" : "80px",
+        lg: isSidebarOpen ? "230px" : "70px",
+      },
+      width: {
+        md: isSidebarOpen ? "calc(100% - 220px)" : "calc(100% - 80px)",
+        lg: isSidebarOpen ? "calc(100% - 230px)" : "calc(100% - 70px)",
+      },
+    }),
+    [isSidebarOpen],
+  );
+
+  return (
+    <InitializeApp isLoading={isLoading}>
+      <Sidebar
+        sideToggled={isSidebarOpen}
+        onShowSidebar={toggleSidebar}
+        data={{ user }}
+      />
+      <Box {...toggledLayoutStyle}>
+        <Header
+          sideToggled={false}
+          onShowSidebar={toggleSidebar}
+          data={{ session }}
+        />
+        <Container sidebarToggle={isSidebarOpen}>{children}</Container>
+      </Box>
+    </InitializeApp>
+  );
+};

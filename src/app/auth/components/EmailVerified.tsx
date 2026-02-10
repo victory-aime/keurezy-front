@@ -26,7 +26,7 @@ export const EmailVerified = () => {
     if (mapped === "success") {
       setOpenSuccess(true);
       setTimeout(() => {
-        router.replace(APP_ROUTES.HOME);
+        router.replace(APP_ROUTES.REDIRECT);
       }, 3000);
     }
   }, [searchParams, router]);

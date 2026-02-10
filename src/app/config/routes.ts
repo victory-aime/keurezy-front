@@ -1,6 +1,6 @@
 export const APP_ROUTES = {
   ROOT: "/",
-  HOME: "/modules",
+  REDIRECT: "/redirect",
   AUTH: {
     SIGN_IN: "/auth/signin",
     SIGN_UP: "/auth/signup",
@@ -14,9 +14,7 @@ export const APP_ROUTES = {
   SECURITY: "/security",
   PRIVACY_POLICY: "/privacy-policy",
   TERMS_OF_USE: "/terms-and-conditions",
+  BO: "/dashboard/back-office",
+  DASHBOARD: "/dashboard",
+  APPARTEMENTS: "/appartements",
 };
-
-export enum ROOT_URL {
-  BO = "/modules/dashboard/back-office",
-  DASHBOARD = "/modules/dashboard",
-}

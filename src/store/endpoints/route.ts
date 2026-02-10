@@ -54,19 +54,6 @@ export const APIS = (baseUrl?: string) => {
         pathBase: "SECURED_API",
       }),
     },
-    OTP: {
-      GENERATE: api({
-        path: "/otp/generate",
-        method: "POST",
-        pathBase: "UNSECURED_API",
-      }),
-      VALIDATE: api({
-        path: "/otp/validate",
-        method: "POST",
-        pathBase: "UNSECURED_API",
-        handleErrorManually: false,
-      }),
-    },
     FAQ: {
       GET_FAQS: api({
         path: "/faq",

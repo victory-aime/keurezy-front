@@ -16,7 +16,8 @@ import { VariablesColors } from "_theme/variables";
 export const SignIn = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const callbackUrl = useSearchParams()?.get("callbackUrl") || APP_ROUTES.HOME;
+  const callbackUrl =
+    useSearchParams()?.get("callbackUrl") || APP_ROUTES.REDIRECT;
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setGoogleIsLoading] = useState(false);
   const { login } = useAuth();

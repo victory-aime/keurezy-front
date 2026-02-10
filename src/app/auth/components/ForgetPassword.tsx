@@ -16,7 +16,7 @@ import { APP_ROUTES } from "_config/routes";
 export const ForgetPassword = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
-  const token = useSearchParams().get("token");
+  const token = useSearchParams()?.get("token");
   const router = useRouter();
 
   const isValidPassword = (password: string) => {
@@ -74,7 +74,7 @@ export const ForgetPassword = () => {
               onClick={() => handleSubmit()}
               mt={2}
               isLoading={isLoading}
-              isDisabled={!isValid && isValidPassword(values?.newPassword)}
+              isDisabled={!isValid || !isValidPassword(values?.newPassword)}
             >
               {t("COMMON.VALIDATE")}
             </BaseButton>

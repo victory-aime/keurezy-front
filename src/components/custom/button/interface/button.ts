@@ -10,6 +10,7 @@ export type variantColorType =
   | "warning"
   | "info"
   | "purple"
+  | "overlay"
   | "neutral";
 
 export interface VariantColorStyle {

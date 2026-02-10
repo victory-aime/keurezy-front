@@ -10,6 +10,7 @@ interface AuthTypes {
   name?: string;
   email?: string;
   password?: string;
+  role?: string;
   callbackUrl?: string;
   providerType?: string;
 }
@@ -21,8 +22,10 @@ export const useAuth = () => {
   const logout = async () => {
     try {
       showLoader();
-      await authClient.signOut();
-      router.replace(APP_ROUTES.AUTH.SIGN_IN);
+      const { data } = await authClient.signOut();
+      if (data?.success) {
+        window.location.reload();
+      }
     } finally {
       hideLoader();
     }

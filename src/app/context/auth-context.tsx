@@ -4,34 +4,21 @@ import { createContext, useContext, ReactNode } from "react";
 import { authClient } from "../lib/auth-client";
 import { SessionErrorModal } from "../auth/components/ErrorModal";
 import { isExpired } from "../helpers/expire-token";
-
-interface AuthContextType {
-  session: {
-    user: {
-      id: string;
-      createdAt: Date;
-      updatedAt: Date;
-      email: string;
-      emailVerified: boolean;
-      name: string;
-      image?: string | null | undefined;
-    };
-    session: any;
-  } | null;
-  isLoading: boolean;
-}
+import { AuthContextType } from "../dashboard/Layout/sidebar/types";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthContextProvider({ children }: { children: ReactNode }) {
   const { data: session, isPending: isLoading } = authClient.useSession();
 
-  if (isExpired(session?.session?.expiresAt!)) {
+  if (session?.session?.expiresAt && isExpired(session.session.expiresAt)) {
     return <SessionErrorModal />;
   }
 
   return (
-    <AuthContext.Provider value={{ session, isLoading }}>
+    <AuthContext.Provider
+      value={{ session: session?.session, isLoading, user: session?.user }}
+    >
       {children}
     </AuthContext.Provider>
   );

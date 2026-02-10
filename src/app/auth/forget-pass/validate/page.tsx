@@ -1,6 +1,10 @@
-import React from "react";
+import { Suspense } from "react";
 import { ForgetPassword } from "../../components/ForgetPassword";
 
 export default function ForgetPasswordPage() {
-  return <ForgetPassword />;
+  return (
+    <Suspense>
+      <ForgetPassword />
+    </Suspense>
+  );
 }

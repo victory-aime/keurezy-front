@@ -1,5 +1,10 @@
+import { Suspense } from "react";
 import { EmailVerified } from "../components/EmailVerified";
 
 export default function EmailVerificationPage() {
-  return <EmailVerified />;
+  return (
+    <Suspense>
+      <EmailVerified />
+    </Suspense>
+  );
 }
