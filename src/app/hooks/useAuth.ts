@@ -19,12 +19,14 @@ export const useAuth = () => {
   const router = useRouter();
   const { showLoader, hideLoader, isLoading } = useGlobalLoader();
 
-  const logout = async () => {
+  const logout = async (callBackURL?: string) => {
     try {
       showLoader();
       const { data } = await authClient.signOut();
-      if (data?.success) {
+      if (data?.success && !callBackURL) {
         window.location.reload();
+      } else {
+        router.push(callBackURL!);
       }
     } finally {
       hideLoader();

@@ -26,4 +26,10 @@ export class UserService extends BaseApi {
       data,
     );
   }
+  check_email(email: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().USER.CHECK_EMAIL,
+      { email },
+    );
+  }
 }

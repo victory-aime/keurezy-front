@@ -1,13 +1,14 @@
 import { ILink } from "../types";
 import { FaUsers } from "react-icons/fa6";
 import { FaUserAlt } from "react-icons/fa";
-import { IoIosHelpCircle } from "react-icons/io";
+import { IoIosArrowRoundBack, IoIosHelpCircle } from "react-icons/io";
 import { BO_ROUTES } from "../../../back-office/routes";
 import { DASHBOARD_ROUTES } from "../../../routes";
 import { UserRole } from "../../../../../types/enum";
 import { TbHome2 } from "react-icons/tb";
 import { BsFillBuildingsFill } from "react-icons/bs";
 import { TbTaxEuro } from "react-icons/tb";
+import { APP_ROUTES } from "_config/routes";
 
 const ALL_CSA_ROUTES: ILink[] = [
   {
@@ -29,6 +30,11 @@ const ALL_CSA_ROUTES: ILink[] = [
     path: DASHBOARD_ROUTES.PROFILE,
     label: "SIDE_BAR.PROFILE",
     icon: FaUserAlt,
+  },
+  {
+    path: APP_ROUTES.ROOT,
+    label: "SIDE_BAR.ROOT",
+    icon: IoIosArrowRoundBack,
   },
 ];
 

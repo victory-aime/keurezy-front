@@ -19,6 +19,7 @@ export const VariablesColors = {
   grayScale: "#64748B", // custom static
   gray400: "#a1a1aa",
   gray100: "#f4f4f5",
+  gray200: "#e4e4e7",
   white: "#ffffff",
   black: "#18181b",
   transparent: "transparent",

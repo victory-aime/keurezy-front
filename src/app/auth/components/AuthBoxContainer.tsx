@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { ReactNode } from "react";
 import Image from "next/image";
 import { VariablesColors } from "_theme/variables";
+import { ASSETS } from "_assets/images";
 
 export const AuthBoxContainer = ({
   children,
@@ -59,7 +60,7 @@ export const AuthBoxContainer = ({
       <Card.Root
         size="md"
         w="full"
-        maxW={{ base: "100%", md: "600px" }}
+        maxW={{ base: "100%", md: "750px" }}
         border="none"
         //bg={{ base: "transparent", md: "rgba(255,255,255,0.75)" }}
         backdropFilter={{ base: "none", md: "blur(14px)" }}
@@ -67,16 +68,11 @@ export const AuthBoxContainer = ({
           WebkitBackdropFilter: { base: "none", md: "blur(14px)" },
         }}
         borderRadius={{ base: "none", md: "2xl" }}
-        //boxShadow={{ base: "none", md: "0 20px 40px rgba(0,0,0,0.15)" }}
+        //boxShadow={{ base: "none", md: "0 10px 20px rgba(0,0,0,0.15)" }}
         zIndex={1}
       >
         <Card.Header alignItems="center" gap={3}>
-          <Image
-            src="/assets/svg/my-immo.svg"
-            width={45}
-            height={45}
-            alt="logo"
-          />
+          <Image src={ASSETS.LOGO} width={45} height={45} alt="logo" />
           <Card.Title fontSize="xl" textAlign="center">
             {t(title)}
           </Card.Title>

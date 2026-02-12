@@ -3,13 +3,14 @@ import { BsFillBuildingsFill } from "react-icons/bs";
 import { CiFacebook, CiInstagram, CiMail, CiPhone } from "react-icons/ci";
 import { FaTiktok } from "react-icons/fa";
 import { HiHeart, HiHome, HiUser } from "react-icons/hi2";
+import { UserRole } from "../../../types/enum";
 
 export const USERS_ROUTES = {
   PROFILE: `/profile`,
   FAVORITE: `/favorite`,
 };
 
-export const HEADER_LINKS = (isAuthenticated: boolean) => {
+export const HEADER_LINKS = (isAuthenticated: boolean, role: UserRole) => {
   const publicLinks = [
     {
       id: 1,
@@ -25,7 +26,7 @@ export const HEADER_LINKS = (isAuthenticated: boolean) => {
     },
   ];
 
-  const privateLinks = [
+  const privateUserLinks = [
     {
       id: 3,
       icon: HiHeart,
@@ -40,7 +41,9 @@ export const HEADER_LINKS = (isAuthenticated: boolean) => {
     },
   ];
 
-  return isAuthenticated ? [...publicLinks, ...privateLinks] : publicLinks;
+  return isAuthenticated && role === UserRole.USER
+    ? [...publicLinks, ...privateUserLinks]
+    : publicLinks;
 };
 
 export const FOOTER_ROUTES: Array<{

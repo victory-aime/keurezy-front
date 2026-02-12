@@ -21,6 +21,7 @@ const PROTECTED_ROUTES: Record<string, string[]> = {
   [`${APP_ROUTES.BO}`]: [UserRole.ADMIN],
 };
 const RESET_PASSWORD_ROUTE = APP_ROUTES.AUTH.RESET_PASSWORD_VALIDATE;
+const CREATE_AGENCY_ROUTE = APP_ROUTES.AUTH.REGISTER_AGENCY;
 const TOTP_ROUTE = APP_ROUTES.AUTH._2FA;
 
 export async function proxy(request: NextRequest) {
@@ -39,6 +40,19 @@ export async function proxy(request: NextRequest) {
     if (!token) {
       const url = request.nextUrl.clone();
       url.pathname = APP_ROUTES.AUTH.SIGN_IN;
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+  }
+  /**
+   * 🔐 PROTECTION CREATE AGENCY (token dans l'URL)
+   */
+  if (pathname === CREATE_AGENCY_ROUTE) {
+    const token = searchParams.get("token");
+
+    if (!token) {
+      const url = request.nextUrl.clone();
+      url.pathname = APP_ROUTES.AUTH.SIGN_UP;
       url.search = "";
       return NextResponse.redirect(url);
     }
@@ -92,5 +106,6 @@ export const config = {
     `/favorite/:path*`,
     `/auth/signin/totp`,
     `/auth/forget-pass/validate`,
+    `/auth/register-agency/:path*`,
   ],
 };

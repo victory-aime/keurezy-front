@@ -10,6 +10,6 @@ import { GlobalApplicationContext } from "./applicationContext";
  */
 
 export const applicationContext = new GlobalApplicationContext(
-  process.env.NEXT_PUBLIC_BACKEND_URL!,
+  process.env.NEXT_PUBLIC_BACKEND_PATH!,
 );
 applicationInstance.setContext(applicationContext as any);

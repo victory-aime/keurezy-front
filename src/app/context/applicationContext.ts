@@ -3,7 +3,6 @@ import { ApplicationContext } from "rise-core-frontend";
 import { handleApiError } from "_utils/handleApiError";
 import { handleApiSuccess } from "_utils/handleApiSuccess";
 import { AxiosError } from "axios";
-import { emitError } from "_utils/auth/errorHandler";
 
 /**
  * @class.ts GlobalApplicationContext
@@ -34,8 +33,6 @@ export class GlobalApplicationContext extends ApplicationContext {
     if (code === 101 || code === 103) {
       this.setToken("");
       this.setRefreshToken("");
-    } else if (code === 102) {
-      emitError(code);
     } else {
       handleApiError({
         message: message ?? "",

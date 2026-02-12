@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { InitializeApp } from "_context/provider/initialize-app";

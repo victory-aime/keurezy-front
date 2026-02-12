@@ -7,6 +7,7 @@ interface TextInputProps extends HTMLChakraProps<"input"> {
   required?: boolean;
   isReadOnly?: boolean;
   isDisabled?: boolean;
+  isVerified?: boolean;
   infoMessage?: string | null;
   helperMessage?: string;
   useFullAmountMask?: boolean;

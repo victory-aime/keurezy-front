@@ -1,4 +1,10 @@
-import { CheckboxGroup, Fieldset, SimpleGrid } from "@chakra-ui/react";
+import {
+  CheckboxGroup,
+  Field,
+  Fieldset,
+  Flex,
+  SimpleGrid,
+} from "@chakra-ui/react";
 import { Checkbox } from "_components/ui/checkbox";
 import { useField, useFormikContext } from "formik";
 import React, { FC } from "react";
@@ -6,7 +12,7 @@ import { CheckBoxProps } from "./interface/input";
 import { NoDataFound } from "../no-data-found";
 import { BaseText, TextVariant } from "../base-text";
 
-export const CheckboxForm: FC<CheckBoxProps> = ({
+export const FormCheckbox: FC<CheckBoxProps> = ({
   name,
   validate,
   label,
@@ -24,7 +30,7 @@ export const CheckboxForm: FC<CheckBoxProps> = ({
   const { setValue } = helpers;
 
   return (
-    <Fieldset.Root id={name} invalid={isError}>
+    <Field.Root id={name} invalid={isError}>
       {items && (
         <CheckboxGroup
           invalid={isError}
@@ -85,8 +91,12 @@ export const CheckboxForm: FC<CheckBoxProps> = ({
           <BaseText variant={TextVariant.S}>{label}</BaseText>
         </Checkbox>
       )}
-
-      {isError && <Fieldset.ErrorText>{error}</Fieldset.ErrorText>}
-    </Fieldset.Root>
+      {isError && (
+        <Flex gap={1} mt={1} alignItems={"center"}>
+          <Field.ErrorIcon width={4} height={4} color={"red.500"} />
+          <Field.ErrorText>{error}</Field.ErrorText>
+        </Flex>
+      )}
+    </Field.Root>
   );
 };

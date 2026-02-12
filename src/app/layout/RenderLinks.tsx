@@ -1,15 +1,15 @@
-import { Box, Flex, For, HStack, Spinner, VStack } from "@chakra-ui/react";
+import { Flex, For, HStack, Spinner } from "@chakra-ui/react";
 import { BaseButton, BaseIcon, BaseText } from "_components/custom";
 import { Avatar } from "_components/ui/avatar";
 import { APP_ROUTES } from "_config/routes";
 import { useAuth } from "_hooks/useAuth";
-import { VariablesColors } from "_theme/variables";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { UserMenu } from "./UserMenu";
 import { MODELS } from "_types/";
 import { CiBellOn, CiLogout } from "react-icons/ci";
+import { UserRole } from "../../types/enum";
 
 export const RenderLinks = ({
   links,
@@ -17,6 +17,7 @@ export const RenderLinks = ({
   user,
   createAgency,
   isMobile,
+  onClose,
 }: {
   links: {
     id: number;
@@ -28,6 +29,7 @@ export const RenderLinks = ({
   user: MODELS.IUser | undefined;
   isMobile: boolean;
   createAgency?: () => void;
+  onClose?: () => void;
 }) => {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -71,12 +73,14 @@ export const RenderLinks = ({
       <Flex
         width={isMobile ? "full" : "1/2"}
         alignItems={isMobile ? "none" : "center"}
-        justifyContent={"space-around"}
+        justifyContent={"flex-end"}
         flexDirection={isMobile ? "column" : "row"}
         gap={2}
       >
         <BaseButton colorType={"secondary"} onClick={createAgency}>
-          Creer mon agence
+          {user?.role !== UserRole.IMMO_OWNER
+            ? " Créer mon agence"
+            : "Accéder au tableau de bord"}
         </BaseButton>
         {isLoading ? (
           <Spinner />
@@ -93,12 +97,22 @@ export const RenderLinks = ({
                         user?.image! ?? "https://avatar.iran.liara.run/public"
                       }
                     />
-                    <BaseIcon color={"red"} onClick={logout} cursor={"pointer"}>
+                    <BaseIcon
+                      color={"red"}
+                      onClick={() => logout()}
+                      cursor={"pointer"}
+                    >
                       <CiLogout />
                     </BaseIcon>
                   </>
                 ) : (
-                  <UserMenu user={user} logout={logout} />
+                  <UserMenu
+                    user={user}
+                    logout={() => {
+                      onClose?.();
+                      logout();
+                    }}
+                  />
                 )}
               </>
             ) : (

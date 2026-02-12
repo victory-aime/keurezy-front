@@ -1,10 +1,11 @@
 "use client";
-import { Steps } from "@chakra-ui/react";
+
+import { Box, Steps } from "@chakra-ui/react";
 import React, { FC, useEffect, useState } from "react";
-import { StepperProps } from "./interface/stepper";
+import { BaseStepperProps } from "./interface/stepper";
 import { LuCheck } from "react-icons/lu";
 
-export const BaseStepper: FC<StepperProps> = ({ steps, goNextSteps }) => {
+export const BaseStepper: FC<BaseStepperProps> = ({ steps, goNextSteps }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handleStepChange = (step: number) => {
@@ -27,9 +28,10 @@ export const BaseStepper: FC<StepperProps> = ({ steps, goNextSteps }) => {
       defaultValue={steps[currentIndex]?.stepNumber}
       variant={"solid"}
       colorPalette={"purple"}
-      onStepChange={({ step }: { step: any }) => {
+      onStepChange={({ step }) => {
         handleStepChange(step);
       }}
+      p={{ base: 2, md: 0 }}
     >
       <Steps.List>
         {steps.map((step, index) => (

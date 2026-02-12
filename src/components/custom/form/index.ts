@@ -1,7 +1,7 @@
 import FormTextArea from "./FormTextArea";
 import FormTextInput from "./FormInput";
 import FormSelect from "./FormSelect";
-import { CheckboxForm } from "./CheckboxForm";
+import { FormCheckbox } from "./CheckboxForm";
 import { FormSlider } from "./FormSlider";
 import { FormSwitch } from "./FormSwitch";
 import { FormColorPicker } from "./FormColorPicker";
@@ -12,7 +12,7 @@ export {
   FormTextArea,
   FormTextInput,
   FormSelect,
-  CheckboxForm,
+  FormCheckbox,
   FormSlider,
   FormSwitch,
   FormColorPicker,

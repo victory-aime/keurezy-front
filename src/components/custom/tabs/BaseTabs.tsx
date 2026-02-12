@@ -11,7 +11,6 @@ export const BaseTabs = ({
   isMobile,
   title = "",
   description = "",
-  addTitle = "",
   ...rest
 }: TabsProps) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -22,7 +21,6 @@ export const BaseTabs = ({
       description={description}
       border={"none"}
       textAlign={rest.textAlign}
-      height={"100vh"}
     >
       <Tabs.Root
         defaultValue={items[currentIndex]?.label}
@@ -49,12 +47,7 @@ export const BaseTabs = ({
             gap={4}
             width={"full"}
           >
-            <Tabs.List
-              border={"1px solid"}
-              borderColor={"lighter.500"}
-              rounded="l3"
-              p={"4px"}
-            >
+            <Tabs.List width={"full"}>
               {items.map((item, index) => (
                 <Tabs.Trigger
                   color={
@@ -63,6 +56,7 @@ export const BaseTabs = ({
                   key={index}
                   value={item.label}
                   p={5}
+                  width={"full"}
                 >
                   {item?.icon}
                   {item.label}
@@ -72,7 +66,7 @@ export const BaseTabs = ({
             </Tabs.List>
           </VStack>
         </Flex>
-        <Box mt={rest.mt ?? 10}>
+        <Box mt={rest.mt ?? 5}>
           {items.map((item, index) => (
             <Tabs.Content
               key={index}

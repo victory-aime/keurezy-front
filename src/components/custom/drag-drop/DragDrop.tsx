@@ -15,15 +15,17 @@ import {
   For,
   Circle,
   VStack,
+  Flex,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { HiX } from "react-icons/hi";
+import { ReactNode, useEffect, useState } from "react";
+import { HiOutlineInformationCircle, HiX } from "react-icons/hi";
 import { LuUpload } from "react-icons/lu";
 import {
   ACCEPTED_TYPES,
   MAX_FILE_SIZE,
   MAX_FILE_SIZE_MB,
   MAX_FILES,
+  TYPES_FILES,
 } from "./constant/constants";
 import { convertUrlsToFiles } from "rise-core-frontend";
 import { BaseText, TextVariant } from "../base-text";
@@ -62,30 +64,32 @@ const FileImageList = ({
   return (
     <Box w={"full"}>
       <HStack width={"full"} justifyContent={"flex-start"} wrap="wrap" gap="3">
-        {fileUpload.acceptedFiles.map((file) => (
-          <FileUpload.Item
-            p="2"
-            width="auto"
-            key={file.name}
-            file={file}
-            pos="relative"
-          >
-            <Float>
-              <FileUpload.ItemDeleteTrigger
-                p="0.5"
-                rounded="l1"
-                bg="red.500"
-                borderWidth="1px"
-              >
-                <HiX color={VariablesColors.white} />
-              </FileUpload.ItemDeleteTrigger>
-            </Float>
-            <FileUploadItemPreviewImage boxSize="300px" objectFit="cover" />
-          </FileUpload.Item>
+        {fileUpload.acceptedFiles.map((file, index) => (
+          <FileUpload.ItemGroup key={index} asChild>
+            <FileUpload.Item
+              p="2"
+              width="auto"
+              key={file.name}
+              file={file}
+              pos="relative"
+            >
+              <Float>
+                <FileUpload.ItemDeleteTrigger
+                  p="0.5"
+                  rounded="l1"
+                  bg="red.500"
+                  borderWidth="1px"
+                >
+                  <HiX color={VariablesColors.white} />
+                </FileUpload.ItemDeleteTrigger>
+              </Float>
+              <FileUploadItemPreviewImage boxSize="120px" objectFit="cover" />
+            </FileUpload.Item>
+          </FileUpload.ItemGroup>
         ))}
       </HStack>
       {error && (
-        <Alert.Root status="error" mt={5} p={4} width={"fit-content"}>
+        <Alert.Root status="error" mt={5} p={4} width={"full"}>
           <Alert.Indicator />
           <Alert.Content>
             <Alert.Title>
@@ -108,11 +112,15 @@ export const BaseDragDropZone = ({
   initialImageUrls,
   maxFiles = MAX_FILES,
   maxFileSize = MAX_FILE_SIZE,
+  label,
+  messageInfo,
 }: {
   getFilesUploaded: (files: File[]) => void;
   initialImageUrls: string[];
   maxFiles?: number;
   maxFileSize?: number;
+  label?: string | ReactNode;
+  messageInfo?: string;
 }) => {
   const { getRootProps } = useFileUpload();
   const { t } = useTranslation();
@@ -128,11 +136,11 @@ export const BaseDragDropZone = ({
       _dragging={{ borderColor: "primary.500" }}
     >
       <FileUpload.HiddenInput />
-      <FileImageList
-        getFilesUploaded={getFilesUploaded}
-        initialImageUrls={initialImageUrls}
-        t={t}
-      />
+      {label === "string" ? (
+        <BaseText variant={TextVariant.L}>{label}</BaseText>
+      ) : (
+        label
+      )}
       <FileUploadDropzone>
         <Icon fontSize="xl" color="fg.muted">
           <LuUpload />
@@ -142,13 +150,27 @@ export const BaseDragDropZone = ({
             {t("DRAG_DROP.TITLE")}
           </BaseText>
           <BaseText color="fg.subtle">
-            {t("DRAG_DROP.DESC", { max_size: MAX_FILE_SIZE_MB })}
+            {t("DRAG_DROP.DESC", {
+              max_size: MAX_FILE_SIZE_MB,
+              type_files: TYPES_FILES,
+            })}
           </BaseText>
-          <BaseText color="fg.subtle" variant={TextVariant.XS}>
+          <BaseText color="fg.subtle" variant={TextVariant.S}>
             {t("DRAG_DROP.FILES_NUMBER", { max_files: maxFiles })}
           </BaseText>
         </FileUploadDropzoneContent>
       </FileUploadDropzone>
+      {messageInfo && (
+        <Flex gap={2} alignItems={"center"} color={VariablesColors.info}>
+          <HiOutlineInformationCircle size={18} />
+          {messageInfo}
+        </Flex>
+      )}
+      <FileImageList
+        getFilesUploaded={getFilesUploaded}
+        initialImageUrls={initialImageUrls}
+        t={t}
+      />
     </FileUpload.Root>
   );
 };

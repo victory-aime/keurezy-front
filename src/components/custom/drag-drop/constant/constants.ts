@@ -10,5 +10,12 @@ const FILES_INIT_SIZE = 2;
 const MAX_FILE_SIZE = FILES_INIT_SIZE * 1024 * 1024;
 const MAX_FILE_SIZE_MB = MAX_FILE_SIZE / (1024 * 1024);
 const ACCEPTED_TYPES = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
+const TYPES_FILES = [".png ", ".jpg ", ".jpeg ", ".webp "];
 
-export { MAX_FILES, MAX_FILE_SIZE, ACCEPTED_TYPES, MAX_FILE_SIZE_MB };
+export {
+  MAX_FILES,
+  MAX_FILE_SIZE,
+  ACCEPTED_TYPES,
+  MAX_FILE_SIZE_MB,
+  TYPES_FILES,
+};

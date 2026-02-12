@@ -11,11 +11,16 @@ import { handleApiSuccess } from "_utils/handleApiSuccess";
 import { SendEmailRecap } from "./SendEmailRecap";
 import { useRouter } from "next/navigation";
 import { handleApiError } from "_utils/handleApiError";
+import { UserModule } from "_store/state-management";
 
 export const TokenExpired = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [openRecap, setOpenRecap] = useState(false);
   const router = useRouter();
+
+  const { mutateAsync: checkEmail, isPending } = UserModule.checkEmailMutation(
+    {},
+  );
 
   const resendEmailVerification = async (values: FormikValues) => {
     try {
@@ -51,15 +56,21 @@ export const TokenExpired = () => {
       <Formik
         initialValues={{ email: "" }}
         onSubmit={resendEmailVerification}
-        validationSchema={
-          VALIDATION.AUTH.resetPasswordInitRequestValidationSchema
-        }
+        validateOnChange={false}
+        validateOnBlur
+        validationSchema={VALIDATION.AUTH.resetPasswordInitRequestValidationSchema(
+          async (email: string) => {
+            const user = await checkEmail({ payload: { email } });
+            return !!user;
+          },
+        )}
       >
         {({ dirty, isValid, handleSubmit }) => (
           <VStack gap={2}>
             <FormTextInput
               name={"email"}
               placeholder={"FORM.EMAIL_PLACEHOLDER"}
+              isVerified={isPending}
             />
             <BaseButton
               isLoading={isLoading}

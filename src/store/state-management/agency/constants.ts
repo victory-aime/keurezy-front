@@ -1,0 +1,4 @@
+export enum AGENCY_KEYS {
+  CREATE_AGENCY = "CREATE_AGENCY",
+  CHECK_NAME = "CHECK_NAME",
+}

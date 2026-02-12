@@ -34,7 +34,7 @@ export const FormPhonePicker = ({
     : !!(error && (touched || submitCount > 0));
 
   const colorBorder = useColorModeValue(
-    VariablesColors.gray100,
+    VariablesColors.gray200,
     VariablesColors.black,
   );
   const colorDropdown = useColorModeValue(
@@ -110,7 +110,9 @@ export const FormPhonePicker = ({
         countrySelectorStyleProps={{
           buttonStyle: {
             padding: "8px",
-            backgroundColor: colorBorder,
+            //backgroundColor: colorBorder,
+            borderTopLeftRadius: "12px",
+            borderBottomLeftRadius: "12px",
             borderRight: "none",
             borderTopColor: isError ? VariablesColors.danger : colorBorder,
             borderBottomColor: isError ? VariablesColors.danger : colorBorder,
@@ -122,7 +124,7 @@ export const FormPhonePicker = ({
             style: {
               backgroundColor: colorDropdown,
               color: colorText,
-              borderRadius: "4px",
+              borderRadius: "12px",
               padding: "8px",
             },
             listItemClassName: "phone-dropdown-item",
@@ -132,10 +134,11 @@ export const FormPhonePicker = ({
           dropdownArrowStyle: { marginLeft: "4px" },
         }}
         inputStyle={{
-          backgroundColor: colorBorder,
+          //backgroundColor: colorBorder,
           color: colorText,
           border: `1px solid ${isError ? VariablesColors.danger : colorBorder}`,
-          borderRadius: "7px",
+          borderTopRightRadius: "12px",
+          borderBottomRightRadius: "12px",
           borderTopLeftRadius: "0",
           borderBottomLeftRadius: "0",
           height: "40px",

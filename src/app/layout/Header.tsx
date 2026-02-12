@@ -1,35 +1,21 @@
 "use client";
-import {
-  Flex,
-  HStack,
-  For,
-  Spinner,
-  useBreakpointValue,
-} from "@chakra-ui/react";
-import {
-  BaseButton,
-  BaseText,
-  CustomToast,
-  ToastStatus,
-} from "_components/custom";
+import { Flex, HStack, useBreakpointValue } from "@chakra-ui/react";
+import { BaseText, CustomToast, ToastStatus } from "_components/custom";
 import Image from "next/image";
-import { CiBellOn } from "react-icons/ci";
 import { UserModule } from "_store/state-management";
 import { APP_ROUTES } from "_config/routes";
 import { useRouter } from "next/navigation";
-import { use, useState } from "react";
-import { useAuth } from "_hooks/useAuth";
+import { useState } from "react";
 import { useAuthContext } from "_context/auth-context";
 import { HEADER_LINKS } from "./routes";
-import Link from "next/link";
 import { MobileLayout } from "./Mobile";
 import { RenderLinks } from "./RenderLinks";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { UserMenu } from "./UserMenu";
+import { UserRole } from "../../types/enum";
+import { ASSETS } from "_assets/images";
 
 export const Header = () => {
   const router = useRouter();
-  const { logout } = useAuth();
   const { session } = useAuthContext();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -41,16 +27,13 @@ export const Header = () => {
     },
   });
 
-  const links = HEADER_LINKS(!!session?.token);
+  const links = HEADER_LINKS(!!session?.token, user?.role!);
 
   const createAgency = () => {
-    if (user?.id) {
-      CustomToast({
-        duration: 3000,
-        title: "Vos infos",
-        description: user?.id,
-        type: ToastStatus.INFO,
-      });
+    if (user?.id && user?.role !== UserRole.IMMO_OWNER) {
+      router.push(`${APP_ROUTES.AUTH.REGISTER_AGENCY}?token=${user?.id}`);
+    } else if (user?.role === UserRole.IMMO_OWNER) {
+      router.push(APP_ROUTES.DASHBOARD);
     } else {
       CustomToast({
         duration: 3000,
@@ -63,12 +46,7 @@ export const Header = () => {
   return (
     <Flex width={"full"} p={4}>
       <HStack width={"1/3"}>
-        <Image
-          src={"/assets/svg/my-immo.svg"}
-          alt={"logo"}
-          width={45}
-          height={45}
-        />
+        <Image src={ASSETS.LOGO} alt={"logo"} width={45} height={45} />
         <BaseText>MyIMMO</BaseText>
       </HStack>
 
@@ -86,6 +64,7 @@ export const Header = () => {
             links={links}
             isLoading={isLoading}
             user={user}
+            createAgency={createAgency}
           />
         </HStack>
       ) : (

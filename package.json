@@ -6,6 +6,7 @@
     "dev": "next dev --port 5080",
     "build": "next build",
     "start": "next start --port 5080",
+    "start:prod": "dotenv -e .env.production -- cross-env APP_ENV=prod next start",
     "commit": "prettier --write . && git add . && cz"
   },
   "config": {
@@ -19,8 +20,8 @@
     ]
   },
   "dependencies": {
-    "@chakra-ui/charts": "^3.31.0",
-    "@chakra-ui/react": "^3.31.0",
+    "@chakra-ui/charts": "^3.33.0",
+    "@chakra-ui/react": "^3.33.0",
     "@emotion/react": "^11.14.0",
     "@fullcalendar/core": "^6.1.20",
     "@fullcalendar/daygrid": "^6.1.20",
@@ -34,6 +35,7 @@
     "better-auth": "^1.4.18",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
+    "dotenv-cli": "^11.0.0",
     "formik": "^2.4.9",
     "google-libphonenumber": "^3.2.44",
     "i18next": "^25.8.0",

@@ -16,6 +16,7 @@ import { VariablesColors } from "_theme/variables";
 import { FOOTER_ROUTES, SOCIAL_LINKS } from "./routes";
 import { useIsActive } from "../hooks/useActive";
 import { useRouter } from "next/navigation";
+import { ASSETS } from "_assets/images";
 
 export const Footer = () => {
   const router = useRouter();
@@ -39,12 +40,7 @@ export const Footer = () => {
       >
         <VStack alignItems={"flex-start"} width={"full"} gap={3}>
           <HStack width={"full"}>
-            <Image
-              src={"/assets/svg/my-immo.svg"}
-              alt={"logo"}
-              width={45}
-              height={45}
-            />
+            <Image src={ASSETS.LOGO} alt={"logo"} width={45} height={45} />
             <BaseText>MyIMMO</BaseText>
           </HStack>
           <BaseText>

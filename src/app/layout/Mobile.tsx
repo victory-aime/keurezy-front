@@ -13,6 +13,7 @@ export interface IMobileLayout {
     name: string;
     url: string;
   }[];
+  createAgency: () => void;
   user: MODELS.IUser | undefined;
 }
 export const MobileLayout = ({
@@ -21,6 +22,7 @@ export const MobileLayout = ({
   links,
   user,
   isLoading,
+  createAgency,
 }: IMobileLayout) => {
   return (
     <BaseDrawer
@@ -33,7 +35,17 @@ export const MobileLayout = ({
       drawerContentColor={"white"}
     >
       <Stack width={"full"}>
-        <RenderLinks links={links} isMobile user={user} isLoading={isLoading} />
+        <RenderLinks
+          links={links}
+          isMobile
+          user={user}
+          isLoading={isLoading}
+          onClose={onClose}
+          createAgency={() => {
+            onClose();
+            createAgency();
+          }}
+        />
       </Stack>
     </BaseDrawer>
   );

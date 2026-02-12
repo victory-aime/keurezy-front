@@ -1,10 +1,18 @@
-import React from "react";
 import { VStack } from "@chakra-ui/react";
 import { IMobileSidebar } from "../types";
 import { RenderLinks } from "./RenderLinks";
 import { BaseDrawer } from "_components/custom/drawer/BaseDrawer";
+import { BaseButton } from "_components/custom";
+import { VariablesColors } from "_theme/variables";
+import { t } from "i18next";
+import { CiLogout } from "react-icons/ci";
 
-export const MobileSidebar = ({ isOpen, onClose, links }: IMobileSidebar) => {
+export const MobileSidebar = ({
+  isOpen,
+  onClose,
+  links,
+  handleLogout,
+}: IMobileSidebar) => {
   return (
     <BaseDrawer
       title={"Menu"}
@@ -27,6 +35,25 @@ export const MobileSidebar = ({ isOpen, onClose, links }: IMobileSidebar) => {
           sideToggled={isOpen}
           onShowSidebar={onClose}
         />
+        <BaseButton
+          withGradient
+          colorType={"danger"}
+          overflow={"hidden"}
+          justifyContent={"center"}
+          onClick={() => {
+            onClose();
+            handleLogout?.();
+          }}
+          leftIcon={
+            <CiLogout
+              width="18px"
+              height="18px"
+              color={VariablesColors.white}
+            />
+          }
+        >
+          {t("COMMON.LOGOUT")}
+        </BaseButton>
       </VStack>
     </BaseDrawer>
   );

@@ -159,7 +159,7 @@
   },
   "DRAG_DROP": {
     "TITLE": "Glissez-déposez des fichiers ici, ou cliquez pour sélectionner",
-    "DESC": "Format accepte: .png, .jpg taille {{max_size}}MB",
+    "DESC": "Format accepte: {{type_files}} taille {{max_size}}MB",
     "FILES_NUMBER": "Nombre total de fichiers à ajouter {{max_files}}",
     "ERROR": {
       "MAX_FILES": "Vous ne pouvez pas télécharger plus de {{max_files}} fichiers.",

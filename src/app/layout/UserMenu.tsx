@@ -35,7 +35,12 @@ export const UserMenu = ({
       >
         Notifications
       </BaseButton>
-      <BaseButton leftIcon={<CiLogout />} colorType={"danger"} width={"full"}>
+      <BaseButton
+        leftIcon={<CiLogout />}
+        onClick={() => logout()}
+        colorType={"danger"}
+        width={"full"}
+      >
         Deconnexion
       </BaseButton>
     </VStack>

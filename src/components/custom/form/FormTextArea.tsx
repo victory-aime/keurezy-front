@@ -27,7 +27,7 @@ const FormTextArea: FC<FormTextAreaProps> = ({
   minHeight,
   helperMessage,
   autoresize = true,
-  maxCharacters = 20,
+  maxCharacters,
 }) => {
   const { t } = useTranslation();
   const fieldHookConfig = {
@@ -46,18 +46,30 @@ const FormTextArea: FC<FormTextAreaProps> = ({
   return (
     <Field.Root id={name} invalid={isError}>
       {label && (
-        <Field.Label display={"flex"} gap={"6px"}>
-          {t(label)}
-          {required && <Text color={"red"}> * </Text>}
+        <Field.Label
+          display={"flex"}
+          gap={"6px"}
+          justifyContent={"space-between"}
+          width={"full"}
+        >
+          <Flex gap={"6px"}>
+            {t(label)}
+            {required && <Text color={"red"}> * </Text>}
+          </Flex>
+          {maxCharacters && (
+            <Span color="fg.muted" textStyle="xs">
+              {field.value?.length} / {maxCharacters}
+            </Span>
+          )}
         </Field.Label>
       )}
       <Textarea
         {...field}
-        bg={"bg.muted"}
+        //bg={"bg.muted"}
         autoresize={autoresize}
         border={"1px solid"}
-        borderColor={isError ? "red.500" : "bg.muted"}
-        _focus={{ borderColor: "primary.500" }}
+        borderColor={isError ? "red.500" : "inherit"}
+        _focus={{ borderColor: isError ? "red.500" : "primary.500" }}
         _placeholder={{ color: isError ? "red.500" : "gray.400" }}
         placeholder={t(placeholder)}
         fontSize={{ base: "16px", md: "12px" }}
@@ -65,9 +77,10 @@ const FormTextArea: FC<FormTextAreaProps> = ({
         height={minHeight}
         p={3}
         mt={"5px"}
-        borderRadius={"7px"}
+        borderRadius={"12px"}
         value={value ?? field.value}
         onChange={(event) => {
+          field.onChange(event);
           onChangeFunction?.(event);
           setValue(event.currentTarget.value.slice(0, maxCharacters));
         }}

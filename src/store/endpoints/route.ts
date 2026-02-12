@@ -22,6 +22,27 @@ export const APIS = (baseUrl?: string) => {
         method: "POST",
         pathBase: "SECURED_API",
       }),
+      CHECK_EMAIL: api({
+        path: "/user/verified-email",
+        method: "POST",
+        pathBase: "UNSECURED_API",
+        showResponse: false,
+      }),
+    },
+    AGENCY: {
+      CREATE_AGENCY: api({
+        path: "/agency/create",
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      CHECK_NAME: api({
+        path: "/agency/verified-name",
+        method: "POST",
+        pathBase: "UNSECURED_API",
+        showResponse: false,
+        handleErrorManually: false,
+      }),
     },
     AUTH: {
       LOGIN: api({

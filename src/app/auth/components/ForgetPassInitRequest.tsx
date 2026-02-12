@@ -11,6 +11,7 @@ import { authClient } from "../../lib/auth-client";
 import { useState } from "react";
 import { handleApiSuccess } from "_utils/handleApiSuccess";
 import { handleApiError } from "_utils/handleApiError";
+import { UserModule } from "_store/state-management";
 
 export const ForgetPassInitRequest = () => {
   const { t } = useTranslation();
@@ -18,6 +19,9 @@ export const ForgetPassInitRequest = () => {
   const [status, setStatus] = useState(false);
   const router = useRouter();
 
+  const { mutateAsync: checkEmail, isPending } = UserModule.checkEmailMutation(
+    {},
+  );
   const resetPasswordInit = async (values: FormikValues) => {
     try {
       setIsLoading(true);
@@ -63,25 +67,30 @@ export const ForgetPassInitRequest = () => {
         <BaseText>Email sent</BaseText>
       ) : (
         <Formik
+          enableReinitialize
           initialValues={{ email: "" }}
           onSubmit={resetPasswordInit}
-          validationSchema={
-            VALIDATION.AUTH.resetPasswordInitRequestValidationSchema
-          }
+          validateOnChange={false}
+          validationSchema={VALIDATION.AUTH.resetPasswordInitRequestValidationSchema(
+            async (email: string) => {
+              const user = await checkEmail({ payload: { email } });
+              return !!user;
+            },
+          )}
         >
-          {({ handleSubmit, isValid, dirty }) => (
-            <VStack gap={2}>
+          {({ handleSubmit, isValid }) => (
+            <VStack gap={2} alignItems={"flex-start"}>
               <FormTextInput
                 name={"email"}
                 placeholder={"FORM.EMAIL_PLACEHOLDER"}
+                isVerified={isPending}
               />
-
               <BaseButton
                 width={"full"}
                 onClick={() => handleSubmit()}
                 isLoading={isLoading}
                 mt={2}
-                isDisabled={!isValid || !dirty}
+                isDisabled={!isValid}
               >
                 Envoyer-moi le lien
               </BaseButton>

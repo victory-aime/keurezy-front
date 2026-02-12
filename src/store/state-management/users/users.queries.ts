@@ -33,4 +33,20 @@ const regeneratePasswordMutation = (
   });
 };
 
-export { getUserInfo, resetPasswordMutation, regeneratePasswordMutation };
+const checkEmailMutation = (
+  args: QUERIES.MutationPayload<{ email: string }>,
+) => {
+  return QUERIES.useCustomMutation({
+    mutationKey: [Constants.USERS_KEYS.CHECK_EMAIL],
+    mutationFn: ({ payload }) =>
+      usersServiceInstance().check_email(payload?.email!),
+    options: args.mutationOptions,
+  });
+};
+
+export {
+  getUserInfo,
+  resetPasswordMutation,
+  regeneratePasswordMutation,
+  checkEmailMutation,
+};

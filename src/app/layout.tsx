@@ -9,6 +9,7 @@ import { ThemeProvider } from "_components/ui/provider";
 import { LoaderProvider } from "_context/loaderContext";
 import { Toaster } from "_components/ui/toaster";
 import { I18nProvider } from "_context/provider/i18n-provider";
+import { AuthContextProvider } from "_context/auth-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +38,9 @@ export default function RootLayout({
           <ThemeProvider>
             <LoaderProvider>
               <Toaster />
-              <I18nProvider>{children}</I18nProvider>
+              <AuthContextProvider>
+                <I18nProvider>{children}</I18nProvider>
+              </AuthContextProvider>
             </LoaderProvider>
           </ThemeProvider>
         </GlobalApplicationProvider>

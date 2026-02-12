@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/api/v1/:path*",
-        destination: `${process.env.API_BACKEND_URL}/api/:path*`,
+        destination: `${process.env.API_BACKEND_URL}/api/v1/:path*`,
       },
     ];
   },

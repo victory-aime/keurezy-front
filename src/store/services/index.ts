@@ -1,2 +1,3 @@
-export * as CommonModule from "./common";
-export * as UserModule from "./users";
+export * from "./common";
+export * from "./users";
+export * from "./agency";

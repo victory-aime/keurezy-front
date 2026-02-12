@@ -8,6 +8,7 @@ export const APP_ROUTES = {
     RESET_PASSWORD: "/auth/forget-pass/request",
     RESET_PASSWORD_VALIDATE: "/auth/forget-pass/validate",
     VERIFIED_EMAIL: "/auth/email-verified",
+    REGISTER_AGENCY: "/auth/register-agency",
   },
   PROTECTED: "/not-authenticated",
   LEGAL_MENTIONS: "/mentions-legales",

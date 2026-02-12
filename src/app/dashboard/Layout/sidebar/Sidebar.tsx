@@ -14,6 +14,7 @@ import { useAuth } from "_hooks/useAuth";
 import { CiLogout, CiWarning } from "react-icons/ci";
 import { useTranslation } from "react-i18next";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { APP_ROUTES } from "_config/routes";
 
 export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
   const { t } = useTranslation();
@@ -54,12 +55,12 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
 
   return (
     <>
-      <BaseModal
+      {/* <BaseModal
         isOpen={isModalOpen}
         icon={<CiWarning />}
         modalType={"alertdialog"}
         title={"Aucun espace de travail associé"}
-        onClick={() => logout()}
+        onClick={() => logout(APP_ROUTES.AUTH.SIGN_IN)}
         isLoading={isLoading}
         showCloseButton={false}
         buttonSaveTitle={"COMMON.LOGOUT"}
@@ -69,13 +70,13 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
           Veuillez contacter votre administrateur pour obtenir l’accès
           nécessaire.
         </BaseText>
-      </BaseModal>
-
+      </BaseModal> */}
       {isMobile ? (
         <MobileSidebar
           isOpen={sideToggled}
           onClose={onShowSidebar}
           links={sidebarLinks}
+          handleLogout={() => logout(APP_ROUTES.AUTH.SIGN_IN)}
         />
       ) : (
         <Box {...toggledSideBarStyle}>
@@ -140,7 +141,7 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
               colorType={"danger"}
               overflow={"hidden"}
               justifyContent={"center"}
-              onClick={() => logout()}
+              onClick={() => logout(APP_ROUTES.AUTH.SIGN_IN)}
               isLoading={isLoading}
               leftIcon={
                 <CiLogout

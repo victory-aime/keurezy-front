@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useField, useFormikContext } from "formik";
-import { Input, Field, Flex, InputGroup } from "@chakra-ui/react";
+import { Input, Field, Flex, InputGroup, Spinner } from "@chakra-ui/react";
 import { TextInputProps } from "./interface/input";
 import { TbLockBitcoin } from "react-icons/tb";
 import { HiOutlineInformationCircle } from "react-icons/hi";
@@ -23,6 +23,7 @@ const FormTextInput = ({
   required = false,
   isReadOnly = false,
   isDisabled = false,
+  isVerified = false,
   rightAccessory,
   leftAccessory,
   customRadius,
@@ -141,14 +142,14 @@ const FormTextInput = ({
             placeholder={t(placeholder)}
             borderRadius={customRadius ?? "12px"}
             border={"1px solid"}
-            borderColor={isError ? "red.500" : "inherit"}
-            _focus={{ borderColor: "primary.500" }}
+            borderColor={isError ? "red.500" : "gray.200"}
+            _focus={{ borderColor: isError ? "red.500" : "primary.500" }}
             _placeholder={{ color: isError ? "red.500" : "gray.400" }}
             size={"lg"}
             variant={"outline"}
             //bg={"bg.muted"}
             readOnly={isReadOnly}
-            disabled={isDisabled}
+            disabled={isDisabled || isLoading}
             fontSize={{ base: "16px", md: "14px" }}
             height={height}
             autoCapitalize="none"
@@ -158,11 +159,18 @@ const FormTextInput = ({
         </InputGroup>
       )}
 
-      {isError && (
-        <Flex gap={1} mt={1} alignItems={"center"}>
-          <Field.ErrorIcon width={4} height={4} color={"red.500"} />
-          <Field.ErrorText>{error}</Field.ErrorText>
+      {isVerified && !isError ? (
+        <Flex gap={1} mt={1} alignItems={"center"} color={"primary.500"}>
+          <Spinner />
+          <BaseText>verification en cours ...</BaseText>
         </Flex>
+      ) : (
+        isError && (
+          <Flex gap={1} mt={1} alignItems={"center"}>
+            <Field.ErrorIcon width={4} height={4} color={"red.500"} />
+            <Field.ErrorText>{error}</Field.ErrorText>
+          </Flex>
+        )
       )}
       {infoMessage && !isLoading && (
         <Flex gap={1} mt={1} alignItems={"center"}>

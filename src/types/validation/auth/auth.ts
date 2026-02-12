@@ -1,3 +1,4 @@
+import { UserModule } from "_store/state-management";
 import * as Yup from "yup";
 
 export const loginValidationSchema = Yup.object({
@@ -24,12 +25,31 @@ export const createUserValidationSchema = Yup.object().shape({
   password: Yup.string().required("Le mot de passe est obligatoire"),
 });
 
-export const resetPasswordInitRequestValidationSchema = Yup.object().shape({
-  email: Yup.string()
-    .trim()
-    .email("Adresse e-mail invalide")
-    .required("Veuillez renseigner votre adresse e-mail"),
-});
+export const resetPasswordInitRequestValidationSchema = (
+  checkEmail: (email: string) => Promise<boolean>,
+) =>
+  Yup.object({
+    email: Yup.string()
+      .trim()
+      .email("Adresse e-mail invalide")
+      .required("Veuillez renseigner votre adresse e-mail")
+      .test(
+        "email-exists",
+        "Aucun compte associé à cet email",
+        async function (value) {
+          if (!value) return true;
+          try {
+            const emailExists = await checkEmail(value);
+            return emailExists;
+          } catch {
+            return this.createError({
+              message:
+                "Impossible de vérifier cette adresse e-mail pour le moment",
+            });
+          }
+        },
+      ),
+  });
 
 export const resetPasswordValidationSchema = Yup.object().shape({
   newPassword: Yup.string()

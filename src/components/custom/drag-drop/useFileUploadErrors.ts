@@ -54,7 +54,7 @@ export const useFileUploadErrors = ({
       setErrorType(null);
       onValidFiles(fileUpload.acceptedFiles);
     }
-  }, [fileUpload]);
+  }, [fileUpload.acceptedFiles.length, fileUpload.rejectedFiles.length]);
 
   useEffect(() => {
     if (error) {
