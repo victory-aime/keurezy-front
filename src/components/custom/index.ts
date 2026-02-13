@@ -25,3 +25,4 @@ export * from "./display-info";
 export * from "./switch-color";
 export * from "./toast";
 export * from "./tooltip";
+export * from "./icons";

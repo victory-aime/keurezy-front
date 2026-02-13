@@ -8,13 +8,14 @@ import { SideBarProps } from "./types";
 import Image from "next/image";
 import { HiX } from "react-icons/hi";
 import { useEffect, useState } from "react";
-import { BaseButton, BaseIcon, BaseModal, BaseText } from "_components/custom";
+import { BaseButton, BaseIcon, BaseText, Icons } from "_components/custom";
 import { VariablesColors } from "_theme/variables";
 import { useAuth } from "_hooks/useAuth";
-import { CiLogout, CiWarning } from "react-icons/ci";
 import { useTranslation } from "react-i18next";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { APP_ROUTES } from "_config/routes";
+import { ASSETS } from "_assets/images";
+import { UserModule } from "_store/state-management";
 
 export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
   const { t } = useTranslation();
@@ -22,10 +23,11 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
     sideToggled,
   });
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const { data: user } = UserModule.getUserInfo({
+    queryOptions: { enabled: false },
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const sidebarLinks = data?.user?.role
-    ? MENU_BY_ROLE[data?.user?.role] || []
-    : [];
+  const sidebarLinks = user?.role ? MENU_BY_ROLE[user?.role] || [] : [];
   const { logout, isLoading } = useAuth();
 
   // const permissionsLink = useCallback(() => {
@@ -101,12 +103,7 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
                 justifyContent="space-around"
               >
                 <Flex gap={2}>
-                  <Image
-                    src="/assets/svg/my-immo.svg"
-                    width={24}
-                    height={24}
-                    alt="logo"
-                  />
+                  <Image src={ASSETS.LOGO} width={24} height={24} alt="logo" />
                   <BaseText>{t("MyIMMO")}</BaseText>
                 </Flex>
                 <BaseIcon rounded={"full"} bgColor={"red.500"} boxSize={"25px"}>
@@ -144,7 +141,7 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
               onClick={() => logout(APP_ROUTES.AUTH.SIGN_IN)}
               isLoading={isLoading}
               leftIcon={
-                <CiLogout
+                <Icons.Logout
                   width="18px"
                   height="18px"
                   color={VariablesColors.white}

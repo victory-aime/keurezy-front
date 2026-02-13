@@ -2,8 +2,9 @@
   "SIDE_BAR": {
     "DASHBOARD": "Tableau de bord",
     "GALLERY": "Gallery",
-    "SERVICE": "Mes services",
-    "SALON": "Mes salons",
+    "AGENCY": "Mon agence",
+    "APPART": "Mes appertements",
+    "ROOT": "Allez à la page d'accueil",
     "FINANCE": "Finances",
     "SETTINGS": "Paramètres",
     "PROFILE": "Mon profil",

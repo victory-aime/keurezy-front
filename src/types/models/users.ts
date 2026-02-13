@@ -11,6 +11,7 @@ export interface IUser {
   status?: Status | undefined;
   role?: UserRole | undefined;
   accounts?: IAccountUsers[];
+  propertyOwner?: { id: string; propertyAgency: { id: string } };
 }
 
 export interface IAccountUsers {

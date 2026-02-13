@@ -5,4 +5,5 @@ export const DASHBOARD_ROUTES = {
   APPART: `${APP_ROUTES.DASHBOARD}/appartements`,
   QUITTANCE: `${APP_ROUTES.DASHBOARD}/quittances`,
   PROFILE: `${APP_ROUTES.DASHBOARD}/profile`,
+  AGENCY: `${APP_ROUTES.DASHBOARD}/agency`,
 };

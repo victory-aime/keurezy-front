@@ -19,19 +19,10 @@ const getBadgeContent = (
         return { variant: "success", label: t("COMMON.STATUS.ACTIVE") };
       case "INACTIVE":
         return { variant: "danger", label: t("COMMON.STATUS.INACTIVE") };
-      default:
-        return { variant: "success", label: t("inconnu") };
-    }
-  } else if (type === "level") {
-    switch (status) {
-      case "GARDERIE":
-        return { variant: "secondary", label: "Garderie" };
-      case "MATERNELLE":
-        return { variant: "tertiary", label: "Maternelle" };
-      case "PRIMAIRE":
-        return { variant: "success", label: "Primaire" };
-      case "COLLEGE":
-        return { variant: "info", label: "College" };
+      case "PENDING":
+        return { variant: "warning", label: t("COMMON.STATUS.PENDING") };
+      case "CLOSE":
+        return { variant: "danger", label: t("COMMON.STATUS.CLOSE") };
       default:
         return { variant: "success", label: t("inconnu") };
     }

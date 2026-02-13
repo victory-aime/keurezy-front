@@ -4,6 +4,13 @@ import {
   createApiAction,
 } from "rise-core-frontend";
 
+const APIS_ROUTES_MODULES_PATH = {
+  USER: "/user",
+  AGENCY: "/agency",
+  AUTH: "/auth",
+  FAQ: "/faq",
+};
+
 export const APIS = (baseUrl?: string) => {
   const api = (args: Omit<ApiActionProps, "baseUrl">): APIObjectType =>
     createApiAction({ ...args, baseUrl });
@@ -11,19 +18,14 @@ export const APIS = (baseUrl?: string) => {
   return {
     USER: {
       INFO: api({
-        path: "/user/info",
+        path: `${APIS_ROUTES_MODULES_PATH.USER}/info`,
         method: "GET",
         pathBase: "SECURED_API",
         showResponse: false,
         handleErrorManually: false,
       }),
-      REGENERATE_PASSWORD: api({
-        path: "/user/regenerate-password",
-        method: "POST",
-        pathBase: "SECURED_API",
-      }),
       CHECK_EMAIL: api({
-        path: "/user/verified-email",
+        path: `${APIS_ROUTES_MODULES_PATH.USER}/verified-email`,
         method: "POST",
         pathBase: "UNSECURED_API",
         showResponse: false,
@@ -31,13 +33,30 @@ export const APIS = (baseUrl?: string) => {
     },
     AGENCY: {
       CREATE_AGENCY: api({
-        path: "/agency/create",
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/create`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      AGENCY_INFO: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}`,
+        method: "GET",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      UPDATE_AGENCY: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/update`,
+        method: "POST",
+        pathBase: "SECURED_API",
+      }),
+      CLOSE_AGENCY: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/close`,
         method: "POST",
         pathBase: "SECURED_API",
         showResponse: false,
       }),
       CHECK_NAME: api({
-        path: "/agency/verified-name",
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/verified-name`,
         method: "POST",
         pathBase: "UNSECURED_API",
         showResponse: false,
@@ -46,54 +65,54 @@ export const APIS = (baseUrl?: string) => {
     },
     AUTH: {
       LOGIN: api({
-        path: "/auth/login",
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/login`,
         method: "POST",
         pathBase: "UNSECURED_API",
         showResponse: false,
       }),
       SSO_GOOGLE: api({
-        path: "/auth/sso/google",
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/sso/google`,
         method: "POST",
         pathBase: "SECURED_API",
         showResponse: false,
       }),
       REFRESH: api({
-        path: "/auth/refresh-token",
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/refresh-token`,
         method: "POST",
         pathBase: "SECURED_API",
         showResponse: false,
       }),
       LOGOUT: api({
-        path: "/auth/logout",
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/logout`,
         method: "POST",
         pathBase: "SECURED_API",
         showResponse: false,
       }),
       RESET_PASSWORD: api({
-        path: "/auth/reset-password",
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/reset-password`,
         method: "POST",
         pathBase: "SECURED_API",
       }),
     },
     FAQ: {
       GET_FAQS: api({
-        path: "/faq",
+        path: `${APIS_ROUTES_MODULES_PATH.FAQ}/list`,
         method: "GET",
         pathBase: "SECURED_API",
         showResponse: false,
       }),
       CREATE: api({
-        path: "/faq/create-faq",
+        path: `${APIS_ROUTES_MODULES_PATH.FAQ}/create-faq`,
         method: "POST",
         pathBase: "SECURED_API",
       }),
       UPDATE: api({
-        path: "/faq/update-faq",
+        path: `${APIS_ROUTES_MODULES_PATH.FAQ}/update-faq`,
         method: "POST",
         pathBase: "SECURED_API",
       }),
       DELETE: api({
-        path: "/faq/delete-faq",
+        path: `${APIS_ROUTES_MODULES_PATH.FAQ}/delete-faq`,
         method: "DELETE",
         pathBase: "SECURED_API",
       }),

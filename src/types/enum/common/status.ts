@@ -5,4 +5,6 @@ export enum Status {
   INFO = "INFO",
   WARNING = "WARNING",
   PAYMENT = "PAYMENT",
+  CLOSE = "CLOSE",
+  OPEN = "OPEN",
 }

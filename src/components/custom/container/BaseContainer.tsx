@@ -1,4 +1,12 @@
-import { Box, Center, Flex, HStack, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Flex,
+  HStack,
+  Stack,
+  VStack,
+  FlexProps,
+} from "@chakra-ui/react";
 import { boxStyle } from "./style";
 import { BaseText, TextVariant } from "../base-text";
 import { ActionsButton } from "../button";
@@ -31,7 +39,7 @@ export const BaseContainer = ({
   iconColor = "success",
   icon,
   ...rest
-}: IBoxProps) => {
+}: IBoxProps & FlexProps) => {
   const { t } = useTranslation();
 
   if (withActionButtons && !actionsButtonProps) {
@@ -161,7 +169,7 @@ export const BaseContainer = ({
           {filterComponent}
         </Box>
       )}
-      <Box>{children}</Box>
+      <VStack gap={rest.gap}>{children}</VStack>
     </Box>
   );
 };

@@ -4,13 +4,8 @@ import { Flex } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { BaseButton } from "../base/baseButton";
-import { IoIosClose } from "react-icons/io";
-import { ActionButtonTypes } from "_components/custom";
+import { ActionButtonTypes, Icons } from "_components/custom";
 import { useTranslation } from "react-i18next";
-import { HiMiniPlusSmall } from "react-icons/hi2";
-import { CiFilter, CiSaveDown2 } from "react-icons/ci";
-import { CgSync } from "react-icons/cg";
-import { IoDocumentTextOutline } from "react-icons/io5";
 
 export const ActionsButton = ({
   cancelTitle = "COMMON.CANCEL",
@@ -53,7 +48,7 @@ export const ActionsButton = ({
               isLoading={isLoading}
               disabled={isLoading || isDisabled}
               px={"15px"}
-              leftIcon={<IoDocumentTextOutline />}
+              leftIcon={<Icons.Paper />}
             >
               {t(downloadTitle)}
             </BaseButton>
@@ -65,7 +60,7 @@ export const ActionsButton = ({
               disabled={isLoading}
               colorType={cancelColor}
               variant={cancelVariant}
-              leftIcon={cancelIcon ? cancelIcon : <IoIosClose />}
+              leftIcon={cancelIcon ? cancelIcon : <Icons.Close />}
               onClick={() => (onCancel ? onCancel?.() : router?.back())}
             >
               {t(cancelTitle)}
@@ -77,7 +72,7 @@ export const ActionsButton = ({
               px={"15px"}
               colorType={"tertiary"}
               withGradient
-              leftIcon={<CiFilter />}
+              leftIcon={<Icons.Filter />}
               onClick={onToggleFilter}
             >
               {t("COMMON.FILTER")}
@@ -92,7 +87,7 @@ export const ActionsButton = ({
               isLoading={isLoading}
               disabled={isLoading || isDisabled}
               leftIcon={
-                icon ? icon : requestId ? <CiSaveDown2 /> : <HiMiniPlusSmall />
+                icon ? icon : requestId ? <Icons.Save /> : <Icons.Minus />
               }
             >
               {t(validateTitle)}
@@ -106,7 +101,7 @@ export const ActionsButton = ({
               withGradient
               isLoading={isLoading}
               disabled={isLoading || isDisabled}
-              leftIcon={<CgSync size={14} />}
+              leftIcon={<Icons.Refresh size={14} />}
             >
               {t(refreshTitle)}
             </BaseButton>

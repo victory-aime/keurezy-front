@@ -48,7 +48,7 @@ export const TokenExpired = () => {
 
   return (
     <AuthBoxContainer
-      title={"Ce lien de vérification a expiré"}
+      title={"Ce lien de vérification a expiré ou a deja eté utilisé"}
       description={
         <BaseText>Aucun souci, vous pouvez en demander un nouveau.</BaseText>
       }

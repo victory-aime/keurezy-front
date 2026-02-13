@@ -1,20 +1,16 @@
 import { ILink } from "../types";
-import { FaUsers } from "react-icons/fa6";
-import { FaUserAlt } from "react-icons/fa";
-import { IoIosArrowRoundBack, IoIosHelpCircle } from "react-icons/io";
 import { BO_ROUTES } from "../../../back-office/routes";
 import { DASHBOARD_ROUTES } from "../../../routes";
 import { UserRole } from "../../../../../types/enum";
-import { TbHome2 } from "react-icons/tb";
 import { BsFillBuildingsFill } from "react-icons/bs";
-import { TbTaxEuro } from "react-icons/tb";
 import { APP_ROUTES } from "_config/routes";
+import { Icons } from "_components/custom";
 
 const ALL_CSA_ROUTES: ILink[] = [
   {
     path: DASHBOARD_ROUTES.HOME,
     label: "SIDE_BAR.DASHBOARD",
-    icon: TbHome2,
+    icon: Icons.Home,
   },
   {
     path: DASHBOARD_ROUTES.APPART,
@@ -24,17 +20,22 @@ const ALL_CSA_ROUTES: ILink[] = [
   {
     path: DASHBOARD_ROUTES.QUITTANCE,
     label: "SIDE_BAR.QUITTANCE",
-    icon: TbTaxEuro,
+    icon: Icons.TbTax,
+  },
+  {
+    path: DASHBOARD_ROUTES.AGENCY,
+    label: "SIDE_BAR.AGENCY",
+    icon: Icons.RiBuildingLine,
   },
   {
     path: DASHBOARD_ROUTES.PROFILE,
     label: "SIDE_BAR.PROFILE",
-    icon: FaUserAlt,
+    icon: Icons.User,
   },
   {
     path: APP_ROUTES.ROOT,
     label: "SIDE_BAR.ROOT",
-    icon: IoIosArrowRoundBack,
+    icon: Icons.IoIosArrowRoundBack,
   },
 ];
 
@@ -42,17 +43,17 @@ const ADMIN_ROUTES: ILink[] = [
   {
     path: BO_ROUTES.DASHBOARD,
     label: "SIDE_BAR.DASHBOARD",
-    icon: TbHome2,
+    icon: Icons.Home,
   },
   {
     path: BO_ROUTES.USERS,
     label: "SIDE_BAR.USERS",
-    icon: FaUsers,
+    icon: Icons.FaUsers,
   },
   {
     path: BO_ROUTES.FAQ,
     label: "Faq",
-    icon: IoIosHelpCircle,
+    icon: Icons.IoIosHelpCircle,
   },
 ];
 

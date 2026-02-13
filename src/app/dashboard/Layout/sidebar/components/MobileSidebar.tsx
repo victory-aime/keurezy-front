@@ -1,11 +1,9 @@
 import { VStack } from "@chakra-ui/react";
 import { IMobileSidebar } from "../types";
 import { RenderLinks } from "./RenderLinks";
-import { BaseDrawer } from "_components/custom/drawer/BaseDrawer";
-import { BaseButton } from "_components/custom";
+import { BaseDrawer, BaseButton, Icons } from "_components/custom";
 import { VariablesColors } from "_theme/variables";
 import { t } from "i18next";
-import { CiLogout } from "react-icons/ci";
 
 export const MobileSidebar = ({
   isOpen,
@@ -21,7 +19,6 @@ export const MobileSidebar = ({
       size={"xs"}
       placement={"start"}
       ignoreFooter
-      drawerContentColor={"primary.800"}
     >
       <VStack
         alignItems={"flex-start"}
@@ -45,7 +42,7 @@ export const MobileSidebar = ({
             handleLogout?.();
           }}
           leftIcon={
-            <CiLogout
+            <Icons.Logout
               width="18px"
               height="18px"
               color={VariablesColors.white}

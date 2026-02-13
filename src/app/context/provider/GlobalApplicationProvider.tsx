@@ -11,8 +11,19 @@ export default function GlobalApplicationProvider({
 }: {
   children: ReactNode;
 }) {
+  const queryClient = QUERIES.createQueryClient({
+    defaultOptions: {
+      queries: {
+        retryDelay: 2000,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        retry: 1,
+        staleTime: 5 * 60 * 1000,
+      },
+    },
+  });
   return (
-    <QueryClientProvider client={QUERIES.queryClient}>
+    <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools
         initialIsOpen={false}
         buttonPosition={"bottom-right"}

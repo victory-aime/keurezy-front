@@ -7,6 +7,7 @@ import {
   BaseText,
   CustomSkeletonLoader,
   TextVariant,
+  Icons,
 } from "_components/custom";
 import { useTranslation } from "react-i18next";
 import { SelectLanguages } from "_component/SelectLanguages";
@@ -62,7 +63,7 @@ export const Header = ({ onShowSidebar, data }: SideBarProps) => {
             justifyContent="flex-start"
             gap={3}
           >
-            {isMobile ? <RxHamburgerMenu onClick={onShowSidebar} /> : null}
+            {isMobile ? <Icons.Menu onClick={onShowSidebar} /> : null}
             <Image
               alt={"user-image"}
               src={user?.image! ?? "https://avatar.iran.liara.run/public"}

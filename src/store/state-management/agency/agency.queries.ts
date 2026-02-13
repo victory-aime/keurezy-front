@@ -6,11 +6,11 @@ import { QUERIES } from "rise-core-frontend";
 const getAgencyInfo = (args: QUERIES.QueryPayload<{ agencyId: string }>) => {
   const { params, queryOptions } = args;
 
-  // return QUERIES.useCustomQuery<MODELS.IUser, any>({
-  //   queryKey: [Constants.USERS_KEYS.GET_USER_INFO],
-  //   queryFn: () => usersServiceInstance().user_info(params?.userId),
-  //   options: queryOptions,
-  // });
+  return QUERIES.useCustomQuery<MODELS.IAgency>({
+    queryKey: [Constants.AGENCY_KEYS.AGENCY_INFO],
+    queryFn: () => agencyServiceInstance().agency_info(params?.agencyId),
+    options: queryOptions,
+  });
 };
 
 const createAgencyMutation = (
@@ -24,6 +24,27 @@ const createAgencyMutation = (
   });
 };
 
+const updateAgencyMutation = (
+  args: QUERIES.MutationPayload<MODELS.IUpdateAgency>,
+) => {
+  return QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.UPDATE_AGENCY],
+    mutationFn: ({ payload }) =>
+      agencyServiceInstance().update_agency(payload!),
+    options: args.mutationOptions,
+  });
+};
+
+const closeAgencyMutation = (
+  args: QUERIES.MutationPayload<MODELS.ICloseAgency>,
+) => {
+  return QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.CLOSE_AGENCY],
+    mutationFn: ({ params }) => agencyServiceInstance().close_agency(params!),
+    options: args.mutationOptions,
+  });
+};
+
 const checkNameMutation = (args: QUERIES.MutationPayload<{ name: string }>) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.AGENCY_KEYS.CHECK_NAME],
@@ -33,4 +54,10 @@ const checkNameMutation = (args: QUERIES.MutationPayload<{ name: string }>) => {
   });
 };
 
-export { createAgencyMutation, checkNameMutation, getAgencyInfo };
+export {
+  createAgencyMutation,
+  checkNameMutation,
+  getAgencyInfo,
+  updateAgencyMutation,
+  closeAgencyMutation,
+};

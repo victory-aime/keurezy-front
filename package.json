@@ -52,7 +52,7 @@
     "react-icons": "^5.5.0",
     "react-international-phone": "^4.7.0",
     "react-use": "^17.6.0",
-    "rise-core-frontend": "^4.4.0",
+    "rise-core-frontend": "^4.4.1",
     "yup": "^1.7.1"
   },
   "devDependencies": {

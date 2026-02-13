@@ -1,17 +1,11 @@
 import { HStack, IconButton } from "@chakra-ui/react";
-import { FaTrashAlt } from "react-icons/fa";
 import {
-  IoCopyOutline,
-  IoDownloadOutline,
-  IoKeyOutline,
-  IoShareOutline,
-} from "react-icons/io5";
-import { MdEdit } from "react-icons/md";
-import { BaseButton } from "../button";
-import { TbRestore } from "react-icons/tb";
-import { ActionButtonsProps, BaseTooltip, Loader } from "_components/custom";
-import { PiEyeLight } from "react-icons/pi";
-import { GrMoney } from "react-icons/gr";
+  ActionButtonsProps,
+  BaseTooltip,
+  Loader,
+  Icons,
+  BaseButton,
+} from "_components/custom";
 
 export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
   return (
@@ -50,7 +44,7 @@ export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
                   bgColor="red.500"
                   {...commonProps}
                 >
-                  {isLoading ? <Loader loader size={"xs"} /> : <FaTrashAlt />}
+                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.Trash />}
                 </IconButton>
               </BaseTooltip>
             );
@@ -64,7 +58,7 @@ export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
                   bgColor="info.500"
                   {...commonProps}
                 >
-                  {isLoading ? <Loader loader size={"xs"} /> : <MdEdit />}
+                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.Edit />}
                 </IconButton>
               </BaseTooltip>
             );
@@ -77,7 +71,7 @@ export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
                   bgColor="secondary.500"
                   {...commonProps}
                 >
-                  {isLoading ? <Loader loader size={"xs"} /> : <PiEyeLight />}
+                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.View />}
                 </IconButton>
               </BaseTooltip>
             );
@@ -91,11 +85,7 @@ export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
                   bgColor="tertiary.500"
                   {...commonProps}
                 >
-                  {isLoading ? (
-                    <Loader loader size={"xs"} />
-                  ) : (
-                    <IoShareOutline />
-                  )}
+                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.Share />}
                 </IconButton>
               </BaseTooltip>
             );
@@ -109,11 +99,7 @@ export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
                   bgColor="secondary.500"
                   {...commonProps}
                 >
-                  {isLoading ? (
-                    <Loader loader size={"xs"} />
-                  ) : (
-                    <IoCopyOutline />
-                  )}
+                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.Copy />}
                 </IconButton>
               </BaseTooltip>
             );
@@ -127,7 +113,11 @@ export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
                   bgColor="warning.300"
                   {...commonProps}
                 >
-                  {isLoading ? <Loader loader size={"xs"} /> : <GrMoney />}
+                  {isLoading ? (
+                    <Loader loader size={"xs"} />
+                  ) : (
+                    <Icons.Payment />
+                  )}
                 </IconButton>
               </BaseTooltip>
             );
@@ -144,7 +134,7 @@ export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
                   {isLoading ? (
                     <Loader loader size={"xs"} />
                   ) : (
-                    <IoDownloadOutline />
+                    <Icons.Download />
                   )}
                 </IconButton>
               </BaseTooltip>
@@ -159,7 +149,11 @@ export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
                   bgColor="orange.800"
                   {...commonProps}
                 >
-                  {isLoading ? <Loader loader size={"xs"} /> : <TbRestore />}
+                  {isLoading ? (
+                    <Loader loader size={"xs"} />
+                  ) : (
+                    <Icons.Restore />
+                  )}
                 </IconButton>
               </BaseTooltip>
             );
@@ -173,7 +167,7 @@ export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
                   bgColor="purple.800"
                   {...commonProps}
                 >
-                  {isLoading ? <Loader loader size={"xs"} /> : <IoKeyOutline />}
+                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.Key />}
                 </IconButton>
               </BaseTooltip>
             );

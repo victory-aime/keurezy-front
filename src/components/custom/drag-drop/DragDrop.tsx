@@ -212,6 +212,7 @@ const SimpleFileUpload = ({
 
   useEffect(() => {
     if (fileUpload.acceptedFiles.length > 0) {
+      setIsImageDeleted(false);
       const file = fileUpload.acceptedFiles[0];
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
@@ -251,12 +252,6 @@ const SimpleFileUpload = ({
                     : "/assets/images/placeholder-image.png")
                 : "/assets/images/placeholder-image.png"
             }
-            css={{
-              outlineWidth: "1px",
-              outlineColor: "colorPalette.500",
-              outlineOffset: "2px",
-              outlineStyle: "solid",
-            }}
           />
         </FileUpload.Trigger>
 
@@ -340,6 +335,7 @@ export const UploadAvatar = ({
   isReadOnly,
   handleDeleteAvatar,
   shape,
+  messageInfo,
 }: {
   getFileUploaded: (file: File | undefined) => void;
   avatarImage?: string;
@@ -348,6 +344,7 @@ export const UploadAvatar = ({
   isReadOnly?: boolean;
   handleDeleteAvatar?: () => void;
   shape?: "square" | "rounded" | "full";
+  messageInfo?: string;
 }) => {
   const { getRootProps } = useFileUpload();
   return (
@@ -371,6 +368,12 @@ export const UploadAvatar = ({
             shape={shape}
             isReadOnly={isReadOnly}
           />
+          {messageInfo && (
+            <Flex gap={2} alignItems={"center"} color={VariablesColors.red}>
+              <HiOutlineInformationCircle size={18} />
+              {messageInfo}
+            </Flex>
+          )}
         </FileUpload.Root>
       )}
     </>
