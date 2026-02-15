@@ -1,4 +1,4 @@
-import { CgSync } from "react-icons/cg";
+import { CgCreditCard, CgSync } from "react-icons/cg";
 import {
   CiFilter,
   CiLogout,
@@ -6,15 +6,24 @@ import {
   CiSaveDown2,
   CiUser,
 } from "react-icons/ci";
-import { FaUserAlt, FaUsers } from "react-icons/fa";
+import { FaUserAlt, FaUserPlus, FaUsers } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
-import { HiHome, HiMiniPlusSmall } from "react-icons/hi2";
+import {
+  HiHome,
+  HiMiniPlusSmall,
+  HiOutlineWrenchScrewdriver,
+} from "react-icons/hi2";
 import {
   IoIosArrowRoundBack,
   IoIosClose,
   IoIosHelpCircle,
+  IoIosTrendingUp,
 } from "react-icons/io";
-import { IoDocumentTextOutline } from "react-icons/io5";
+import {
+  IoBarChartOutline,
+  IoDocumentTextOutline,
+  IoShieldCheckmarkSharp,
+} from "react-icons/io5";
 import { RiBuildingLine } from "react-icons/ri";
 import { TbTaxEuro } from "react-icons/tb";
 import { FaTrashAlt } from "react-icons/fa";
@@ -58,4 +67,10 @@ export const Icons = {
   Trash: FaTrashAlt,
   Logout: CiLogout,
   Menu: RxHamburgerMenu,
+  CreditCard: CgCreditCard,
+  Wrench: HiOutlineWrenchScrewdriver,
+  Shield: IoShieldCheckmarkSharp,
+  Chart: IoBarChartOutline,
+  Trending: IoIosTrendingUp,
+  UserPlus: FaUserPlus,
 };

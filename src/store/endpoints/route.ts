@@ -7,6 +7,7 @@ import {
 const APIS_ROUTES_MODULES_PATH = {
   USER: "/user",
   AGENCY: "/agency",
+  PROPERTY: "/property",
   AUTH: "/auth",
   FAQ: "/faq",
 };
@@ -51,6 +52,38 @@ export const APIS = (baseUrl?: string) => {
       }),
       CLOSE_AGENCY: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/close`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      CHECK_NAME: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/verified-name`,
+        method: "POST",
+        pathBase: "UNSECURED_API",
+        showResponse: false,
+        handleErrorManually: false,
+      }),
+    },
+    PROPERTY: {
+      CREATE_PROPERTY: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/create`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      ALL_PROPERTIES: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/all`,
+        method: "GET",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      UPDATE_PROPERTY: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/update`,
+        method: "POST",
+        pathBase: "SECURED_API",
+      }),
+      CLOSE_PROPERTY: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/close`,
         method: "POST",
         pathBase: "SECURED_API",
         showResponse: false,

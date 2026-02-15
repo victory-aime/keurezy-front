@@ -4,16 +4,21 @@ interface IProperty {
   id?: string;
   ownerId?: string;
   title?: string;
-  galleryImages?: string[];
+  galleryImages?: string[] | File[] | null;
   description?: string;
   type?: PropertyType;
   price?: number;
   surface?: number;
-  rooms: number;
+  rooms?: number;
   address?: string;
   city?: string;
   country?: string;
+  propertyAgenceId?: string;
   status?: COMMON.Status;
+}
+
+interface ICreateProperty extends IProperty {
+  galleryImages?: File[] | null;
 }
 
 interface IPropertyResponse {
@@ -21,4 +26,4 @@ interface IPropertyResponse {
   totalDataPerPages: number;
 }
 
-export type { IProperty, IPropertyResponse };
+export type { IProperty, IPropertyResponse, ICreateProperty };

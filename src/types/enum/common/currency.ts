@@ -3,4 +3,5 @@ export enum Currency {
   EUR = "€",
   XAF = "FCFA",
   XOF = "XOF",
+  TND = "TND",
 }

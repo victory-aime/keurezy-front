@@ -7,4 +7,7 @@ export enum Status {
   PAYMENT = "PAYMENT",
   CLOSE = "CLOSE",
   OPEN = "OPEN",
+  AVAILABLE = "AVAILABLE",
+  RESERVED = "RESERVED",
+  RENTED = "RENTED",
 }

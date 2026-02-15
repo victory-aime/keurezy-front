@@ -21,6 +21,8 @@ const getBadgeContent = (
         return { variant: "danger", label: t("COMMON.STATUS.INACTIVE") };
       case "PENDING":
         return { variant: "warning", label: t("COMMON.STATUS.PENDING") };
+      case "AVAILABLE":
+        return { variant: "tertiary", label: t("COMMON.STATUS.AVAILABLE") };
       case "CLOSE":
         return { variant: "danger", label: t("COMMON.STATUS.CLOSE") };
       default:

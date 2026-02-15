@@ -58,6 +58,7 @@ interface FullSelectProps {
   isLoading?: boolean;
   isReadOnly?: boolean;
   ref?: any | undefined;
+  customRadius?: string;
 }
 interface DefaultProps extends TextInputProps {
   isNumber?: boolean;

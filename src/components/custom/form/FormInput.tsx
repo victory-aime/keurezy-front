@@ -32,7 +32,7 @@ const FormTextInput = ({
   toolTipInfo,
   isLoading,
   onChangeFunction,
-  currency = ENUM.COMMON.Currency.XOF,
+  currency = ENUM.COMMON.Currency.XAF,
   ...rest
 }: TextInputProps) => {
   const { t } = useTranslation();
@@ -73,12 +73,15 @@ const FormTextInput = ({
         <CustomSkeletonLoader type="FORM" height={height} width={"100%"} />
       ) : (
         <InputGroup
-          flex={1}
           width={"full"}
           startElement={
             isPassword ? (
               <Flex alignItems={"flex-start"} justifyContent={"flex-start"}>
                 <TbLockBitcoin />
+              </Flex>
+            ) : isCurrency && currency === ENUM.COMMON.Currency.USD ? (
+              <Flex alignItems={"flex-start"} justifyContent={"flex-start"}>
+                {currency}
               </Flex>
             ) : (
               leftAccessory && (
@@ -106,7 +109,7 @@ const FormTextInput = ({
                   <HiOutlineInformationCircle size={18} />
                 </BaseTooltip>
               </>
-            ) : isCurrency ? (
+            ) : isCurrency && currency !== ENUM.COMMON.Currency.USD ? (
               currency
             ) : (
               rightAccessory && (
@@ -145,7 +148,6 @@ const FormTextInput = ({
             borderColor={isError ? "red.500" : "gray.200"}
             _focus={{ borderColor: isError ? "red.500" : "primary.500" }}
             _placeholder={{ color: isError ? "red.500" : "gray.400" }}
-            size={"lg"}
             variant={"outline"}
             //bg={"bg.muted"}
             readOnly={isReadOnly}

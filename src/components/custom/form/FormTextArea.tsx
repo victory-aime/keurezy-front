@@ -1,13 +1,6 @@
 import React, { FC } from "react";
 import { useField, useFormikContext } from "formik";
-import {
-  Field,
-  Flex,
-  InputGroup,
-  Span,
-  Text,
-  Textarea,
-} from "@chakra-ui/react";
+import { Field, Flex, Span, Text, Textarea } from "@chakra-ui/react";
 import { FormTextAreaProps } from "./interface/input";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import { useTranslation } from "react-i18next";
@@ -58,7 +51,7 @@ const FormTextArea: FC<FormTextAreaProps> = ({
           </Flex>
           {maxCharacters && (
             <Span color="fg.muted" textStyle="xs">
-              {field.value?.length} / {maxCharacters}
+              {field.value?.length || 0} / {maxCharacters}
             </Span>
           )}
         </Field.Label>
@@ -102,7 +95,12 @@ const FormTextArea: FC<FormTextAreaProps> = ({
           </Field.HelperText>
         </Flex>
       ) : null}
-      {isError && <Field.ErrorText>{error}</Field.ErrorText>}
+      {isError && (
+        <Flex gap={1} mt={1} alignItems={"center"}>
+          <Field.ErrorIcon width={4} height={4} color={"red.500"} />
+          <Field.ErrorText>{error}</Field.ErrorText>
+        </Flex>
+      )}
     </Field.Root>
   );
 };

@@ -40,6 +40,7 @@ const FormSelect: FC<FullSelectProps> = ({
   isLoading,
   ref,
   isReadOnly = false,
+  customRadius = "12px",
   customRenderSelected,
 }) => {
   const { t } = useTranslation();
@@ -118,6 +119,7 @@ const FormSelect: FC<FullSelectProps> = ({
             <SelectTrigger
               clearable={isClearable}
               showDropdownIcon={showDropdownIcon}
+              isError={isError}
             >
               {customRenderSelected ? (
                 customRenderSelected(
@@ -134,7 +136,12 @@ const FormSelect: FC<FullSelectProps> = ({
               )}
             </SelectTrigger>
 
-            <SelectContent borderRadius={7} p={3} portalRef={ref} maxH="220px">
+            <SelectContent
+              borderRadius={customRadius}
+              p={3}
+              portalRef={ref}
+              maxH="220px"
+            >
               {listItems?.items?.length > 4 && (
                 <InputGroup
                   flex={1}
@@ -158,10 +165,11 @@ const FormSelect: FC<FullSelectProps> = ({
                     height={"40px"}
                     variant={"outline"}
                     borderColor={isError ? "red.500" : "bg.muted"}
-                    borderBottom={1}
+                    borderRadius={"12px"}
+                    shadow={"xs"}
                     _placeholder={{ color: isError ? "red.500" : "gray.400" }}
                     fontSize={{ base: "16px", md: "12px" }}
-                    _focus={{ borderColor: "bg.muted" }}
+                    _focus={{ borderColor: isError ? "red.500" : "bg.muted" }}
                     readOnly={isReadOnly}
                     disabled={isDisabled}
                     value={searchTerm}
@@ -178,8 +186,8 @@ const FormSelect: FC<FullSelectProps> = ({
                         key={item.id || item.value}
                         item={item.value}
                         _highlighted={{
-                          color: item.value ? "tertiary.500" : "inherit",
-                          background: item.value ? "teal.50" : "transparent",
+                          color: item.value ? "primary.500" : "inherit",
+                          background: item.value ? "purple.50" : "transparent",
                         }}
                         fontSize={{ base: "16px", md: "13px" }}
                       >

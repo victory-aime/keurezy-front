@@ -4,23 +4,45 @@ import type { CollectionItem } from "@chakra-ui/react";
 import { Select as ChakraSelect, Portal } from "@chakra-ui/react";
 import { CloseButton } from "./close-button";
 import * as React from "react";
+import { VariablesColors } from "_theme/variables";
 
 interface SelectTriggerProps extends ChakraSelect.ControlProps {
   clearable?: boolean;
+  isError?: boolean;
   showDropdownIcon?: boolean;
+  customRadius?: string;
 }
 
 export const SelectTrigger = React.forwardRef<
   HTMLButtonElement,
   SelectTriggerProps
 >(function SelectTrigger(props, ref) {
-  const { children, clearable, showDropdownIcon = true, ...rest } = props;
+  const {
+    children,
+    clearable,
+    isError,
+    showDropdownIcon = true,
+    customRadius = "12px",
+    ...rest
+  } = props;
   return (
     <ChakraSelect.Control {...rest}>
-      <ChakraSelect.Trigger ref={ref}>{children}</ChakraSelect.Trigger>
+      <ChakraSelect.Trigger
+        ref={ref}
+        bgColor={VariablesColors.white}
+        border={"1px solid"}
+        borderColor={isError ? "red.500" : "inherit"}
+        borderRadius={customRadius}
+      >
+        {children}
+      </ChakraSelect.Trigger>
       <ChakraSelect.IndicatorGroup>
-        {clearable && <SelectClearTrigger />}
-        {showDropdownIcon && <ChakraSelect.Indicator pr={3} />}
+        {clearable && (
+          <SelectClearTrigger color={isError ? "red" : "inherit"} />
+        )}
+        {showDropdownIcon && (
+          <ChakraSelect.Indicator pr={3} color={isError ? "red" : "inherit"} />
+        )}
       </ChakraSelect.IndicatorGroup>
     </ChakraSelect.Control>
   );

@@ -27,7 +27,10 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
     queryOptions: { enabled: false },
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const sidebarLinks = user?.role ? MENU_BY_ROLE[user?.role] || [] : [];
+  const sidebarLinks =
+    (data?.user?.role ?? user?.role)
+      ? MENU_BY_ROLE[data?.user?.role! ?? user?.role] || []
+      : [];
   const { logout, isLoading } = useAuth();
 
   // const permissionsLink = useCallback(() => {
@@ -53,7 +56,10 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
     } else {
       setIsModalOpen(false);
     }
-  }, [sidebarLinks]);
+    if (!data?.user?.role && !user?.role) {
+      window.location.reload();
+    }
+  }, [sidebarLinks, data?.user?.role, user?.role]);
 
   return (
     <>

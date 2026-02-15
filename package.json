@@ -37,6 +37,7 @@
     "dotenv": "^17.2.3",
     "dotenv-cli": "^11.0.0",
     "formik": "^2.4.9",
+    "framer-motion": "^12.34.0",
     "google-libphonenumber": "^3.2.44",
     "i18next": "^25.8.0",
     "jwt-decode": "^4.0.0",
