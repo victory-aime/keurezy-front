@@ -1,9 +1,9 @@
-import { Field, Flex, Text } from "@chakra-ui/react";
-import { Slider } from "_components/ui/slider";
+import { Field, Flex, Text, Slider, Box } from "@chakra-ui/react";
 import { useField } from "formik";
-import React, { FC } from "react";
+import { FC } from "react";
 import { DefaultProps } from "./interface/input";
 import { BaseFormatNumber } from "../format-number";
+import { Icons } from "../icons";
 
 export const FormSlider: FC<DefaultProps> = ({
   name,
@@ -14,6 +14,7 @@ export const FormSlider: FC<DefaultProps> = ({
   min = 10,
   max = 1000,
   onChangeFunction,
+  slideIcon = Icons.Payment,
   ...rest
 }) => {
   const fieldHookConfig = {
@@ -45,10 +46,11 @@ export const FormSlider: FC<DefaultProps> = ({
         </Field.Label>
       )}
 
-      <Slider
+      <Slider.Root
         {...field}
-        width="full"
-        name={field.name}
+        width={"full"}
+        min={min}
+        max={max}
         value={field.value}
         onFocusChange={({ focusedIndex, value }) => {
           if (focusedIndex !== -1) return;
@@ -59,9 +61,16 @@ export const FormSlider: FC<DefaultProps> = ({
           setValue(value);
           onChangeFunction?.(value);
         }}
-        min={min}
-        max={max}
-      />
+      >
+        <Slider.Control>
+          <Slider.Track bg="secondary.500">
+            <Slider.Range bg="primary.500" />
+          </Slider.Track>
+          <Slider.Thumb index={0} boxSize={8} borderColor="primary.200">
+            <Box color="secondary.600" as={slideIcon} />
+          </Slider.Thumb>
+        </Slider.Control>
+      </Slider.Root>
     </Field.Root>
   );
 };

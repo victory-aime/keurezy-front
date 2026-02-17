@@ -3,24 +3,29 @@ import {
   CiFilter,
   CiLogout,
   CiMapPin,
+  CiPlay1,
   CiSaveDown2,
   CiUser,
 } from "react-icons/ci";
 import { FaUserAlt, FaUserPlus, FaUsers } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import {
+  HiHeart,
   HiHome,
   HiMiniPlusSmall,
   HiOutlineWrenchScrewdriver,
 } from "react-icons/hi2";
 import {
   IoIosArrowRoundBack,
+  IoIosArrowRoundForward,
+  IoIosCheckmark,
   IoIosClose,
   IoIosHelpCircle,
   IoIosTrendingUp,
 } from "react-icons/io";
 import {
   IoBarChartOutline,
+  IoBedOutline,
   IoDocumentTextOutline,
   IoShieldCheckmarkSharp,
 } from "react-icons/io5";
@@ -33,11 +38,12 @@ import {
   IoKeyOutline,
   IoShareOutline,
 } from "react-icons/io5";
-import { MdEdit } from "react-icons/md";
-import { PiEyeLight } from "react-icons/pi";
+import { MdEdit, MdLocalPhone } from "react-icons/md";
+import { PiBathtubLight, PiEyeLight } from "react-icons/pi";
 import { GrMoney } from "react-icons/gr";
 import { TbRestore } from "react-icons/tb";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { LuMaximize } from "react-icons/lu";
 
 export const Icons = {
   MapPin: CiMapPin,
@@ -73,4 +79,12 @@ export const Icons = {
   Chart: IoBarChartOutline,
   Trending: IoIosTrendingUp,
   UserPlus: FaUserPlus,
+  Check: IoIosCheckmark,
+  ArrowRight: IoIosArrowRoundForward,
+  Play: CiPlay1,
+  Bath: PiBathtubLight,
+  Bed: IoBedOutline,
+  Maximize: LuMaximize,
+  Phone: MdLocalPhone,
+  Heart: HiHeart,
 };

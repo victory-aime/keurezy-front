@@ -1,32 +1,67 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { BaseButton, BaseText, Icons, TextVariant } from "_components/custom";
 import {
-  Button,
+  BaseButton,
+  BaseText,
+  CustomToast,
+  Icons,
+  TextVariant,
+  ToastStatus,
+} from "_components/custom";
+import {
   Box,
   Flex,
-  VStack,
   HStack,
   Stack,
   Container,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { ASSETS } from "_assets/images";
 import { hexToRGB } from "_theme/colors";
-import { usePathname } from "next/navigation";
+import { UserModule } from "_store/state-management";
+import { useAuthContext } from "_context/auth-context";
+import { HEADER_LINKS } from "../layout/routes";
+import { Avatar } from "_components/ui/avatar";
+import { useRouter } from "next/navigation";
+import { APP_ROUTES } from "_config/routes";
+import { UserRole } from "../../types/enum";
+import { useAuth } from "_hooks/useAuth";
+import { useIsActive } from "_hooks/useActive";
 
 export const Navbar = () => {
+  const { session } = useAuthContext();
+  const { logout } = useAuth();
+  const { isActiveLink } = useIsActive();
+  const router = useRouter();
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const [isOpen, setIsOpen] = useState(false);
-  const location = usePathname();
+  const MotionBox = motion(Box);
 
-  const links = [
-    { href: "/", label: "Accueil" },
-    { href: "/properties", label: "Propriétés" },
-    { href: "/pricing", label: "Tarifs" },
-  ];
+  const { data: user, isLoading } = UserModule.getUserInfo({
+    params: { userId: session?.userId },
+    queryOptions: {
+      enabled: !!session?.userId,
+    },
+  });
 
-  const isActive = (href: string) => location === href;
+  const createAgency = () => {
+    if (user?.id && user?.role !== UserRole.IMMO_OWNER) {
+      router.push(`${APP_ROUTES.AUTH.REGISTER_AGENCY}?token=${user?.id}`);
+    } else if (user?.role === UserRole.IMMO_OWNER) {
+      router.push(APP_ROUTES.DASHBOARD);
+    } else {
+      CustomToast({
+        duration: 3000,
+        title: "Veuillez creer un compte",
+        description: " Pour creer une agence vous devrez vous incrire",
+        type: ToastStatus.INFO,
+      });
+    }
+  };
+
+  const links = HEADER_LINKS(!!session?.token, user?.role!);
 
   return (
     <Box
@@ -42,7 +77,7 @@ export const Navbar = () => {
     >
       <Container
         mx={"auto"}
-        px={{ sm: 6, lg: 8 }}
+        px={{ base: 6, sm: 8 }}
         py={2}
         alignItems="center"
         justifyContent="space-between"
@@ -59,121 +94,191 @@ export const Navbar = () => {
 
           {/* Desktop nav */}
           <Flex
-            display={{ base: "none", md: "flex" }}
+            display={{ base: "none", sm: "flex" }}
             gap={2}
             alignItems={"center"}
             justifyContent={"center"}
             width={"full"}
           >
-            {links.map((link) => (
-              <HStack
-                px={4}
-                py={2}
-                rounded={"lg"}
-                fontSize={"sm"}
-                fontWeight={"medium"}
-                color={isActive(link?.href) ? "primary.500" : "inherit"}
-                bgColor={
-                  isActive(link?.href) ? hexToRGB("primary", 0.1) : "none"
-                }
-                _hover={{
-                  bgColor: !isActive(link?.href)
-                    ? hexToRGB("primary", 0.3)
-                    : "bg.muted",
-                  color: isActive(link?.href) ? "primary.500" : "inherit",
-                }}
-              >
-                <Link key={link.href} href={link.href}>
-                  {link.label}
+            {links.map((link, i) => {
+              const isActive = isActiveLink(link.url);
+              return (
+                <Link key={link.url} href={link.url}>
+                  <HStack
+                    key={i}
+                    px={4}
+                    py={2}
+                    rounded={"lg"}
+                    fontSize={"sm"}
+                    fontWeight={"medium"}
+                    cursor={"pointer"}
+                    color={isActive ? "primary.500" : "gray.600"}
+                    bgColor={isActive ? hexToRGB("primary", 0.1) : "none"}
+                    _hover={{
+                      bgColor: !isActive
+                        ? hexToRGB("primary", 0.3)
+                        : "bg.muted",
+                      color: isActive ? "primary.500" : "gray.600",
+                    }}
+                  >
+                    <link.icon />
+
+                    {link.name}
+                  </HStack>
                 </Link>
-              </HStack>
-            ))}
+              );
+            })}
           </Flex>
 
           <Flex
             gap={3}
             alignItems={"center"}
             ml={"auto"}
-            display={{ base: "none", md: "flex" }}
+            display={{ base: "none", sm: "flex" }}
           >
-            <BaseButton variant="outline" onClick={() => {}}>
-              Connexion
-            </BaseButton>
+            {user ? (
+              <Avatar
+                name={user?.name}
+                src={user?.image! ?? "https://avatar.iran.liara.run/public"}
+              />
+            ) : (
+              <BaseButton
+                variant="outline"
+                onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
+              >
+                Connexion
+              </BaseButton>
+            )}
 
-            <BaseButton onClick={() => {}}>Commencer</BaseButton>
+            {user && (
+              <BaseButton
+                onClick={() => logout()}
+                colorType={"danger"}
+                leftIcon={<Icons.Logout />}
+              >
+                Deconnexion
+              </BaseButton>
+            )}
+
+            {user && user?.role === UserRole.IMMO_OWNER ? (
+              <BaseButton
+                onClick={() => router.push(APP_ROUTES.DASHBOARD)}
+                colorType={"secondary"}
+                leftIcon={<Icons.Home />}
+              >
+                Acceder au Tableau de bord
+              </BaseButton>
+            ) : (
+              <BaseButton onClick={createAgency}>Créer mon agence</BaseButton>
+            )}
           </Flex>
 
           <Stack
             display={{ base: "block", md: "none" }}
             onClick={() => setIsOpen(!isOpen)}
           >
-            {isOpen ? (
-              <Icons.Close className="w-5 h-5" />
-            ) : (
-              <Icons.Menu className="w-5 h-5" />
-            )}
+            {isOpen ? <Icons.Close /> : <Icons.Menu />}
           </Stack>
         </Flex>
       </Container>
       {/* Mobile menu */}
       <AnimatePresence>
-        {isOpen && (
-          <motion.div
+        {isOpen && isMobile && (
+          <MotionBox
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background border-b border-border overflow-hidden"
+            borderBottomWidth="1px"
+            borderColor="border"
+            overflow={"hidden"}
           >
             <Box px={4} py={4} spaceY={2}>
-              {links.map((link) => (
-                <Stack
-                  width={"full"}
-                  px={2}
-                  py={2}
-                  key={link.href}
-                  rounded={"lg"}
-                  fontSize={"sm"}
-                  fontWeight={"medium"}
-                  color={isActive(link?.href) ? "primary.500" : "inherit"}
-                  bgColor={
-                    isActive(link?.href) ? hexToRGB("primary", 0.1) : "none"
-                  }
-                  _hover={{
-                    bgColor: !isActive(link?.href)
-                      ? hexToRGB("primary", 0.3)
-                      : "bg.muted",
-                    color: isActive(link?.href) ? "primary.500" : "inherit",
-                  }}
-                >
+              {links.map((link) => {
+                const isActive = isActiveLink(link.url);
+                return (
                   <Link
-                    key={link.href}
-                    href={link.href}
+                    key={link.url}
+                    href={link.url}
                     onClick={() => setIsOpen(false)}
                   >
-                    {link.label}
+                    <HStack
+                      width={"full"}
+                      px={2}
+                      py={2}
+                      key={link.url}
+                      rounded={"lg"}
+                      fontSize={"sm"}
+                      fontWeight={"medium"}
+                      color={isActive ? "primary.500" : "gray.600"}
+                      bgColor={isActive ? hexToRGB("primary", 0.1) : "none"}
+                      _hover={{
+                        bgColor: !isActive
+                          ? hexToRGB("primary", 0.3)
+                          : "bg.muted",
+                        color: isActive ? "primary.500" : "inherit",
+                      }}
+                    >
+                      <link.icon />
+                      {link.name}
+                    </HStack>
                   </Link>
-                </Stack>
-              ))}
+                );
+              })}
               <Stack alignItems={"center"} pt={2} gap={2} width={"full"}>
-                <Button
-                  variant="ghost"
-                  width="full"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Connexion
-                </Button>
+                {user ? (
+                  <Flex
+                    alignItems={"center"}
+                    width={"full"}
+                    borderRadius={"12px"}
+                    gap={2}
+                  >
+                    <Avatar
+                      name={user?.name}
+                      src={
+                        user?.image! ?? "https://avatar.iran.liara.run/public"
+                      }
+                    />
+                    <BaseText textTransform={"capitalize"}>
+                      {user?.name}
+                    </BaseText>
+                  </Flex>
+                ) : (
+                  <BaseButton
+                    width={"full"}
+                    variant="outline"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Connexion
+                  </BaseButton>
+                )}
+                {user && (
+                  <BaseButton
+                    onClick={() => logout()}
+                    width={"full"}
+                    colorType={"danger"}
+                    leftIcon={<Icons.Logout />}
+                  >
+                    Deconnexion
+                  </BaseButton>
+                )}
 
-                <Button
-                  variant="ghost"
-                  bgColor={"primary.500"}
-                  width="full"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Commencer
-                </Button>
+                {user && user?.role === UserRole.IMMO_OWNER ? (
+                  <BaseButton
+                    onClick={() => router.push(APP_ROUTES.DASHBOARD)}
+                    width={"full"}
+                    colorType={"secondary"}
+                    leftIcon={<Icons.Home />}
+                  >
+                    Acceder au Tableau de bord
+                  </BaseButton>
+                ) : (
+                  <BaseButton width={"full"} onClick={createAgency}>
+                    Créer mon agence
+                  </BaseButton>
+                )}
               </Stack>
             </Box>
-          </motion.div>
+          </MotionBox>
         )}
       </AnimatePresence>
     </Box>

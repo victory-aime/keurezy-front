@@ -13,6 +13,8 @@ import { BaseButton, BaseText, Icons } from "_components/custom";
 import { ASSETS } from "_assets/images";
 import { hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
+import Link from "next/link";
+import { APP_ROUTES } from "_config/routes";
 
 const MotionBox = motion(Box);
 
@@ -25,11 +27,11 @@ export const HeroSection = () => {
       alignItems="center"
       overflow="hidden"
     >
-      <Container mx="auto" px={{ base: 6, lg: 8 }} position="relative">
+      <Container mx="auto" px={{ base: 6, sm: 8 }} position="relative">
         <Grid
-          gap={{ base: 10, lg: 16 }}
+          gap={{ base: 10, sm: 16 }}
           alignItems="center"
-          templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
+          templateColumns={{ base: "1fr", sm: "1fr 1fr" }}
         >
           {/* LEFT CONTENT */}
           <MotionBox
@@ -66,7 +68,7 @@ export const HeroSection = () => {
 
             {/* Title */}
             <Box
-              fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
+              fontSize={{ base: "4xl", sm: "5xl", lg: "6xl" }}
               fontWeight="extrabold"
               lineHeight="1.1"
               mb={3}
@@ -86,6 +88,7 @@ export const HeroSection = () => {
               color="gray.500"
               maxW="lg"
               lineHeight="tall"
+              flexWrap={"wrap"}
               mb={8}
             >
               La plateforme tout-en-un pour les propriétaires et gestionnaires
@@ -95,21 +98,21 @@ export const HeroSection = () => {
 
             {/* Buttons */}
             <Flex wrap="wrap" gap={4} mb={10}>
-              <BaseButton size="lg" rightIcon={<Icons.IoIosArrowRoundBack />}>
-                Commencer gratuitement
-              </BaseButton>
+              <Link href={APP_ROUTES.AUTH.SIGN_UP}>
+                <BaseButton size="lg" rightIcon={<Icons.ArrowRight />}>
+                  Commencer gratuitement
+                </BaseButton>
+              </Link>
 
-              <BaseButton
-                size="lg"
-                variant="outline"
-                leftIcon={<Icons.Download />}
-              >
-                Explorer les biens
-              </BaseButton>
+              <Link href={APP_ROUTES.APPARTEMENTS}>
+                <BaseButton variant="outline" leftIcon={<Icons.Play />}>
+                  Explorer les biens
+                </BaseButton>
+              </Link>
             </Flex>
 
             {/* Stats */}
-            <Flex align="center" gap={8}>
+            <Flex width={"full"} align="center" gap={8} wrap={"wrap"}>
               <StatBlock value="2,500+" label="Propriétés gérées" />
               <Separator orientation="vertical" h="10" />
               <StatBlock value="98%" label="Satisfaction client" />
@@ -124,7 +127,7 @@ export const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             position="relative"
-            display={{ base: "none", lg: "block" }}
+            display={{ base: "none", sm: "block" }}
           >
             <Box
               position="relative"

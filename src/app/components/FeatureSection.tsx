@@ -51,7 +51,7 @@ const MotionBox = motion(Box);
 export const FeaturesSection = () => {
   return (
     <Box py={10} bgColor={"bg.muted"}>
-      <Container mx="auto" px={{ base: 6, lg: 8 }}>
+      <Container mx="auto" px={{ base: 6, sm: 8 }}>
         <MotionBox
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -96,16 +96,10 @@ export const FeaturesSection = () => {
               <BaseIcon color={feature.color}>
                 <feature.icon />
               </BaseIcon>
-              <BaseText
-                mb={1}
-                mt={1}
-                className="text-lg font-semibold text-card-foreground mb-2"
-              >
+              <BaseText mb={1} mt={1}>
                 {feature.title}
               </BaseText>
-              <BaseText className="text-sm text-muted-foreground leading-relaxed">
-                {feature.description}
-              </BaseText>
+              <BaseText>{feature.description}</BaseText>
             </MotionBox>
           ))}
         </SimpleGrid>

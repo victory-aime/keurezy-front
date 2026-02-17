@@ -21,7 +21,7 @@ export const HEADER_LINKS = (isAuthenticated: boolean, role: UserRole) => {
     {
       id: 2,
       icon: BsFillBuildingsFill,
-      name: "Appartements",
+      name: "Propriétes",
       url: APP_ROUTES.APPARTEMENTS,
     },
   ];
@@ -58,11 +58,7 @@ export const FOOTER_ROUTES: Array<{
         url: APP_ROUTES.ROOT,
       },
       {
-        name: "appartements",
-        url: USERS_ROUTES.PROFILE,
-      },
-      {
-        name: "accueil",
+        name: "Propriétes",
         url: APP_ROUTES.APPARTEMENTS,
       },
     ],

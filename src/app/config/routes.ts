@@ -17,5 +17,6 @@ export const APP_ROUTES = {
   TERMS_OF_USE: "/terms-and-conditions",
   BO: "/dashboard/back-office",
   DASHBOARD: "/dashboard",
-  APPARTEMENTS: "/appartements",
+  APPARTEMENTS: "/properties",
+  APPARTEMENT_DETAIL: "/properties/details",
 };

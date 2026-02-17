@@ -39,7 +39,7 @@ const MotionVstack = motion(VStack);
 export const HowItWorksSection = () => {
   return (
     <Box py={10}>
-      <Container mx="auto" px={{ base: 6, lg: 8 }}>
+      <Container mx="auto" px={{ base: 6, sm: 8 }}>
         <MotionBox
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -63,7 +63,7 @@ export const HowItWorksSection = () => {
             quelques jours.
           </BaseText>
         </MotionBox>
-        <SimpleGrid columns={{ base: 1, md: 3 }} gap={10} position={"relative"}>
+        <SimpleGrid columns={{ base: 1, sm: 3 }} gap={10} position={"relative"}>
           {steps.map((step, i) => (
             <MotionVstack
               key={step.step}

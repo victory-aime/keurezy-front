@@ -1,5 +1,11 @@
 import { HTMLChakraProps, ListCollection } from "@chakra-ui/react";
-import React, { HTMLInputTypeAttribute } from "react";
+import React, {
+  ElementType,
+  HTMLInputTypeAttribute,
+  JSXElementConstructor,
+  ReactElement,
+  ReactNode,
+} from "react";
 
 interface TextInputProps extends HTMLChakraProps<"input"> {
   name: string;
@@ -64,6 +70,7 @@ interface DefaultProps extends TextInputProps {
   isNumber?: boolean;
   min: number;
   max: number;
+  slideIcon?: ElementType | undefined;
 }
 
 interface CheckBoxProps extends HTMLChakraProps<"label"> {

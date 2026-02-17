@@ -5,9 +5,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 export const NoDataAnimation = ({
-  animationType,
+  animationType = "folder",
 }: {
-  animationType: "folder" | "trash";
+  animationType?: "folder" | "trash";
 }) => {
   let content = null;
   const { t } = useTranslation();

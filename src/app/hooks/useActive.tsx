@@ -35,6 +35,15 @@ export const useIsActive = () => {
     // Actif si on est sur le lien exact ou une sous-route
     return pathname === link || pathname.startsWith(`${link}/`);
   };
+  const itHasActiveChildLink = (
+    links?: { label: string; path: string }[],
+  ): boolean => {
+    if (!pathname || !links) return false;
 
-  return { isActiveLink, pathname };
+    return links.some((link) => {
+      if (!link?.path) return false;
+      return pathname === link.path || pathname.startsWith(`${link.path}/`);
+    });
+  };
+  return { isActiveLink, itHasActiveChildLink, pathname };
 };
