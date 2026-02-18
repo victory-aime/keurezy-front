@@ -7,6 +7,7 @@ export enum TextVariant {
   M = "M",
   S = "S",
   XS = "XS",
+  XXS = "XXS",
 }
 
 export enum TextWeight {

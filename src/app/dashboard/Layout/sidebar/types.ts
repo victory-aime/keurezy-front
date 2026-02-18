@@ -1,11 +1,11 @@
 import { Session } from "better-auth";
-import React from "react";
+import React, { ReactNode } from "react";
 
 export interface IMobileSidebar {
   isOpen: boolean;
   onClose: (value?: any) => void;
   handleLogout?: () => void;
-  links: ILink[];
+  links: SidebarNavGroupProps[];
 }
 export interface ILink {
   icon: React.ComponentType<any>;
@@ -15,6 +15,19 @@ export interface ILink {
   subItems?: subItems;
   key?: string;
   viewBox?: string;
+}
+
+interface INavItem {
+  label: string;
+  path: string;
+  icon: React.ElementType;
+  badge?: number;
+}
+
+export interface SidebarNavGroupProps {
+  title: string;
+  icon: React.ElementType;
+  links: INavItem[];
 }
 
 export type subItems = SimpleSubItem[];
@@ -87,4 +100,11 @@ export interface AuthContextType {
     image?: string | null | undefined;
   } | null;
   isLoading?: boolean;
+}
+
+export interface SideToolTipProps {
+  children: ReactNode;
+  label: string;
+  placement?: "left" | "right" | "top" | "bottom";
+  disabled?: boolean;
 }

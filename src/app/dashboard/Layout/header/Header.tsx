@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, Image, useBreakpointValue } from "@chakra-ui/react";
+import { Flex, Image } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { SideBarProps } from "../sidebar/types";
 import {
@@ -13,18 +13,10 @@ import { useTranslation } from "react-i18next";
 import { SelectLanguages } from "_component/SelectLanguages";
 import { FlagImagesIcon } from "_component/flag/FlagImages";
 import { UserModule } from "_store/state-management";
-import { RxHamburgerMenu } from "react-icons/rx";
 
-export const Header = ({ onShowSidebar, data }: SideBarProps) => {
+export const Header = ({ onShowSidebar, data, sideToggled }: SideBarProps) => {
   const { t } = useTranslation();
   const [openSelectLanguage, setOpenSelectLanguage] = useState(false);
-
-  const isMobile = useBreakpointValue({
-    base: true,
-    sm: true,
-    md: false,
-    lg: false,
-  });
 
   /**
    * ⚠️ IMPORTANT
@@ -63,7 +55,7 @@ export const Header = ({ onShowSidebar, data }: SideBarProps) => {
             justifyContent="flex-start"
             gap={3}
           >
-            {isMobile ? <Icons.Menu onClick={onShowSidebar} /> : null}
+            <Icons.Menu onClick={onShowSidebar} />
             <Image
               alt={"user-image"}
               src={user?.image! ?? "https://avatar.iran.liara.run/public"}

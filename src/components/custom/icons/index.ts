@@ -1,5 +1,6 @@
 import { CgCreditCard, CgSync } from "react-icons/cg";
 import {
+  CiBellOn,
   CiFilter,
   CiLogout,
   CiMapPin,
@@ -7,7 +8,7 @@ import {
   CiSaveDown2,
   CiUser,
 } from "react-icons/ci";
-import { FaUserAlt, FaUserPlus, FaUsers } from "react-icons/fa";
+import { FaCog, FaUserAlt, FaUserPlus, FaUsers } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import {
   HiHeart,
@@ -26,10 +27,11 @@ import {
 import {
   IoBarChartOutline,
   IoBedOutline,
+  IoChatbubblesOutline,
   IoDocumentTextOutline,
   IoShieldCheckmarkSharp,
 } from "react-icons/io5";
-import { RiBuildingLine } from "react-icons/ri";
+import { RiBuildingLine, RiSearch2Line } from "react-icons/ri";
 import { TbTaxEuro } from "react-icons/tb";
 import { FaTrashAlt } from "react-icons/fa";
 import {
@@ -44,6 +46,7 @@ import { GrMoney } from "react-icons/gr";
 import { TbRestore } from "react-icons/tb";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { LuMaximize } from "react-icons/lu";
+import { BsSliders } from "react-icons/bs";
 
 export const Icons = {
   MapPin: CiMapPin,
@@ -87,4 +90,9 @@ export const Icons = {
   Maximize: LuMaximize,
   Phone: MdLocalPhone,
   Heart: HiHeart,
+  Search: RiSearch2Line,
+  Slider: BsSliders,
+  Chat: IoChatbubblesOutline,
+  Bell: CiBellOn,
+  Setting: FaCog,
 };

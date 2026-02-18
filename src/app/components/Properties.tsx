@@ -7,6 +7,7 @@ import {
   FormSelect,
   FormSlider,
   FormTextInput,
+  Icons,
   NoDataFound,
   TextVariant,
   TextWeight,
@@ -253,12 +254,12 @@ export const Properties = () => {
                     placeholder="Rechercher par nom ou localisation..."
                     value={search}
                     onChangeFunction={(e: any) => setSearch(e.target.value)}
-                    leftAccessory={<RiSearch2Line />}
+                    leftAccessory={<Icons.Search />}
                   />
                   <BaseButton
                     variant="outline"
                     onClick={() => setShowFilters(!showFilters)}
-                    leftIcon={<BsSliders />}
+                    leftIcon={<Icons.Slider />}
                   >
                     Filtres
                   </BaseButton>

@@ -125,7 +125,7 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
             mt={6}
           >
             <RenderLinks
-              links={sidebarLinks}
+              links={[]}
               sideToggled={sideToggled}
               onShowSidebar={onShowSidebar}
             />

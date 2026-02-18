@@ -22,6 +22,7 @@ export const BaseText: React.FC<BaseTextProps> = ({
     [TextVariant.M]: "16px",
     [TextVariant.S]: "14px",
     [TextVariant.XS]: "12px",
+    [TextVariant.XXS]: "10px",
   };
 
   const weightMap: Record<TextWeight, string> = {

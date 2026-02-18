@@ -50,7 +50,7 @@ const MotionBox = motion(Box);
 
 export const FeaturesSection = () => {
   return (
-    <Box py={10} bgColor={"bg.muted"}>
+    <Box py={10} bgColor={"bg.muted"} width={"full"}>
       <Container mx="auto" px={{ base: 6, sm: 8 }}>
         <MotionBox
           initial={{ opacity: 0, y: 20 }}

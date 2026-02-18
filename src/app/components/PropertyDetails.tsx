@@ -81,7 +81,7 @@ export const PropertyDetails = ({ id }: { id: string }) => {
       <Container
         mx={"auto"}
         px={{ base: 6, sm: 8 }}
-        py={{ base: 10, sm: 2 }}
+        py={{ base: 10, sm: 6 }}
         overflow={"hidden"}
       >
         <MotionBox initial={{ opacity: 0 }} animate={{ opacity: 1 }}>

@@ -1,53 +1,38 @@
 "use client";
 
-import { Box } from "@chakra-ui/react";
-import React, { FunctionComponent, useMemo, useState } from "react";
+import React, { FC, FunctionComponent, useState } from "react";
 import { Header } from "./header";
-import { Sidebar } from "./sidebar";
-import { layoutStyle } from "./styles";
 import { Container } from "./container/Container";
 import { useAuthContext } from "_context/auth-context";
 import { InitializeApp } from "_context/provider/initialize-app";
+import { SidebarV2 } from "./sidebar/SidebarV2";
+import { FooterV2 } from "./footer/FooterV2";
+import { SidebarInset } from "./sidebar/components/SidebarInset";
+import { HeaderV2 } from "./header/HeaderV2";
 
 export const Layout: FunctionComponent<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const { session, user, isLoading } = useAuthContext();
-
-  const toggledLayoutStyle = useMemo(
-    () => ({
-      ...layoutStyle,
-      ml: {
-        md: isSidebarOpen ? "220px" : "80px",
-        lg: isSidebarOpen ? "230px" : "70px",
-      },
-      width: {
-        md: isSidebarOpen ? "calc(100% - 220px)" : "calc(100% - 80px)",
-        lg: isSidebarOpen ? "calc(100% - 230px)" : "calc(100% - 70px)",
-      },
-    }),
-    [isSidebarOpen],
-  );
 
   return (
     <InitializeApp isLoading={isLoading}>
-      <Sidebar
-        sideToggled={isSidebarOpen}
-        onShowSidebar={toggleSidebar}
+      <SidebarV2
         data={{ user }}
+        onShowSidebar={toggleSidebar}
+        sideToggled={isSidebarOpen}
       />
-      <Box {...toggledLayoutStyle}>
-        <Header
-          sideToggled={false}
+      <SidebarInset variant="inset" collapsed={!isSidebarOpen}>
+        <HeaderV2
+          sideToggled={isSidebarOpen}
           onShowSidebar={toggleSidebar}
           data={{ session }}
         />
         <Container sidebarToggle={isSidebarOpen}>{children}</Container>
-      </Box>
+        <FooterV2 />
+      </SidebarInset>
     </InitializeApp>
   );
 };

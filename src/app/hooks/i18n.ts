@@ -1,3 +1,4 @@
+"use client";
 import { StorageKey } from "_constants/StorageKeys";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";

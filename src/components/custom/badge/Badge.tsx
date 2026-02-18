@@ -51,6 +51,7 @@ export const BaseBadge: FC<Props> = ({
   color,
   type = "common",
   status,
+  textSize = TextVariant.XS,
   ...props
 }) => {
   const { t } = useTranslation();
@@ -88,7 +89,7 @@ export const BaseBadge: FC<Props> = ({
       }}
       _disabled={{ background: "gray.300", cursor: "not-allowed" }}
     >
-      <BaseText variant={TextVariant.XS} textTransform="capitalize">
+      <BaseText variant={textSize} textTransform="capitalize">
         {customLabel ?? resolvedLabel}
       </BaseText>
     </Badge>
