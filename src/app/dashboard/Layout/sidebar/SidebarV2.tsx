@@ -7,12 +7,12 @@ import { ASSETS } from "_assets/images";
 import Image from "next/image";
 import { SideBarProps } from "./types";
 import { UserModule } from "_store/state-management";
-import { MENU_BY_ROLE } from "./routes/routes";
+import { ALL_CSA_ROUTES, MENU_BY_ROLE } from "./routes/routes";
 import { RenderGroupedLinks } from "./components/RenderGroupedLinks";
-import { useEffect } from "react";
 import { useAuth } from "_hooks/useAuth";
 import { APP_ROUTES } from "_config/routes";
 import { SideToolTip } from "./components/SideToolTip";
+import { useSessionRefreshContext } from "_context/SessionRefresh-context";
 
 export const SidebarV2 = ({
   data,
@@ -21,19 +21,14 @@ export const SidebarV2 = ({
 }: SideBarProps) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { logout, isLoading } = useAuth();
+  const { dismissToast } = useSessionRefreshContext();
   const { data: user } = UserModule.getUserInfo({
     queryOptions: { enabled: false },
   });
   const sidebarLinks =
     (data?.user?.role ?? user?.role)
       ? MENU_BY_ROLE[data?.user?.role! ?? user?.role] || []
-      : [];
-
-  useEffect(() => {
-    if (!data?.user?.role && !user?.role) {
-      window.location.reload();
-    }
-  }, [data?.user?.role, user?.role]);
+      : ALL_CSA_ROUTES;
 
   return (
     <Box>
@@ -42,7 +37,10 @@ export const SidebarV2 = ({
           isOpen={sideToggled}
           onClose={onShowSidebar}
           links={sidebarLinks}
-          handleLogout={() => logout(APP_ROUTES.AUTH.SIGN_IN)}
+          handleLogout={() => {
+            dismissToast?.();
+            logout(APP_ROUTES.AUTH.SIGN_IN);
+          }}
         />
       ) : (
         <Box
@@ -84,7 +82,10 @@ export const SidebarV2 = ({
                 width={"full"}
                 colorType={"danger"}
                 leftIcon={<Icons.Logout />}
-                onClick={() => logout(APP_ROUTES.AUTH.SIGN_IN)}
+                onClick={() => {
+                  dismissToast?.();
+                  logout(APP_ROUTES.AUTH.SIGN_IN);
+                }}
               >
                 {sideToggled ? "Déconnexion" : null}
               </BaseButton>

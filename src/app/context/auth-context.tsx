@@ -12,7 +12,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   const { data: session, isPending: isLoading } = authClient.useSession();
 
   if (session?.session?.expiresAt && isExpired(session.session.expiresAt)) {
-    return <SessionErrorModal />;
+    return <SessionErrorModal isOpen />;
   }
 
   return (

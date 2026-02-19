@@ -31,7 +31,7 @@ import {
   IoDocumentTextOutline,
   IoShieldCheckmarkSharp,
 } from "react-icons/io5";
-import { RiBuildingLine, RiSearch2Line } from "react-icons/ri";
+import { RiSearch2Line } from "react-icons/ri";
 import { TbTaxEuro } from "react-icons/tb";
 import { FaTrashAlt } from "react-icons/fa";
 import {
@@ -45,7 +45,7 @@ import { PiBathtubLight, PiEyeLight } from "react-icons/pi";
 import { GrMoney } from "react-icons/gr";
 import { TbRestore } from "react-icons/tb";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { LuMaximize } from "react-icons/lu";
+import { LuBuilding2, LuMaximize } from "react-icons/lu";
 import { BsSliders } from "react-icons/bs";
 
 export const Icons = {
@@ -53,7 +53,7 @@ export const Icons = {
   Mail: HiOutlineMail,
   User: CiUser,
   Close: IoIosClose,
-  RiBuildingLine: RiBuildingLine,
+  RiBuildingLine: LuBuilding2,
   FaUsers: FaUsers,
   FaUserAlt: FaUserAlt,
   IoIosArrowRoundBack,

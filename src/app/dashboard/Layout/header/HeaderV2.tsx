@@ -25,10 +25,12 @@ import { useRouter } from "next/navigation";
 import { DASHBOARD_ROUTES } from "../../routes";
 import { useAuth } from "_hooks/useAuth";
 import { APP_ROUTES } from "_config/routes";
+import { useAuthContext } from "_context/auth-context";
 
 export const HeaderV2 = ({ data, onShowSidebar }: SideBarProps) => {
   const router = useRouter();
   const { logout } = useAuth();
+  const {} = useAuthContext();
   const { data: user, isLoading } = UserModule.getUserInfo({
     params: { userId: data?.session?.userId },
     queryOptions: {
@@ -74,7 +76,7 @@ export const HeaderV2 = ({ data, onShowSidebar }: SideBarProps) => {
           <Box position="relative">
             <Icons.Chat size={24} />
             <Float>
-              <Circle fontSize={"xs"} size="4" bg="red" color="white">
+              <Circle fontSize={"xs"} size="4" bg="primary.500" color="white">
                 3
               </Circle>
             </Float>

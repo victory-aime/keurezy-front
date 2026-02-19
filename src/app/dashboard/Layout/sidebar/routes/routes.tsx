@@ -6,7 +6,7 @@ import { BsFillBuildingsFill } from "react-icons/bs";
 import { APP_ROUTES } from "_config/routes";
 import { Icons } from "_components/custom";
 
-const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
+export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
   {
     links: [
       {
@@ -16,8 +16,8 @@ const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
       },
       {
         label: "Propriétés",
-        path: "/dashboard/properties",
-        icon: Icons.Wrench /*Building2*/,
+        path: DASHBOARD_ROUTES.APPART,
+        icon: Icons.RiBuildingLine,
       },
       { label: "Locataires", path: "/dashboard/tenants", icon: Icons.FaUsers },
       {

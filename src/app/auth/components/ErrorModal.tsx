@@ -1,7 +1,7 @@
 "use client";
 
 import { PiWarningBold } from "react-icons/pi";
-import { BaseModal, BaseText } from "_components/custom";
+import { BaseModal, BaseText, ModalOpenProps } from "_components/custom";
 import { hexToRGB } from "_theme/colors";
 import { useTranslation } from "react-i18next";
 import { VariablesColors } from "_theme/variables";
@@ -9,7 +9,7 @@ import { useAuth } from "_hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "_config/routes";
 
-export const SessionErrorModal = () => {
+export const SessionErrorModal = ({ isOpen }: { isOpen?: boolean }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const { isLoading, logout } = useAuth();
@@ -23,7 +23,7 @@ export const SessionErrorModal = () => {
 
   return (
     <BaseModal
-      isOpen
+      isOpen={isOpen}
       icon={<PiWarningBold size={22} color={VariablesColors.warning} />}
       iconBackgroundColor={hexToRGB("warning", 0.2)}
       title={"SESSION_EXPIRE"}

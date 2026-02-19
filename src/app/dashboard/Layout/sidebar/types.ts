@@ -100,6 +100,7 @@ export interface AuthContextType {
     image?: string | null | undefined;
   } | null;
   isLoading?: boolean;
+  dismissToast?: (() => void) | undefined;
 }
 
 export interface SideToolTipProps {

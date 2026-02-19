@@ -15,10 +15,10 @@ export const Layout: FunctionComponent<{
 }> = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-  const { session, user, isLoading } = useAuthContext();
+  const { session, user } = useAuthContext();
 
   return (
-    <InitializeApp isLoading={isLoading}>
+    <>
       <SidebarV2
         data={{ user }}
         onShowSidebar={toggleSidebar}
@@ -33,6 +33,6 @@ export const Layout: FunctionComponent<{
         <Container sidebarToggle={isSidebarOpen}>{children}</Container>
         <FooterV2 />
       </SidebarInset>
-    </InitializeApp>
+    </>
   );
 };
