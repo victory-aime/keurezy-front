@@ -31,7 +31,7 @@ interface ColumnsDataTable {
   header: string;
   accessor: string | "fullObject";
   cell?: (x?: any) => JSX.Element | string | Date | undefined;
-  actions?: ActionProps[]; // For multiple actions
+  actions?: ActionProps[];
   disabled?: (data?: any) => boolean;
 }
 
@@ -43,13 +43,6 @@ interface PaginationProps {
   currentPage?: number;
   lazy: boolean;
   onLazyLoad?: (index: number) => void;
-}
-
-interface ColumnsDataTable {
-  header: string;
-  accessor: string | "fullObject";
-  cell?: (x?: any) => JSX.Element | string | Date | undefined;
-  disabled?: (data?: any) => boolean;
 }
 
 type NoDataFoundType = "trash" | "folder";
@@ -90,6 +83,42 @@ interface HoverActionButtonProps {
   isDisabled?: boolean;
 }
 
+interface DataGridProps<T> extends BaseDataViewProps {
+  totalPages?: number;
+  totalDataPerPage?: number;
+  initialPage?: number;
+  lazy?: boolean;
+  hidePagination?: boolean;
+  onLazyLoad?: (page: number) => void;
+  renderItem: (item: T, index: number) => React.ReactNode;
+  displayRows?: {
+    base?: number;
+    sm?: number;
+    md?: number;
+    lg?: number;
+    lgToXl?: number;
+    xl?: number;
+  };
+  spacing?: number;
+}
+
+interface BaseDataViewProps {
+  data: any[];
+  isLoading?: boolean;
+  actions?: ActionProps[];
+}
+
+interface DisplayContainerProps<T> extends BaseDataViewProps, TableProps {
+  renderGridItem?: (item: any, index: number) => React.ReactNode;
+}
+
+type DataViewMode = "table" | "grid";
+
+interface DataViewSwitchProps {
+  mode: DataViewMode;
+  onChange: (mode: DataViewMode) => void;
+}
+
 export type {
   ActionProps,
   PaginationProps,
@@ -97,4 +126,8 @@ export type {
   TableProps,
   ActionButtonsProps,
   HoverActionButtonProps,
+  DisplayContainerProps,
+  DataGridProps,
+  DataViewSwitchProps,
+  DataViewMode,
 };

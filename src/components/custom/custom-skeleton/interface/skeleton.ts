@@ -11,6 +11,7 @@ type LoaderType =
   | "IMAGE"
   | "TEXT_IMAGE"
   | "BUTTON"
+  | "DATA_GRID"
   | "FORM";
 
 interface CustomSkeletonLoaderProps {

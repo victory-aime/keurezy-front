@@ -1,5 +1,12 @@
 "use client";
-import { ActionBar, Box, CloseButton, Table } from "@chakra-ui/react";
+import {
+  ActionBar,
+  Box,
+  CloseButton,
+  Menu,
+  Portal,
+  Table,
+} from "@chakra-ui/react";
 import React, { FC, useEffect, useState } from "react";
 import { Checkbox } from "_components/ui/checkbox";
 import {
@@ -11,6 +18,7 @@ import {
 import {
   BaseButton,
   CustomSkeletonLoader,
+  Icons,
   PaginationDataTable,
   TableProps,
 } from "_components/custom";
@@ -153,7 +161,7 @@ export const DataTableContainer: FC<TableProps> = ({
                   : rowIndex % 2 === 0
                     ? colorMode === "light"
                       ? "white"
-                      : "black"
+                      : "white"
                     : colorMode === "light"
                       ? hexToRGB("neutral", 0.3)
                       : "whiteAlpha.200"
@@ -216,7 +224,7 @@ export const DataTableContainer: FC<TableProps> = ({
         closeOnInteractOutside={false}
         onOpenChange={(e) => setOpenActionBar(e?.open)}
       >
-        <ActionBarContent>
+        <ActionBarContent mb={"30px"}>
           <ActionBarSelectionTrigger>
             {selection?.length} {t("COMMON.ITEMS_SELECTED")}
           </ActionBarSelectionTrigger>
@@ -229,14 +237,6 @@ export const DataTableContainer: FC<TableProps> = ({
           >
             {t("COMMON.DELETE")}
           </BaseButton>
-          {/*<BaseButton*/}
-          {/*  colorType={"secondary"}*/}
-          {/*  p={"2"}*/}
-          {/*  variant={"outline"}*/}
-          {/*  onClick={handleShareActionBar}*/}
-          {/*>*/}
-          {/*  {t("COMMON.SHARE")}*/}
-          {/*</BaseButton>*/}
           <ActionBar.CloseTrigger asChild>
             <CloseButton size="sm" onClick={() => setSelection([])} />
           </ActionBar.CloseTrigger>

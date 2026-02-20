@@ -36,11 +36,11 @@ export const SidebarGroup = ({
         >
           {isCollapsed ? (
             <Flex gap={2} alignItems={"center"}>
-              <Icon as={icon} />
+              <Icon as={icon} size={"md"} />
               {t(title)}
             </Flex>
           ) : (
-            <Icon as={icon} />
+            <Icon as={icon} size={"xs"} />
           )}
 
           <Accordion.ItemIndicator />
@@ -78,7 +78,7 @@ export const SidebarGroup = ({
                     }
                     transition="all 0.2s"
                   >
-                    <Icon as={item.icon} boxSize={5} />
+                    <Icon as={item.icon} size={"sm"} />
                     {isCollapsed && (
                       <>
                         <BaseText flex="1" fontSize="sm">

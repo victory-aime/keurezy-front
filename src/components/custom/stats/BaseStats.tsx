@@ -4,7 +4,6 @@ import {
   StatDownIndicator,
   StatUpIndicator,
   Flex,
-  Box,
   VStack,
 } from "@chakra-ui/react";
 import { FC } from "react";
@@ -14,7 +13,6 @@ import { BaseFormatNumber } from "../format-number";
 import { boxStyle } from "../container/style";
 import { ENUM } from "_types/index";
 import { BaseText } from "_components/custom";
-import { hexToRGB } from "_theme/colors";
 
 export const BaseStats: FC<BaseStatsProps> = ({
   color = "primary",
@@ -26,6 +24,7 @@ export const BaseStats: FC<BaseStatsProps> = ({
   percent = 0.25,
   isNumber = false,
   currency = ENUM.COMMON.Currency.USD,
+  isPercent = false,
   ...rest
 }) => {
   const isPositive = percent >= 0;
@@ -36,12 +35,8 @@ export const BaseStats: FC<BaseStatsProps> = ({
       gap={4}
       {...boxStyle}
       {...rest}
-      _hover={{
-        borderWidth: 2,
-        borderLeftColor: iconBgColor,
-        borderBottomColor: iconBgColor,
-        transition: "all 400ms cubic-bezier(0.25, 0.1, 0.25, 1)",
-      }}
+      borderLeftColor={iconBgColor}
+      transition={"all 400ms cubic-bezier(0.25, 0.1, 0.25, 1)"}
     >
       <VStack alignItems={"flex-start"} gap={5}>
         <Flex alignItems={"center"} gap={5}>
@@ -67,22 +62,22 @@ export const BaseStats: FC<BaseStatsProps> = ({
             value
           )}
         </Stat.ValueText>
-
-        <HStack
-          gap="1"
-          color={"white"}
-          bgColor={hexToRGB(color, 0.3)}
-          p={2}
-          rounded={"full"}
-          fontWeight={"bold"}
-        >
-          {isPositive ? (
-            <StatUpIndicator color={color} />
-          ) : (
-            <StatDownIndicator color={color} />
-          )}
-          <BaseFormatNumber style="percent" value={percent} />
-        </HStack>
+        {isPercent && (
+          <HStack
+            gap="1"
+            color={"white"}
+            p={2}
+            rounded={"full"}
+            fontWeight={"bold"}
+          >
+            {isPositive ? (
+              <StatUpIndicator color={color} />
+            ) : (
+              <StatDownIndicator color={color} />
+            )}
+            <BaseFormatNumber style="percent" value={percent} />
+          </HStack>
+        )}
       </HStack>
     </Stat.Root>
   );

@@ -166,6 +166,20 @@ export const CustomSkeletonLoader: FunctionComponent<
     </Skeleton>
   );
 
+  const GridLoader = (
+    <SimpleGrid columns={{ base: 1, sm: 2, md: 3, xl: 4 }} gap={6} mt={8}>
+      {Array.from({ length: 8 }, (_, i) => (
+        <Box key={i} p={4}>
+          <Skeleton height="180px" borderRadius="12px" />
+          <Stack mt={4}>
+            <SkeletonText noOfLines={2} />
+            <Skeleton height="20px" width="60%" />
+          </Stack>
+        </Box>
+      ))}
+    </SimpleGrid>
+  );
+
   const renderSkeletonSwitch = (param: LoaderType): JSX.Element | null => {
     switch (param) {
       case "DATA_TABLE":
@@ -190,6 +204,8 @@ export const CustomSkeletonLoader: FunctionComponent<
         return SkeletonButton;
       case "FORM":
         return SkeletonFormLoader;
+      case "DATA_GRID":
+        return GridLoader;
       default:
         return null;
     }

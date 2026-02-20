@@ -1,4 +1,4 @@
-import { HStack, IconButton } from "@chakra-ui/react";
+import { HStack, IconButton, Menu, Portal } from "@chakra-ui/react";
 import {
   ActionButtonsProps,
   BaseTooltip,
@@ -7,184 +7,151 @@ import {
   BaseButton,
 } from "_components/custom";
 
+const ACTION_CONFIG = {
+  delete: {
+    tooltip: "COMMON.DELETE",
+    icon: Icons.Trash,
+    bg: "red.500",
+    color: "white",
+    aria: "Supprimer",
+  },
+  edit: {
+    tooltip: "COMMON.EDIT",
+    icon: Icons.Edit,
+    bg: "info.500",
+    color: "white",
+    aria: "Modifier",
+  },
+  view: {
+    tooltip: "COMMON.DETAIL",
+    icon: Icons.View,
+    bg: "secondary.500",
+    aria: "Voir",
+  },
+  share: {
+    tooltip: "COMMON.SHARE",
+    icon: Icons.Share,
+    bg: "tertiary.500",
+    color: "white",
+    aria: "Partager",
+  },
+  duplicate: {
+    tooltip: "COMMON.DUPLICATE",
+    icon: Icons.Copy,
+    bg: "secondary.500",
+    color: "white",
+    aria: "Dupliquer",
+  },
+  payment: {
+    tooltip: "COMMON.PAYMENT",
+    icon: Icons.Payment,
+    bg: "warning.300",
+    color: "white",
+    aria: "Payment",
+  },
+  download: {
+    tooltip: "COMMON.DOWNLOAD",
+    icon: Icons.Download,
+    bg: "success.900",
+    color: "white",
+    aria: "Download",
+  },
+  restore: {
+    tooltip: "COMMON.RESTORE",
+    icon: Icons.Restore,
+    bg: "orange.800",
+    color: "white",
+    aria: "Restore",
+  },
+  passkey: {
+    tooltip: "COMMON.PASSKEY",
+    icon: Icons.Key,
+    bg: "purple.800",
+    color: "white",
+    aria: "Passkey",
+  },
+} as const;
+
 export const ActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
   return (
-    <HStack gap={2}>
-      {actions.map((action, index) => {
-        const isShown =
-          typeof action.isShown === "function"
-            ? action.isShown(item)
-            : action.isShown !== false;
+    <></>
+    // <Menu.Root positioning={{ placement: "bottom" }}>
+    //   <Menu.Trigger rounded="full" focusRing="none">
+    //     <Icons.Menu />
+    //   </Menu.Trigger>
 
-        if (!isShown) return null;
+    //   <Portal>
+    //     <Menu.Positioner>
+    //       <Menu.Content>
+    //         <HStack gap={2}>
+    //           {actions.map((action) => {
+    //             const label =
+    //               typeof action.name === "function"
+    //                 ? action.name(item)
+    //                 : action.name;
 
-        const isDisabled = action.isDisabled ? action.isDisabled(item) : false;
-        const isLoading =
-          typeof action.isLoading === "function"
-            ? action.isLoading(item)
-            : !!action.isLoading;
+    //             const isShown =
+    //               typeof action.isShown === "function"
+    //                 ? action.isShown(item)
+    //                 : action.isShown !== false;
 
-        const label =
-          typeof action.name === "function" ? action.name(item) : action.name;
+    //             if (!isShown) return null;
 
-        const commonProps = {
-          onClick: () => action.handleClick(item),
-          disabled: isDisabled || isLoading,
-          isLoading,
-        };
+    //             const isDisabled =
+    //               typeof action.isDisabled === "function"
+    //                 ? action.isDisabled(item)
+    //                 : !!action.isDisabled;
 
-        switch (label) {
-          case "delete":
-            return (
-              <BaseTooltip message={"COMMON.DELETE"} key={index} show>
-                <IconButton
-                  size={"sm"}
-                  aria-label="Supprimer"
-                  color="white"
-                  bgColor="red.500"
-                  {...commonProps}
-                >
-                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.Trash />}
-                </IconButton>
-              </BaseTooltip>
-            );
-          case "edit":
-            return (
-              <BaseTooltip message={"COMMON.EDIT"} key={index} show>
-                <IconButton
-                  size={"sm"}
-                  aria-label="Supprimer"
-                  color="white"
-                  bgColor="info.500"
-                  {...commonProps}
-                >
-                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.Edit />}
-                </IconButton>
-              </BaseTooltip>
-            );
-          case "view":
-            return (
-              <BaseTooltip message={"COMMON.DETAIL"} key={index} show arrow>
-                <IconButton
-                  size={"sm"}
-                  aria-label="Voir"
-                  bgColor="secondary.500"
-                  {...commonProps}
-                >
-                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.View />}
-                </IconButton>
-              </BaseTooltip>
-            );
-          case "share":
-            return (
-              <BaseTooltip message={"COMMON.SHARE"} key={index} show>
-                <IconButton
-                  size={"sm"}
-                  aria-label="Partager"
-                  color="white"
-                  bgColor="tertiary.500"
-                  {...commonProps}
-                >
-                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.Share />}
-                </IconButton>
-              </BaseTooltip>
-            );
-          case "duplicate":
-            return (
-              <BaseTooltip message={"COMMON.DUPLICATE"} key={index} show>
-                <IconButton
-                  size={"sm"}
-                  aria-label="Dupliquer"
-                  color="white"
-                  bgColor="secondary.500"
-                  {...commonProps}
-                >
-                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.Copy />}
-                </IconButton>
-              </BaseTooltip>
-            );
-          case "payment":
-            return (
-              <BaseTooltip message={"COMMON.PAYMENT"} key={index} show>
-                <IconButton
-                  size={"sm"}
-                  aria-label="payment"
-                  color="white"
-                  bgColor="warning.300"
-                  {...commonProps}
-                >
-                  {isLoading ? (
-                    <Loader loader size={"xs"} />
-                  ) : (
-                    <Icons.Payment />
-                  )}
-                </IconButton>
-              </BaseTooltip>
-            );
-          case "download":
-            return (
-              <BaseTooltip message={"COMMON.DOWNLOAD"} key={index} show>
-                <IconButton
-                  size={"sm"}
-                  aria-label="download"
-                  color="white"
-                  bgColor="success.900"
-                  {...commonProps}
-                >
-                  {isLoading ? (
-                    <Loader loader size={"xs"} />
-                  ) : (
-                    <Icons.Download />
-                  )}
-                </IconButton>
-              </BaseTooltip>
-            );
-          case "restore":
-            return (
-              <BaseTooltip message={"COMMON.RESTORE"} key={index} show>
-                <IconButton
-                  size={"sm"}
-                  aria-label="restore"
-                  color="white"
-                  bgColor="orange.800"
-                  {...commonProps}
-                >
-                  {isLoading ? (
-                    <Loader loader size={"xs"} />
-                  ) : (
-                    <Icons.Restore />
-                  )}
-                </IconButton>
-              </BaseTooltip>
-            );
-          case "passkey":
-            return (
-              <BaseTooltip message={"COMMON.PASSKEY"} key={index} show>
-                <IconButton
-                  size={"sm"}
-                  aria-label="passkey"
-                  color="white"
-                  bgColor="purple.800"
-                  {...commonProps}
-                >
-                  {isLoading ? <Loader loader size={"xs"} /> : <Icons.Key />}
-                </IconButton>
-              </BaseTooltip>
-            );
-          default:
-            return (
-              <BaseButton
-                key={index}
-                size="sm"
-                onClick={() => action.handleClick(item)}
-                disabled={isDisabled || isLoading}
-                isLoading={isLoading}
-              >
-                {label}
-              </BaseButton>
-            );
-        }
-      })}
-    </HStack>
+    //             const isLoading =
+    //               typeof action.isLoading === "function"
+    //                 ? action.isLoading(item)
+    //                 : !!action.isLoading;
+
+    //             const config =
+    //               ACTION_CONFIG[label as keyof typeof ACTION_CONFIG];
+
+    //             const handleClick = (e: React.MouseEvent) => {
+    //               e.stopPropagation();
+    //               action.handleClick(item);
+    //             };
+
+    //             if (!config) {
+    //               return (
+    //                 <BaseButton
+    //                   key={label}
+    //                   size="sm"
+    //                   onClick={handleClick}
+    //                   disabled={isDisabled || isLoading}
+    //                   isLoading={isLoading}
+    //                 >
+    //                   {label}
+    //                 </BaseButton>
+    //               );
+    //             }
+
+    //             const Icon = config.icon;
+
+    //             return (
+    //               <Menu.Item key={label} value={label} asChild>
+    //                 <BaseTooltip message={config.tooltip} show>
+    //                   <IconButton
+    //                     size="sm"
+    //                     aria-label={config.aria}
+    //                     bgColor={config.bg}
+    //                     color={config.color}
+    //                     onClick={handleClick}
+    //                     disabled={isDisabled || isLoading}
+    //                   >
+    //                     {isLoading ? <Loader loader size="xs" /> : <Icon />}
+    //                   </IconButton>
+    //                 </BaseTooltip>
+    //               </Menu.Item>
+    //             );
+    //           })}
+    //         </HStack>
+    //       </Menu.Content>
+    //     </Menu.Positioner>
+    //   </Portal>
+    // </Menu.Root>
   );
 };

@@ -63,7 +63,7 @@ export const BaseContainer = ({
         justifyContent={"space-between"}
         gap={5}
       >
-        <Stack gap={2} width={"full"}>
+        <Stack gap={0} width={"full"}>
           {loader ? (
             <CustomSkeletonLoader
               type="TEXT"

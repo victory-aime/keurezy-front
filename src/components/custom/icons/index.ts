@@ -7,6 +7,7 @@ import {
   CiPlay1,
   CiSaveDown2,
   CiUser,
+  CiViewList,
 } from "react-icons/ci";
 import { FaCog, FaUserAlt, FaUserPlus, FaUsers } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
@@ -47,6 +48,7 @@ import { TbRestore } from "react-icons/tb";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { LuBuilding2, LuMaximize } from "react-icons/lu";
 import { BsSliders } from "react-icons/bs";
+import { CiGrid31 } from "react-icons/ci";
 
 export const Icons = {
   MapPin: CiMapPin,
@@ -95,4 +97,6 @@ export const Icons = {
   Chat: IoChatbubblesOutline,
   Bell: CiBellOn,
   Setting: FaCog,
+  List: CiViewList,
+  Grid: CiGrid31,
 };
