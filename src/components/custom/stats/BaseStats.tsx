@@ -12,7 +12,7 @@ import { BaseIcon } from "../base-icon";
 import { BaseFormatNumber } from "../format-number";
 import { boxStyle } from "../container/style";
 import { ENUM } from "_types/index";
-import { BaseText } from "_components/custom";
+import { BaseText, CustomSkeletonLoader } from "_components/custom";
 
 export const BaseStats: FC<BaseStatsProps> = ({
   color = "primary",
@@ -25,17 +25,23 @@ export const BaseStats: FC<BaseStatsProps> = ({
   isNumber = false,
   currency = ENUM.COMMON.Currency.USD,
   isPercent = false,
+  isLoading = false,
   ...rest
 }) => {
   const isPositive = percent >= 0;
 
-  return (
+  return isLoading ? (
+    <Flex width={"full"} gap={3}>
+      <CustomSkeletonLoader type={"FORM"} width={"full"} height={150} />
+    </Flex>
+  ) : (
     <Stat.Root
       p={0}
       gap={4}
       {...boxStyle}
       {...rest}
       borderLeftColor={iconBgColor}
+      size={"sm"}
       transition={"all 400ms cubic-bezier(0.25, 0.1, 0.25, 1)"}
     >
       <VStack alignItems={"flex-start"} gap={5}>
@@ -53,11 +59,7 @@ export const BaseStats: FC<BaseStatsProps> = ({
       >
         <Stat.ValueText alignItems="center" gap={2} fontSize={"xl"}>
           {value && isNumber ? (
-            <BaseFormatNumber
-              value={value}
-              notation="compact"
-              currencyCode={currency}
-            />
+            <BaseFormatNumber value={value} currencyCode={currency} />
           ) : (
             value
           )}

@@ -5,26 +5,22 @@ import {
   BaseContainer,
   BaseFormatNumber,
   BaseRatio,
-  BaseStats,
+  BaseText,
   ColumnsDataTable,
-  DataTableContainer,
-  Icons,
+  TextVariant,
+  TextWeight,
+  DataDisplayContainer,
 } from "_components/custom";
-import { AppartForm } from "./AppartForm";
-import { useState } from "react";
 import { PropertyModule, UserModule } from "_store/state-management";
-import { MODELS, CONSTANTS, ENUM } from "_types/*";
-import { DashboardProperties } from "./View";
-import { SimpleGrid, Flex } from "@chakra-ui/react";
-import { properties, Property } from "_component/Properties";
-import { DataDisplayContainer } from "_components/custom/data-table/DataDisplayContainer";
-import { AppartCard } from "./AppartCard";
+import { CONSTANTS, ENUM } from "_types/*";
+import { Flex, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import { DASHBOARD_ROUTES } from "../../routes";
+import { AppartGridView } from "./AppartCard";
+import { AppartStatsCard } from "./AppartStats";
 
 export const AppartList = () => {
   const router = useRouter();
-  const [openForm, setOpenForm] = useState(false);
-  const [selectedValues, setSelectedValues] = useState({} as MODELS.IProperty);
 
   const { data: user } = UserModule.getUserInfo({
     queryOptions: {
@@ -41,46 +37,9 @@ export const AppartList = () => {
       agencyId: user?.propertyOwner?.propertyAgency?.id,
     },
     queryOptions: {
-      enabled: false,
+      enabled: !!user?.propertyOwner?.propertyAgency?.id,
     },
   });
-
-  const { mutateAsync: createProperty, isPending: createPending } =
-    PropertyModule.createPropertyMutation({
-      mutationOptions: {
-        onSuccess: async () => {
-          setOpenForm(false);
-          await refectProperty();
-        },
-      },
-    });
-
-  const handleCreateProperty = async (data: MODELS.ICreateProperty) => {
-    const formData = new FormData();
-    formData.append("title", String(data.title));
-    formData.append("description", String(data.description));
-    formData.append("type", String(data.type));
-    formData.append("country", String(data.country));
-    formData.append("city", String(data.city));
-    formData.append("address", String(data.address));
-    formData.append("price", String(data.price));
-    formData.append("surface", String(data.surface));
-    formData.append("rooms", String(data.rooms));
-    formData.append(
-      "propertyAgenceId",
-      String(user?.propertyOwner?.propertyAgency.id),
-    );
-    if (data.galleryImages) {
-      data.galleryImages.forEach((file) => {
-        formData.append("galleryImages", file);
-      });
-    }
-    if (selectedValues?.id) {
-      console.log("update property with id", selectedValues.id);
-    } else {
-      await createProperty({ payload: formData as MODELS.ICreateProperty });
-    }
-  };
 
   const appartColumns: ColumnsDataTable[] = [
     {
@@ -88,29 +47,34 @@ export const AppartList = () => {
       accessor: "select",
     },
     {
-      header: "Images",
-      accessor: "galleryImages",
-      cell: (image: string[]) => <BaseRatio image={image?.[0]} width={100} />,
-    },
-    {
-      header: "Nom du bâtiment",
-      accessor: "title",
-    },
-    {
-      header: "Pays",
-      accessor: "country",
-      cell: (country: string) =>
-        CONSTANTS.countryList.find((item) => item.value === country)?.label ||
-        country,
-    },
-    {
-      header: "Ville",
+      header: "Bien",
       accessor: "fullObject",
       cell: (data) => {
         const city = CONSTANTS.citiesByCountry?.[data.country || ""]?.find(
           (item) => item.value === data.city,
         )?.label;
-        return city || "";
+        return (
+          <Flex
+            width={"full"}
+            gap={4}
+            alignItems={"center"}
+            justifyContent={"flex-start"}
+          >
+            <BaseRatio image={data?.galleryImages?.[0]} width={100} />
+            <VStack alignItems={"flex-start"} gap={0}>
+              <BaseText variant={TextVariant.XS} weight={TextWeight.SemiBold}>
+                {data?.title}
+              </BaseText>
+              <BaseText
+                variant={TextVariant.XS}
+                lineClamp={1}
+                color={"gray.600"}
+              >
+                {data?.address} , {city}
+              </BaseText>
+            </VStack>
+          </Flex>
+        );
       },
     },
 
@@ -122,15 +86,17 @@ export const AppartList = () => {
         type,
     },
     {
-      header: "Prix",
+      header: "Loyer",
       accessor: "price",
       cell: (price: number) => <BaseFormatNumber value={price} />,
     },
 
     {
-      header: "Prix",
+      header: "Status",
       accessor: "status",
-      cell: (price: ENUM.COMMON.Status) => <BaseBadge status={price} />,
+      cell: (price: ENUM.COMMON.Status) => (
+        <BaseBadge variant="plain" status={price} />
+      ),
     },
 
     {
@@ -138,19 +104,10 @@ export const AppartList = () => {
       accessor: "actions",
       actions: [
         {
-          name: "view",
-          handleClick() {},
-        },
-        {
           name: "edit",
           handleClick(data) {
-            setSelectedValues(data);
-            setOpenForm(true);
+            router.push(`${DASHBOARD_ROUTES.APPART.ADD}?requestId=${data?.id}`);
           },
-        },
-        {
-          name: "delete",
-          handleClick() {},
         },
       ],
     },
@@ -161,64 +118,26 @@ export const AppartList = () => {
       border={"none"}
       title={"Propriétes"}
       description={"Gérez l'ensemble de vos biens immobiliers"}
+      loader={isLoading}
+      numberOfLines={2}
       withActionButtons
       actionsButtonProps={{
         validateTitle: "Ajouter une propriété",
         onReload: async () => {
           await refectProperty();
         },
-        onDownload() {},
         onClick: () => {
-          setOpenForm(true);
-          setSelectedValues({});
+          router.push(DASHBOARD_ROUTES.APPART.ADD);
         },
       }}
     >
-      <SimpleGrid
-        width={"full"}
-        mt={"20px"}
-        column={{ base: 2, sm: 4 }}
-        gap={4}
-      >
-        <Flex width={"full"} gap={4}>
-          {[
-            {
-              label: "Total",
-              value: properties.length,
-              color: "primary.500",
-            },
-            {
-              label: "Disponibles",
-              value: properties.filter((p) => p.available).length,
-              color: "tertiary.500",
-            },
-            {
-              label: "Occupés",
-              value: properties.filter((p) => !p.available).length,
-              color: "danger.500",
-            },
-            {
-              label: "Revenu mensuel",
-              value: properties.reduce((s, p) => s + p.price, 0),
-              color: "secondary.500",
-              isAmount: true,
-            },
-          ].map((s, i) => (
-            <BaseStats
-              key={i}
-              icon={<Icons.Bath />}
-              iconBgColor={s.color}
-              title={s.label}
-              value={s.value}
-              isNumber={s.isAmount}
-            />
-          ))}
-        </Flex>
-      </SimpleGrid>
+      <AppartStatsCard properties={allProperties ?? []} isLoading={isLoading} />
+
       <DataDisplayContainer
-        data={properties}
+        data={allProperties ?? []}
         columns={appartColumns}
-        renderGridItem={(item) => <AppartCard property={item} />}
+        isLoading={isLoading}
+        renderGridItem={(item) => <AppartGridView property={item} />}
         actions={[
           {
             name: "view",
@@ -228,20 +147,13 @@ export const AppartList = () => {
           {
             name: "edit",
             handleClick(data) {
-              setSelectedValues(data);
-              setOpenForm(true);
+              router.push(
+                `${DASHBOARD_ROUTES.APPART.ADD}?requestId=${data?.id}`,
+              );
             },
           },
         ]}
         hidePagination
-      />
-
-      <AppartForm
-        onChange={setOpenForm}
-        isOpen={openForm}
-        data={selectedValues}
-        callback={handleCreateProperty}
-        isLoading={createPending}
       />
     </BaseContainer>
   );

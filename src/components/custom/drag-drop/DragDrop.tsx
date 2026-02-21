@@ -141,7 +141,7 @@ export const BaseDragDropZone = ({
       ) : (
         label
       )}
-      <FileUploadDropzone>
+      <FileUploadDropzone _hover={{ borderColor: "primary.500" }}>
         <Icon fontSize="xl" color="fg.muted">
           <LuUpload />
         </Icon>

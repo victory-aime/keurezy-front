@@ -1,4 +1,4 @@
-import { Button, ButtonProps, HStack } from "@chakra-ui/react";
+import { BadgeProps, Button, ButtonProps, HStack } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { ButtonBaseProps, VariantColorStyle } from "_components/custom";
 import { LoadingDots } from "../animation/loadingDots";
@@ -7,7 +7,7 @@ import { Colors, getColor, getGradient, getHoverGradient } from "_theme/colors";
 
 const getVariantStyles = (
   colorType: keyof Colors,
-  variant: ButtonProps["variant"] = "solid",
+  variant: ButtonProps["variant"] | BadgeProps["variant"] = "solid",
   withGradient: boolean = false,
 ): VariantColorStyle => {
   const color = getColor(colorType, 500);
@@ -17,6 +17,13 @@ const getVariantStyles = (
 
   switch (variant) {
     case "subtle":
+      return {
+        bg: color,
+        textColor: color,
+        gradient: "none",
+        hover: `${color}30`,
+      };
+    case "plain":
       return {
         bg: `${color}`,
         textColor: color,

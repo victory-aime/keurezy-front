@@ -1,9 +1,10 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { PropertyCard } from "./PropertyCard";
 import {
   BaseButton,
   BaseText,
+  CustomSkeletonLoader,
   FormSelect,
   FormSlider,
   FormTextInput,
@@ -15,37 +16,19 @@ import {
 import { motion } from "framer-motion";
 import {
   Box,
+  Center,
   Container,
   createListCollection,
   Flex,
-  Input,
-  InputGroup,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { BsSliders } from "react-icons/bs";
-import { RiSearch2Line } from "react-icons/ri";
-import { Navbar } from "./NavBar";
-import { Footer } from "../layout/Footer";
 import { ASSETS } from "_assets/images";
-import { Formik, FormikHelpers, FormikValues } from "formik";
+import { Formik } from "formik";
+import { PropertyModule } from "_store/state-management";
+import { UserLayout } from "../layout/Layout";
+import { CONSTANTS } from "_types/";
 
-export interface Property {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  location: string;
-  type: "apartment" | "house" | "studio" | "penthouse" | "loft";
-  beds: number;
-  baths: number;
-  surface: number;
-  available: boolean;
-  images: string[];
-  amenities: string[];
-  features: string[];
-}
-
-export const properties: Property[] = [
+export const properties = [
   {
     id: "1",
     title: "Luxury Modern Apartment",
@@ -177,52 +160,51 @@ export const properties: Property[] = [
     ],
   },
 ];
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const Properties = () => {
   const [search, setSearch] = useState("");
-  const [type, setType] = useState("all");
+  const [type, setType] = useState();
   const [priceRange, setPriceRange] = useState([0, 6000]);
   const [showFilters, setShowFilters] = useState(false);
 
-  const filtered = useMemo(() => {
-    return properties.filter((p) => {
-      const matchSearch =
-        p.title.toLowerCase().includes(search.toLowerCase()) ||
-        p.location.toLowerCase().includes(search.toLowerCase());
-      const matchType = type === "all" || p.type === type;
-      const matchPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
-      return matchSearch && matchType && matchPrice;
-    });
-  }, [search, type, priceRange]);
+  const { data: allPublicProperties, isLoading } =
+    PropertyModule.getAllPublicProperties({});
 
-  const list = createListCollection({
+  // const filtered = useMemo(() => {
+  //   return allPublicProperties?.filter((property) => {
+  //     const title = property?.title?.toLowerCase() ?? "";
+  //     const address = property?.address?.toLowerCase() ?? "";
+  //     const matchSearch =
+  //       title.includes(search.toLowerCase()) ||
+  //       address.includes(search.toLowerCase());
+
+  //     // const propertyType = Array.isArray(property?.type)
+  //     //   ? property.type[0]
+  //     //   : property?.type;
+
+  //     //const matchType = type === "all" || propertyType === type;
+
+  //     //const price = property?.price ?? 0;
+
+  //     //const matchPrice = price >= priceRange[0] && price <= priceRange[1];
+
+  //     return matchSearch;
+  //   });
+  // }, [search, type, priceRange, allPublicProperties]);
+
+  const propertyList = createListCollection({
     items: [
-      {
-        label: "Tous les types",
-        value: "all",
-      },
-      {
-        label: "Appartement",
-        value: "apartment",
-      },
-      {
-        label: "Maison",
-        value: "house",
-      },
-      {
-        label: "Studio",
-        value: "studio",
-      },
+      { label: "Tous les types", value: "all" },
+      ...CONSTANTS.propertyTypes,
     ],
   });
 
   return (
-    <Formik initialValues={{ slide: priceRange }} onSubmit={() => {}}>
-      {({ setFieldValue }) => (
-        <Box minH={"100vh"}>
-          <Navbar />
-          <Box py={24} pb={10}>
+    <UserLayout>
+      <Formik initialValues={{ slide: priceRange }} onSubmit={() => {}}>
+        {({ setFieldValue }) => (
+          <Box width={"full"} py={24} pb={10}>
             <Container mx={"auto"} px={{ base: 6, sm: 8 }} py={2}>
               <MotionBox
                 initial={{ opacity: 0, y: 20 }}
@@ -282,7 +264,7 @@ export const Properties = () => {
                     <FormSelect
                       name={"test"}
                       label="Type de bien"
-                      listItems={list}
+                      listItems={propertyList}
                       setFieldValue={setFieldValue}
                       onChangeFunc={(value) => setType(value?.[0])}
                     />
@@ -300,15 +282,23 @@ export const Properties = () => {
                   </Flex>
                 )}
               </MotionBox>
-
-              {/* Results */}
-              <BaseText mb={3}>
-                {filtered.length} résultat{filtered.length !== 1 ? "s" : ""}
-              </BaseText>
-
-              {filtered.length > 0 ? (
-                <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={6}>
-                  {filtered.map((property, i) => (
+              {isLoading ? (
+                <>
+                  {Array.from({ length: 2 }).map((_, i) => (
+                    <CustomSkeletonLoader
+                      key={i}
+                      type={"DATA_GRID"}
+                      width={"full"}
+                    />
+                  ))}
+                </>
+              ) : allPublicProperties && allPublicProperties.length > 0 ? (
+                <SimpleGrid
+                  columns={{ base: 1, sm: 2, lg: 3 }}
+                  gap={6}
+                  width={"full"}
+                >
+                  {allPublicProperties?.map((property, i) => (
                     <PropertyCard
                       key={property.id}
                       property={property}
@@ -317,16 +307,18 @@ export const Properties = () => {
                   ))}
                 </SimpleGrid>
               ) : (
-                <NoDataFound
-                  title={"Aucune propriété ne correspond à vos critères."}
-                  imageType={"v2"}
-                />
+                <Center>
+                  <NoDataFound
+                    title={"Aucune propriété ne correspond à vos critères."}
+                    imageType={"v2"}
+                    containerStyle={{ width: "1/2" }}
+                  />
+                </Center>
               )}
             </Container>
           </Box>
-          <Footer />
-        </Box>
-      )}
-    </Formik>
+        )}
+      </Formik>
+    </UserLayout>
   );
 };

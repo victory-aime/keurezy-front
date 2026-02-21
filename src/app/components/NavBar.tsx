@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   BaseButton,
   BaseText,
+  CustomSkeletonLoader,
   CustomToast,
   Icons,
   TextVariant,
@@ -30,6 +31,8 @@ import { UserRole } from "../../types/enum";
 import { useAuth } from "_hooks/useAuth";
 import { useIsActive } from "_hooks/useActive";
 
+const MotionBox = motion.create(Box);
+
 export const Navbar = () => {
   const { session } = useAuthContext();
   const { logout } = useAuth();
@@ -37,7 +40,6 @@ export const Navbar = () => {
   const router = useRouter();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isOpen, setIsOpen] = useState(false);
-  const MotionBox = motion(Box);
 
   const { data: user, isLoading } = UserModule.getUserInfo({
     params: { userId: session?.userId },
@@ -54,7 +56,7 @@ export const Navbar = () => {
     } else {
       CustomToast({
         duration: 3000,
-        title: "Veuillez creer un compte",
+        title: "Veuillez créer un compte",
         description: " Pour creer une agence vous devrez vous incrire",
         type: ToastStatus.INFO,
       });
@@ -136,40 +138,54 @@ export const Navbar = () => {
             ml={"auto"}
             display={{ base: "none", sm: "flex" }}
           >
-            {user ? (
-              <Avatar
-                name={user?.name}
-                src={user?.image! ?? "https://avatar.iran.liara.run/public"}
-              />
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <CustomSkeletonLoader
+                  type={"BUTTON"}
+                  colorButton="neutral"
+                  width={100}
+                  key={i}
+                />
+              ))
             ) : (
-              <BaseButton
-                variant="outline"
-                onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
-              >
-                Connexion
-              </BaseButton>
-            )}
+              <>
+                {user ? (
+                  <Avatar
+                    name={user?.name}
+                    src={user?.image! ?? "https://avatar.iran.liara.run/public"}
+                  />
+                ) : (
+                  <BaseButton
+                    variant="outline"
+                    onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
+                  >
+                    Connexion
+                  </BaseButton>
+                )}
 
-            {user && (
-              <BaseButton
-                onClick={() => logout()}
-                colorType={"danger"}
-                leftIcon={<Icons.Logout />}
-              >
-                Deconnexion
-              </BaseButton>
-            )}
-
-            {user && user?.role === UserRole.IMMO_OWNER ? (
-              <BaseButton
-                onClick={() => router.push(APP_ROUTES.DASHBOARD)}
-                colorType={"secondary"}
-                leftIcon={<Icons.Home />}
-              >
-                Acceder au Tableau de bord
-              </BaseButton>
-            ) : (
-              <BaseButton onClick={createAgency}>Créer mon agence</BaseButton>
+                {user && (
+                  <BaseButton
+                    onClick={() => logout()}
+                    colorType={"danger"}
+                    leftIcon={<Icons.Logout />}
+                  >
+                    Deconnexion
+                  </BaseButton>
+                )}
+                {user && user?.role === UserRole.IMMO_OWNER ? (
+                  <BaseButton
+                    onClick={() => router.push(APP_ROUTES.DASHBOARD)}
+                    colorType={"secondary"}
+                    leftIcon={<Icons.Home />}
+                  >
+                    Acceder au Tableau de bord
+                  </BaseButton>
+                ) : (
+                  <BaseButton onClick={createAgency}>
+                    Créer mon agence
+                  </BaseButton>
+                )}
+              </>
             )}
           </Flex>
 
@@ -225,56 +241,72 @@ export const Navbar = () => {
                 );
               })}
               <Stack alignItems={"center"} pt={2} gap={2} width={"full"}>
-                {user ? (
-                  <Flex
-                    alignItems={"center"}
-                    width={"full"}
-                    borderRadius={"12px"}
-                    gap={2}
-                  >
-                    <Avatar
-                      name={user?.name}
-                      src={
-                        user?.image! ?? "https://avatar.iran.liara.run/public"
-                      }
+                {isLoading ? (
+                  Array.from({ length: 3 }).map((_, i) => (
+                    <CustomSkeletonLoader
+                      type={"BUTTON"}
+                      colorButton="neutral"
+                      width={"full"}
+                      key={i}
                     />
-                    <BaseText textTransform={"capitalize"}>
-                      {user?.name}
-                    </BaseText>
-                  </Flex>
+                  ))
                 ) : (
-                  <BaseButton
-                    width={"full"}
-                    variant="outline"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Connexion
-                  </BaseButton>
-                )}
-                {user && (
-                  <BaseButton
-                    onClick={() => logout()}
-                    width={"full"}
-                    colorType={"danger"}
-                    leftIcon={<Icons.Logout />}
-                  >
-                    Deconnexion
-                  </BaseButton>
-                )}
-
-                {user && user?.role === UserRole.IMMO_OWNER ? (
-                  <BaseButton
-                    onClick={() => router.push(APP_ROUTES.DASHBOARD)}
-                    width={"full"}
-                    colorType={"secondary"}
-                    leftIcon={<Icons.Home />}
-                  >
-                    Acceder au Tableau de bord
-                  </BaseButton>
-                ) : (
-                  <BaseButton width={"full"} onClick={createAgency}>
-                    Créer mon agence
-                  </BaseButton>
+                  <>
+                    {user ? (
+                      <Flex
+                        alignItems={"center"}
+                        width={"full"}
+                        borderRadius={"12px"}
+                        gap={2}
+                      >
+                        <Avatar
+                          name={user?.name}
+                          src={
+                            user?.image! ??
+                            "https://avatar.iran.liara.run/public"
+                          }
+                        />
+                        <BaseText textTransform={"capitalize"}>
+                          {user?.name}
+                        </BaseText>
+                      </Flex>
+                    ) : (
+                      <BaseButton
+                        width={"full"}
+                        variant="outline"
+                        onClick={() => {
+                          router.push(APP_ROUTES.AUTH.SIGN_IN);
+                          setIsOpen(false);
+                        }}
+                      >
+                        Connexion
+                      </BaseButton>
+                    )}
+                    {user && (
+                      <BaseButton
+                        onClick={() => logout()}
+                        width={"full"}
+                        colorType={"danger"}
+                        leftIcon={<Icons.Logout />}
+                      >
+                        Deconnexion
+                      </BaseButton>
+                    )}
+                    {user && user?.role === UserRole.IMMO_OWNER ? (
+                      <BaseButton
+                        onClick={() => router.push(APP_ROUTES.DASHBOARD)}
+                        width={"full"}
+                        colorType={"secondary"}
+                        leftIcon={<Icons.Home />}
+                      >
+                        Acceder au Tableau de bord
+                      </BaseButton>
+                    ) : (
+                      <BaseButton width={"full"} onClick={() => createAgency()}>
+                        Créer mon agence
+                      </BaseButton>
+                    )}
+                  </>
                 )}
               </Stack>
             </Box>

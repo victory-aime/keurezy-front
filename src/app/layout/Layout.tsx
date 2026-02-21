@@ -1,7 +1,5 @@
 "use client";
 
-import { InitializeApp } from "_context/provider/initialize-app";
-import { useAuthContext } from "_context/auth-context";
 import { ReactNode } from "react";
 import { Navbar } from "_component/NavBar";
 import { Footer } from "./Footer";
@@ -9,10 +7,9 @@ import { Box, IconButton, VStack } from "@chakra-ui/react";
 import { Icons } from "_components/custom";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
-const MotionBox = motion(Box);
-export const UserLayout = ({ children }: { children: ReactNode }) => {
-  const { isLoading } = useAuthContext();
+const MotionBox = motion.create(Box);
 
+export const UserLayout = ({ children }: { children: ReactNode }) => {
   // Scroll progress (0 → 1)
   const { scrollYProgress } = useScroll();
 
@@ -41,7 +38,7 @@ export const UserLayout = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <InitializeApp isLoading={isLoading}>
+    <>
       <Navbar />
       <VStack
         alignItems={"center"}
@@ -50,8 +47,7 @@ export const UserLayout = ({ children }: { children: ReactNode }) => {
         gap={{ base: 6, sm: 12 }}
         py={{ base: 12, sm: 14 }}
       >
-        {" "}
-        {children}{" "}
+        {children}
       </VStack>
       <Footer />
       <MotionBox
@@ -105,6 +101,6 @@ export const UserLayout = ({ children }: { children: ReactNode }) => {
           </IconButton>
         </Box>
       </MotionBox>
-    </InitializeApp>
+    </>
   );
 };

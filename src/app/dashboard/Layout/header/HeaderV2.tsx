@@ -26,8 +26,13 @@ import { DASHBOARD_ROUTES } from "../../routes";
 import { useAuth } from "_hooks/useAuth";
 import { APP_ROUTES } from "_config/routes";
 import { useAuthContext } from "_context/auth-context";
+import { VariablesColors } from "_theme/variables";
 
-export const HeaderV2 = ({ data, onShowSidebar }: SideBarProps) => {
+export const HeaderV2 = ({
+  data,
+  onShowSidebar,
+  sideToggled,
+}: SideBarProps) => {
   const router = useRouter();
   const { logout } = useAuth();
   const {} = useAuthContext();
@@ -60,7 +65,21 @@ export const HeaderV2 = ({ data, onShowSidebar }: SideBarProps) => {
       pt={3}
       bgColor={"white"}
     >
-      <Icons.Bath onClick={onShowSidebar} />
+      {sideToggled ? (
+        <Icons.SideOpen
+          size={18}
+          color={VariablesColors.grayScale}
+          onClick={onShowSidebar}
+          cursor={"pointer"}
+        />
+      ) : (
+        <Icons.SideClose
+          size={18}
+          color={VariablesColors.grayScale}
+          onClick={onShowSidebar}
+          cursor={"pointer"}
+        />
+      )}
 
       <Separator orientation="vertical" height={6} />
 

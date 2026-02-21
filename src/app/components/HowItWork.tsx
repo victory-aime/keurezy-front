@@ -33,8 +33,8 @@ const steps = [
   },
 ];
 
-const MotionBox = motion(Box);
-const MotionVstack = motion(VStack);
+const MotionBox = motion.create(Box);
+const MotionVstack = motion.create(VStack);
 
 export const HowItWorksSection = () => {
   return (

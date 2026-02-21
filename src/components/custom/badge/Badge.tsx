@@ -25,6 +25,10 @@ const getBadgeContent = (
         return { variant: "tertiary", label: t("COMMON.STATUS.AVAILABLE") };
       case "CLOSE":
         return { variant: "danger", label: t("COMMON.STATUS.CLOSE") };
+      case "RESERVED":
+        return { variant: "info", label: t("COMMON.STATUS.RESERVED") };
+      case "RENTED":
+        return { variant: "warning", label: t("COMMON.STATUS.RENTED") };
       default:
         return { variant: "success", label: t("inconnu") };
     }
@@ -80,7 +84,7 @@ export const BaseBadge: FC<Props> = ({
       size={props.size ?? "lg"}
       borderColor={isSubtle ? textColor : undefined}
       bg={backgroundColor}
-      borderRadius={props.borderRadius ?? "7px"}
+      borderRadius={props.borderRadius ?? "full"}
       p={props.p ?? 2}
       color={textColor}
       _hover={{ background: hover ?? `${bg}CC` }}

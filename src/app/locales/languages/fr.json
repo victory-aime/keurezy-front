@@ -115,7 +115,11 @@
       "INACTIVE": "Inactif",
       "PENDING": "En attente",
       "CANCELED": "Annulée",
-      "EXPIRED": "Expiree"
+      "EXPIRED": "Expiree",
+      "AVAILABLE": "Disponible",
+      "RENTED": "Occupé",
+      "RESERVED": "Réserver",
+      "CLOSED": "Fermer"
     },
     "TODAY": "Aujourd'hui",
     "MONTH": "Mois",

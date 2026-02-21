@@ -10,6 +10,9 @@ interface IProperty {
   price?: number;
   surface?: number;
   rooms?: number;
+  postalCode?: number;
+  sdb?: number;
+  locationCaution?: number;
   address?: string;
   city?: string;
   country?: string;

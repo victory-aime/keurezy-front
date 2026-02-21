@@ -20,7 +20,11 @@ export function DataDisplayContainer<T>({
   return (
     <Box width="full">
       <Flex justify="flex-end" mb={4}>
-        <DataViewSwitcher mode={mode} onChange={setMode} />
+        <DataViewSwitcher
+          mode={mode}
+          onChange={setMode}
+          isLoading={isLoading}
+        />
       </Flex>
 
       {isLoading ? (

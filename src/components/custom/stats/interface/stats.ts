@@ -12,4 +12,5 @@ export interface BaseStatsProps extends StatRootProps {
   message?: string;
   percent?: number;
   currency?: ENUM.COMMON.Currency;
+  isLoading?: boolean;
 }

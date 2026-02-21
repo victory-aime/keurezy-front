@@ -10,7 +10,7 @@ import { hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
 import { motion } from "framer-motion";
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const CTASection = () => {
   return (

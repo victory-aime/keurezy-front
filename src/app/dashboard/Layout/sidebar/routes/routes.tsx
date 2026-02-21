@@ -16,15 +16,11 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
       },
       {
         label: "Propriétés",
-        path: DASHBOARD_ROUTES.APPART,
+        path: DASHBOARD_ROUTES.APPART.LIST,
         icon: Icons.RiBuildingLine,
       },
       { label: "Locataires", path: "/dashboard/tenants", icon: Icons.FaUsers },
-      {
-        label: "Baux",
-        path: "/dashboard/leases",
-        icon: Icons.Wrench /*FileText*/,
-      },
+
       {
         label: "Paiements",
         path: "/dashboard/payments",
@@ -35,6 +31,11 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         path: "/dashboard/maintenance",
         icon: Icons.Wrench,
         badge: 3,
+      },
+      {
+        label: "Voir la page d'accueil",
+        path: APP_ROUTES.ROOT,
+        icon: Icons.IoIosArrowRoundBack,
       },
     ],
     title: "Principal",
@@ -60,19 +61,19 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
       {
         label: "Messages",
         path: "/dashboard/messages",
-        icon: Icons.Wrench /*MessageSquare*/,
+        icon: Icons.Chat,
         badge: 5,
       },
       {
         label: "Notifications",
         path: "/dashboard/notifications",
-        icon: Icons.Wrench /*Bell*/,
+        icon: Icons.Bell,
         badge: 12,
       },
       {
-        label: "Documents",
-        path: "/dashboard/documents",
-        icon: Icons.Wrench /*FolderOpen*/,
+        label: "SIDE_BAR.AGENCY",
+        path: DASHBOARD_ROUTES.AGENCY,
+        icon: Icons.Office /*FolderOpen*/,
       },
     ],
   },

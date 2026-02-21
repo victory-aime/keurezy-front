@@ -1,47 +1,117 @@
+"use client";
 import { Formik, FormikValues } from "formik";
 import {
+  ActionsButton,
   BaseDragDropZone,
-  BaseDrawer,
   FormSelect,
   FormTextArea,
   FormTextInput,
-  ModalOpenProps,
+  Icons,
 } from "_components/custom";
 import { createListCollection, HStack, VStack } from "@chakra-ui/react";
-import { BsFillBuildingsFill } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { MODELS, CONSTANTS, VALIDATION } from "_types/";
+import { FormCard } from "../../components/FormCard";
+import { FormContainer } from "../../components/FormContainer";
+import { useRouter } from "next/navigation";
+import { PropertyModule, UserModule } from "_store/state-management";
+import { findDynamicIdInList } from "rise-core-frontend";
 
-export const AppartForm = ({
-  isOpen,
-  onChange,
-  isLoading,
-  callback = () => {},
-  data,
-}: ModalOpenProps) => {
+export const AppartForm = ({ appartId }: { appartId: string }) => {
+  const router = useRouter();
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [initialValues, setInitialValues] = useState<MODELS.ICreateProperty>(
     {} as MODELS.ICreateProperty,
   );
 
-  useEffect(() => {
-    if (data) {
-      setInitialValues({
-        ...data,
-        type: data.type ? [data.type] : [],
-        country: data.country ? [data.country] : [],
-        city: data.city ? [data.city] : [],
+  const { data: user } = UserModule.getUserInfo({
+    queryOptions: {
+      enabled: false,
+    },
+  });
+
+  const {
+    data: allProperties,
+    isLoading: fetchLoading,
+    refetch: refectProperty,
+  } = PropertyModule.getAllProperties({
+    params: {
+      agencyId: user?.propertyOwner?.propertyAgency?.id,
+    },
+    queryOptions: {
+      enabled: !!user?.propertyOwner?.propertyAgency?.id && !!appartId,
+    },
+  });
+
+  const { mutateAsync: createProperty, isPending: createPending } =
+    PropertyModule.createPropertyMutation({
+      mutationOptions: {
+        onSuccess: async () => {
+          await refectProperty();
+          router.back();
+        },
+      },
+    });
+
+  const handleCreateProperty = async (data: MODELS.ICreateProperty) => {
+    const formData = new FormData();
+    formData.append("title", String(data.title));
+    formData.append("description", String(data.description));
+    formData.append("type", String(data.type));
+    formData.append("country", String(data.country));
+    formData.append("city", String(data.city));
+    formData.append("address", String(data.address));
+    formData.append("price", String(data.price));
+    formData.append("surface", String(data.surface));
+    formData.append("rooms", String(data.rooms));
+    formData.append("sdb", String(data.sdb));
+    formData.append("postalCode", String(data.postalCode));
+    formData.append("locationCaution", String(data.locationCaution));
+    formData.append("status", String(data.status));
+    formData.append(
+      "propertyAgenceId",
+      String(user?.propertyOwner?.propertyAgency.id),
+    );
+    if (data.galleryImages) {
+      data.galleryImages.forEach((file) => {
+        formData.append("galleryImages", file);
       });
-      setGalleryImages(data?.galleryImages || []);
     }
-    if (!isOpen) {
+    if (data?.id) {
+      console.log("update property with id", data?.id);
+    } else {
+      await createProperty({ payload: formData as MODELS.ICreateProperty });
+    }
+  };
+
+  const getProperty = findDynamicIdInList(appartId, allProperties);
+
+  useEffect(() => {
+    if (appartId && getProperty) {
+      setInitialValues({
+        ...getProperty,
+        type: getProperty.type ? [getProperty.type] : [],
+        country: getProperty.country ? [getProperty.country] : [],
+        city: getProperty.city ? [getProperty.city] : [],
+        status: getProperty.status ? [getProperty.status] : [],
+      });
+      setGalleryImages(getProperty?.galleryImages || []);
+    }
+    if (!appartId) {
       setInitialValues({});
       setGalleryImages([]);
     }
-  }, [data, isOpen]);
+  }, [appartId, getProperty]);
 
   const propertyTypes = createListCollection({
     items: CONSTANTS.propertyTypes.map((type) => ({
+      label: type.label,
+      value: type.value,
+    })),
+  });
+
+  const propertyStatusList = createListCollection({
+    items: CONSTANTS.propertyStatus.map((type) => ({
       label: type.label,
       value: type.value,
     })),
@@ -68,11 +138,12 @@ export const AppartForm = ({
   const onSubmit = (values: FormikValues) => {
     const request: MODELS.ICreateProperty = {
       ...values,
-      type: values.type?.[0] || "",
-      country: values.country?.[0] || "",
-      city: values.city?.[0] || "",
+      type: values.type?.[0],
+      country: values.country?.[0],
+      city: values.city?.[0],
+      status: values.status?.[0],
     };
-    callback(request);
+    handleCreateProperty(request);
   };
 
   return (
@@ -82,101 +153,157 @@ export const AppartForm = ({
       onSubmit={onSubmit}
       validationSchema={VALIDATION.PROPERTY_VALIDATION.createPropertySchema}
     >
-      {({ handleSubmit, setFieldValue, errors, resetForm, values }) => (
-        <BaseDrawer
-          title={
-            data?.id ? "Modifier votre appartement" : "Ajouter un appartement"
-          }
-          icon={<BsFillBuildingsFill />}
-          iconBackgroundColor={"secondary.500"}
-          onChange={() => {
-            onChange(false);
-            resetForm();
-          }}
-          isOpen={isOpen}
-          callback={() => handleSubmit()}
-          size={"lg"}
-          buttonSaveTitle={data?.id ? "COMMON.EDIT" : "COMMON.ADD"}
-          isLoading={isLoading}
+      {({ handleSubmit, setFieldValue, errors, values }) => (
+        <FormContainer
+          pageTitle={appartId ? "Modifier le bien " : "Ajouter un bien"}
+          pageDescription={"Renseignez les informations de votre propriété"}
+          isLoading={fetchLoading}
         >
-          <VStack gap={4}>
-            <HStack width={"full"}>
+          <VStack gap={8}>
+            {/* ==================== INFORMATIONS GENERALES ==================== */}
+            <FormCard
+              title="Informations générales"
+              description="Détails principaux du bien"
+            >
               <FormTextInput
-                label={"Titre de l'annonce de l'appartement"}
-                placeholder={"Appartement à louer à Paris"}
-                name={"title"}
+                label="Titre du bien"
+                placeholder="Ex: Appartement à louer à Paris"
+                name="title"
+                isLoading={fetchLoading}
               />
+
+              <HStack width="full" gap={4}>
+                <FormSelect
+                  name="type"
+                  label="Type de propriété"
+                  placeholder="Sélectionner un type"
+                  listItems={propertyTypes}
+                  setFieldValue={setFieldValue}
+                />
+
+                <FormSelect
+                  name="status"
+                  label="Statut du bien"
+                  placeholder="Sélectionner un statut"
+                  listItems={propertyStatusList} // ⚠️ utiliser la bonne liste
+                  setFieldValue={setFieldValue}
+                />
+              </HStack>
+
+              <FormTextArea
+                label="Description"
+                placeholder="Décrivez votre bien..."
+                name="description"
+                maxCharacters={1000}
+              />
+            </FormCard>
+
+            {/* ==================== LOCALISATION ==================== */}
+            <FormCard title="Localisation">
               <FormTextInput
-                label={"Prix de location par mois"}
-                placeholder="Prix de location par mois"
-                name={"price"}
-                type="amount"
+                label="Adresse"
+                placeholder="Adresse complète"
+                name="address"
               />
-            </HStack>
-            <HStack width={"full"}>
-              <FormTextInput
-                label={"Adresse"}
-                placeholder="Adresse"
-                name={"address"}
+
+              <HStack width="full" gap={4}>
+                <FormSelect
+                  name="country"
+                  label="Pays"
+                  placeholder="Sélectionner un pays"
+                  listItems={countryList}
+                  setFieldValue={setFieldValue}
+                  onChangeFunc={() => {
+                    setFieldValue("city", []);
+                  }}
+                />
+
+                <FormTextInput
+                  label="Code postal"
+                  placeholder="45800"
+                  name="postalCode"
+                  type="number"
+                />
+
+                <FormSelect
+                  name="city"
+                  label="Ville"
+                  placeholder="Sélectionner une ville"
+                  listItems={getCityList(values?.country?.[0]!)}
+                  setFieldValue={setFieldValue}
+                />
+              </HStack>
+            </FormCard>
+
+            {/* ==================== CARACTÉRISTIQUES ==================== */}
+            <FormCard title="Caractéristiques">
+              <HStack width="full" gap={4}>
+                <FormTextInput
+                  label="Surface (m²)"
+                  placeholder="Ex: 120"
+                  name="surface"
+                  type="number"
+                />
+
+                <FormTextInput
+                  label="Nombre de chambres"
+                  placeholder="Ex: 3"
+                  name="rooms"
+                  type="number"
+                />
+
+                <FormTextInput
+                  label="Nombre de salles de bain"
+                  placeholder="Ex: 2"
+                  name="sdb" // ✅ corrigé
+                  type="number"
+                />
+              </HStack>
+            </FormCard>
+
+            {/* ==================== TARIFICATION ==================== */}
+            <FormCard title="Tarification">
+              <HStack width="full" gap={4}>
+                <FormTextInput
+                  label="Loyer mensuel"
+                  placeholder="Ex: 1500"
+                  name="price"
+                  type="amount"
+                />
+
+                <FormTextInput
+                  label="Dépôt de garantie"
+                  placeholder="Ex: 500"
+                  name="locationCaution" // ✅ corrigé
+                  type="amount"
+                />
+              </HStack>
+            </FormCard>
+
+            {/* ==================== PHOTOS ==================== */}
+            <FormCard
+              title="Photos"
+              description="Ajoutez des photos pour illustrer votre bien"
+            >
+              <BaseDragDropZone
+                getFilesUploaded={(files) =>
+                  setFieldValue("galleryImages", files)
+                }
+                initialImageUrls={galleryImages}
+                maxFiles={4}
+                messageInfo={errors?.galleryImages as string}
               />
-              <FormSelect
-                name={"type"}
-                label={"Type de propriété"}
-                placeholder="Type de propriété"
-                listItems={propertyTypes}
-                setFieldValue={setFieldValue}
-              />
-            </HStack>
-            <HStack width={"full"}>
-              <FormTextInput
-                label={"Surface en m²"}
-                placeholder="Surface en m²"
-                name={"surface"}
-                type="number"
-              />
-              <FormTextInput
-                label={"Nombre de chambre"}
-                placeholder={"Nombre de chambre"}
-                name={"rooms"}
-                type="number"
-              />
-            </HStack>
-            <HStack width={"full"}>
-              <FormSelect
-                name={"country"}
-                label={"Pays"}
-                placeholder={"Pays"}
-                listItems={countryList}
-                setFieldValue={setFieldValue}
-                onChangeFunc={() => {
-                  setFieldValue("city", []);
-                }}
-              />
-              <FormSelect
-                name={"city"}
-                label={"Ville"}
-                placeholder={"Ville"}
-                listItems={getCityList(values?.country?.[0]!)}
-                setFieldValue={setFieldValue}
-              />
-            </HStack>
-            <FormTextArea
-              label={"Description de l'appartement"}
-              placeholder={"Description de l'appartement"}
-              name={"description"}
-              maxCharacters={1000}
-            />
-            <BaseDragDropZone
-              getFilesUploaded={(files) =>
-                setFieldValue("galleryImages", files)
-              }
-              initialImageUrls={galleryImages}
-              maxFiles={4}
-              label={"Glisser et déposer les images de l'appartement ici"}
-              messageInfo={errors?.galleryImages as string}
-            />
+            </FormCard>
           </VStack>
-        </BaseDrawer>
+          <ActionsButton
+            justifyContent={"flex-end"}
+            onClick={() => handleSubmit()}
+            onCancel={() => router.back()}
+            isLoading={createPending}
+            validateTitle={appartId ? "Modiler le bien" : "Ajouter le bien"}
+            icon={<Icons.RiBuildingLine />}
+          />
+        </FormContainer>
       )}
     </Formik>
   );

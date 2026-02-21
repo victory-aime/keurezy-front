@@ -46,7 +46,7 @@ const features = [
     color: "blue.500",
   },
 ];
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const FeaturesSection = () => {
   return (

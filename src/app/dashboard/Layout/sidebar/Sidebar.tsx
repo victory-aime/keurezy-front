@@ -50,16 +50,11 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
   //   );
   // }, [sidebarLinks, session, hasFeatureAccess, hasModulesAccess]);
 
-  useEffect(() => {
-    if (sidebarLinks?.length === 0) {
-      setIsModalOpen(true);
-    } else {
-      setIsModalOpen(false);
-    }
-    if (!data?.user?.role && !user?.role) {
-      window.location.reload();
-    }
-  }, [sidebarLinks, data?.user?.role, user?.role]);
+  // useEffect(() => {
+  //   if (!data?.user?.role && !user?.role) {
+  //     window.location.reload();
+  //   }
+  // }, [data?.user?.role, user?.role]);
 
   return (
     <>

@@ -24,6 +24,7 @@ export const CustomSkeletonLoader: FunctionComponent<
   numberOfLines = 3,
   statisticBars = 4,
   colorButton = "info",
+  count = 4,
 }) => {
   const DefaultBlockLoader = <Skeleton height={height} variant={variant} />;
 
@@ -168,7 +169,7 @@ export const CustomSkeletonLoader: FunctionComponent<
 
   const GridLoader = (
     <SimpleGrid columns={{ base: 1, sm: 2, md: 3, xl: 4 }} gap={6} mt={8}>
-      {Array.from({ length: 8 }, (_, i) => (
+      {Array.from({ length: count }, (_, i) => (
         <Box key={i} p={4}>
           <Skeleton height="180px" borderRadius="12px" />
           <Stack mt={4}>

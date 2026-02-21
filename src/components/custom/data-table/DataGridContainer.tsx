@@ -3,7 +3,7 @@
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
-  ActionButtons,
+  DataTableActionButtons,
   CustomSkeletonLoader,
   PaginationDataTable,
 } from "_components/custom";
@@ -54,8 +54,18 @@ export function DataGridContainer<T>({
           return (
             <Box key={index} position="relative">
               {renderItem(item, index)}
-              <Box position={"absolute"} top={"8px"} right={"8px"}>
-                {actions && <ActionButtons actions={actions} item={item} />}
+              <Box
+                position={"absolute"}
+                top={"8px"}
+                right={"8px"}
+                p={1}
+                color={"white"}
+                borderRadius={"99px"}
+                bgColor={"primary.500"}
+              >
+                {actions && (
+                  <DataTableActionButtons actions={actions} item={item} />
+                )}
               </Box>
             </Box>
           );

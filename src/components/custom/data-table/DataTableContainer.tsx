@@ -3,6 +3,7 @@ import {
   ActionBar,
   Box,
   CloseButton,
+  Flex,
   Menu,
   Portal,
   Table,
@@ -22,7 +23,7 @@ import {
   PaginationDataTable,
   TableProps,
 } from "_components/custom";
-import { ActionButtons } from "./ActionButtons";
+import { DataTableActionButtons } from "./DataTableActionButtons";
 import { useTranslation } from "react-i18next";
 import { NoDataAnimation } from "_components/custom/data-table/NoDataAnimation";
 import { hexToRGB } from "_theme/colors";
@@ -142,6 +143,7 @@ export const DataTableContainer: FC<TableProps> = ({
                   <>
                     {t(col.header)}{" "}
                     {sortConfig?.key === col.accessor &&
+                      col.accessor !== "actions" &&
                       (sortConfig.direction === "asc" ? "⬆" : "⬇")}
                   </>
                 )}
@@ -199,11 +201,13 @@ export const DataTableContainer: FC<TableProps> = ({
                       }}
                     />
                   ) : col.accessor === "actions" && col.actions ? (
-                    <ActionButtons
-                      key={item.id}
-                      actions={col?.actions}
-                      item={item}
-                    />
+                    <Flex justifyContent={"center"}>
+                      <DataTableActionButtons
+                        key={item.id}
+                        actions={col?.actions}
+                        item={item}
+                      />
+                    </Flex>
                   ) : col.cell ? (
                     col.cell(
                       col.accessor === "fullObject" ? item : item[col.accessor],

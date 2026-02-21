@@ -140,7 +140,7 @@ export const BaseContainer = ({
           <CustomSkeletonLoader
             type={"BUTTON"}
             width={"100px"}
-            colorButton={"success"}
+            colorButton={"primary"}
           />
         ) : (
           <HStack

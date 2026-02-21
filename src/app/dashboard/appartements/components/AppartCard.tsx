@@ -8,8 +8,14 @@ import {
   BaseFormatNumber,
 } from "_components/custom";
 import { VariablesColors } from "_theme/variables";
+import { CONSTANTS, MODELS } from "_types/*";
+import { COMMON } from "../../../../types/enum";
 
-export const AppartCard = ({ property, index = 0 }: any) => {
+export const AppartGridView = ({
+  property,
+}: {
+  property: MODELS.IProperty;
+}) => {
   return (
     <Box key={property.id}>
       <Box
@@ -21,7 +27,7 @@ export const AppartCard = ({ property, index = 0 }: any) => {
       >
         <Box position={"relative"} aspectRatio={16 / 6} overflow={"hidden"}>
           <Image
-            src={property.images[0]}
+            src={property?.galleryImages?.[0]}
             alt={property.title}
             w={"auto"}
             h={"auto"}
@@ -38,14 +44,24 @@ export const AppartCard = ({ property, index = 0 }: any) => {
             className="absolute top-3 left-3 flex gap-2"
           >
             <BaseBadge
-              color={property.available ? "tertiary" : "warning"}
-              label={property.available ? "Disponible" : "Occupé"}
+              color={
+                property.status === COMMON.Status.AVAILABLE
+                  ? "tertiary"
+                  : "warning"
+              }
+              label={
+                CONSTANTS.propertyStatus.find(
+                  (item) => item?.value === property.status,
+                )?.label
+              }
             />
 
             <BaseBadge
               color="neutral"
               label={
-                property.type.charAt(0).toUpperCase() + property.type.slice(1)
+                CONSTANTS.propertyTypes.find(
+                  (item) => item?.value === property?.type,
+                )?.label
               }
             />
           </Box>
@@ -55,27 +71,27 @@ export const AppartCard = ({ property, index = 0 }: any) => {
             <VStack width={"full"} gap={0} alignItems={"flex-start"}>
               <BaseText
                 weight={TextWeight.SemiBold}
-                lineClamp={2}
+                lineClamp={1}
                 textWrap={"wrap"}
                 _hover={{ color: VariablesColors.primary }}
               >
                 {property.title}
               </BaseText>
-              <BaseText variant={TextVariant.S}>{property.location}</BaseText>
+              <BaseText variant={TextVariant.S}>{property?.address}</BaseText>
 
               <Box width={"full"}>
                 <Flex gap={4}>
                   <HStack>
                     <Icons.Bed />
-                    <span>{property.beds}</span>
+                    <span>{property?.rooms}</span>
                   </HStack>
                   <HStack>
                     <Icons.Bath />
-                    <span>{property.baths}</span>
+                    <span>{property?.sdb}</span>
                   </HStack>
                   <HStack>
                     <Icons.Maximize />
-                    <span>{property.surface}m²</span>
+                    <span>{property?.surface}m²</span>
                   </HStack>
                 </Flex>
               </Box>
@@ -87,7 +103,7 @@ export const AppartCard = ({ property, index = 0 }: any) => {
               color={"primary.500"}
               _hover={{ color: VariablesColors.primary }}
             >
-              <BaseFormatNumber value={property.price} />
+              <BaseFormatNumber value={property?.price || 0} />
               <span
                 style={{
                   fontSize: "14px",

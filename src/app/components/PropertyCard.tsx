@@ -7,20 +7,22 @@ import {
   TextWeight,
 } from "_components/custom";
 import { motion } from "framer-motion";
-import { Property } from "./Properties";
 import { Box, Flex, HStack, Image } from "@chakra-ui/react";
 import { VariablesColors } from "_theme/variables";
 import Link from "next/link";
 import { Button } from "_components/ui/button";
 import { APP_ROUTES } from "_config/routes";
+import { MODELS, ENUM, CONSTANTS } from "_types/";
 
-interface PropertyCardProps {
-  property: Property;
+const MotionBox = motion.create(Box);
+
+export const PropertyCard = ({
+  property,
+  index = 0,
+}: {
+  property: MODELS.IProperty;
   index?: number;
-}
-const MotionBox = motion(Box);
-
-export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
+}) => {
   return (
     <MotionBox
       initial={{ opacity: 0, y: 20 }}
@@ -38,7 +40,7 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
         >
           <Box position={"relative"} aspectRatio={4 / 3} overflow={"hidden"}>
             <Image
-              src={property.images[0]}
+              src={property?.galleryImages?.[0]}
               alt={property.title}
               w={"auto"}
               h={"auto"}
@@ -55,14 +57,21 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
               className="absolute top-3 left-3 flex gap-2"
             >
               <BaseBadge
-                color={property.available ? "tertiary" : "danger"}
-                label={property.available ? "Disponible" : "Loué"}
+                color={property.status ? "tertiary" : "danger"}
+                label={
+                  property.status === ENUM.COMMON.Status.AVAILABLE
+                    ? "Disponible"
+                    : "Loué"
+                }
               />
 
               <BaseBadge
                 color="neutral"
                 label={
-                  property.type.charAt(0).toUpperCase() + property.type.slice(1)
+                  property.type &&
+                  CONSTANTS.propertyTypes.find(
+                    (item) => item.value === property.type,
+                  )?.label
                 }
               />
             </Box>
@@ -90,7 +99,7 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
                 color={"primary.500"}
                 _hover={{ color: VariablesColors.primary }}
               >
-                <BaseFormatNumber value={property.price} />
+                <BaseFormatNumber value={property.price ?? 0} />
                 <span
                   style={{ fontSize: "14px", color: VariablesColors.gray400 }}
                 >
@@ -100,7 +109,7 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
             </Flex>
             <Flex gap={2} alignItems={"center"}>
               <Icons.MapPin />
-              <BaseText variant={TextVariant.S}>{property.location}</BaseText>
+              <BaseText variant={TextVariant.S}>{property?.address}</BaseText>
             </Flex>
             <Flex
               pt={2}
@@ -113,11 +122,11 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
               <Flex gap={4}>
                 <HStack>
                   <Icons.Bed />
-                  <span>{property.beds}</span>
+                  <span>{property.rooms}</span>
                 </HStack>
                 <HStack>
                   <Icons.Bath />
-                  <span>{property.baths}</span>
+                  <span>{property.sdb}</span>
                 </HStack>
                 <HStack>
                   <Icons.Maximize />

@@ -1,19 +1,14 @@
 import { DataTableContainer } from "./DataTableContainer";
-import { ActionButtons } from "./ActionButtons";
-import {
-  ActionButtonsProps,
-  ActionProps,
-  TableProps,
-  PaginationProps,
-  ColumnsDataTable,
-} from "./interface/data-types";
+import { DataDisplayContainer } from "./DataDisplayContainer";
+import { DataGridContainer } from "./DataGridContainer";
+import { DataTableActionButtons } from "./DataTableActionButtons";
 import { PaginationDataTable } from "./components/PaginationDataTable";
 
-export { DataTableContainer, ActionButtons, PaginationDataTable };
-export type {
-  ActionButtonsProps,
-  ActionProps,
-  TableProps,
-  PaginationProps,
-  ColumnsDataTable,
+export {
+  DataTableContainer,
+  DataTableActionButtons,
+  PaginationDataTable,
+  DataDisplayContainer,
+  DataGridContainer,
 };
+export * from "./interface/data-types";

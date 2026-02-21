@@ -11,29 +11,24 @@ import {
 } from "_components/custom";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { properties } from "./Properties";
-import { Navbar } from "./NavBar";
 import Link from "next/link";
 import {
-  Badge,
   Box,
-  Button,
   Container,
   Flex,
   Grid,
-  VStack,
   Image,
   Stack,
-  Text,
   HStack,
 } from "@chakra-ui/react";
-import { Footer } from "../layout/Footer";
-import { NoDataAnimation } from "_components/custom/data-table/NoDataAnimation";
 import { APP_ROUTES } from "_config/routes";
 import { UserLayout } from "../layout/Layout";
 import { VariablesColors } from "_theme/variables";
-import { useAuth } from "_hooks/useAuth";
 import { useAuthContext } from "_context/auth-context";
+import { PropertyModule } from "_store/state-management";
+import { findDynamicIdInList } from "rise-core-frontend";
+import { MODELS, CONSTANTS } from "_types/";
+import { UserRole } from "../../types/enum";
 
 const InfoItem = ({
   icon,
@@ -57,24 +52,19 @@ const PriceRow = ({ label, value }: { label: string; value: number }) => (
   </Flex>
 );
 
-export const PropertyDetails = ({ id }: { id: string }) => {
-  const MotionBox = motion(Box);
-  const property = properties.find((p) => p.id === id);
-  const { session } = useAuthContext();
-  const [selectedImage, setSelectedImage] = useState(0);
+const MotionBox = motion.create(Box);
 
-  if (!property) {
-    return (
-      <UserLayout>
-        <VStack>
-          <NoDataAnimation />
-          <Link href={APP_ROUTES.APPARTEMENTS}>
-            <BaseButton mt={4}>Retour aux propriétés</BaseButton>
-          </Link>
-        </VStack>
-      </UserLayout>
-    );
-  }
+export const PropertyDetails = ({ id }: { id: string }) => {
+  const { session, user } = useAuthContext();
+  const [selectedImage, setSelectedImage] = useState(0);
+  const { data: allPublicProperties, isLoading } =
+    PropertyModule.getAllPublicProperties({
+      queryOptions: { enabled: !!id },
+    });
+  const property: MODELS.IProperty = findDynamicIdInList(
+    id,
+    allPublicProperties,
+  );
 
   return (
     <UserLayout>
@@ -106,7 +96,7 @@ export const PropertyDetails = ({ id }: { id: string }) => {
             {/* Main Image */}
             <Box rounded="xl" overflow="hidden">
               <BaseRatio
-                image={property.images[selectedImage]}
+                image={property?.galleryImages?.[selectedImage] as string}
                 ratio={16 / 10}
               />
             </Box>
@@ -115,7 +105,7 @@ export const PropertyDetails = ({ id }: { id: string }) => {
               templateColumns={{ base: "repeat(3, 1fr)", lg: "1fr" }}
               gap={2}
             >
-              {property.images.map((img, i) => (
+              {property?.galleryImages?.map((img, i) => (
                 <Box
                   as="button"
                   key={i}
@@ -145,15 +135,17 @@ export const PropertyDetails = ({ id }: { id: string }) => {
               <Box>
                 <Flex align="center" gap={3} mb={3}>
                   <BaseBadge
-                    color={property.available ? "tertiary" : "danger"}
-                    label={property.available ? "Disponible" : "Loué"}
+                    color={property?.status ? "tertiary" : "danger"}
+                    label={property?.status ? "Disponible" : "Loué"}
                   />
 
                   <BaseBadge
                     color={"neutral"}
                     label={
-                      property.type.charAt(0).toUpperCase() +
-                      property.type.slice(1)
+                      property?.type &&
+                      CONSTANTS.propertyTypes.find(
+                        (item) => item.value === property?.type,
+                      )?.label
                     }
                   />
                 </Flex>
@@ -163,13 +155,13 @@ export const PropertyDetails = ({ id }: { id: string }) => {
                   weight={TextWeight.Bold}
                   mb={2}
                 >
-                  {property.title}
+                  {property?.title}
                 </BaseText>
 
                 <Flex align="center" gap={1.5} color="gray.500">
                   <Icons.MapPin size={16} />
                   <BaseText variant={TextVariant.S}>
-                    {property.location}
+                    {property?.address}
                   </BaseText>
                 </Flex>
               </Box>
@@ -184,15 +176,15 @@ export const PropertyDetails = ({ id }: { id: string }) => {
               >
                 <InfoItem
                   icon={<Icons.Bed size={20} />}
-                  label={`${property.beds} Chambre${property.beds > 1 ? "s" : ""}`}
+                  label={`${property?.rooms} Chambre${(property?.rooms ?? 0) > 1 ? "s" : ""}`}
                 />
                 <InfoItem
                   icon={<Icons.Bath size={20} />}
-                  label={`${property.baths} SdB`}
+                  label={`${property?.sdb} SdB`}
                 />
                 <InfoItem
                   icon={<Icons.Maximize size={20} />}
-                  label={`${property.surface}m²`}
+                  label={`${property?.surface}m²`}
                 />
               </Flex>
 
@@ -206,12 +198,12 @@ export const PropertyDetails = ({ id }: { id: string }) => {
                   Description
                 </BaseText>
                 <BaseText color="gray.500" lineHeight="relaxed">
-                  {property.description}
+                  {property?.description}
                 </BaseText>
               </Box>
 
               {/* Features */}
-              <Box>
+              {/* <Box>
                 <BaseText
                   variant={TextVariant.L}
                   weight={TextWeight.SemiBold}
@@ -234,10 +226,10 @@ export const PropertyDetails = ({ id }: { id: string }) => {
                     </Flex>
                   ))}
                 </Grid>
-              </Box>
+              </Box> */}
 
               {/* Amenities */}
-              <Box>
+              {/* <Box>
                 <Text fontSize="xl" fontWeight="semibold" mb={4}>
                   Équipements
                 </Text>
@@ -247,7 +239,7 @@ export const PropertyDetails = ({ id }: { id: string }) => {
                     <BaseBadge key={a} color="secondary" label={a} />
                   ))}
                 </Flex>
-              </Box>
+              </Box> */}
             </Stack>
 
             {/* RIGHT SIDE - PRICE CARD */}
@@ -270,7 +262,7 @@ export const PropertyDetails = ({ id }: { id: string }) => {
                       color={"primary.500"}
                       fontWeight="bold"
                     >
-                      <BaseFormatNumber value={property.price} />
+                      <BaseFormatNumber value={property?.price ?? 0} />
                       <BaseText as="span" fontSize="md" color="gray.500" ml={1}>
                         /mois
                       </BaseText>
@@ -279,14 +271,17 @@ export const PropertyDetails = ({ id }: { id: string }) => {
 
                   {/* Breakdown */}
                   <Stack gap={2} fontSize="sm">
-                    <PriceRow label="Loyer mensuel" value={property.price} />
+                    <PriceRow
+                      label="Loyer mensuel"
+                      value={property?.price ?? 0}
+                    />
                     <PriceRow
                       label="Charges estimées"
-                      value={Math.round(property.price * 0.12)}
+                      value={Math.round((property?.price ?? 0) * 0.12)}
                     />
                     <PriceRow
                       label="Dépôt de garantie"
-                      value={property.price}
+                      value={property?.price ?? 0}
                     />
 
                     <Flex
@@ -300,7 +295,8 @@ export const PropertyDetails = ({ id }: { id: string }) => {
                       <BaseText>Total 1er mois</BaseText>
                       <BaseFormatNumber
                         value={
-                          property.price * 2 + Math.round(property.price * 0.12)
+                          (property?.price ?? 0) * 2 +
+                          Math.round((property?.price ?? 0) * 0.12)
                         }
                       />
                     </Flex>
@@ -308,9 +304,10 @@ export const PropertyDetails = ({ id }: { id: string }) => {
 
                   {/* Buttons */}
                   <Link href={session ? "/" : APP_ROUTES.AUTH.SIGN_UP}>
-                    <BaseButton w="full">Postuler maintenant</BaseButton>
+                    {user?.role !== UserRole.IMMO_OWNER && (
+                      <BaseButton w="full">Postuler maintenant</BaseButton>
+                    )}
                   </Link>
-
                   <Stack gap={3} pt={2}>
                     <BaseButton
                       variant="outline"

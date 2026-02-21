@@ -77,6 +77,13 @@ export const APIS = (baseUrl?: string) => {
         pathBase: "SECURED_API",
         showResponse: false,
       }),
+      ALL_PROPERTIES_PUBLIC: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}`,
+        method: "GET",
+        pathBase: "UNSECURED_API",
+        showResponse: false,
+        handleErrorManually: false,
+      }),
       UPDATE_PROPERTY: api({
         path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/update`,
         method: "POST",

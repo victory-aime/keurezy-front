@@ -98,6 +98,7 @@ export interface AuthContextType {
     emailVerified: boolean;
     name: string;
     image?: string | null | undefined;
+    role?: string;
   } | null;
   isLoading?: boolean;
   dismissToast?: (() => void) | undefined;

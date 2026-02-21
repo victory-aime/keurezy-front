@@ -21,7 +21,7 @@ const SessionContext = createContext<
 >(undefined);
 
 export function SessionRefreshProvider({ children }: { children: ReactNode }) {
-  const { error } = authClient.useSession();
+  const { error, refetch: refetchSession } = authClient.useSession();
   const isRetryingRef = useRef(false);
   const toastId = "session-error-toast";
 
@@ -39,14 +39,15 @@ export function SessionRefreshProvider({ children }: { children: ReactNode }) {
       showStatus: { error: false, success: false },
       asPromise: {
         promise: retrySessionRequest()
-          .then(() =>
+          .then(async () => {
+            await refetchSession();
             CustomToast({
               id: `${toastId}-final`,
               title: "Connexion rétablie",
               description: "Votre session est active.",
               type: ToastStatus.SUCCESS,
-            }),
-          )
+            });
+          })
           .catch(() =>
             CustomToast({
               id: `${toastId}-error`,

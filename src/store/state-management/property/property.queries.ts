@@ -3,6 +3,16 @@ import { propertyServiceInstance } from "./property.service-instance";
 import { MODELS } from "_types/index";
 import { QUERIES } from "rise-core-frontend";
 
+const getAllPublicProperties = (args: QUERIES.QueryPayload) => {
+  const { queryOptions } = args;
+
+  return QUERIES.useCustomQuery<MODELS.IProperty[]>({
+    queryKey: [Constants.PROPERTIES_KEYS.ALL_PROPERTIES_PUBLIC],
+    queryFn: () => propertyServiceInstance().allPublicProperties(),
+    options: queryOptions,
+  });
+};
+
 const getAllProperties = (args: QUERIES.QueryPayload<{ agencyId: string }>) => {
   const { params, queryOptions } = args;
 
@@ -24,4 +34,4 @@ const createPropertyMutation = (
   });
 };
 
-export { getAllProperties, createPropertyMutation };
+export { getAllProperties, createPropertyMutation, getAllPublicProperties };

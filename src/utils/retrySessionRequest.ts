@@ -1,7 +1,7 @@
 import { authClient } from "../app/lib/auth-client";
 
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 2000;
+const MAX_RETRIES = 5;
+const RETRY_DELAY = 4000;
 
 export async function retrySessionRequest(
   maxRetries = MAX_RETRIES,

@@ -6,6 +6,11 @@ import { MODELS } from "_types/index";
  * such as fetching all agency and creating a new agency through API endpoints.
  */
 export class PropertyService extends BaseApi {
+  allPublicProperties() {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().PROPERTY.ALL_PROPERTIES_PUBLIC,
+    );
+  }
   all_properties(agencyId: string) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().PROPERTY.ALL_PROPERTIES,

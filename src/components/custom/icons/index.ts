@@ -33,7 +33,11 @@ import {
   IoShieldCheckmarkSharp,
 } from "react-icons/io5";
 import { RiSearch2Line } from "react-icons/ri";
-import { TbTaxEuro } from "react-icons/tb";
+import {
+  TbLayoutSidebarRightCollapse,
+  TbLayoutSidebarRightExpand,
+  TbTaxEuro,
+} from "react-icons/tb";
 import { FaTrashAlt } from "react-icons/fa";
 import {
   IoCopyOutline,
@@ -45,10 +49,11 @@ import { MdEdit, MdLocalPhone } from "react-icons/md";
 import { PiBathtubLight, PiEyeLight } from "react-icons/pi";
 import { GrMoney } from "react-icons/gr";
 import { TbRestore } from "react-icons/tb";
-import { RxHamburgerMenu } from "react-icons/rx";
+import { RxDotsHorizontal, RxHamburgerMenu } from "react-icons/rx";
 import { LuBuilding2, LuMaximize } from "react-icons/lu";
 import { BsSliders } from "react-icons/bs";
 import { CiGrid31 } from "react-icons/ci";
+import { ImOffice } from "react-icons/im";
 
 export const Icons = {
   MapPin: CiMapPin,
@@ -99,4 +104,8 @@ export const Icons = {
   Setting: FaCog,
   List: CiViewList,
   Grid: CiGrid31,
+  DotHorizontal: RxDotsHorizontal,
+  SideOpen: TbLayoutSidebarRightExpand,
+  SideClose: TbLayoutSidebarRightCollapse,
+  Office: ImOffice,
 };

@@ -24,7 +24,7 @@ interface CustomToastProps extends ToastProps {
 }
 
 export const CustomToast = ({
-  id,
+  id = "default-toast",
   title = "Notification",
   type = ToastStatus.SUCCESS,
   description,
