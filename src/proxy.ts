@@ -65,12 +65,16 @@ export async function proxy(request: NextRequest) {
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
-  if (!sessionCookie && matchedRoute) {
+  if (matchedRoute) {
+    const url = request.nextUrl.clone();
+    if (!sessionCookie) {
+      url.pathname = APP_ROUTES.PROTECTED;
+      return NextResponse.redirect(url);
+    }
     const allowedRoles = PROTECTED_ROUTES[matchedRoute];
     const hasAccess = allowedRoles.includes(session?.user.role!);
 
     if (!hasAccess) {
-      const url = request.nextUrl.clone();
       url.pathname = APP_ROUTES.PROTECTED;
       return NextResponse.redirect(url);
     }
@@ -107,5 +111,6 @@ export const config = {
     `/auth/signin/totp`,
     `/auth/forget-pass/validate`,
     `/auth/register-agency/:path*`,
+    `/properties/apply/:path*`,
   ],
 };

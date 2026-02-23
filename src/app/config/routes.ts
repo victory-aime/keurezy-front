@@ -19,4 +19,6 @@ export const APP_ROUTES = {
   DASHBOARD: "/dashboard",
   APPARTEMENTS: "/properties",
   APPARTEMENT_DETAIL: "/properties/details",
+  APPARTEMENT_APPLY: "/properties/apply",
+  APPARTEMENT_CONTACT_AGENCY: "/properties/contact",
 };

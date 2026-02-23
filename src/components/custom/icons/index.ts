@@ -49,8 +49,8 @@ import { MdEdit, MdLocalPhone } from "react-icons/md";
 import { PiBathtubLight, PiEyeLight } from "react-icons/pi";
 import { GrMoney } from "react-icons/gr";
 import { TbRestore } from "react-icons/tb";
-import { RxDotsHorizontal, RxHamburgerMenu } from "react-icons/rx";
-import { LuBuilding2, LuMaximize } from "react-icons/lu";
+import { RxDotsHorizontal, RxHamburgerMenu, RxLapTimer } from "react-icons/rx";
+import { LuBuilding2, LuMaximize, LuSend } from "react-icons/lu";
 import { BsSliders } from "react-icons/bs";
 import { CiGrid31 } from "react-icons/ci";
 import { ImOffice } from "react-icons/im";
@@ -108,4 +108,6 @@ export const Icons = {
   SideOpen: TbLayoutSidebarRightExpand,
   SideClose: TbLayoutSidebarRightCollapse,
   Office: ImOffice,
+  Send: LuSend,
+  Timer: RxLapTimer,
 };

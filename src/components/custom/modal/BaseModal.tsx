@@ -37,6 +37,8 @@ const BaseModal = ({
   logoSrc = "/assets/images/placeholder-image.png",
   ref,
   animateConfetti = false,
+  iconCancelButton,
+  iconSaveButton,
   ...rest
 }: ModalProps) => {
   const { t } = useTranslation();
@@ -94,6 +96,7 @@ const BaseModal = ({
                           withGradient
                           onClick={() => onChange?.(!isOpen)}
                           variant={"outline"}
+                          leftIcon={iconCancelButton}
                           colorType={
                             modalType === "alertdialog"
                               ? "danger"
@@ -108,6 +111,7 @@ const BaseModal = ({
                       disabled={disabled}
                       withGradient
                       onClick={() => onClick?.()}
+                      leftIcon={iconSaveButton}
                       colorType={
                         modalType === "alertdialog" ? "danger" : colorSaveButton
                       }

@@ -1,10 +1,10 @@
-import { Suspense } from "react";
 import { SignIn } from "../components/SignIn";
 
-export default function SignInPages() {
-  return (
-    <Suspense>
-      <SignIn />
-    </Suspense>
-  );
+export default async function SignInPages({
+  searchParams,
+}: {
+  searchParams: Promise<{ callbackUrl?: string }>;
+}) {
+  const params = await searchParams;
+  return <SignIn callbackUrl={params.callbackUrl} />;
 }

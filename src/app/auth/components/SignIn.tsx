@@ -2,7 +2,7 @@
 
 import { BaseButton, BaseText, FormTextInput } from "_components/custom";
 import { APP_ROUTES } from "_config/routes";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { VStack, HStack, Box, Separator } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "_hooks/useAuth";
@@ -13,11 +13,13 @@ import { CiCloudOn, CiMail } from "react-icons/ci";
 import { AuthBoxContainer } from "./AuthBoxContainer";
 import { VariablesColors } from "_theme/variables";
 
-export const SignIn = () => {
+export const SignIn = ({
+  callbackUrl = APP_ROUTES.REDIRECT,
+}: {
+  callbackUrl?: string;
+}) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const callbackUrl =
-    useSearchParams()?.get("callbackUrl") || APP_ROUTES.REDIRECT;
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setGoogleIsLoading] = useState(false);
   const { login } = useAuth();

@@ -1,4 +1,4 @@
-import { PropertyDetails } from "_component/PropertyDetails";
+import { PropertyDetails } from "../components/PropertyDetails";
 
 export default async function PropertyDetailsPage({
   searchParams,

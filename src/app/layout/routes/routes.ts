@@ -8,6 +8,7 @@ import { UserRole } from "../../../types/enum";
 export const USERS_ROUTES = {
   PROFILE: `/profile`,
   FAVORITE: `/favorite`,
+  PROPERTIES_APPLY: APP_ROUTES.APPARTEMENT_APPLY,
 };
 
 export const HEADER_LINKS = (isAuthenticated: boolean, role: UserRole) => {

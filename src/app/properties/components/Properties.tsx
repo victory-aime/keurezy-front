@@ -25,7 +25,7 @@ import {
 import { ASSETS } from "_assets/images";
 import { Formik } from "formik";
 import { PropertyModule } from "_store/state-management";
-import { UserLayout } from "../layout/Layout";
+import { UserLayout } from "../../layout/Layout";
 import { CONSTANTS } from "_types/";
 
 export const properties = [

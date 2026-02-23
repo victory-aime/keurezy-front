@@ -18,6 +18,11 @@ interface IProperty {
   country?: string;
   propertyAgenceId?: string;
   status?: COMMON.Status;
+  propertyAgency?: {
+    name?: string;
+    isApprove?: boolean;
+    phone?: string;
+  };
 }
 
 interface ICreateProperty extends IProperty {
