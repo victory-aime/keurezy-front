@@ -32,7 +32,7 @@ export const AppartList = () => {
     data: allProperties,
     isLoading,
     refetch: refectProperty,
-  } = PropertyModule.getAllProperties({
+  } = PropertyModule.getAllPropertiesByAgency({
     params: {
       agencyId: user?.propertyOwner?.propertyAgency?.id,
     },
@@ -98,19 +98,18 @@ export const AppartList = () => {
         <BaseBadge variant="plain" status={price} />
       ),
     },
-
-    {
-      header: "Actions",
-      accessor: "actions",
-      actions: [
-        {
-          name: "edit",
-          handleClick(data) {
-            router.push(`${DASHBOARD_ROUTES.APPART.ADD}?requestId=${data?.id}`);
-          },
-        },
-      ],
-    },
+    // {
+    //   header: "Actions",
+    //   accessor: "actions",
+    //   actions: [
+    //     {
+    //       name: "edit",
+    //       handleClick(data) {
+    //         router.push(`${DASHBOARD_ROUTES.APPART.ADD}?requestId=${data?.id}`);
+    //       },
+    //     },
+    //   ],
+    // },
   ];
 
   return (
@@ -138,21 +137,21 @@ export const AppartList = () => {
         columns={appartColumns}
         isLoading={isLoading}
         renderGridItem={(item) => <AppartGridView property={item} />}
-        actions={[
-          {
-            name: "view",
-            handleClick: (selected: any) => console.log("selected", selected),
-          },
+        // actions={[
+        //   {
+        //     name: "view",
+        //     handleClick: (selected: any) => console.log("selected", selected),
+        //   },
 
-          {
-            name: "edit",
-            handleClick(data) {
-              router.push(
-                `${DASHBOARD_ROUTES.APPART.ADD}?requestId=${data?.id}`,
-              );
-            },
-          },
-        ]}
+        //   {
+        //     name: "edit",
+        //     handleClick(data) {
+        //       router.push(
+        //         `${DASHBOARD_ROUTES.APPART.ADD}?requestId=${data?.id}`,
+        //       );
+        //     },
+        //   },
+        // ]}
         hidePagination
       />
     </BaseContainer>

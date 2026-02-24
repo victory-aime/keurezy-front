@@ -11,9 +11,9 @@ export class PropertyService extends BaseApi {
       this.applicationContext.getApiConfig().PROPERTY.ALL_PROPERTIES_PUBLIC,
     );
   }
-  all_properties(agencyId: string) {
+  getAllPropertyByAgency(agencyId: string) {
     return this.apiService.invoke(
-      this.applicationContext.getApiConfig().PROPERTY.ALL_PROPERTIES,
+      this.applicationContext.getApiConfig().PROPERTY.ALL_PROPERTIES_BY_AGENCY,
       {},
       { params: { agencyId } },
     );

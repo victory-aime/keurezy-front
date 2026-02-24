@@ -146,7 +146,7 @@ export const BaseContainer = ({
           <HStack
             gap={4}
             width={"full"}
-            alignItems={"flex-end"}
+            alignItems={"flex-start"}
             justifyContent={"flex-end"}
             mt={{ base: "30px", md: "0" }}
           >

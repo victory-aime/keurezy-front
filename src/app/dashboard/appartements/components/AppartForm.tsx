@@ -34,7 +34,7 @@ export const AppartForm = ({ appartId }: { appartId: string }) => {
     data: allProperties,
     isLoading: fetchLoading,
     refetch: refectProperty,
-  } = PropertyModule.getAllProperties({
+  } = PropertyModule.getAllPropertiesByAgency({
     params: {
       agencyId: user?.propertyOwner?.propertyAgency?.id,
     },

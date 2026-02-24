@@ -3,11 +3,7 @@ import { APP_ROUTES } from "_config/routes";
 import { UserRole } from "./types/enum";
 import { DASHBOARD_ROUTES } from "./app/dashboard/routes";
 import { USERS_ROUTES } from "./app/layout/routes";
-import {
-  getCookieCache,
-  getSessionCookie,
-  getCookies,
-} from "better-auth/cookies";
+import { getCookieCache, getSessionCookie } from "better-auth/cookies";
 
 /**
  * Liste des routes protégées et des rôles autorisés pour chacune.
@@ -59,6 +55,14 @@ export async function proxy(request: NextRequest) {
   );
   if (matchedRoute) {
     const userRole: string = session?.user?.role;
+
+    console.log("session", session?.user?.role);
+    console.log("session cookies", sessionCookie);
+    console.log(
+      "route access",
+      PROTECTED_ROUTES[matchedRoute].includes(userRole),
+    );
+
     if (
       !sessionCookie ||
       !session ||

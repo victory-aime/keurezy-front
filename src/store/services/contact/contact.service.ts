@@ -12,4 +12,27 @@ export class ContactService extends BaseApi {
       data,
     );
   }
+  agencyRequestList(agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().CONTACT.AGENCY_REQUEST_LIST,
+      {},
+      { params: { agencyId } },
+    );
+  }
+
+  changeRequestStatus(requestId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().CONTACT.CHANGE_REQUEST_STATUS,
+      {},
+      { params: { requestId } },
+    );
+  }
+
+  readAllRequests(agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().CONTACT.READ_ALL_REQUESTS,
+      {},
+      { params: { agencyId } },
+    );
+  }
 }

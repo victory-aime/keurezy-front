@@ -13,12 +13,15 @@ const getAllPublicProperties = (args: QUERIES.QueryPayload) => {
   });
 };
 
-const getAllProperties = (args: QUERIES.QueryPayload<{ agencyId: string }>) => {
+const getAllPropertiesByAgency = (
+  args: QUERIES.QueryPayload<{ agencyId: string }>,
+) => {
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<MODELS.IProperty[]>({
-    queryKey: [Constants.PROPERTIES_KEYS.ALL_PROPERTIES],
-    queryFn: () => propertyServiceInstance().all_properties(params?.agencyId),
+    queryKey: [Constants.PROPERTIES_KEYS.ALL_PROPERTIES_BY_AGENCY],
+    queryFn: () =>
+      propertyServiceInstance().getAllPropertyByAgency(params?.agencyId),
     options: queryOptions,
   });
 };
@@ -34,4 +37,8 @@ const createPropertyMutation = (
   });
 };
 
-export { getAllProperties, createPropertyMutation, getAllPublicProperties };
+export {
+  getAllPropertiesByAgency,
+  createPropertyMutation,
+  getAllPublicProperties,
+};

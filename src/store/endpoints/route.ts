@@ -11,6 +11,7 @@ const APIS_ROUTES_MODULES_PATH = {
   AUTH: "/auth",
   FAQ: "/faq",
   CONTACT: "/contact",
+  REQUEST: "/request",
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -72,7 +73,7 @@ export const APIS = (baseUrl?: string) => {
         pathBase: "SECURED_API",
         showResponse: false,
       }),
-      ALL_PROPERTIES: api({
+      ALL_PROPERTIES_BY_AGENCY: api({
         path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/all`,
         method: "GET",
         pathBase: "SECURED_API",
@@ -140,6 +141,24 @@ export const APIS = (baseUrl?: string) => {
         path: `${APIS_ROUTES_MODULES_PATH.CONTACT}/public-request`,
         method: "POST",
         pathBase: "UNSECURED_API",
+      }),
+      AGENCY_REQUEST_LIST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.REQUEST}/list`,
+        method: "GET",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      CHANGE_REQUEST_STATUS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.REQUEST}/status`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      READ_ALL_REQUESTS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.REQUEST}/read-all`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
       }),
     },
     FAQ: {

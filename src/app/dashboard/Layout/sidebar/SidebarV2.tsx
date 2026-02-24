@@ -6,13 +6,19 @@ import { MobileSidebar } from "./components/MobileSidebar";
 import { ASSETS } from "_assets/images";
 import Image from "next/image";
 import { SideBarProps } from "./types";
-import { UserModule } from "_store/state-management";
+import {
+  UserModule,
+  ContactModule,
+  PropertyModule,
+} from "_store/state-management";
 import { ALL_CSA_ROUTES, MENU_BY_ROLE } from "./routes/routes";
 import { RenderGroupedLinks } from "./components/RenderGroupedLinks";
 import { useAuth } from "_hooks/useAuth";
 import { APP_ROUTES } from "_config/routes";
 import { SideToolTip } from "./components/SideToolTip";
 import { useSessionRefreshContext } from "_context/SessionRefresh-context";
+import { useMemo } from "react";
+import { DASHBOARD_ROUTES } from "../../routes";
 
 export const SidebarV2 = ({
   data,
@@ -20,15 +26,48 @@ export const SidebarV2 = ({
   sideToggled,
 }: SideBarProps) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const { logout, isLoading } = useAuth();
+  const { logout } = useAuth();
   const { dismissToast } = useSessionRefreshContext();
   const { data: user } = UserModule.getUserInfo({
     queryOptions: { enabled: false },
   });
-  const sidebarLinks =
-    (data?.user?.role ?? user?.role)
-      ? MENU_BY_ROLE[data?.user?.role! ?? user?.role] || []
-      : ALL_CSA_ROUTES;
+  const { data: requestList } = ContactModule.agencyRequestListQueries({
+    params: { agencyId: user?.propertyOwner?.propertyAgency?.id },
+    queryOptions: { enabled: !!user?.propertyOwner?.propertyAgency?.id },
+  });
+
+  const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
+    params: { agencyId: user?.propertyOwner?.propertyAgency?.id },
+    queryOptions: { enabled: !!user?.propertyOwner?.propertyAgency?.id },
+  });
+
+  const badgesByPath = useMemo(() => {
+    return {
+      [DASHBOARD_ROUTES.REQUEST]: requestList?.length,
+      [DASHBOARD_ROUTES.APPART.LIST]: propertyList?.length,
+    };
+  }, [requestList?.length, propertyList?.length]);
+
+  const sidebarLinks = useMemo(() => {
+    const baseLinks =
+      (data?.user?.role ?? user?.role)
+        ? MENU_BY_ROLE[data?.user?.role! ?? user?.role] || []
+        : ALL_CSA_ROUTES;
+
+    return baseLinks.map((group) => ({
+      ...group,
+      links: group.links.map((link) => {
+        const badgeValue = badgesByPath[link.path as string];
+        return {
+          ...link,
+          badge:
+            typeof badgeValue === "number" && badgeValue > 0
+              ? badgeValue
+              : undefined,
+        };
+      }),
+    }));
+  }, [data?.user?.role, user?.role, badgesByPath]);
 
   return (
     <Box>

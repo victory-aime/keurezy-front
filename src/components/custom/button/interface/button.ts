@@ -46,6 +46,7 @@ export interface ActionButtonTypes extends FlexProps {
   requestId?: string;
   isLoading?: boolean;
   isDisabled?: boolean;
+  withGradient?: boolean;
   onClick?: () => void;
   onCancel?: () => void;
   onReload?: () => void;

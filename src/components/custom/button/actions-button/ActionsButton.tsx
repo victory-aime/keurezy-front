@@ -25,6 +25,7 @@ export const ActionsButton = ({
   downloadPermission = true,
   validatePermission = true,
   reloadPermission = true,
+  withGradient = true,
   onReload,
   onCancel,
   onDownload,
@@ -41,7 +42,7 @@ export const ActionsButton = ({
         <>
           {onDownload && downloadPermission && (
             <BaseButton
-              withGradient
+              withGradient={withGradient}
               colorType={"info"}
               variant={"outline"}
               onClick={onDownload}
@@ -56,7 +57,7 @@ export const ActionsButton = ({
           {onCancel && (
             <BaseButton
               px={"15px"}
-              withGradient
+              withGradient={withGradient}
               disabled={isLoading}
               colorType={cancelColor}
               variant={cancelVariant}
@@ -71,7 +72,7 @@ export const ActionsButton = ({
             <BaseButton
               px={"15px"}
               colorType={"tertiary"}
-              withGradient
+              withGradient={withGradient}
               leftIcon={<Icons.Filter />}
               onClick={onToggleFilter}
             >
@@ -83,7 +84,7 @@ export const ActionsButton = ({
               onClick={onClick}
               px={"15px"}
               colorType={validateColor}
-              withGradient
+              withGradient={withGradient}
               isLoading={isLoading}
               disabled={isLoading || isDisabled}
               leftIcon={
@@ -98,7 +99,7 @@ export const ActionsButton = ({
               onClick={onReload}
               px={"15px"}
               colorType={"secondary"}
-              withGradient
+              withGradient={withGradient}
               isLoading={isLoading}
               disabled={isLoading || isDisabled}
               leftIcon={<Icons.Refresh size={14} />}

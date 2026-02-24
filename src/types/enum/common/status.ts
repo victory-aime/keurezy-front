@@ -10,4 +10,6 @@ export enum Status {
   AVAILABLE = "AVAILABLE",
   RESERVED = "RESERVED",
   RENTED = "RENTED",
+  READ = "READ",
+  REPLIED = "REPLIED",
 }

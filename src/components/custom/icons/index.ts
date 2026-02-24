@@ -1,5 +1,6 @@
 import { CgCreditCard, CgSync } from "react-icons/cg";
 import {
+  CiBellOff,
   CiBellOn,
   CiFilter,
   CiLogout,
@@ -31,6 +32,7 @@ import {
   IoBarChartOutline,
   IoBedOutline,
   IoChatbubblesOutline,
+  IoCheckmarkDone,
   IoDocumentTextOutline,
   IoShieldCheckmarkSharp,
 } from "react-icons/io5";
@@ -92,6 +94,7 @@ export const Icons = {
   Trending: IoIosTrendingUp,
   UserPlus: FaUserPlus,
   Check: IoIosCheckmark,
+  DoubleCheck: IoCheckmarkDone,
   ArrowRight: IoIosArrowRoundForward,
   Play: CiPlay1,
   Bath: PiBathtubLight,
@@ -114,4 +117,5 @@ export const Icons = {
   Timer: RxLapTimer,
   Request: IoIosGitPullRequest,
   FolderOpen: HiOutlineFolderOpen,
+  BellOff: CiBellOff,
 };

@@ -55,18 +55,18 @@ export function DataGridContainer<T>({
           return (
             <Box key={index} position="relative" width={"full"}>
               {renderItem(item, index)}
-              <BaseIcon
-                position={"absolute"}
-                top={"8px"}
-                right={"8px"}
-                px={2}
-                py={1}
-                borderRadius={"full"}
-              >
-                {actions && (
+              {actions && (
+                <BaseIcon
+                  position={"absolute"}
+                  top={"8px"}
+                  right={"8px"}
+                  px={2}
+                  py={1}
+                  borderRadius={"full"}
+                >
                   <DataTableActionButtons actions={actions} item={item} />
-                )}
-              </BaseIcon>
+                </BaseIcon>
+              )}
             </Box>
           );
         })}

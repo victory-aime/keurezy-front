@@ -4,6 +4,8 @@ import { TabsProps } from "./interface/tabs";
 import { useState } from "react";
 import { hexToRGB } from "_theme/colors";
 import { BaseContainer } from "../container";
+import { Icons } from "../icons";
+import { NoDataAnimation } from "../data-table/NoDataAnimation";
 
 export const BaseTabs = ({
   items,
@@ -11,6 +13,8 @@ export const BaseTabs = ({
   isMobile,
   title = "",
   description = "",
+  withActionButtons = false,
+  actionsButtonProps,
   ...rest
 }: TabsProps) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -21,6 +25,8 @@ export const BaseTabs = ({
       description={description}
       border={"none"}
       textAlign={rest.textAlign}
+      withActionButtons={withActionButtons}
+      actionsButtonProps={actionsButtonProps}
     >
       <Tabs.Root
         defaultValue={items[currentIndex]?.label}
@@ -34,56 +40,39 @@ export const BaseTabs = ({
         }}
         {...rest}
       >
-        <Flex
-          width={"full"}
-          alignItems={"center"}
-          justifyContent={"space-between"}
-          flexDirection={{ base: "column", md: "row" }}
-          overflowX={"auto"}
-          gap={4}
-        >
-          <VStack
-            alignItems={rest.alignItems ?? "flex-start"}
-            gap={4}
-            width={"full"}
-          >
-            <Tabs.List width={"full"}>
-              {items.map((item, index) => (
-                <Tabs.Trigger
-                  color={
-                    currentIndex === index ? "primary.500" : "secondary.400"
-                  }
-                  key={index}
-                  value={item.label}
-                  p={5}
-                  width={"full"}
-                >
-                  {item?.icon}
-                  {item.label}
-                </Tabs.Trigger>
-              ))}
-              <Tabs.Indicator rounded="l2" bgColor={hexToRGB("primary", 0.2)} />
-            </Tabs.List>
-          </VStack>
-        </Flex>
-        <Box mt={rest.mt ?? 5}>
+        <Tabs.List mt={5}>
           {items.map((item, index) => (
-            <Tabs.Content
+            <Tabs.Trigger
+              color={currentIndex === index ? "primary.500" : "gray.400"}
+              bgColor={currentIndex === index ? "white" : "none"}
               key={index}
               value={item.label}
-              _open={{
-                animationName: "fade-in, scale-in",
-                animationDuration: "300ms",
-              }}
-              _closed={{
-                animationName: "fade-out, scale-out",
-                animationDuration: "120ms",
-              }}
+              p={5}
+              width={"fit-content"}
             >
-              {item?.content}
-            </Tabs.Content>
+              {item?.icon}
+              {item.label}
+            </Tabs.Trigger>
           ))}
-        </Box>
+          <Tabs.Indicator rounded="l2" bgColor={hexToRGB("primary", 0.1)} />
+        </Tabs.List>
+        {items?.map((item, index) => (
+          <Tabs.Content
+            key={index}
+            value={item.label}
+            mt={rest.mt ?? 5}
+            _open={{
+              animationName: "fade-in, scale-in",
+              animationDuration: "300ms",
+            }}
+            _closed={{
+              animationName: "fade-out, scale-out",
+              animationDuration: "120ms",
+            }}
+          >
+            {item?.content ?? <NoDataAnimation />}
+          </Tabs.Content>
+        ))}
       </Tabs.Root>
     </BaseContainer>
   );
