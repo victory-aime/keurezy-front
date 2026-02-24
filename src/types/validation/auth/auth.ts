@@ -1,4 +1,3 @@
-import { UserModule } from "_store/state-management";
 import * as Yup from "yup";
 
 export const loginValidationSchema = Yup.object({
@@ -9,11 +8,11 @@ export const loginValidationSchema = Yup.object({
 
   password: Yup.string()
     .required("Veuillez saisir votre mot de passe")
-    .min(8, "Le mot de passe doit contenir au moins 8 caractères"),
-  // .matches(
-  //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/,
-  //   "Le mot de passe doit contenir une majuscule, une minuscule et un chiffre",
-  // ),
+    .min(12, "Le mot de passe doit contenir au moins 12 caractères")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/,
+      "Le mot de passe doit contenir une majuscule, une minuscule et un chiffre",
+    ),
 });
 
 export const createUserValidationSchema = Yup.object().shape({

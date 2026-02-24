@@ -1,8 +1,6 @@
-import { ILink, SidebarNavGroupProps } from "../types";
-import { BO_ROUTES } from "../../../back-office/routes";
+import { SidebarNavGroupProps } from "../types";
 import { DASHBOARD_ROUTES } from "../../../routes";
 import { UserRole } from "../../../../../types/enum";
-import { BsFillBuildingsFill } from "react-icons/bs";
 import { APP_ROUTES } from "_config/routes";
 import { Icons } from "_components/custom";
 
@@ -56,7 +54,7 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
   },
   {
     title: "Gestion",
-    icon: Icons.TbTax,
+    icon: Icons.FolderOpen,
     links: [
       {
         label: "Messages",
@@ -74,6 +72,11 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         label: "SIDE_BAR.AGENCY",
         path: DASHBOARD_ROUTES.AGENCY,
         icon: Icons.Office /*FolderOpen*/,
+      },
+      {
+        label: "Demandes",
+        path: DASHBOARD_ROUTES.REQUEST,
+        icon: Icons.Request,
       },
     ],
   },

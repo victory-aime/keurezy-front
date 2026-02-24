@@ -102,6 +102,7 @@ export interface AuthContextType {
   } | null;
   isLoading?: boolean;
   dismissToast?: (() => void) | undefined;
+  refetchSession?: (() => Promise<void>) | undefined;
 }
 
 export interface SideToolTipProps {

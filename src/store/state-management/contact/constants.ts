@@ -1,0 +1,3 @@
+export enum CONTACT_KEYS {
+  PUBLIC_REQUEST = "PUBLIC_REQUEST",
+}

@@ -15,6 +15,7 @@ import {
   HiHeart,
   HiHome,
   HiMiniPlusSmall,
+  HiOutlineFolderOpen,
   HiOutlineWrenchScrewdriver,
 } from "react-icons/hi2";
 import {
@@ -22,6 +23,7 @@ import {
   IoIosArrowRoundForward,
   IoIosCheckmark,
   IoIosClose,
+  IoIosGitPullRequest,
   IoIosHelpCircle,
   IoIosTrendingUp,
 } from "react-icons/io";
@@ -110,4 +112,6 @@ export const Icons = {
   Office: ImOffice,
   Send: LuSend,
   Timer: RxLapTimer,
+  Request: IoIosGitPullRequest,
+  FolderOpen: HiOutlineFolderOpen,
 };

@@ -3,7 +3,11 @@ import { APP_ROUTES } from "_config/routes";
 import { UserRole } from "./types/enum";
 import { DASHBOARD_ROUTES } from "./app/dashboard/routes";
 import { USERS_ROUTES } from "./app/layout/routes";
-import { getCookieCache } from "better-auth/cookies";
+import {
+  getCookieCache,
+  getSessionCookie,
+  getCookies,
+} from "better-auth/cookies";
 
 /**
  * Liste des routes protégées et des rôles autorisés pour chacune.
@@ -27,35 +31,24 @@ const TOTP_ROUTE = APP_ROUTES.AUTH._2FA;
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
-  const sessionCookie = request.cookies.get("better-auth.session_token");
+  const sessionCookie = getSessionCookie(request);
   const totpCookie = request.cookies.get("better-auth.two_factor");
   const session = await getCookieCache(request);
 
-  /**
-   * 🔐 PROTECTION RESET PASSWORD (token dans l'URL)
-   */
-  if (pathname === RESET_PASSWORD_ROUTE) {
-    const token = searchParams.get("token");
-
-    if (!token) {
-      const url = request.nextUrl.clone();
-      url.pathname = APP_ROUTES.AUTH.SIGN_IN;
-      url.search = "";
-      return NextResponse.redirect(url);
-    }
+  // 🔐 RESET PASSWORD
+  if (pathname === RESET_PASSWORD_ROUTE && !searchParams.get("token")) {
+    const url = request.nextUrl.clone();
+    url.pathname = APP_ROUTES.AUTH.SIGN_IN;
+    url.search = "";
+    return NextResponse.redirect(url);
   }
-  /**
-   * 🔐 PROTECTION CREATE AGENCY (token dans l'URL)
-   */
-  if (pathname === CREATE_AGENCY_ROUTE) {
-    const token = searchParams.get("token");
 
-    if (!token) {
-      const url = request.nextUrl.clone();
-      url.pathname = APP_ROUTES.AUTH.SIGN_UP;
-      url.search = "";
-      return NextResponse.redirect(url);
-    }
+  // 🔐 CREATE AGENCY
+  if (pathname === CREATE_AGENCY_ROUTE && !searchParams.get("token")) {
+    const url = request.nextUrl.clone();
+    url.pathname = APP_ROUTES.AUTH.SIGN_UP;
+    url.search = "";
+    return NextResponse.redirect(url);
   }
 
   /**
@@ -64,17 +57,15 @@ export async function proxy(request: NextRequest) {
   const matchedRoute = Object.keys(PROTECTED_ROUTES).find(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
-
   if (matchedRoute) {
-    const url = request.nextUrl.clone();
-    if (!sessionCookie) {
-      url.pathname = APP_ROUTES.PROTECTED;
-      return NextResponse.redirect(url);
-    }
-    const allowedRoles = PROTECTED_ROUTES[matchedRoute];
-    const hasAccess = allowedRoles.includes(session?.user.role!);
-
-    if (!hasAccess) {
+    const userRole: string = session?.user?.role;
+    if (
+      !sessionCookie ||
+      !session ||
+      !userRole ||
+      !PROTECTED_ROUTES[matchedRoute].includes(userRole)
+    ) {
+      const url = request.nextUrl.clone();
       url.pathname = APP_ROUTES.PROTECTED;
       return NextResponse.redirect(url);
     }
@@ -88,17 +79,12 @@ export async function proxy(request: NextRequest) {
     url.pathname = TOTP_ROUTE;
     return NextResponse.redirect(url);
   }
-
   if (pathname === TOTP_ROUTE && !totpCookie) {
     const url = request.nextUrl.clone();
     url.pathname = APP_ROUTES.REDIRECT;
     return NextResponse.redirect(url);
   }
-  /**
-   * Ici, le middleware agit comme un proxy :
-   * soit tu laisses passer
-   * soit tu rediriges / bloques
-   */
+
   return NextResponse.next();
 }
 
@@ -106,8 +92,6 @@ export const config = {
   matcher: [
     `/dashboard/:path*`,
     `/appartements/:path*`,
-    `/profile/:path*`,
-    `/favorite/:path*`,
     `/auth/signin/totp`,
     `/auth/forget-pass/validate`,
     `/auth/register-agency/:path*`,

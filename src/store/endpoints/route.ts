@@ -10,6 +10,7 @@ const APIS_ROUTES_MODULES_PATH = {
   PROPERTY: "/property",
   AUTH: "/auth",
   FAQ: "/faq",
+  CONTACT: "/contact",
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -132,6 +133,13 @@ export const APIS = (baseUrl?: string) => {
         path: `${APIS_ROUTES_MODULES_PATH.AUTH}/reset-password`,
         method: "POST",
         pathBase: "SECURED_API",
+      }),
+    },
+    CONTACT: {
+      PUBLIC_REQUEST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CONTACT}/public-request`,
+        method: "POST",
+        pathBase: "UNSECURED_API",
       }),
     },
     FAQ: {

@@ -14,11 +14,13 @@ import { AuthBoxContainer } from "./AuthBoxContainer";
 import { PasswordIndicator } from "_component/PasswordIndicator";
 import { authClient } from "../../lib/auth-client";
 import { SendEmailRecap } from "./SendEmailRecap";
+import { useAuthContext } from "_context/auth-context";
 
 export const SignUp = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { signUp } = useAuth();
+  const { refetchSession } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [openModalLink, setOpenModalLink] = useState(false);
 
@@ -35,12 +37,17 @@ export const SignUp = () => {
     await signUp(values)
       .then(async (result) => {
         if (result?.data?.user) {
-          await authClient
-            .sendVerificationEmail({
-              email: result?.data?.user?.email,
-              callbackURL: APP_ROUTES.AUTH.VERIFIED_EMAIL,
-            })
-            .then(() => setOpenModalLink(true));
+          // await authClient
+          //   .sendVerificationEmail({
+          //     email: result?.data?.user?.email,
+          //     callbackURL: APP_ROUTES.AUTH.VERIFIED_EMAIL,
+          //   })
+          //   .then(async () => {
+          //     await refetchSession?.().then(() => {
+          //       setOpenModalLink(true);
+          //     });
+          //   });
+          //router.push(APP_ROUTES.AUTH.SIGN_IN);
         }
       })
       .catch((error) => console.log("error", error))

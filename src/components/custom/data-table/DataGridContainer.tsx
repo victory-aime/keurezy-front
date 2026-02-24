@@ -6,6 +6,7 @@ import {
   DataTableActionButtons,
   CustomSkeletonLoader,
   PaginationDataTable,
+  BaseIcon,
 } from "_components/custom";
 import { DataGridProps } from "./interface/data-types";
 import { NoDataAnimation } from "./NoDataAnimation";
@@ -15,7 +16,7 @@ export function DataGridContainer<T>({
   data,
   isLoading = false,
   renderItem,
-  displayRows = { base: 1, sm: 2, md: 3, lgToXl: 4 },
+  displayRows = { base: 1, sm: 2, lg: 3 },
   spacing = 6,
   actions,
   totalPages,
@@ -48,25 +49,24 @@ export function DataGridContainer<T>({
       );
 
   return (
-    <Box mt="30px">
-      <SimpleGrid columns={displayRows} gap={spacing}>
+    <main>
+      <SimpleGrid columns={displayRows} gap={spacing} width={"full"} mt="30px">
         {paginatedItems.map((item, index) => {
           return (
-            <Box key={index} position="relative">
+            <Box key={index} position="relative" width={"full"}>
               {renderItem(item, index)}
-              <Box
+              <BaseIcon
                 position={"absolute"}
                 top={"8px"}
                 right={"8px"}
-                p={1}
-                color={"white"}
-                borderRadius={"99px"}
-                bgColor={"primary.500"}
+                px={2}
+                py={1}
+                borderRadius={"full"}
               >
                 {actions && (
                   <DataTableActionButtons actions={actions} item={item} />
                 )}
-              </Box>
+              </BaseIcon>
             </Box>
           );
         })}
@@ -81,6 +81,6 @@ export function DataGridContainer<T>({
           onLazyLoad={lazy ? onLazyLoad : setCurrentPage}
         />
       )}
-    </Box>
+    </main>
   );
 }

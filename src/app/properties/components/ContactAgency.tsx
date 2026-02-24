@@ -1,6 +1,6 @@
 "use client";
-import { PropertyModule } from "_store/state-management";
-import { MODELS } from "_types/*";
+import { ContactModule, PropertyModule } from "_store/state-management";
+import { CONSTANTS, MODELS, VALIDATION } from "_types/*";
 import { findDynamicIdInList } from "rise-core-frontend";
 import { PropertiesContainer } from "./PropertiesContainer";
 import { Grid, Stack, Box, Flex, Image, HStack } from "@chakra-ui/react";
@@ -15,7 +15,7 @@ import {
   FormTextArea,
   FormPhonePicker,
   ActionsButton,
-  CustomToast,
+  BaseIcon,
 } from "_components/custom";
 import Link from "next/link";
 import { useAuthContext } from "_context/auth-context";
@@ -23,9 +23,12 @@ import { APP_ROUTES } from "_config/routes";
 import { UserRole } from "../../../types/enum";
 import { Formik } from "formik";
 import { Avatar } from "_components/ui/avatar";
+import { useRouter } from "next/navigation";
+import { hexToRGB } from "_theme/colors";
 
 export const ContactAgency = ({ id }: { id: string }) => {
   const { user } = useAuthContext();
+  const router = useRouter();
   const { data: allPublicProperties, isLoading } =
     PropertyModule.getAllPublicProperties({
       queryOptions: { enabled: !!id },
@@ -36,11 +39,21 @@ export const ContactAgency = ({ id }: { id: string }) => {
     allPublicProperties,
   );
 
-  const onSubmit = () => {
-    CustomToast({
-      title: "Message envoyé !",
-      description: "Le propriétaire vous répondra dans les plus brefs délais.",
+  const { mutateAsync: publicContactRequest, isPending } =
+    ContactModule.publicContactRequestMutation({
+      mutationOptions: {
+        onSuccess: () => router.push(APP_ROUTES.APPARTEMENTS),
+      },
     });
+
+  const onSubmit = async (values: MODELS.IContact) => {
+    const request: MODELS.IContact = {
+      ...values,
+      userId: user?.id,
+      propertyId: property?.id,
+      agencyId: property?.propertyAgenceId,
+    };
+    await publicContactRequest({ payload: request });
   };
 
   return (
@@ -54,8 +67,12 @@ export const ContactAgency = ({ id }: { id: string }) => {
         gap={4}
         mt={{ base: 4, sm: 5 }}
       >
-        <Formik initialValues={{}} onSubmit={onSubmit}>
-          {({ handleSubmit }) => (
+        <Formik
+          initialValues={{} as MODELS.IContact}
+          onSubmit={onSubmit}
+          validationSchema={VALIDATION.CONTACT.ContactValidationSchema}
+        >
+          {({ handleSubmit, isValid }) => (
             <Stack gap={4}>
               <Box>
                 <BaseText
@@ -74,13 +91,13 @@ export const ContactAgency = ({ id }: { id: string }) => {
               <HStack flexDir={{ base: "column", sm: "row" }}>
                 <FormTextInput
                   required
-                  name="name"
+                  name="fullName"
                   label="Nom complet"
                   placeholder="Votre nom"
                 />
                 <FormTextInput
                   required
-                  name="name"
+                  name="email"
                   label="Email"
                   placeholder="votre@mail.com"
                 />
@@ -104,12 +121,23 @@ export const ContactAgency = ({ id }: { id: string }) => {
                 label="Message"
                 placeholder="Bonjour, je suis interessé"
               />
-              {user?.role !== UserRole?.IMMO_OWNER && (
+              {user?.role !== UserRole?.IMMO_OWNER ? (
                 <ActionsButton
                   validateTitle="Envoyer le message"
                   onClick={() => handleSubmit()}
+                  isDisabled={isPending || !isValid}
                   icon={<Icons.Send />}
                 />
+              ) : (
+                <Flex alignItems={"center"} gap={3}>
+                  <BaseIcon color={hexToRGB("red", 0.8)}>
+                    <Icons.Shield />
+                  </BaseIcon>
+                  <BaseText>
+                    En tant que propriétaire, vous ne pouvez pas contacter ou
+                    postuler à ce bien.
+                  </BaseText>
+                </Flex>
               )}
             </Stack>
           )}
@@ -124,7 +152,7 @@ export const ContactAgency = ({ id }: { id: string }) => {
             boxShadow="lg"
           >
             <Image
-              src={property?.galleryImages?.[0]}
+              src={property?.galleryImages?.[0] as string}
               objectFit={"cover"}
               width={"full"}
               height={"40"}
@@ -135,7 +163,14 @@ export const ContactAgency = ({ id }: { id: string }) => {
               </BaseText>
               <HStack gap={0}>
                 <Icons.MapPin />
-                <BaseText variant={TextVariant.S}>{property?.address}</BaseText>
+                <BaseText variant={TextVariant.S}>
+                  {property?.address},{" "}
+                  {
+                    CONSTANTS.citiesByCountry?.[property?.country || ""]?.find(
+                      (item) => item.value === property?.city,
+                    )?.label
+                  }
+                </BaseText>
               </HStack>
               <BaseText
                 variant={TextVariant.M}

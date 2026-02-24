@@ -17,6 +17,7 @@ import { APP_ROUTES } from "_config/routes";
 import { ASSETS } from "_assets/images";
 import { useAuthContext } from "_context/auth-context";
 import { Avatar } from "_components/ui/avatar";
+import { UserRole } from "../../types/enum";
 
 export default function UnauthorizedPage() {
   const { t } = useTranslation();
@@ -40,7 +41,7 @@ export default function UnauthorizedPage() {
         {user ? (
           <Flex alignItems={"center"} gap={2}>
             <Avatar name={user?.name} size={"sm"} />
-            <BaseText>{user?.name}</BaseText>
+            <BaseText textTransform={"capitalize"}>{user?.name}</BaseText>
           </Flex>
         ) : (
           <BaseButton
@@ -74,7 +75,7 @@ export default function UnauthorizedPage() {
               borderWidth={2}
               boxSize={"50px"}
             >
-              <FaLock size={22} color={VariablesColors.primary} />
+              <FaLock size={22} color={VariablesColors.red} />
             </BaseIcon>
 
             <Card.Title fontSize="xl">
@@ -89,9 +90,18 @@ export default function UnauthorizedPage() {
           <Card.Body px={{ base: 0, md: 6 }} gap={3}>
             {user ? (
               <BaseButton
-                onClick={() => router.replace(APP_ROUTES.AUTH.SIGN_IN)}
+                onClick={() => {
+                  if (user?.role === UserRole.IMMO_OWNER) {
+                    router.push(APP_ROUTES.DASHBOARD);
+                  } else {
+                    router.push(APP_ROUTES.ROOT);
+                  }
+                }}
+                colorType="danger"
               >
-                Revenir en arrière
+                {user?.role === UserRole.IMMO_OWNER
+                  ? "Retour au tableau de bord"
+                  : "Retourner à l’accueil"}
               </BaseButton>
             ) : (
               <>

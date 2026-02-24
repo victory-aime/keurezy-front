@@ -91,7 +91,13 @@ export const PropertyDetails = ({ id }: { id: string }) => {
                 opacity: 1,
               }}
             >
-              <Image src={img} alt="" w="100%" h="100%" objectFit="cover" />
+              <Image
+                src={img as string}
+                alt=""
+                w="100%"
+                h="100%"
+                objectFit="cover"
+              />
             </Box>
           ))}
         </Grid>
@@ -128,7 +134,14 @@ export const PropertyDetails = ({ id }: { id: string }) => {
 
             <Flex align="center" gap={1.5} color="gray.500">
               <Icons.MapPin size={16} />
-              <BaseText variant={TextVariant.S}>{property?.address}</BaseText>
+              <BaseText variant={TextVariant.S}>
+                {property?.address},{" "}
+                {
+                  CONSTANTS.citiesByCountry?.[property?.country || ""]?.find(
+                    (item) => item.value === property?.city,
+                  )?.label
+                }
+              </BaseText>
             </Flex>
           </Box>
 

@@ -7,12 +7,12 @@ import {
   TextWeight,
 } from "_components/custom";
 import { motion } from "framer-motion";
-import { Box, Flex, HStack, Image } from "@chakra-ui/react";
+import { Box, Flex, HStack, Image, Span } from "@chakra-ui/react";
 import { VariablesColors } from "_theme/variables";
 import Link from "next/link";
 import { Button } from "_components/ui/button";
 import { APP_ROUTES } from "_config/routes";
-import { MODELS, ENUM, CONSTANTS } from "_types/";
+import { MODELS, CONSTANTS } from "_types/";
 
 const MotionBox = motion.create(Box);
 
@@ -40,10 +40,8 @@ export const PropertyCard = ({
         >
           <Box position={"relative"} aspectRatio={4 / 3} overflow={"hidden"}>
             <Image
-              src={property?.galleryImages?.[0]}
+              src={property?.galleryImages?.[0] as string}
               alt={property.title}
-              w={"auto"}
-              h={"auto"}
               objectFit={"cover"}
               borderTopRadius={12}
               loading="lazy"
@@ -59,9 +57,9 @@ export const PropertyCard = ({
               <BaseBadge
                 color={property.status ? "tertiary" : "danger"}
                 label={
-                  property.status === ENUM.COMMON.Status.AVAILABLE
-                    ? "Disponible"
-                    : "Loué"
+                  CONSTANTS.propertyStatus.find(
+                    (item) => item.value === property.status,
+                  )?.label
                 }
               />
 
@@ -77,16 +75,15 @@ export const PropertyCard = ({
             </Box>
           </Box>
 
-          <Box spaceY={3} p={5}>
+          <Box spaceY={3} p={3}>
             <Flex
               width={"full"}
               alignItems={"center"}
               justifyContent={"space-between"}
-              gap={2}
             >
               <BaseText
                 weight={TextWeight.SemiBold}
-                lineClamp={2}
+                lineClamp={1}
                 textWrap={"wrap"}
                 _hover={{ color: VariablesColors.primary }}
               >
@@ -100,19 +97,24 @@ export const PropertyCard = ({
                 _hover={{ color: VariablesColors.primary }}
               >
                 <BaseFormatNumber value={property.price ?? 0} />
-                <span
-                  style={{ fontSize: "14px", color: VariablesColors.gray400 }}
-                >
+                <Span fontSize={"sm"} color={"gray.400"}>
                   /mois
-                </span>
+                </Span>
               </BaseText>
             </Flex>
-            <Flex gap={2} alignItems={"center"}>
+            <Flex alignItems={"center"}>
               <Icons.MapPin />
-              <BaseText variant={TextVariant.S}>{property?.address}</BaseText>
+              <BaseText variant={TextVariant.S}>
+                {property?.address},{" "}
+                {
+                  CONSTANTS.citiesByCountry?.[property?.country || ""]?.find(
+                    (item) => item.value === property?.city,
+                  )?.label
+                }
+              </BaseText>
             </Flex>
             <Flex
-              pt={2}
+              pt={1}
               borderTop={"1px solid"}
               borderColor={"gray.200"}
               alignItems={"center"}

@@ -9,4 +9,5 @@ export const DASHBOARD_ROUTES = {
   QUITTANCE: `${APP_ROUTES.DASHBOARD}/quittances`,
   PROFILE: `${APP_ROUTES.DASHBOARD}/profile`,
   AGENCY: `${APP_ROUTES.DASHBOARD}/agency`,
+  REQUEST: `${APP_ROUTES.DASHBOARD}/request`,
 };
