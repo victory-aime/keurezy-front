@@ -54,7 +54,12 @@ import { PiBathtubLight, PiEyeLight } from "react-icons/pi";
 import { GrMoney } from "react-icons/gr";
 import { TbRestore } from "react-icons/tb";
 import { RxDotsHorizontal, RxHamburgerMenu, RxLapTimer } from "react-icons/rx";
-import { LuBuilding2, LuMaximize, LuSend } from "react-icons/lu";
+import {
+  LuBuilding2,
+  LuClipboardList,
+  LuMaximize,
+  LuSend,
+} from "react-icons/lu";
 import { BsSliders } from "react-icons/bs";
 import { CiGrid31 } from "react-icons/ci";
 import { ImOffice } from "react-icons/im";
@@ -118,4 +123,5 @@ export const Icons = {
   Request: IoIosGitPullRequest,
   FolderOpen: HiOutlineFolderOpen,
   BellOff: CiBellOff,
+  Clipboard: LuClipboardList,
 };

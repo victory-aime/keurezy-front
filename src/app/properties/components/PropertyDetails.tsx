@@ -244,9 +244,13 @@ export const PropertyDetails = ({ id }: { id: string }) => {
                 <BaseButton
                   w="full"
                   onClick={() => {
-                    router.push(
-                      `${APP_ROUTES.AUTH.SIGN_IN}?callbackUrl=${encodeURIComponent(callback)}`,
-                    );
+                    if (user) {
+                      router.push(callback);
+                    } else {
+                      router.push(
+                        `${APP_ROUTES.AUTH.SIGN_IN}?callbackUrl=${encodeURIComponent(callback)}`,
+                      );
+                    }
                   }}
                 >
                   Postuler maintenant

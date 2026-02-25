@@ -26,3 +26,4 @@ export * from "./switch-color";
 export * from "./toast";
 export * from "./tooltip";
 export * from "./icons";
+export * from "./tag";

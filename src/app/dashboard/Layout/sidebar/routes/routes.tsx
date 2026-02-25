@@ -18,18 +18,16 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         icon: Icons.RiBuildingLine,
       },
       { label: "Locataires", path: "/dashboard/tenants", icon: Icons.FaUsers },
-
       {
-        label: "Paiements",
-        path: "/dashboard/payments",
-        icon: Icons.CreditCard,
+        label: "Candidatures",
+        path: DASHBOARD_ROUTES.RENTAL_REQUEST,
+        icon: Icons.Clipboard,
       },
-      {
-        label: "Maintenance",
-        path: "/dashboard/maintenance",
-        icon: Icons.Wrench,
-        badge: 3,
-      },
+      // {
+      //   label: "Paiements",
+      //   path: "/dashboard/payments",
+      //   icon: Icons.CreditCard,
+      // },
       {
         label: "Voir la page d'accueil",
         path: APP_ROUTES.ROOT,

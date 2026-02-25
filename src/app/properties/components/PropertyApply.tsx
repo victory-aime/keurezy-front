@@ -24,9 +24,9 @@ import {
 import { APP_ROUTES } from "_config/routes";
 import { VariablesColors } from "_theme/variables";
 import { useAuthContext } from "_context/auth-context";
-import { PropertyModule } from "_store/state-management";
+import { PropertyModule, RentalModule } from "_store/state-management";
 import { findDynamicIdInList } from "rise-core-frontend";
-import { MODELS, CONSTANTS } from "_types/";
+import { MODELS, CONSTANTS, VALIDATION } from "_types/";
 import { Formik } from "formik";
 import { hexToRGB } from "_theme/colors";
 import { useRouter } from "next/navigation";
@@ -38,9 +38,19 @@ export const PropertyApply = ({ id }: { id: string }) => {
   const { session, user } = useAuthContext();
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const router = useRouter();
+
   const { data: allPublicProperties, isLoading } =
     PropertyModule.getAllPublicProperties({
       queryOptions: { enabled: !!id },
+    });
+
+  const { mutateAsync: createRental, isPending } =
+    RentalModule.createRentalMutation({
+      mutationOptions: {
+        onSuccess: () => {
+          setOpenSuccessModal(true);
+        },
+      },
     });
 
   const property: MODELS.IProperty = findDynamicIdInList(
@@ -52,12 +62,8 @@ export const PropertyApply = ({ id }: { id: string }) => {
     return <PropertyApplySkeletonLoad isLoading={isLoading} />;
   }
 
-  const onSubmit = () => {
-    CustomToast({
-      title: "Votre candidature a été envoyée avec succès !",
-      description: "Le propriétaire vous contactera sous 48h.",
-    });
-    setOpenSuccessModal(true);
+  const onSubmit = async (values: MODELS.IRentalRequest) => {
+    await createRental({ payload: values });
   };
 
   return (
@@ -66,7 +72,16 @@ export const PropertyApply = ({ id }: { id: string }) => {
       label={"Retour à l'annonce"}
       maxW={"4xl"}
     >
-      <Formik initialValues={{}} onSubmit={onSubmit}>
+      <Formik
+        initialValues={
+          {
+            propertyId: id,
+            tenantId: user?.id,
+          } as MODELS.IRentalRequest
+        }
+        onSubmit={onSubmit}
+        validationSchema={VALIDATION.RENTAL.createRentalRequestSchema}
+      >
         {({ handleSubmit }) => (
           <Stack width={"full"} gap={8}>
             <Stack justifyContent={"flex-start"} mt={2} gap={0}>
@@ -99,7 +114,7 @@ export const PropertyApply = ({ id }: { id: string }) => {
                   }}
                 >
                   <Image
-                    src={property?.galleryImages?.[0]}
+                    src={property?.galleryImages?.[0] as string}
                     alt=""
                     w="100%"
                     h="100%"
@@ -141,7 +156,12 @@ export const PropertyApply = ({ id }: { id: string }) => {
                 </BaseIcon>
                 <BaseText>Coordonnées</BaseText>
               </Flex>
-              <FormPhonePicker required name="phone" label="PROFILE.PHONE" />
+              <FormPhonePicker
+                required
+                name="phone"
+                label="PROFILE.PHONE"
+                listAvailableCountries={["cd"]}
+              />
             </Box>
 
             <Box width={"full"}>
@@ -216,6 +236,7 @@ export const PropertyApply = ({ id }: { id: string }) => {
               cancelVariant="outline"
               icon={<Icons.Send />}
               onClick={() => handleSubmit()}
+              isLoading={isPending}
               validateTitle="Envoyer ma candidature"
             />
           </Stack>

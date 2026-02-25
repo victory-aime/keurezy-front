@@ -8,6 +8,8 @@ export enum Status {
   CLOSE = "CLOSE",
   OPEN = "OPEN",
   AVAILABLE = "AVAILABLE",
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
   RESERVED = "RESERVED",
   RENTED = "RENTED",
   READ = "READ",

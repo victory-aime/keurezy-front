@@ -17,7 +17,6 @@ import {
   ActionsButton,
   BaseIcon,
 } from "_components/custom";
-import Link from "next/link";
 import { useAuthContext } from "_context/auth-context";
 import { APP_ROUTES } from "_config/routes";
 import { UserRole } from "../../../types/enum";
@@ -28,6 +27,7 @@ import { hexToRGB } from "_theme/colors";
 
 export const ContactAgency = ({ id }: { id: string }) => {
   const { user } = useAuthContext();
+  const callback = `${APP_ROUTES.APPARTEMENT_APPLY}?id=${id}`;
   const router = useRouter();
   const { data: allPublicProperties, isLoading } =
     PropertyModule.getAllPublicProperties({
@@ -68,12 +68,19 @@ export const ContactAgency = ({ id }: { id: string }) => {
         mt={{ base: 4, sm: 5 }}
       >
         <Formik
-          initialValues={{} as MODELS.IContact}
+          enableReinitialize
+          initialValues={
+            {
+              fullName: user?.name ?? "",
+              email: user?.email ?? "",
+            } as MODELS.IContact
+          }
           onSubmit={onSubmit}
           validationSchema={VALIDATION.CONTACT.ContactValidationSchema}
         >
-          {({ handleSubmit, isValid }) => (
+          {({ handleSubmit, values, isValid }) => (
             <Stack gap={4}>
+              {JSON.stringify(values)}
               <Box>
                 <BaseText
                   fontSize={{ base: "2xl", sm: "3xl" }}
@@ -89,18 +96,22 @@ export const ContactAgency = ({ id }: { id: string }) => {
                 </BaseText>
               </Box>
               <HStack flexDir={{ base: "column", sm: "row" }}>
-                <FormTextInput
-                  required
-                  name="fullName"
-                  label="Nom complet"
-                  placeholder="Votre nom"
-                />
-                <FormTextInput
-                  required
-                  name="email"
-                  label="Email"
-                  placeholder="votre@mail.com"
-                />
+                {user ? null : (
+                  <>
+                    <FormTextInput
+                      required
+                      name="fullName"
+                      label="Nom complet"
+                      placeholder="Votre nom"
+                    />
+                    <FormTextInput
+                      required
+                      name="email"
+                      label="Email"
+                      placeholder="votre@mail.com"
+                    />
+                  </>
+                )}
               </HStack>
               <HStack
                 gap={2}
@@ -255,9 +266,20 @@ export const ContactAgency = ({ id }: { id: string }) => {
                   Intéressé par ce bien ?
                 </BaseText>
 
-                <Link href={`${APP_ROUTES.APPARTEMENT_APPLY}?id=${id}`}>
-                  <BaseButton w="full">Postuler maintenant</BaseButton>
-                </Link>
+                <BaseButton
+                  w="full"
+                  onClick={() => {
+                    if (user) {
+                      router.push(callback);
+                    } else {
+                      router.push(
+                        `${APP_ROUTES.AUTH.SIGN_IN}?callbackUrl=${encodeURIComponent(callback)}`,
+                      );
+                    }
+                  }}
+                >
+                  Postuler maintenant
+                </BaseButton>
               </Stack>
             </Box>
           )}

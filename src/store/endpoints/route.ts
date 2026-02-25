@@ -12,6 +12,7 @@ const APIS_ROUTES_MODULES_PATH = {
   FAQ: "/faq",
   CONTACT: "/contact",
   REQUEST: "/request",
+  RENTAL: "/rental",
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -157,6 +158,25 @@ export const APIS = (baseUrl?: string) => {
       READ_ALL_REQUESTS: api({
         path: `${APIS_ROUTES_MODULES_PATH.REQUEST}/read-all`,
         method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+    },
+    RENTAL: {
+      CREATE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.RENTAL}/create`,
+        method: "POST",
+        pathBase: "SECURED_API",
+      }),
+      RENTAL_AGENCY_REQUEST_LIST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.RENTAL}/agency-list`,
+        method: "GET",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      RENTAL_USER_REQUEST_LIST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.RENTAL}/user-list`,
+        method: "GET",
         pathBase: "SECURED_API",
         showResponse: false,
       }),

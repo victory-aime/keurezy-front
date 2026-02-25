@@ -6,13 +6,12 @@ import {
   DialogFooter,
   DialogRoot,
 } from "_components/ui/dialog";
-import { Flex } from "@chakra-ui/react";
-import React from "react";
+import { DialogFooterProps, Flex, VStack } from "@chakra-ui/react";
 import { BaseButton } from "../button";
 import { ModalProps } from "./interface/modal";
 import { BaseIcon } from "../base-icon";
 import { useTranslation } from "react-i18next";
-import { BaseText, TextVariant } from "_components/custom";
+import { BaseTag, BaseText, TextVariant } from "_components/custom";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 
@@ -21,10 +20,12 @@ const BaseModal = ({
   ignoreFooter = false,
   onChange,
   title = "Modal Title",
+  description = "",
   colorSaveButton = "primary",
   colorCancelButton = "danger",
   buttonSaveTitle = "COMMON.VALIDATE",
   buttonCancelTitle = "COMMON.CANCEL",
+  status,
   showCloseButton = true,
   isLoading,
   onClick,
@@ -34,13 +35,13 @@ const BaseModal = ({
   iconBackgroundColor = "primary.500",
   children,
   disabled,
-  logoSrc = "/assets/images/placeholder-image.png",
   ref,
   animateConfetti = false,
   iconCancelButton,
   iconSaveButton,
+  scrollBehavior = "inside",
   ...rest
-}: ModalProps) => {
+}: ModalProps & DialogFooterProps) => {
   const { t } = useTranslation();
   const { width, height } = useWindowSize();
 
@@ -55,8 +56,9 @@ const BaseModal = ({
         onOpenChange={(e) => onChange?.(e?.open)}
         placement={"center"}
         role={modalType}
-        size={isFull ? "full" : "lg"}
+        size={{ mdDown: "full", sm: rest.size ?? "lg" }}
         motionPreset="slide-in-top"
+        scrollBehavior={scrollBehavior}
         {...rest}
       >
         <DialogContent width={"full"} p={4}>
@@ -71,19 +73,30 @@ const BaseModal = ({
                 {icon}
               </BaseIcon>
             )}
-            <BaseText variant={TextVariant.S}>{t(title)}</BaseText>
+            <VStack gap={0} alignItems={"flex-start"}>
+              <BaseText variant={TextVariant.S}>{t(title)}</BaseText>
+              <BaseText
+                variant={TextVariant.S}
+                fontWeight={"light"}
+                color={"gray.400"}
+              >
+                {t(description)}
+              </BaseText>
+            </VStack>
+            {status && <BaseTag status={status} variant="subtle" />}
 
             {showCloseButton && <DialogCloseTrigger />}
           </Flex>
 
-          <DialogBody autoFocus={false} mt={4} ref={ref}>
+          <DialogBody autoFocus={false} ref={ref} pr={3} pl={0}>
             {children}
             {!ignoreFooter ? (
               <DialogFooter
-                mt={8}
+                mt={4}
                 alignItems={"center"}
                 justifyContent={"center"}
                 gap={4}
+                {...rest}
               >
                 {isLoading ? (
                   <BaseButton isLoading />
@@ -107,25 +120,26 @@ const BaseModal = ({
                         </BaseButton>
                       </DialogActionTrigger>
                     )}
-                    <BaseButton
-                      disabled={disabled}
-                      withGradient
-                      onClick={() => onClick?.()}
-                      leftIcon={iconSaveButton}
-                      colorType={
-                        modalType === "alertdialog" ? "danger" : colorSaveButton
-                      }
-                    >
-                      {t(buttonSaveTitle)}
-                    </BaseButton>
+                    {buttonSaveTitle && (
+                      <BaseButton
+                        disabled={disabled}
+                        withGradient
+                        onClick={() => onClick?.()}
+                        leftIcon={iconSaveButton}
+                        colorType={
+                          modalType === "alertdialog"
+                            ? "danger"
+                            : colorSaveButton
+                        }
+                      >
+                        {t(buttonSaveTitle)}
+                      </BaseButton>
+                    )}
                   </>
                 )}
               </DialogFooter>
             ) : null}
           </DialogBody>
-          {/*<Flex alignItems={"flex-end"} justifyContent={"flex-end"}>*/}
-          {/*  <Image src={logoSrc} alt={"logo"} width={"60px"} />*/}
-          {/*</Flex>*/}
         </DialogContent>
       </DialogRoot>
     </>

@@ -1,4 +1,4 @@
-import { HStack, Menu, Portal, VStack } from "@chakra-ui/react";
+import { HStack, IconButton, Menu, Portal, VStack } from "@chakra-ui/react";
 import {
   ActionButtonsProps,
   Loader,
@@ -78,6 +78,64 @@ export const DataTableActionButtons = <T,>({
   item,
 }: ActionButtonsProps<T>) => {
   const { t } = useTranslation();
+  const visibleActions = actions.filter((action) => {
+    const isShown =
+      typeof action.isShown === "function"
+        ? action.isShown(item)
+        : action.isShown !== false;
+
+    return isShown;
+  });
+
+  if (visibleActions.length === 1) {
+    const action = visibleActions[0];
+
+    const label =
+      typeof action.name === "function" ? action.name(item) : action.name;
+
+    const config = ACTION_CONFIG[label as keyof typeof ACTION_CONFIG];
+
+    const isDisabled =
+      typeof action.isDisabled === "function"
+        ? action.isDisabled(item)
+        : !!action.isDisabled;
+
+    const isLoading =
+      typeof action.isLoading === "function"
+        ? action.isLoading(item)
+        : !!action.isLoading;
+
+    const handleClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      action.handleClick(item);
+    };
+
+    if (!config) {
+      return (
+        <BaseButton
+          size="sm"
+          onClick={handleClick}
+          disabled={isDisabled || isLoading}
+          isLoading={isLoading}
+        >
+          {label}
+        </BaseButton>
+      );
+    }
+
+    const Icon = config.icon;
+
+    return (
+      <IconButton
+        onClick={handleClick}
+        disabled={isDisabled || isLoading}
+        variant={"surface"}
+        size={"xs"}
+      >
+        {isLoading ? <Loader loader size="xs" /> : <Icon />}
+      </IconButton>
+    );
+  }
   return (
     <Menu.Root positioning={{ placement: "bottom" }}>
       <Menu.Trigger cursor={"pointer"} width={"full"}>

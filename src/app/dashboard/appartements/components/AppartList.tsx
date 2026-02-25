@@ -10,6 +10,7 @@ import {
   TextVariant,
   TextWeight,
   DataDisplayContainer,
+  BaseTag,
 } from "_components/custom";
 import { PropertyModule, UserModule } from "_store/state-management";
 import { CONSTANTS, ENUM } from "_types/*";
@@ -94,9 +95,7 @@ export const AppartList = () => {
     {
       header: "Status",
       accessor: "status",
-      cell: (price: ENUM.COMMON.Status) => (
-        <BaseBadge variant="plain" status={price} />
-      ),
+      cell: (status: ENUM.COMMON.Status) => <BaseTag status={status} />,
     },
     // {
     //   header: "Actions",

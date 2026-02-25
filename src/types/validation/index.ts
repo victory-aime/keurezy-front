@@ -5,3 +5,4 @@ export * as TOTP_VALIDATION from "./totp";
 export * as AGENCY_VALIDATION from "./agency";
 export * as PROPERTY_VALIDATION from "./property";
 export * as CONTACT from "./contact";
+export * as RENTAL from "./rental";

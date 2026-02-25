@@ -10,6 +10,7 @@ import {
   UserModule,
   ContactModule,
   PropertyModule,
+  RentalModule,
 } from "_store/state-management";
 import { ALL_CSA_ROUTES, MENU_BY_ROLE } from "./routes/routes";
 import { RenderGroupedLinks } from "./components/RenderGroupedLinks";
@@ -41,12 +42,19 @@ export const SidebarV2 = ({
     queryOptions: { enabled: !!user?.propertyOwner?.propertyAgency?.id },
   });
 
+  const { data: rentalRequestList } =
+    RentalModule.rentalAgencyRequestListQueries({
+      params: { agencyId: user?.propertyOwner?.propertyAgency?.id },
+      queryOptions: { enabled: !!user?.propertyOwner?.propertyAgency?.id },
+    });
+
   const badgesByPath = useMemo(() => {
     return {
       [DASHBOARD_ROUTES.REQUEST]: requestList?.length,
       [DASHBOARD_ROUTES.APPART.LIST]: propertyList?.length,
+      [DASHBOARD_ROUTES.RENTAL_REQUEST]: rentalRequestList?.length,
     };
-  }, [requestList?.length, propertyList?.length]);
+  }, [requestList?.length, propertyList?.length, rentalRequestList?.length]);
 
   const sidebarLinks = useMemo(() => {
     const baseLinks =

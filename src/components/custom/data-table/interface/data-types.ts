@@ -57,7 +57,9 @@ interface TableProps {
   totalDataPerPage?: number;
   lazy?: boolean;
   animationType?: NoDataFoundType;
+  isOpenSelect?: boolean;
   handleRowSelection?: (item: any) => void;
+  onOpenSelectRow?: (item: any) => void;
   handleDeleteActionBar?: (item?: any) => void;
   handleShareActionBar?: (item?: any) => void;
   enabledSort?: boolean;

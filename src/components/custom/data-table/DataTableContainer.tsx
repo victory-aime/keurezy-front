@@ -33,11 +33,12 @@ export const DataTableContainer: FC<TableProps> = ({
   data,
   columns,
   handleRowSelection,
+  onOpenSelectRow,
   handleDeleteActionBar,
-  handleShareActionBar,
   onLazyLoad,
   minH = "10rem",
   hidePagination = false,
+  isOpenSelect = false,
   isLoading,
   totalPages,
   initialPage = 1,
@@ -168,6 +169,18 @@ export const DataTableContainer: FC<TableProps> = ({
                       ? hexToRGB("neutral", 0.3)
                       : "whiteAlpha.200"
               }
+              onClick={() => {
+                if (isOpenSelect) {
+                  onOpenSelectRow?.(item);
+                } else {
+                  setSelection((prev) =>
+                    prev.includes(item.id)
+                      ? prev.filter((id) => id !== item.id)
+                      : [...prev, item.id],
+                  );
+                }
+              }}
+              cursor={isOpenSelect ? "pointer" : "default"}
               overflow="hidden"
             >
               {columns?.map((col, rowIndex) => (
