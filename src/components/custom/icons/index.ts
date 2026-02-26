@@ -5,6 +5,7 @@ import {
   CiFilter,
   CiLogout,
   CiMapPin,
+  CiMobile3,
   CiPlay1,
   CiSaveDown2,
   CiUser,
@@ -58,12 +59,15 @@ import { RxDotsHorizontal, RxHamburgerMenu, RxLapTimer } from "react-icons/rx";
 import {
   LuBuilding2,
   LuClipboardList,
+  LuHeartHandshake,
   LuMaximize,
   LuSend,
 } from "react-icons/lu";
-import { BsSliders } from "react-icons/bs";
+import { BsCalendar3, BsSliders } from "react-icons/bs";
 import { CiGrid31 } from "react-icons/ci";
 import { ImOffice } from "react-icons/im";
+import { GoZap } from "react-icons/go";
+import { BiWorld } from "react-icons/bi";
 
 export const Icons = {
   MapPin: CiMapPin,
@@ -126,4 +130,10 @@ export const Icons = {
   BellOff: CiBellOff,
   Clipboard: LuClipboardList,
   Warn: CiWarning,
+  Zap: GoZap,
+  Mobile: CiMobile3,
+  World: BiWorld,
+  LuHeartHandshake,
+  Calendar: BsCalendar3,
+  TrendingUp: IoIosTrendingUp,
 };

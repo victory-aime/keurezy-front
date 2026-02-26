@@ -1,28 +1,29 @@
 import {
   Box,
-  Button,
   Container,
   Flex,
   Grid,
   Separator,
   Text,
-  Image,
+  HStack,
+  SimpleGrid,
+  VStack,
+  Span,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { BaseButton, BaseText, Icons } from "_components/custom";
-import { ASSETS } from "_assets/images";
 import { hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
 import Link from "next/link";
 import { APP_ROUTES } from "_config/routes";
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const HeroSection = () => {
   return (
     <Box
+      py={24}
       position="relative"
-      minH="90vh"
       display="flex"
       alignItems="center"
       overflow="hidden"
@@ -61,24 +62,32 @@ export const HeroSection = () => {
                 animation="pulse 2s infinite"
                 color={"primary.500"}
               />
-              <BaseText color={"primary.500"}>
-                Nouveau : Paiements automatisés
+              <BaseText color={"primary.500"} fontSize={"sm"}>
+                Plateforme tout-en-un pour la gestion locative
               </BaseText>
             </Flex>
 
             {/* Title */}
             <Box
-              fontSize={{ base: "4xl", sm: "5xl", lg: "6xl" }}
+              fontSize={{ base: "2xl", sm: "3xl", lg: "4xl" }}
               fontWeight="extrabold"
               lineHeight="1.1"
               mb={3}
             >
-              Gérez vos biens
+              La Gestion locative
               <br />
-              <Text
-                bg={`linear-gradient(to-r,${VariablesColors.primary} , ${VariablesColors.tertiary})`}
-              >
-                en toute simplicité
+              <Text>
+                <Span
+                  bgClip={"text"}
+                  gradientFrom={"primary.400"}
+                  gradientVia={"primary.500"}
+                  gradientTo={"tertiary.500"}
+                  bgGradient={"to-r"}
+                  color={"transparent"}
+                >
+                  Intelligente
+                </Span>{" "}
+                pour tous
               </Text>
             </Box>
 
@@ -91,28 +100,41 @@ export const HeroSection = () => {
               flexWrap={"wrap"}
               mb={8}
             >
-              La plateforme tout-en-un pour les propriétaires et gestionnaires
-              immobiliers. Automatisez la collecte des loyers, suivez vos
-              locataires et optimisez votre rendement.
+              Une expérience fluide pour louer, gérer et développer vos
+              investissements immobiliers. Locataires et propriétaires, tout est
+              réuni sur une seule plateforme
             </Text>
 
             {/* Buttons */}
-            <Flex wrap="wrap" gap={4} mb={10}>
+            <Flex flexDirection={{ base: "column", sm: "row" }} gap={4} mb={10}>
               <Link href={APP_ROUTES.AUTH.SIGN_UP}>
-                <BaseButton size="lg" rightIcon={<Icons.ArrowRight />}>
-                  Commencer gratuitement
+                <BaseButton
+                  variant="outline"
+                  leftIcon={<Icons.FaUsers />}
+                  width={{ base: "full" }}
+                >
+                  Je suis Locataire
                 </BaseButton>
               </Link>
 
-              <Link href={APP_ROUTES.APPARTEMENTS}>
-                <BaseButton variant="outline" leftIcon={<Icons.Play />}>
-                  Explorer les biens
+              <Link href={APP_ROUTES.AUTH.ONBOARD}>
+                <BaseButton
+                  leftIcon={<Icons.RiBuildingLine />}
+                  width={{ base: "full" }}
+                >
+                  Je suis Proprietaire
                 </BaseButton>
               </Link>
             </Flex>
 
             {/* Stats */}
-            <Flex width={"full"} align="center" gap={8} wrap={"wrap"}>
+            <Flex
+              width={"full"}
+              align="center"
+              justifyContent={"center"}
+              gap={8}
+              wrap={"wrap"}
+            >
               <StatBlock value="2,500+" label="Propriétés gérées" />
               <Separator orientation="vertical" h="10" />
               <StatBlock value="98%" label="Satisfaction client" />
@@ -122,72 +144,172 @@ export const HeroSection = () => {
           </MotionBox>
 
           {/* RIGHT IMAGE */}
+
+          {/* Dashboard mockup */}
+
           <MotionBox
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            mt={16}
+            width={"full"}
+            maxW="5xl"
+            mx="auto"
             position="relative"
-            display={{ base: "none", sm: "block" }}
           >
             <Box
-              position="relative"
-              rounded="2xl"
+              borderRadius="xl"
+              borderWidth="1px"
+              bg="white"
+              shadow="xl"
               overflow="hidden"
-              boxShadow="2xl"
             >
-              <Image
-                src={ASSETS.HERO}
-                alt="Gestion immobilière moderne"
-                w="100%"
-                objectFit="cover"
-              />
+              {/* Top bar */}
+              <Flex
+                align="center"
+                gap={2}
+                px={4}
+                py={3}
+                borderBottomWidth="1px"
+                bg="gray.50"
+              >
+                <Box
+                  w={3}
+                  h={3}
+                  borderRadius="full"
+                  bg="red.400"
+                  opacity={0.6}
+                />
+                <Box
+                  w={3}
+                  h={3}
+                  borderRadius="full"
+                  bg="yellow.400"
+                  opacity={0.6}
+                />
+                <Box
+                  w={3}
+                  h={3}
+                  borderRadius="full"
+                  bg="green.400"
+                  opacity={0.6}
+                />
+                <Text ml={2} fontSize="xs" color="gray.500">
+                  my-immo.dashboard.app
+                </Text>
+              </Flex>
 
-              <Box
-                position="absolute"
-                inset={0}
-                bg="linear-gradient(to-t, blackAlpha.400, transparent)"
-              />
+              <Box p={6}>
+                {/* KPI GRID */}
+                <SimpleGrid columns={{ base: 2, sm: 2, lg: 4 }} gap={4}>
+                  {[
+                    { label: "Revenus", value: "€12,450", color: "blue" },
+                    { label: "Occupation", value: "94%", color: "primary" },
+                    { label: "Locataires", value: "28", color: "success" },
+                    { label: "Biens", value: "12", color: "warning" },
+                  ].map((kpi) => (
+                    <Box
+                      key={kpi.label}
+                      borderRadius="lg"
+                      p={4}
+                      bg={`${kpi.color}.100`}
+                    >
+                      <Text
+                        fontSize="xs"
+                        fontWeight="medium"
+                        opacity={0.7}
+                        color={`${kpi.color}.600`}
+                      >
+                        {kpi.label}
+                      </Text>
+                      <Text
+                        fontSize="xl"
+                        fontWeight="bold"
+                        mt={1}
+                        color={`${kpi.color}.700`}
+                      >
+                        {kpi.value}
+                      </Text>
+                    </Box>
+                  ))}
+                </SimpleGrid>
+
+                {/* Charts + Activity */}
+                <SimpleGrid columns={{ base: 1, sm: 1, lg: 3 }} gap={4} mt={6}>
+                  {/* Bar chart mock */}
+                  <Flex
+                    gridColumn="span 2"
+                    h="128px"
+                    borderRadius="lg"
+                    bg="gray.50"
+                    borderWidth="1px"
+                    align="flex-end"
+                    p={4}
+                    gap={1}
+                  >
+                    {[40, 65, 55, 80, 70, 90, 85, 75, 95, 88, 92, 78].map(
+                      (h, i) => (
+                        <MotionBox
+                          key={i}
+                          flex="1"
+                          borderRadius="sm"
+                          bg="primary.300"
+                          initial={{ height: 0 }}
+                          animate={{ height: `${h}%` }}
+                          transition={{ delay: 0.8 + i * 0.05, duration: 0.4 }}
+                        />
+                      ),
+                    )}
+                  </Flex>
+
+                  {/* Activity panel */}
+                  <Flex
+                    borderRadius="lg"
+                    bg="gray.50"
+                    borderWidth="1px"
+                    p={4}
+                    direction="column"
+                    justify="space-between"
+                    width={"full"}
+                  >
+                    <Text fontSize="xs" color="gray.500" fontWeight="medium">
+                      Activité récente
+                    </Text>
+
+                    <VStack align="start" gap={2} width={"full"}>
+                      {["Loyer reçu", "Nouveau bail", "Maintenance"].map(
+                        (item) => (
+                          <HStack key={item} gap={2}>
+                            <Box
+                              w={1.5}
+                              h={1.5}
+                              borderRadius="full"
+                              bg="purple.400"
+                            />
+                            <Text fontSize="xs" color="gray.500">
+                              {item}
+                            </Text>
+                          </HStack>
+                        ),
+                      )}
+                    </VStack>
+                  </Flex>
+                </SimpleGrid>
+              </Box>
             </Box>
 
-            {/* Floating Card */}
-            <MotionBox
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6, duration: 0.4 }}
+            <Box
               position="absolute"
-              bottom="-6"
-              left="-6"
-              bg="white"
-              rounded="xl"
-              p={3}
-              boxShadow="xl"
-              border="1px solid"
-              borderColor="gray.200"
-            >
-              <Flex align="center" gap={3}>
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  rounded="full"
-                  bg={hexToRGB("tertiary", 0.1)}
-                  boxSize={"60px"}
-                >
-                  <Text fontWeight="bold" color="tertiary.500">
-                    +12%
-                  </Text>
-                </Box>
-
-                <Box>
-                  <Text fontSize="sm" fontWeight="semibold">
-                    Rendement moyen
-                  </Text>
-                  <Text fontSize="xs" color="gray.500">
-                    Sur les 12 derniers mois
-                  </Text>
-                </Box>
-              </Flex>
-            </MotionBox>
+              bottom="-32px"
+              left="50%"
+              transform="translateX(-50%)"
+              w="75%"
+              h="64px"
+              bg="primary.200"
+              opacity={0.3}
+              filter="blur(60px)"
+              borderRadius="full"
+            />
           </MotionBox>
         </Grid>
       </Container>

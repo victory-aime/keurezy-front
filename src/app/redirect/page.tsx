@@ -23,7 +23,7 @@ export default function RedirectAfterLogin() {
     ) {
       router.push(roleToDashboardMap[session?.user?.role]);
     } else {
-      router.replace(APP_ROUTES.PROTECTED);
+      router.replace(APP_ROUTES.ROOT);
     }
   }, [session, isPending, router]);
 

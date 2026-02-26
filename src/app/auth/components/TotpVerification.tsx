@@ -27,6 +27,8 @@ export const TotpVerification = () => {
       if (!result || "status" in result) {
         if (result?.status === 401 || result?.status === 400) {
           formikHelpers?.setFieldError("totpCode", "Code invalide ou expiré");
+        } else if (result?.status === 500) {
+          formikHelpers?.setFieldError("totpCode", t("COMMON.SERVER_ERROR"));
         } else {
           formikHelpers?.setFieldError(
             "totpCode",

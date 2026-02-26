@@ -6,9 +6,11 @@ import {
   TextVariant,
   TextWeight,
 } from "_components/custom";
+import { APP_ROUTES } from "_config/routes";
 import { hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const MotionBox = motion.create(Box);
 
@@ -29,7 +31,10 @@ export const CTASection = () => {
           <Box
             position="absolute"
             inset={0}
-            bg={`linear-gradient(to-br, ${VariablesColors.primary}, ${VariablesColors.primary}, 0.8)`}
+            bgGradient={"to-br"}
+            gradientFrom={"primary.500"}
+            gradientVia={"primary.800"}
+            gradientTo={"secondary.100"}
           />
 
           <Box
@@ -41,14 +46,6 @@ export const CTASection = () => {
             rounded="full"
             bg={hexToRGB("secondary", 0.1)}
             filter="blur(96px)"
-          />
-
-          {/* Full Overlay Glass Effect */}
-          <Box
-            position="absolute"
-            inset={0}
-            backdropFilter="blur(80px)"
-            bg={hexToRGB("secondary", 0.08)}
           />
 
           {/* Bottom Left Big Blur Blob */}
@@ -77,7 +74,7 @@ export const CTASection = () => {
               lineHeight={"1.2"}
               color={"white"}
             >
-              Prêt à simplifier votre gestion locative ?
+              Prêt à transformer votre expérience locative ?
             </BaseText>
             <BaseText
               maxW={"xl"}
@@ -86,30 +83,33 @@ export const CTASection = () => {
               variant={TextVariant.XL}
               color={"white"}
             >
-              Rejoignez des milliers de propriétaires qui font confiance à
-              RentFlow pour gérer leurs biens.
+              Rejoignez des milliers d'utilisateurs qui font confiance à MyIMMO.
             </BaseText>
             <HStack
               gap={2}
               justifyContent={"center"}
               flexDirection={{ base: "column", md: "row" }}
             >
-              <BaseButton
-                width={{ base: "full", md: "fit-content" }}
-                colorType="secondary"
-                className="gap-2 font-semibold"
-              >
-                Commencer maintenant
-                <Icons.ArrowRight />
-              </BaseButton>
+              <Link href={APP_ROUTES.AUTH.SIGN_UP}>
+                <BaseButton
+                  width={{ base: "full", md: "fit-content" }}
+                  colorType="secondary"
+                  leftIcon={<Icons.Home />}
+                >
+                  Rejoindre en tant que locataire
+                </BaseButton>
+              </Link>
 
-              <BaseButton
-                width={{ base: "full", md: "fit-content" }}
-                variant="outline"
-                colorType="neutral"
-              >
-                Voir les propriétés
-              </BaseButton>
+              <Link href={APP_ROUTES.AUTH.ONBOARD}>
+                <BaseButton
+                  width={{ base: "full", md: "fit-content" }}
+                  variant="outline"
+                  colorType="neutral"
+                  leftIcon={<Icons.RiBuildingLine />}
+                >
+                  Rejoindre en tant que propriétaire
+                </BaseButton>
+              </Link>
             </HStack>
           </VStack>
         </MotionBox>

@@ -1,11 +1,15 @@
 "use client";
 
-import { Card, Center, VStack, Box } from "@chakra-ui/react";
+import { Card, Center, VStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { ReactNode } from "react";
 import Image from "next/image";
-import { VariablesColors } from "_theme/variables";
 import { ASSETS } from "_assets/images";
+import { motion } from "framer-motion";
+
+const MotionCard = motion(Card.Root);
+const MotionHeader = motion(Card.Header);
+const MotionBody = motion(Card.Body);
 
 export const AuthBoxContainer = ({
   children,
@@ -27,61 +31,50 @@ export const AuthBoxContainer = ({
       position="relative"
       overflow="hidden"
     >
-      <Box
-        display={{ base: "none", md: "block" }}
-        position="absolute"
-        inset={0}
-        bg={VariablesColors.white}
-        opacity={0.15}
-      />
-      <Box
-        display={{ base: "none", md: "block" }}
-        position="absolute"
-        top="-20%"
-        right="-20%"
-        w="500px"
-        h="500px"
-        bg={VariablesColors.secondary}
-        borderRadius="full"
-        filter="blur(120px)"
-      />
-      <Box
-        display={{ base: "none", md: "block" }}
-        position="absolute"
-        bottom="-20%"
-        left="-20%"
-        w="500px"
-        h="500px"
-        bg={VariablesColors.primary}
-        borderRadius="full"
-        filter="blur(120px)"
-      />
-
-      <Card.Root
+      <MotionCard
         size="md"
         w="full"
-        maxW={{ base: "100%", md: "750px" }}
+        mt="5"
+        maxW={{ base: "100%", sm: "700px" }}
         border="none"
-        //bg={{ base: "transparent", md: "rgba(255,255,255,0.75)" }}
-        backdropFilter={{ base: "none", md: "blur(14px)" }}
-        css={{
-          WebkitBackdropFilter: { base: "none", md: "blur(14px)" },
-        }}
         borderRadius={{ base: "none", md: "2xl" }}
-        //boxShadow={{ base: "none", md: "0 10px 20px rgba(0,0,0,0.15)" }}
-        zIndex={1}
+        initial={{ opacity: 0, y: 40, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <Card.Header alignItems="center" gap={3}>
-          <Image src={ASSETS.LOGO} width={45} height={45} alt="logo" />
+        <MotionHeader
+          alignItems="center"
+          gap={3}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.4 }}
+          >
+            <Image src={ASSETS.LOGO} width={45} height={45} alt="logo" />
+          </motion.div>
+
           <Card.Title fontSize="xl" textAlign="center">
             {t(title)}
           </Card.Title>
+
           <VStack fontSize="sm" color="gray.500" textAlign="center">
             {description}
           </VStack>
-        </Card.Header>
-        <Card.Body px={{ base: 0, md: 6 }}>{children}</Card.Body>
-      </Card.Root>
+        </MotionHeader>
+
+        <MotionBody
+          px={{ base: 0, md: 6 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
+          {children}
+        </MotionBody>
+      </MotionCard>
     </Center>
   );
 };

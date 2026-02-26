@@ -38,12 +38,7 @@ export const BaseText: React.FC<BaseTextProps> = ({
   };
 
   return (
-    <Text
-      fontSize={sizeMap[variant]}
-      fontWeight={weightMap[weight]}
-      lineHeight={props.lineHeight ?? "1.8"}
-      {...props}
-    >
+    <Text fontSize={sizeMap[variant]} fontWeight={weightMap[weight]} {...props}>
       {children}
     </Text>
   );

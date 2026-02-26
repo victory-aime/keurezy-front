@@ -16,6 +16,7 @@ import {
   List,
   SimpleGrid,
 } from "@chakra-ui/react";
+import { VariablesColors } from "_theme/variables";
 
 const pricingPlans = [
   {
@@ -79,17 +80,21 @@ export const PricingSection = () => {
           textAlign={"center"}
         >
           <BaseText
-            variant={TextVariant.S}
             color={"primary.500"}
             textTransform={"uppercase"}
-            mb={2}
+            fontWeight={"semibold"}
           >
             Tarifs
           </BaseText>
-          <BaseText variant={TextVariant.M}>
+
+          <BaseText
+            fontWeight={"bold"}
+            variant={TextVariant.H2}
+            lineHeight={1.2}
+          >
             Des prix simples et transparents
           </BaseText>
-          <BaseText variant={TextVariant.M} mb={2}>
+          <BaseText variant={TextVariant.L} mb={2} mt={1} color={"gray.400"}>
             Commencez gratuitement, évoluez quand vous êtes prêt.
           </BaseText>
         </MotionBox>

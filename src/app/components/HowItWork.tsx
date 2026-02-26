@@ -50,15 +50,21 @@ export const HowItWorksSection = () => {
           textAlign={"center"}
         >
           <BaseText
-            variant={TextVariant.S}
             color={"primary.500"}
             textTransform={"uppercase"}
-            mb={2}
+            fontWeight={"semibold"}
           >
             Comment ça marche
           </BaseText>
-          <BaseText variant={TextVariant.M}>Trois étapes simples</BaseText>
-          <BaseText variant={TextVariant.M} mb={2}>
+
+          <BaseText
+            fontWeight={"bold"}
+            variant={TextVariant.H2}
+            lineHeight={1.2}
+          >
+            Trois étapes simples
+          </BaseText>
+          <BaseText variant={TextVariant.L} mb={2} mt={1} color={"gray.400"}>
             Commencez à gérer vos propriétés en quelques minutes, pas en
             quelques jours.
           </BaseText>
@@ -91,15 +97,20 @@ export const HowItWorksSection = () => {
                 Étape {step.step}
               </BaseText>
               <BaseText
-                variant={TextVariant.XS}
+                variant={TextVariant.H3}
                 weight={TextWeight.SemiBold}
                 mt={1}
                 mb={1}
               >
                 {step.title}
               </BaseText>
-              <BaseText variant={TextVariant.XS} maxW={"xs"} mx={"auto"}>
-                Étape {step.description}
+              <BaseText
+                variant={TextVariant.M}
+                maxW={"xs"}
+                mx={"auto"}
+                color={"gray.400"}
+              >
+                {step.description}
               </BaseText>
             </MotionVstack>
           ))}

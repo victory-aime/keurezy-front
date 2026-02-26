@@ -5,10 +5,8 @@ import {
   BaseButton,
   BaseText,
   CustomSkeletonLoader,
-  BaseToast,
   Icons,
   TextVariant,
-  ToastStatus,
 } from "_components/custom";
 import {
   Box,
@@ -47,21 +45,6 @@ export const Navbar = () => {
       enabled: !!session?.userId,
     },
   });
-
-  const createAgency = () => {
-    if (user?.id && user?.role !== UserRole.IMMO_OWNER) {
-      router.push(`${APP_ROUTES.AUTH.REGISTER_AGENCY}?token=${user?.id}`);
-    } else if (user?.role === UserRole.IMMO_OWNER) {
-      router.push(APP_ROUTES.DASHBOARD);
-    } else {
-      BaseToast({
-        duration: 3000,
-        title: "Veuillez créer un compte",
-        description: " Pour creer une agence vous devrez vous incrire",
-        type: ToastStatus.INFO,
-      });
-    }
-  };
 
   const links = HEADER_LINKS(!!session?.token, user?.role!);
 
@@ -181,8 +164,10 @@ export const Navbar = () => {
                     Acceder au Tableau de bord
                   </BaseButton>
                 ) : (
-                  <BaseButton onClick={createAgency}>
-                    Créer mon agence
+                  <BaseButton
+                    onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
+                  >
+                    Commencer
                   </BaseButton>
                 )}
               </>
@@ -193,7 +178,7 @@ export const Navbar = () => {
             display={{ base: "block", md: "none" }}
             onClick={() => setIsOpen(!isOpen)}
           >
-            {isOpen ? <Icons.Close /> : <Icons.Menu />}
+            {isOpen ? <Icons.Close size={20} /> : <Icons.Menu size={20} />}
           </Stack>
         </Flex>
       </Container>
@@ -302,8 +287,10 @@ export const Navbar = () => {
                         Acceder au Tableau de bord
                       </BaseButton>
                     ) : (
-                      <BaseButton width={"full"} onClick={() => createAgency()}>
-                        Créer mon agence
+                      <BaseButton
+                        onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
+                      >
+                        Commencer
                       </BaseButton>
                     )}
                   </>

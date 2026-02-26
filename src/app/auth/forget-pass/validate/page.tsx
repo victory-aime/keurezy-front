@@ -1,10 +1,10 @@
-import { Suspense } from "react";
 import { ForgetPassword } from "../../components/ForgetPassword";
 
-export default function ForgetPasswordPage() {
-  return (
-    <Suspense>
-      <ForgetPassword />
-    </Suspense>
-  );
+export default async function ForgetPasswordPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ token?: string }>;
+}) {
+  const params = await searchParams;
+  return <ForgetPassword token={params?.token!} />;
 }
