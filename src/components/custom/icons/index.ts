@@ -9,6 +9,7 @@ import {
   CiSaveDown2,
   CiUser,
   CiViewList,
+  CiWarning,
 } from "react-icons/ci";
 import { FaCog, FaUserAlt, FaUserPlus, FaUsers } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
@@ -124,4 +125,5 @@ export const Icons = {
   FolderOpen: HiOutlineFolderOpen,
   BellOff: CiBellOff,
   Clipboard: LuClipboardList,
+  Warn: CiWarning,
 };

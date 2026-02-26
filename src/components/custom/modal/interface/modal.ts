@@ -18,6 +18,10 @@ interface ModalProps extends DialogRootProps {
   colorCancelButton?: variantColorType;
   iconCancelButton?: ReactNode;
   iconSaveButton?: ReactNode;
+  onReject?: () => void;
+  buttonRejectTitle?: string;
+  iconRejectButton?: React.ReactNode;
+  colorRejectButton?: variantColorType;
   scrollBehavior?: "inside" | "outside";
   isFull?: boolean | undefined;
   icon?: ReactNode;

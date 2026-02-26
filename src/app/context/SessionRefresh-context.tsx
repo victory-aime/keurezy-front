@@ -8,7 +8,7 @@ import {
   createContext,
   useContext,
 } from "react";
-import { CustomToast, ToastStatus } from "_components/custom";
+import { BaseToast, ToastStatus } from "_components/custom";
 import { toaster } from "_components/ui/toaster";
 import { retrySessionRequest } from "_utils/retrySessionRequest";
 import { authClient } from "../lib/auth-client";
@@ -34,14 +34,14 @@ export function SessionRefreshProvider({ children }: { children: ReactNode }) {
 
     isRetryingRef.current = true;
 
-    CustomToast({
+    BaseToast({
       id: toastId,
       showStatus: { error: false, success: false },
       asPromise: {
         promise: retrySessionRequest()
           .then(async () => {
             await refetchSession();
-            CustomToast({
+            BaseToast({
               id: `${toastId}-final`,
               title: "Connexion rétablie",
               description: "Votre session est active.",
@@ -49,7 +49,7 @@ export function SessionRefreshProvider({ children }: { children: ReactNode }) {
             });
           })
           .catch(() =>
-            CustomToast({
+            BaseToast({
               id: `${toastId}-error`,
               title: "Connexion impossible",
               description:

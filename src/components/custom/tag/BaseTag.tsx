@@ -1,12 +1,13 @@
 import { ColorPalette, Tag } from "@chakra-ui/react";
 import React, { FC, ReactNode } from "react";
-import { BaseTagProps, TagType } from "./interface/tag";
+import { BaseTagProps } from "./interface/tag";
 import { useTranslation } from "react-i18next";
 import { Icons } from "../icons";
 import { ENUM } from "_types/*";
 
-const getBadgeContent = (
+const getTagContent = (
   status: ENUM.COMMON.Status | undefined,
+  color: ColorPalette = "red",
   t?: (key: string) => string,
 ): { colorPalette: ColorPalette; label: string; icon?: ReactNode } => {
   if (!t) return { colorPalette: "blue", label: "Inconnu" };
@@ -31,8 +32,20 @@ const getBadgeContent = (
         colorPalette: "orange",
         label: t("COMMON.STATUS.PENDING"),
       };
+    case "ACCEPTED":
+      return {
+        icon: <Icons.Check />,
+        colorPalette: "green",
+        label: t("COMMON.STATUS.ACCEPTED"),
+      };
+    case "REJECTED":
+      return {
+        icon: <Icons.Close />,
+        colorPalette: "red",
+        label: t("COMMON.STATUS.REJECTED"),
+      };
     default:
-      return { colorPalette: "green", label: t("inconnu") };
+      return { colorPalette: color, label: t("COMMON.STATUS.UNKNOWN") };
   }
 };
 
@@ -40,7 +53,7 @@ export const BaseTag: FC<BaseTagProps> = ({
   children,
   variant = "subtle",
   label: customLabel,
-  color,
+  color = "red",
   status,
   ...props
 }) => {
@@ -50,7 +63,7 @@ export const BaseTag: FC<BaseTagProps> = ({
     colorPalette,
     label: resolvedLabel,
     icon,
-  } = getBadgeContent(status, t);
+  } = getTagContent(status, color as ColorPalette, t);
 
   return (
     <Tag.Root
@@ -62,7 +75,7 @@ export const BaseTag: FC<BaseTagProps> = ({
     >
       {icon && <Tag.StartElement>{icon}</Tag.StartElement>}
 
-      <Tag.Label textTransform={"capitalize"}>
+      <Tag.Label textTransform="capitalize">
         {customLabel ?? resolvedLabel}
       </Tag.Label>
     </Tag.Root>

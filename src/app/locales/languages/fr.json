@@ -119,7 +119,9 @@
       "AVAILABLE": "Disponible",
       "RENTED": "Occupé",
       "RESERVED": "Réserver",
-      "CLOSED": "Fermer"
+      "CLOSED": "Fermer",
+      "REJECTED": "Rejetée",
+      "ACCEPTED": "Acceptée"
     },
     "TODAY": "Aujourd'hui",
     "MONTH": "Mois",

@@ -1,29 +1,7 @@
 import { toaster } from "_components/ui/toaster";
-import { ToastStatus, DEFAULT_TIME, ToastProps } from "./interface/toats";
+import { ToastStatus, DEFAULT_TIME, BaseToastProps } from "./interface/toats";
 
-interface CustomToastProps extends ToastProps {
-  id?: string;
-  persist?: boolean;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
-  showStatus?: {
-    success?: boolean;
-    error?: boolean;
-  };
-  asPromise?: {
-    promise: Promise<any>;
-    config?: {
-      loading?: ToastProps;
-      success?: ToastProps;
-      error?: ToastProps;
-      loader?: () => void;
-    };
-  };
-}
-
-export const CustomToast = ({
+export const BaseToast = ({
   id = "default-toast",
   title = "Notification",
   type = ToastStatus.SUCCESS,
@@ -33,7 +11,7 @@ export const CustomToast = ({
   action,
   asPromise,
   showStatus,
-}: CustomToastProps) => {
+}: BaseToastProps) => {
   const showSuccess = showStatus?.success ?? true;
   const showError = showStatus?.error;
 

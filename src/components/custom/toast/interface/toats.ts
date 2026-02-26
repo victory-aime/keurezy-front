@@ -14,4 +14,26 @@ interface ToastProps {
   duration?: number;
 }
 
-export type { ToastProps };
+interface BaseToastProps extends ToastProps {
+  id?: string;
+  persist?: boolean;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
+  showStatus?: {
+    success?: boolean;
+    error?: boolean;
+  };
+  asPromise?: {
+    promise: Promise<any>;
+    config?: {
+      loading?: ToastProps;
+      success?: ToastProps;
+      error?: ToastProps;
+      loader?: () => void;
+    };
+  };
+}
+
+export type { ToastProps, BaseToastProps };

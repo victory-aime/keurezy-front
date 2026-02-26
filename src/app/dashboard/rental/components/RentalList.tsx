@@ -1,9 +1,7 @@
 "use client";
-import { Box, Flex, VStack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import {
   BaseContainer,
-  BaseModal,
-  BaseStats,
   BaseTag,
   BaseText,
   ColumnsDataTable,
@@ -11,11 +9,16 @@ import {
   Icons,
 } from "_components/custom";
 import { Avatar } from "_components/ui/avatar";
-import { RentalModule, UserModule } from "_store/state-management";
+import {
+  RentalAgreementModule,
+  RentalModule,
+  UserModule,
+} from "_store/state-management";
 import { ENUM, MODELS } from "_types/*";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { formatDisplayDate } from "rise-core-frontend";
-import { RentalInfoItem, RentalModalSection } from "./RentalSection";
+import { RentalStatsCard } from "./RentalStatsCard";
+import { RentalModal } from "./RentalModal";
 
 export const RentalList = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -37,6 +40,44 @@ export const RentalList = () => {
     queryOptions: { enabled: !!user?.propertyOwner?.propertyAgency?.id },
   });
 
+  const { mutateAsync: approveRequest, isPending: approvePending } =
+    RentalAgreementModule.approveRentalAgreementMutation({
+      mutationOptions: { onSuccess: async () => await refetchList() },
+    });
+
+  const { mutateAsync: rejectRequest, isPending: rejectPending } =
+    RentalAgreementModule.rejectRentalAgreementMutation({
+      mutationOptions: { onSuccess: async () => await refetchList() },
+    });
+
+  const pendingRequestCountForSelected = useMemo(() => {
+    if (!rentalList || !selectedValues?.property?.id) return 0;
+
+    return rentalList.filter(
+      (r) =>
+        r.property?.id === selectedValues.property.id &&
+        r.status === ENUM.COMMON.Status.PENDING,
+    ).length;
+  }, [rentalList, selectedValues]);
+
+  const handleApprove = async () => {
+    await approveRequest({
+      params: {
+        agencyId: user?.propertyOwner?.propertyAgency?.id,
+        requestId: selectedValues?.id,
+      },
+    });
+  };
+
+  const handleReject = async () => {
+    await rejectRequest({
+      params: {
+        agencyId: user?.propertyOwner?.propertyAgency?.id,
+        requestId: selectedValues?.id,
+      },
+    });
+  };
+
   const rentalColumns: ColumnsDataTable[] = [
     {
       header: "ID",
@@ -48,8 +89,8 @@ export const RentalList = () => {
       accessor: "tenant",
       cell: (value: { name: string }) => {
         return (
-          <Flex alignItems={"center"} gap={2}>
-            <Avatar name={value.name} />
+          <Flex alignItems={"center"} gap={2} textTransform={"capitalize"}>
+            <Avatar name={value.name} bgColor={"primary.100"} />
             {value?.name}
           </Flex>
         );
@@ -93,6 +134,7 @@ export const RentalList = () => {
       ],
     },
   ];
+
   return (
     <BaseContainer
       title={"Candidatures"}
@@ -100,51 +142,12 @@ export const RentalList = () => {
       p={0}
       loader={rentalLoad}
       description={"Gérez les demandes de location sur vos biens"}
+      withActionButtons
+      actionsButtonProps={{
+        onReload: async () => await refetchList(),
+      }}
     >
-      <Flex width={"full"} gap={4}>
-        {[
-          {
-            label: "Total",
-            value: rentalList?.length,
-            icon: <Icons.Clipboard />,
-            iconBgColor: "primary.500",
-          },
-          {
-            label: "En attente",
-            value: rentalList?.filter(
-              (p) => p.status === ENUM.COMMON.Status.PENDING,
-            ).length,
-            icon: <Icons.Timer />,
-            iconBgColor: "warning.500",
-          },
-          {
-            label: "Acceptées",
-            value: rentalList?.filter(
-              (p) => p.status === ENUM.COMMON.Status.ACCEPTED,
-            ).length,
-            icon: <Icons.Check />,
-            iconBgColor: "tertiary.500",
-          },
-          {
-            label: "Rejetées",
-            value: rentalList?.filter(
-              (p) => p.status === ENUM.COMMON.Status.REJECTED,
-            ).length,
-            icon: <Icons.Close />,
-            iconBgColor: "red.500",
-          },
-        ].map((stats, i) => (
-          <BaseStats
-            key={i}
-            mt={"30px"}
-            icon={stats.icon}
-            isLoading={rentalLoad}
-            iconBgColor={stats.iconBgColor}
-            title={stats.label}
-            value={stats.value ?? 0}
-          />
-        ))}
-      </Flex>
+      <RentalStatsCard rentalList={rentalList ?? []} isLoading={rentalLoad} />
 
       <DataTableContainer
         data={rentalList ?? []}
@@ -157,97 +160,18 @@ export const RentalList = () => {
         }}
         hidePagination
       />
-      <BaseModal
+      <RentalModal
+        onChange={setOpen}
         isOpen={open}
-        onChange={() => {
+        data={selectedValues}
+        callback={handleApprove}
+        onReject={() => {
+          handleReject();
           setOpen(false);
         }}
-        title="Candidature"
-        description={`Candidature pour : ${selectedValues?.property?.title}`}
-        status={selectedValues?.status}
-        buttonCancelTitle={
-          selectedValues?.status === ENUM.COMMON.Status.PENDING
-            ? "Rejeter"
-            : "Fermer"
-        }
-        iconCancelButton={<Icons.Close />}
-        iconSaveButton={<Icons.Check />}
-        buttonSaveTitle={
-          selectedValues?.status === ENUM.COMMON.Status.PENDING
-            ? "Accepter"
-            : ""
-        }
-        alignItems={"flex-end"}
-        justifyContent={"flex-end"}
-      >
-        <VStack alignItems="flex-start" gap={6}>
-          <RentalModalSection icon={<Icons.User />} title="Informations">
-            <Flex
-              width="full"
-              gap={4}
-              justifyContent="space-between"
-              flexWrap="wrap"
-            >
-              <RentalInfoItem
-                icon={<Icons.User />}
-                label="Nom"
-                value={selectedValues?.tenant?.name}
-              />
-              <RentalInfoItem
-                icon={<Icons.Mail />}
-                label="Email"
-                value={selectedValues?.tenant?.email}
-              />
-              <RentalInfoItem
-                icon={<Icons.Phone />}
-                label="Phone"
-                value={selectedValues?.phone}
-              />
-            </Flex>
-          </RentalModalSection>
-
-          <RentalModalSection
-            icon={<Icons.RiBuildingLine />}
-            title="Détails de la demande"
-          >
-            <Flex
-              width="full"
-              gap={4}
-              justifyContent="space-between"
-              flexWrap="wrap"
-            >
-              <RentalInfoItem
-                icon={<Icons.RiBuildingLine />}
-                label="Bien"
-                value={selectedValues?.property?.title}
-              />
-              <RentalInfoItem
-                icon={<Icons.User />}
-                label="Emménagement"
-                value={formatDisplayDate(selectedValues?.createdAt)}
-              />
-              <RentalInfoItem
-                icon={<Icons.User />}
-                label="Candidature"
-                value={formatDisplayDate(selectedValues?.createdAt)}
-              />
-            </Flex>
-          </RentalModalSection>
-
-          <RentalModalSection icon={<Icons.Chat />} title="Message du candidat">
-            <Box
-              width="full"
-              p={4}
-              rounded="lg"
-              bgColor="gray.100"
-              border="1px solid"
-              borderColor="border"
-            >
-              {selectedValues?.message}
-            </Box>
-          </RentalModalSection>
-        </VStack>
-      </BaseModal>
+        isLoading={approvePending || rejectPending}
+        pendingRequestCountForSelected={pendingRequestCountForSelected}
+      />
     </BaseContainer>
   );
 };

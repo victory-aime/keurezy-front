@@ -1,6 +1,6 @@
 "use client";
 import { Flex, HStack, useBreakpointValue } from "@chakra-ui/react";
-import { BaseText, CustomToast, ToastStatus } from "_components/custom";
+import { BaseText, BaseToast, ToastStatus } from "_components/custom";
 import Image from "next/image";
 import { UserModule } from "_store/state-management";
 import { APP_ROUTES } from "_config/routes";
@@ -35,7 +35,7 @@ export const Header = () => {
     } else if (user?.role === UserRole.IMMO_OWNER) {
       router.push(APP_ROUTES.DASHBOARD);
     } else {
-      CustomToast({
+      BaseToast({
         duration: 3000,
         title: "Veuillez creer un compte",
         description: " Pour creer une agence vous devrez vous incrire",

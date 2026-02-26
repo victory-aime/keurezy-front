@@ -14,16 +14,13 @@ import { AuthBoxContainer } from "./AuthBoxContainer";
 import { PasswordIndicator } from "_component/PasswordIndicator";
 import { authClient } from "../../lib/auth-client";
 import { SendEmailRecap } from "./SendEmailRecap";
-import { useAuthContext } from "_context/auth-context";
 
 export const SignUp = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { signUp } = useAuth();
-  const { refetchSession } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [openModalLink, setOpenModalLink] = useState(false);
-
   const isValidPassword = (password: string) => {
     return VALIDATION.AUTH.passwordValidations(password)?.every((v) => v.test);
   };
@@ -43,9 +40,7 @@ export const SignUp = () => {
           //     callbackURL: APP_ROUTES.AUTH.VERIFIED_EMAIL,
           //   })
           //   .then(async () => {
-          //     await refetchSession?.().then(() => {
           //       setOpenModalLink(true);
-          //     });
           //   });
           //router.push(APP_ROUTES.AUTH.SIGN_IN);
         }
@@ -106,7 +101,10 @@ export const SignUp = () => {
             />
 
             <PasswordIndicator password={values.password} />
-
+            <BaseText color={"gray.400"}>
+              En créant un compte, vous acceptez nos Conditions d'utilisation et
+              notre Politique de confidentialité.
+            </BaseText>
             <BaseButton
               withGradient
               width="full"

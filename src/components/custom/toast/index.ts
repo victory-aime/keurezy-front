@@ -1,4 +1,2 @@
-import { CustomToast } from "./CustomToast";
-import { ToastStatus } from "./interface/toats";
-
-export { CustomToast, ToastStatus };
+export * from "./interface/toats";
+export * from "./BaseToast";

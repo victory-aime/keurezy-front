@@ -17,6 +17,7 @@ import { AgencyModule } from "_store/state-management";
 import { useState } from "react";
 import { APP_ROUTES } from "_config/routes";
 import { useRouter } from "next/navigation";
+import { useAuthContext } from "_context/auth-context";
 
 export const RegisterAgencyStep2 = ({
   values,
@@ -26,12 +27,15 @@ export const RegisterAgencyStep2 = ({
   Prev?: any;
 }) => {
   const router = useRouter();
+  const { refetchSession } = useAuthContext();
   const [succesModal, setSuccesModal] = useState<boolean>(false);
   const { mutateAsync: createAgency, isPending: isLoading } =
     AgencyModule.createAgencyMutation({
       mutationOptions: {
-        onSuccess: () => {
-          setSuccesModal(true);
+        onSuccess: async () => {
+          await refetchSession?.().then(() => {
+            setSuccesModal(true);
+          });
         },
       },
     });

@@ -39,6 +39,10 @@ const BaseModal = ({
   animateConfetti = false,
   iconCancelButton,
   iconSaveButton,
+  iconRejectButton,
+  onReject,
+  buttonRejectTitle = "COMMON.REJECTED",
+  colorRejectButton,
   scrollBehavior = "inside",
   ...rest
 }: ModalProps & DialogFooterProps) => {
@@ -93,6 +97,7 @@ const BaseModal = ({
             {!ignoreFooter ? (
               <DialogFooter
                 mt={4}
+                p={0}
                 alignItems={"center"}
                 justifyContent={"center"}
                 gap={4}
@@ -119,6 +124,17 @@ const BaseModal = ({
                           {t(buttonCancelTitle)}
                         </BaseButton>
                       </DialogActionTrigger>
+                    )}
+                    {/* Reject = action métier */}
+                    {buttonRejectTitle && (
+                      <BaseButton
+                        variant="outline"
+                        colorType={colorRejectButton ?? "danger"}
+                        onClick={() => onReject?.()}
+                        leftIcon={iconRejectButton}
+                      >
+                        {t(buttonRejectTitle)}
+                      </BaseButton>
                     )}
                     {buttonSaveTitle && (
                       <BaseButton

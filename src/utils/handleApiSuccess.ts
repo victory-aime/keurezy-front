@@ -1,4 +1,4 @@
-import { CustomToast, ToastStatus } from "_components/custom/toast";
+import { BaseToast, ToastStatus } from "_components/custom/toast";
 
 export const handleApiSuccess = (response: {
   status: number;
@@ -30,7 +30,7 @@ export const handleApiSuccess = (response: {
       break;
   }
 
-  CustomToast({
+  BaseToast({
     title,
     description,
     type: toastStatus,

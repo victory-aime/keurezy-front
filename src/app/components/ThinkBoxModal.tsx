@@ -1,7 +1,7 @@
 "use client";
 
 import { VStack } from "@chakra-ui/react";
-import { CustomToast, FormTextArea, FormTextInput } from "_components/custom";
+import { BaseToast, FormTextArea, FormTextInput } from "_components/custom";
 import { BaseModal } from "_components/custom/modal";
 import { ModalOpenProps } from "_components/custom/modal/interface/modal";
 import { hexToRGB } from "_theme/colors";
@@ -38,7 +38,7 @@ const ThinkBoxModal: FC<ModalOpenProps> = ({ isOpen, onChange, data }) => {
         "Content-Type": "application/json",
       },
     });
-    CustomToast({
+    BaseToast({
       asPromise: {
         promise,
         config: {

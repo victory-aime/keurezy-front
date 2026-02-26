@@ -5,7 +5,7 @@ import {
   BaseIcon,
   BaseModal,
   BaseText,
-  CustomToast,
+  BaseToast,
   FormPhonePicker,
   FormTextArea,
   Icons,

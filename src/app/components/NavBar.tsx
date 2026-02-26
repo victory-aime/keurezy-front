@@ -5,7 +5,7 @@ import {
   BaseButton,
   BaseText,
   CustomSkeletonLoader,
-  CustomToast,
+  BaseToast,
   Icons,
   TextVariant,
   ToastStatus,
@@ -54,7 +54,7 @@ export const Navbar = () => {
     } else if (user?.role === UserRole.IMMO_OWNER) {
       router.push(APP_ROUTES.DASHBOARD);
     } else {
-      CustomToast({
+      BaseToast({
         duration: 3000,
         title: "Veuillez créer un compte",
         description: " Pour creer une agence vous devrez vous incrire",
