@@ -8,7 +8,6 @@ export interface IMobileLayout {
   onClose: (value?: any) => void;
   isLoading?: boolean;
   links: {
-    id: number;
     icon: any;
     name: string;
     url: string;

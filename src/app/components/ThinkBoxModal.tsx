@@ -81,7 +81,7 @@ const ThinkBoxModal: FC<ModalOpenProps> = ({ isOpen, onChange, data }) => {
           buttonSaveTitle={"COMMON.SEND"}
           colorSaveButton={"warning"}
           colorCancelButton={"warning"}
-          onClick={handleSubmit}
+          onClick={() => handleSubmit()}
         >
           <VStack gap={4}>
             <FormTextInput

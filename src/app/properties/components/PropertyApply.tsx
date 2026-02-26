@@ -249,7 +249,6 @@ export const PropertyApply = ({ id }: { id: string }) => {
           router.push(APP_ROUTES.APPARTEMENTS);
           setOpenSuccessModal(false);
         }}
-        showCloseButton={false}
         closeOnEscape={false}
         closeOnInteractOutside={false}
         icon={<Icons.Check size={40} />}

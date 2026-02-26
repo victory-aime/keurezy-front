@@ -12,6 +12,7 @@ import { useState } from "react";
 import { CiCloudOn, CiMail } from "react-icons/ci";
 import { AuthBoxContainer } from "./AuthBoxContainer";
 import { VariablesColors } from "_theme/variables";
+import { Navbar } from "_component/NavBar";
 
 export const SignIn = ({
   callbackUrl = APP_ROUTES.REDIRECT,
@@ -46,85 +47,88 @@ export const SignIn = ({
   };
 
   return (
-    <AuthBoxContainer
-      title={"Bienvenue !"}
-      description={
-        <BaseText>
-          Vous n'avez pas de compte ?{" "}
-          <Box
-            as="span"
-            cursor="pointer"
-            color="primary.500"
-            onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
-          >
-            S'inscrire
-          </Box>
-        </BaseText>
-      }
-    >
-      <Formik
-        initialValues={{ email: "", password: "" }}
-        enableReinitialize
-        onSubmit={handleSubmit}
-        validationSchema={VALIDATION.AUTH.loginValidationSchema}
-      >
-        {({ values, handleSubmit }) => (
-          <VStack width="full" gap={4}>
-            <BaseButton
-              variant={"outline"}
-              width={"full"}
-              colorType={"neutral"}
-              isLoading={isGoogleLoading}
-              leftIcon={<CiCloudOn color={VariablesColors.black} />}
-              onClick={async () => {
-                await handleGoogleLogin().then(() => setIsLoading(false));
-              }}
-            >
-              <BaseText color={"black"}>Continuer avec le SSO</BaseText>
-            </BaseButton>
-            <HStack
-              gap={"4"}
-              width={"full"}
-              alignItems={"center"}
-              justifyContent={"center"}
-            >
-              <Separator width={"full"} />
-              ou
-              <Separator width={"full"} />
-            </HStack>
-            <FormTextInput
-              name="email"
-              placeholder={"FORM.EMAIL_PLACEHOLDER"}
-              value={values.email}
-              leftAccessory={<CiMail />}
-            />
-            <FormTextInput
-              name="password"
-              type="password"
-              placeholder={"FORM.PASSWORD_PLACEHOLDER"}
-              value={values.password}
-            />
-            <BaseButton
-              withGradient
-              isLoading={isLoading}
-              width={"full"}
-              colorType={"primary"}
-              onClick={() => {
-                handleSubmit();
-              }}
-            >
-              {t("COMMON.LOGIN")}
-            </BaseButton>
-            <BaseText
+    <>
+      <Navbar />
+      <AuthBoxContainer
+        title={"Bienvenue !"}
+        description={
+          <BaseText>
+            Vous n'avez pas de compte ?{" "}
+            <Box
+              as="span"
               cursor="pointer"
-              color={"primary.500"}
-              onClick={() => router.push(APP_ROUTES.AUTH.RESET_PASSWORD)}
+              color="primary.500"
+              onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
             >
-              {t("FORM.FORGOT_PASSWORD")}
-            </BaseText>
-          </VStack>
-        )}
-      </Formik>
-    </AuthBoxContainer>
+              S'inscrire
+            </Box>
+          </BaseText>
+        }
+      >
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          enableReinitialize
+          onSubmit={handleSubmit}
+          validationSchema={VALIDATION.AUTH.loginValidationSchema}
+        >
+          {({ values, handleSubmit }) => (
+            <VStack width="full" gap={4}>
+              <BaseButton
+                variant={"outline"}
+                width={"full"}
+                colorType={"neutral"}
+                isLoading={isGoogleLoading}
+                leftIcon={<CiCloudOn color={VariablesColors.black} />}
+                onClick={async () => {
+                  await handleGoogleLogin().then(() => setIsLoading(false));
+                }}
+              >
+                <BaseText color={"black"}>Continuer avec le SSO</BaseText>
+              </BaseButton>
+              <HStack
+                gap={"4"}
+                width={"full"}
+                alignItems={"center"}
+                justifyContent={"center"}
+              >
+                <Separator width={"full"} />
+                ou
+                <Separator width={"full"} />
+              </HStack>
+              <FormTextInput
+                name="email"
+                placeholder={"FORM.EMAIL_PLACEHOLDER"}
+                value={values.email}
+                leftAccessory={<CiMail />}
+              />
+              <FormTextInput
+                name="password"
+                type="password"
+                placeholder={"FORM.PASSWORD_PLACEHOLDER"}
+                value={values.password}
+              />
+              <BaseButton
+                withGradient
+                isLoading={isLoading}
+                width={"full"}
+                colorType={"primary"}
+                onClick={() => {
+                  handleSubmit();
+                }}
+              >
+                {t("COMMON.LOGIN")}
+              </BaseButton>
+              <BaseText
+                cursor="pointer"
+                color={"primary.500"}
+                onClick={() => router.push(APP_ROUTES.AUTH.RESET_PASSWORD)}
+              >
+                {t("FORM.FORGOT_PASSWORD")}
+              </BaseText>
+            </VStack>
+          )}
+        </Formik>
+      </AuthBoxContainer>
+    </>
   );
 };

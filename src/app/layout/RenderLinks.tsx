@@ -20,7 +20,6 @@ export const RenderLinks = ({
   onClose,
 }: {
   links: {
-    id: number;
     icon: any;
     name: string;
     url: string;
@@ -58,7 +57,7 @@ export const RenderLinks = ({
                 leftIcon={<link.icon />}
                 onClick={() => {
                   const index = links?.findIndex(
-                    (item) => item?.id === link?.id,
+                    (item) => item?.name === link?.name,
                   );
                   setCurrentIndex(index);
                 }}

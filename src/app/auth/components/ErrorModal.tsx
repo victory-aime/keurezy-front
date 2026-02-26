@@ -37,7 +37,7 @@ export const SessionErrorModal = ({ isOpen }: { isOpen?: boolean }) => {
       isLoading={isLoading}
       showCloseButton={false}
       onClick={handleReconnect}
-      onChange={handleSignOut}
+      onChange={() => handleSignOut()}
     >
       <BaseText>{t("SESSION_MESSAGE")}</BaseText>
     </BaseModal>

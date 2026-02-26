@@ -209,7 +209,7 @@ export const AgencyInfo = () => {
             <BaseModal
               icon={<Icons.Close />}
               isOpen={closeAgencyOpen}
-              onChange={setCloseAgencyOpen}
+              onChange={() => setCloseAgencyOpen(false)}
               title="Confirmer la fermeture définitive de l’agence"
               modalType={"alertdialog"}
               onClick={() => {

@@ -12,6 +12,7 @@ import { useState } from "react";
 import { handleApiSuccess } from "_utils/handleApiSuccess";
 import { handleApiError } from "_utils/handleApiError";
 import { UserModule } from "_store/state-management";
+import { Navbar } from "_component/NavBar";
 
 export const ForgetPassInitRequest = () => {
   const { t } = useTranslation();
@@ -47,57 +48,60 @@ export const ForgetPassInitRequest = () => {
   };
 
   return (
-    <AuthBoxContainer
-      title={"Mot de passe oublié"}
-      description={
-        <BaseText>
-          Vous vous rappeler de votre mot de passe ?{" "}
-          <Box
-            as="span"
-            cursor="pointer"
-            color="primary.500"
-            onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
+    <>
+      <Navbar />
+      <AuthBoxContainer
+        title={"Mot de passe oublié"}
+        description={
+          <BaseText>
+            Vous vous rappeler de votre mot de passe ?{" "}
+            <Box
+              as="span"
+              cursor="pointer"
+              color="primary.500"
+              onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
+            >
+              {t("COMMON.LOGIN")}
+            </Box>
+          </BaseText>
+        }
+      >
+        {status ? (
+          <BaseText>Email sent</BaseText>
+        ) : (
+          <Formik
+            enableReinitialize
+            initialValues={{ email: "" }}
+            onSubmit={resetPasswordInit}
+            validateOnChange={false}
+            validationSchema={VALIDATION.AUTH.resetPasswordInitRequestValidationSchema(
+              async (email: string) => {
+                const user = await checkEmail({ payload: { email } });
+                return !!user;
+              },
+            )}
           >
-            {t("COMMON.LOGIN")}
-          </Box>
-        </BaseText>
-      }
-    >
-      {status ? (
-        <BaseText>Email sent</BaseText>
-      ) : (
-        <Formik
-          enableReinitialize
-          initialValues={{ email: "" }}
-          onSubmit={resetPasswordInit}
-          validateOnChange={false}
-          validationSchema={VALIDATION.AUTH.resetPasswordInitRequestValidationSchema(
-            async (email: string) => {
-              const user = await checkEmail({ payload: { email } });
-              return !!user;
-            },
-          )}
-        >
-          {({ handleSubmit, isValid }) => (
-            <VStack gap={2} alignItems={"flex-start"}>
-              <FormTextInput
-                name={"email"}
-                placeholder={"FORM.EMAIL_PLACEHOLDER"}
-                isVerified={isPending}
-              />
-              <BaseButton
-                width={"full"}
-                onClick={() => handleSubmit()}
-                isLoading={isLoading}
-                mt={2}
-                isDisabled={!isValid}
-              >
-                Envoyer-moi le lien
-              </BaseButton>
-            </VStack>
-          )}
-        </Formik>
-      )}
-    </AuthBoxContainer>
+            {({ handleSubmit, isValid }) => (
+              <VStack gap={2} alignItems={"flex-start"}>
+                <FormTextInput
+                  name={"email"}
+                  placeholder={"FORM.EMAIL_PLACEHOLDER"}
+                  isVerified={isPending}
+                />
+                <BaseButton
+                  width={"full"}
+                  onClick={() => handleSubmit()}
+                  isLoading={isLoading}
+                  mt={2}
+                  isDisabled={!isValid}
+                >
+                  Envoyer-moi le lien
+                </BaseButton>
+              </VStack>
+            )}
+          </Formik>
+        )}
+      </AuthBoxContainer>
+    </>
   );
 };

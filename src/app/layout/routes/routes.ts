@@ -1,3 +1,4 @@
+"use client";
 import { APP_ROUTES } from "_config/routes";
 import { CiFacebook, CiInstagram, CiMail, CiPhone } from "react-icons/ci";
 import { FaTiktok } from "react-icons/fa";
@@ -8,7 +9,7 @@ export const USERS_ROUTES = {
   PROFILE: `/profile`,
   FAVORITE: `/favorite`,
   REQUEST: `/my-requests`,
-  PROPERTIES_APPLY: APP_ROUTES.APPARTEMENT_APPLY,
+  //PROPERTIES_APPLY: APP_ROUTES.APPARTEMENT_APPLY,
 };
 
 export const HEADER_LINKS = (isAuthenticated: boolean, role: UserRole) => {

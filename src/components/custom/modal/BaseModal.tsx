@@ -41,7 +41,7 @@ const BaseModal = ({
   iconSaveButton,
   iconRejectButton,
   onReject,
-  buttonRejectTitle = "COMMON.REJECTED",
+  buttonRejectTitle = "",
   colorRejectButton,
   scrollBehavior = "inside",
   ...rest

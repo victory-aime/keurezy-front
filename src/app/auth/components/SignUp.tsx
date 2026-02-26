@@ -14,6 +14,7 @@ import { AuthBoxContainer } from "./AuthBoxContainer";
 import { PasswordIndicator } from "_component/PasswordIndicator";
 import { authClient } from "../../lib/auth-client";
 import { SendEmailRecap } from "./SendEmailRecap";
+import { Navbar } from "_component/NavBar";
 
 export const SignUp = () => {
   const { t } = useTranslation();
@@ -50,81 +51,84 @@ export const SignUp = () => {
   };
 
   return (
-    <AuthBoxContainer
-      title="FORM.LOGIN_TITLE"
-      description={
-        <BaseText>
-          Vous avez déjà un compte ?{" "}
-          <Box
-            as="span"
-            cursor="pointer"
-            color="primary.500"
-            onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
-          >
-            {t("COMMON.LOGIN")}
-          </Box>
-        </BaseText>
-      }
-    >
-      <Formik
-        initialValues={{
-          name: "",
-          email: "",
-          password: "",
-        }}
-        validationSchema={VALIDATION.AUTH.createUserValidationSchema}
-        validateOnBlur={false}
-        onSubmit={handleSubmit}
-        enableReinitialize
-      >
-        {({ values, handleSubmit, isValid }) => (
-          <VStack width="full" gap={5}>
-            <FormTextInput
-              name="name"
-              required
-              placeholder="FORM.NAME_PLACEHOLDER"
-              leftAccessory={<CiUser />}
-            />
-            <FormTextInput
-              name="email"
-              type="email"
-              required
-              placeholder="FORM.EMAIL_PLACEHOLDER"
-              leftAccessory={<CiMail />}
-            />
-            <FormTextInput
-              name="password"
-              type="password"
-              required
-              placeholder="FORM.PASSWORD_PLACEHOLDER"
-              autoComplete="new-password"
-            />
-
-            <PasswordIndicator password={values.password} />
-            <BaseText color={"gray.400"}>
-              En créant un compte, vous acceptez nos Conditions d'utilisation et
-              notre Politique de confidentialité.
-            </BaseText>
-            <BaseButton
-              withGradient
-              width="full"
-              isLoading={isLoading}
-              isDisabled={!isValidPassword(values.password) || !isValid}
-              onClick={() => handleSubmit()}
+    <>
+      <Navbar />
+      <AuthBoxContainer
+        title="FORM.LOGIN_TITLE"
+        description={
+          <BaseText>
+            Vous avez déjà un compte ?{" "}
+            <Box
+              as="span"
+              cursor="pointer"
+              color="primary.500"
+              onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
             >
-              {t("COMMON.SIGN_UP")}
-            </BaseButton>
-          </VStack>
-        )}
-      </Formik>
-      <SendEmailRecap
-        onChange={() => {
-          router.push(APP_ROUTES.AUTH.SIGN_IN);
-          setOpenModalLink(false);
-        }}
-        isOpen={openModalLink}
-        data={{ title: "Encore une dernière étape 👋" }}
-      />
-    </AuthBoxContainer>
+              {t("COMMON.LOGIN")}
+            </Box>
+          </BaseText>
+        }
+      >
+        <Formik
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+          }}
+          validationSchema={VALIDATION.AUTH.createUserValidationSchema}
+          validateOnBlur={false}
+          onSubmit={handleSubmit}
+          enableReinitialize
+        >
+          {({ values, handleSubmit, isValid }) => (
+            <VStack width="full" gap={5}>
+              <FormTextInput
+                name="name"
+                required
+                placeholder="FORM.NAME_PLACEHOLDER"
+                leftAccessory={<CiUser />}
+              />
+              <FormTextInput
+                name="email"
+                type="email"
+                required
+                placeholder="FORM.EMAIL_PLACEHOLDER"
+                leftAccessory={<CiMail />}
+              />
+              <FormTextInput
+                name="password"
+                type="password"
+                required
+                placeholder="FORM.PASSWORD_PLACEHOLDER"
+                autoComplete="new-password"
+              />
+
+              <PasswordIndicator password={values.password} />
+              <BaseText color={"gray.400"}>
+                En créant un compte, vous acceptez nos Conditions d'utilisation
+                et notre Politique de confidentialité.
+              </BaseText>
+              <BaseButton
+                withGradient
+                width="full"
+                isLoading={isLoading}
+                isDisabled={!isValidPassword(values.password) || !isValid}
+                onClick={() => handleSubmit()}
+              >
+                {t("COMMON.SIGN_UP")}
+              </BaseButton>
+            </VStack>
+          )}
+        </Formik>
+        <SendEmailRecap
+          onChange={() => {
+            router.push(APP_ROUTES.AUTH.SIGN_IN);
+            setOpenModalLink(false);
+          }}
+          isOpen={openModalLink}
+          data={{ title: "Encore une dernière étape 👋" }}
+        />
+      </AuthBoxContainer>
+    </>
   );
 };

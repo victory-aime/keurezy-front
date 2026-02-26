@@ -44,7 +44,7 @@ export const EmailVerified = () => {
           icon={<CiMail />}
           iconBackgroundColor={"tertiary.500"}
           isOpen={openSuccess}
-          onChange={setOpenSuccess}
+          onChange={() => setOpenSuccess(false)}
           closeOnEscape={false}
           closeOnInteractOutside={false}
           showCloseButton={false}
