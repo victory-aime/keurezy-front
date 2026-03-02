@@ -8,6 +8,7 @@ import {
   CiMobile3,
   CiPlay1,
   CiSaveDown2,
+  CiStar,
   CiUser,
   CiViewList,
   CiWarning,
@@ -36,12 +37,14 @@ import {
   IoChatbubblesOutline,
   IoCheckmarkDone,
   IoDocumentTextOutline,
+  IoRocketSharp,
   IoShieldCheckmarkSharp,
 } from "react-icons/io5";
 import { RiSearch2Line } from "react-icons/ri";
 import {
   TbLayoutSidebarRightCollapse,
   TbLayoutSidebarRightExpand,
+  TbSparkles,
   TbTaxEuro,
 } from "react-icons/tb";
 import { FaTrashAlt } from "react-icons/fa";
@@ -68,6 +71,7 @@ import { CiGrid31 } from "react-icons/ci";
 import { ImOffice } from "react-icons/im";
 import { GoZap } from "react-icons/go";
 import { BiWorld } from "react-icons/bi";
+import { FiTarget } from "react-icons/fi";
 
 export const Icons = {
   MapPin: CiMapPin,
@@ -136,4 +140,8 @@ export const Icons = {
   LuHeartHandshake,
   Calendar: BsCalendar3,
   TrendingUp: IoIosTrendingUp,
+  Star: CiStar,
+  TbSparkles,
+  Target: FiTarget,
+  Rocket: IoRocketSharp,
 };

@@ -62,8 +62,10 @@ export const useAuth = () => {
             async onSuccess(context) {
               if (context.data.twoFactorRedirect) {
                 router.replace(APP_ROUTES.AUTH._2FA);
+              } else if (callbackUrl) {
+                router.push(callbackUrl);
               } else {
-                router.push(callbackUrl!);
+                return;
               }
             },
           },

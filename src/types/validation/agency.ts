@@ -14,11 +14,6 @@ export const createAgencyValidationSchema = Yup.object().shape({
     .required("Description obligatoire")
     .min(20, "la description ne doit au moins avoir 20 caractères"),
   phone: phoneSchema(),
-});
-
-export const createAgencyStep2Schema = Yup.object().shape({
-  agencyLogo: Yup.mixed<File>().required("Le logo est obligatoire"),
-
   documents: Yup.array()
     .of(Yup.mixed<File>().required())
     .min(1, "Au moins un document est requis"),
@@ -27,6 +22,8 @@ export const createAgencyStep2Schema = Yup.object().shape({
     "Vous devez accepter les conditions",
   ),
 });
+
+export const createAgencyStep2Schema = Yup.object().shape({});
 
 export const updateAgencyValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -41,5 +38,4 @@ export const updateAgencyValidationSchema = Yup.object().shape({
     .required("Description obligatoire")
     .min(20, "la description ne doit au moins avoir 20 caractères"),
   phone: phoneSchema(),
-  agencyLogo: Yup.mixed<File>().required("Le logo est obligatoire"),
 });

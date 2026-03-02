@@ -21,7 +21,7 @@ export const BaseSwitch: FC<BaseSwitchProps> = ({
     <Switch.Root
       checked={isChecked}
       onCheckedChange={(value) => onSwitchChange(value.checked)}
-      colorPalette={"green"}
+      colorPalette={"purple"}
       size={"md"}
       disabled={isDisabled}
     >

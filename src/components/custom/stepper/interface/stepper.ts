@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 
 interface BaseStepperProps extends StepsRootProps {
   steps: {
-    icon: ReactNode;
+    icon?: ReactNode;
     label: string;
     stepNumber: number;
     content: (props: {
@@ -11,6 +11,7 @@ interface BaseStepperProps extends StepsRootProps {
       PrevTrigger: React.FC<{ children: ReactNode }>;
     }) => ReactNode;
   }[];
+  linear?: boolean;
   goNextSteps: (step: number) => void;
 }
 

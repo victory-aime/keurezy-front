@@ -17,7 +17,6 @@ import { ProfileForm } from "../../profile/components/ProfileForm";
 import { AgencyModule, UserModule } from "_store/state-management";
 import { ENUM, MODELS, VALIDATION } from "_types/";
 import { useEffect, useState } from "react";
-
 import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "_config/routes";
 import { authClient } from "../../../lib/auth-client";
@@ -27,7 +26,6 @@ export const AgencyInfo = () => {
   const [closeAgencyOpen, setCloseAgencyOpen] = useState(false);
   const router = useRouter();
   const { showLoader, hideLoader } = useGlobalLoader();
-  const [initalLogo, setInitialLogo] = useState<string>();
   const [initialAgencyValues, setInitialAgencyValues] =
     useState<MODELS.IAgency>({} as MODELS.IAgency);
 
@@ -93,7 +91,6 @@ export const AgencyInfo = () => {
   useEffect(() => {
     if (agency) {
       setInitialAgencyValues(agency);
-      setInitialLogo(agency?.agencyLogo);
     }
   }, [agency]);
 
@@ -109,8 +106,7 @@ export const AgencyInfo = () => {
         VALIDATION.AGENCY_VALIDATION.updateAgencyValidationSchema
       }
     >
-      {({ values, handleSubmit, dirty, setFieldValue, errors, isValid }) => {
-        console.log("verif", !dirty && !isValid);
+      {({ values, handleSubmit, setFieldValue, errors }) => {
         return (
           <>
             <BaseContainer
@@ -126,13 +122,13 @@ export const AgencyInfo = () => {
                 mt={5}
                 flexDirection={{ base: "column", md: "row" }}
               >
-                <Flex width={{ base: "full", md: "1/2" }}>
+                <Flex width={{ base: "full", md: "1/4" }}>
                   <UploadAvatar
                     getFileUploaded={(files) =>
                       setFieldValue("agencyLogo", files)
                     }
                     handleDeleteAvatar={() => {}}
-                    avatarImage={initalLogo}
+                    avatarImage={undefined}
                     messageInfo={errors?.agencyLogo}
                   />
                 </Flex>
@@ -198,11 +194,7 @@ export const AgencyInfo = () => {
               </ProfileForm>
             </BaseContainer>
             <Flex width="full" alignItems="flex-end" justifyContent="flex-end">
-              <BaseButton
-                colorType="success"
-                onClick={() => handleSubmit()}
-                isDisabled={!dirty || !isValid}
-              >
+              <BaseButton colorType="success" onClick={() => handleSubmit()}>
                 {t("Sauvegarder les changements")}
               </BaseButton>
             </Flex>

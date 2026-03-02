@@ -97,7 +97,7 @@ const FormTextArea: FC<FormTextAreaProps> = ({
       ) : null}
       {isError && (
         <Flex gap={1} mt={1} alignItems={"center"}>
-          <Field.ErrorIcon width={4} height={4} color={"red.500"} />
+          <Field.ErrorIcon width={2.5} height={2.5} color={"red.500"} />
           <Field.ErrorText>{error}</Field.ErrorText>
         </Flex>
       )}

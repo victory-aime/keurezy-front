@@ -196,12 +196,12 @@ export const OwnerSection = () => {
               color: "primary.50",
             },
           ].map((kpi, i) => (
-            <Box
+            <MotionBox
               key={kpi.label}
-              //   initial={{ opacity: 0, scale: 0.9 }}
-              //   whileInView={{ opacity: 1, scale: 1 }}
-              //   viewport={{ once: true }}
-              //   transition={{ delay: i * 0.1 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
               p={6}
               rounded={"xl"}
               border={"1px solid"}
@@ -219,7 +219,7 @@ export const OwnerSection = () => {
               <Span fontSize={"sm"} color={"gray.400"}>
                 {kpi.label}
               </Span>
-            </Box>
+            </MotionBox>
           ))}
         </SimpleGrid>
 
@@ -278,7 +278,7 @@ export const OwnerSection = () => {
                     fontWeight="medium"
                     mb={2}
                   >
-                    Revenus mensuels (€)
+                    Revenus mensuels ({ENUM.COMMON.Currency.XOF})
                   </Text>
 
                   <Flex align="flex-end" gap={1.5} h="112px">

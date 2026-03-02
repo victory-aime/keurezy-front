@@ -7,7 +7,7 @@ export const AgencyNameWatcher = ({
   setNameAlreadyExists,
 }: any) => {
   const { values } = useFormikContext<any>();
-  const name = values.name;
+  const name = values.business.name;
 
   useEffect(() => {
     if (!name) return;

@@ -21,7 +21,13 @@ export const createUserValidationSchema = Yup.object().shape({
     .trim()
     .email("Adresse e-mail invalide")
     .required("L’e-mail est obligatoire"),
-  password: Yup.string().required("Le mot de passe est obligatoire"),
+  password: Yup.string()
+    .required("Le mot de passe est obligatoire")
+    .min(12, "Le mot de passe doit contenir au moins 12 caractères")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/,
+      "Le mot de passe doit contenir une majuscule, une minuscule et un chiffre",
+    ),
 });
 
 export const resetPasswordInitRequestValidationSchema = (
@@ -53,7 +59,12 @@ export const resetPasswordInitRequestValidationSchema = (
 export const resetPasswordValidationSchema = Yup.object().shape({
   newPassword: Yup.string()
     .trim()
-    .required("Veuillez renseigner le nouveau mot de passe"),
+    .required("Veuillez renseigner le nouveau mot de passe")
+    .min(12, "Le mot de passe doit contenir au moins 12 caractères")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/,
+      "Le mot de passe doit contenir une majuscule, une minuscule et un chiffre",
+    ),
 
   confirmPassword: Yup.string()
     .trim()

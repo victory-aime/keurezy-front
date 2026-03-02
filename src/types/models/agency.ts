@@ -4,7 +4,6 @@ interface ICreateAgency {
   address?: string;
   description?: string;
   phone?: string;
-  agencyLogo?: File | null;
   userId?: string;
   acceptTerms?: boolean;
   documents?: File[];
@@ -26,7 +25,7 @@ interface IAgency {
   phone: string;
   status: COMMON.Status;
   isApprove: boolean;
-  agencyLogo: string;
+  agencyLogo?: string;
   documents: string[];
 }
 

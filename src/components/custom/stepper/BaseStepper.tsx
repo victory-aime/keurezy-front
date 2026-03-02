@@ -5,7 +5,11 @@ import React, { FC, useEffect, useState } from "react";
 import { BaseStepperProps } from "./interface/stepper";
 import { LuCheck } from "react-icons/lu";
 
-export const BaseStepper: FC<BaseStepperProps> = ({ steps, goNextSteps }) => {
+export const BaseStepper: FC<BaseStepperProps> = ({
+  steps,
+  goNextSteps,
+  linear = true,
+}) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handleStepChange = (step: number) => {
@@ -22,7 +26,7 @@ export const BaseStepper: FC<BaseStepperProps> = ({ steps, goNextSteps }) => {
   return (
     <Steps.Root
       w={"100%"}
-      linear
+      linear={linear}
       count={steps?.length}
       defaultStep={currentIndex}
       defaultValue={steps[currentIndex]?.stepNumber}

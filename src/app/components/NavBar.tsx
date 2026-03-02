@@ -288,6 +288,7 @@ export const Navbar = () => {
                       </BaseButton>
                     ) : (
                       <BaseButton
+                        width={"full"}
                         onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
                       >
                         Commencer

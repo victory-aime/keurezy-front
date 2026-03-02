@@ -67,11 +67,12 @@ export const BaseTag: FC<BaseTagProps> = ({
 
   return (
     <Tag.Root
-      {...props}
       variant={variant}
       colorPalette={colorPalette}
-      p={2}
       _disabled={{ background: "gray.300", cursor: "not-allowed" }}
+      px={2}
+      py={1}
+      {...props}
     >
       {icon && <Tag.StartElement>{icon}</Tag.StartElement>}
 

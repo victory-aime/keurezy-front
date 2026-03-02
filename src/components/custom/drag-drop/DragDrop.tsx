@@ -137,7 +137,7 @@ export const BaseDragDropZone = ({
     >
       <FileUpload.HiddenInput />
       {label === "string" ? (
-        <BaseText variant={TextVariant.L}>{label}</BaseText>
+        <BaseText fontSize={"sm"}>{label}</BaseText>
       ) : (
         label
       )}
@@ -161,7 +161,12 @@ export const BaseDragDropZone = ({
         </FileUploadDropzoneContent>
       </FileUploadDropzone>
       {messageInfo && (
-        <Flex gap={2} alignItems={"center"} color={VariablesColors.info}>
+        <Flex
+          gap={2}
+          fontSize={"sm"}
+          alignItems={"center"}
+          color={VariablesColors.info}
+        >
           <HiOutlineInformationCircle size={18} />
           {messageInfo}
         </Flex>

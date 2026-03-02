@@ -55,7 +55,6 @@ const FormTextInput = ({
         <Field.Label
           display={"flex"}
           gap={"6px"}
-          mb={"4px"}
           fontSize={{ base: "14px", md: "12px" }}
         >
           {isLoading ? (
@@ -169,14 +168,14 @@ const FormTextInput = ({
       ) : (
         isError && (
           <Flex gap={1} mt={1} alignItems={"center"}>
-            <Field.ErrorIcon width={4} height={4} color={"red.500"} />
+            <Field.ErrorIcon width={2.5} height={2.5} color={"red.500"} />
             <Field.ErrorText>{error}</Field.ErrorText>
           </Flex>
         )
       )}
       {infoMessage && !isLoading && (
         <Flex gap={1} mt={1} alignItems={"center"}>
-          <Field.ErrorIcon width={4} height={4} color={"info.500"} />
+          <Field.ErrorIcon width={2} height={2} color={"info.500"} />
           <Field.HelperText p={1}>{t(infoMessage)}</Field.HelperText>
         </Flex>
       )}

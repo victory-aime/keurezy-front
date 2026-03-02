@@ -22,12 +22,11 @@ export const FormCheckbox: FC<CheckBoxProps> = ({
   isReadOnly = false,
 }) => {
   const fieldHookConfig = { name, validate };
-  const [field, { touched, error }, helpers] = useField(fieldHookConfig);
+  const [field, { touched, error }, { setValue }] = useField(fieldHookConfig);
   const { submitCount } = useFormikContext();
   const isError = isReadOnly
     ? !!error
     : !!(error && (touched || submitCount > 0));
-  const { setValue } = helpers;
 
   return (
     <Field.Root id={name} invalid={isError}>
@@ -77,7 +76,8 @@ export const FormCheckbox: FC<CheckBoxProps> = ({
 
       {!items && label && (
         <Checkbox
-          name={name}
+          {...field}
+          name={field.name}
           value={field.value}
           checked={field.value}
           size={size}
@@ -93,7 +93,7 @@ export const FormCheckbox: FC<CheckBoxProps> = ({
       )}
       {isError && (
         <Flex gap={1} mt={1} alignItems={"center"}>
-          <Field.ErrorIcon width={4} height={4} color={"red.500"} />
+          <Field.ErrorIcon width={2.5} height={2.5} color={"red.500"} />
           <Field.ErrorText>{error}</Field.ErrorText>
         </Flex>
       )}
