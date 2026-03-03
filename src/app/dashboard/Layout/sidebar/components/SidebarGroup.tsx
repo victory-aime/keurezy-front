@@ -21,7 +21,7 @@ export const SidebarGroup = ({
   const { isActiveLink } = useIsActive();
 
   return (
-    <Accordion.Root collapsible>
+    <Accordion.Root collapsible defaultValue={[title]}>
       <Accordion.Item value={title} border="none">
         <Accordion.ItemTrigger
           py={1}

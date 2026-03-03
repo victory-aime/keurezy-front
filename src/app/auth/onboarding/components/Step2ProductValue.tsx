@@ -19,7 +19,7 @@ import { PropertiesMockup } from "./PropertiesMockup";
 import { TenantsMockup } from "./TenantMockup";
 import { GridContainer } from "./GridContainer";
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 const MotionVStack = motion(VStack);
 
 /* ═══════════════ STEP 2: Product Value ═══════════════ */

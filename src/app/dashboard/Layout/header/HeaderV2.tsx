@@ -64,6 +64,7 @@ export const HeaderV2 = ({
       px={4}
       pt={3}
       bgColor={"white"}
+      data-tour="header"
     >
       {sideToggled ? (
         <Icons.SideOpen
@@ -174,7 +175,7 @@ export const HeaderV2 = ({
                   color="fg.error"
                   _hover={{ bg: "bg.error", color: "fg.error" }}
                   cursor={"pointer"}
-                  onClick={() => logout(APP_ROUTES.AUTH.SIGN_IN)}
+                  onClick={() => logout()}
                 >
                   <Icons.Logout />
                   Deconnexion

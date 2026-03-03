@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { TopBarMockup } from "./TopBarMockup";
 import { ENUM } from "_types/*";
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const PaymentsMockup = () => {
   const bg = useColorModeValue("white", "gray.900");

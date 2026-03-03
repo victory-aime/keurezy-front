@@ -2,6 +2,7 @@ import { CgCreditCard, CgSync } from "react-icons/cg";
 import {
   CiBellOff,
   CiBellOn,
+  CiCloudOn,
   CiFilter,
   CiLogout,
   CiMapPin,
@@ -72,6 +73,7 @@ import { ImOffice } from "react-icons/im";
 import { GoZap } from "react-icons/go";
 import { BiWorld } from "react-icons/bi";
 import { FiTarget } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 
 export const Icons = {
   MapPin: CiMapPin,
@@ -144,4 +146,6 @@ export const Icons = {
   TbSparkles,
   Target: FiTarget,
   Rocket: IoRocketSharp,
+  Cloud: CiCloudOn,
+  Google: FcGoogle,
 };

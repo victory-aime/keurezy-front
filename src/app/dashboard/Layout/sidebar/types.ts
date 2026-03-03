@@ -101,7 +101,6 @@ export interface AuthContextType {
     role?: string;
   } | null;
   isLoading?: boolean;
-  dismissToast?: (() => void) | undefined;
   refetchSession?: (() => Promise<void>) | undefined;
 }
 

@@ -15,7 +15,7 @@ import { motion } from "framer-motion";
 import { TopBarMockup } from "./TopBarMockup";
 import { Colors, hexToRGB } from "_theme/colors";
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const TenantsMockup = () => {
   const bg = useColorModeValue("white", "gray.900");

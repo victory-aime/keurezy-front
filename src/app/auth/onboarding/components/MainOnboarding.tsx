@@ -9,7 +9,6 @@ import {
   Text,
   Span,
   Image,
-  JsxElement,
 } from "@chakra-ui/react";
 import { BaseButton, BaseText, Icons, TextVariant } from "_components/custom";
 import { useRouter } from "next/navigation";
@@ -19,7 +18,7 @@ import { StepUserAccount } from "../components/StepUserAccount";
 import { StepBusiness } from "../components/StepBusiness";
 import { ASSETS } from "_assets/images";
 import { APP_ROUTES } from "_config/routes";
-import { MODELS, VALIDATION } from "_types/*";
+import { MODELS } from "_types/*";
 import { OnboardFinish } from "../components/FinalStep";
 import { Formik } from "formik";
 import { authClient } from "../../../lib/auth-client";
@@ -33,13 +32,15 @@ import {
   onboardStepValidationSchemas,
   slideVariants,
 } from "../constants/onboard";
+import { StorageKey } from "_constants/StorageKeys";
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const MainOnboarding = () => {
   const navigate = useRouter();
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [nameAlreadyExists, setNameAlreadyExists] = useState(false);
   const [, setIsCheckingName] = useState(false);
   const formikRef = useRef<any>(null);
@@ -49,17 +50,16 @@ export const MainOnboarding = () => {
     {},
   );
 
-  const { mutateAsync: createAgency, isPending: isLoading } =
-    AgencyModule.createAgencyMutation({
-      mutationOptions: {
-        onSuccess: async () => {
-          await login({
-            email: formikRef.current.values.account.email,
-            password: formikRef.current.values.account.password,
-          });
-        },
+  const { mutateAsync: createAgency } = AgencyModule.createAgencyMutation({
+    mutationOptions: {
+      onSuccess: async () => {
+        await login({
+          email: formikRef.current.values.account.email,
+          password: formikRef.current.values.account.password,
+        });
       },
-    });
+    },
+  });
 
   const stepsConfig: { component: () => JSX.Element; blocking: boolean }[] = [
     { component: StepIntro, blocking: false },
@@ -111,6 +111,54 @@ export const MainOnboarding = () => {
     return true;
   };
 
+  const completeOnboarding = async () => {
+    try {
+      // 1️⃣ Création du user
+      setIsLoading(true);
+      const result = await signUp(formikRef.current.values.account);
+      const user = result?.data?.user;
+
+      if (!user) throw new Error("User creation failed");
+
+      // 2️⃣ Envoi email de vérification
+      await authClient
+        .sendVerificationEmail({
+          email: user.email,
+          callbackURL: APP_ROUTES.AUTH.VERIFIED_EMAIL,
+        })
+        .catch((error) => console.log("failed send email link", error));
+
+      // 3️⃣ Création agence
+      const formData = new FormData();
+      const business = formikRef.current.values.business;
+
+      formData.append("userId", String(user.id));
+      formData.append("name", business.name);
+      formData.append("description", business.description);
+      formData.append("address", business.address);
+      formData.append("phone", business.phone);
+      formData.append("acceptTerms", String(business.acceptTerms));
+
+      if (business.documents?.length > 0) {
+        business.documents.forEach((file: File) => {
+          formData.append("documents", file);
+        });
+      }
+
+      await createAgency({
+        payload: formData as MODELS.ICreateAgency,
+      });
+
+      // 4️⃣ Aller au step final
+      setStep(TOTAL_ONBOARD_STEPS - 1);
+    } catch (error) {
+      console.error("Onboarding failed:", error);
+      // ici tu peux afficher un toast
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const nexStep = async () => {
     const schema = onboardStepValidationSchemas[step];
 
@@ -126,53 +174,13 @@ export const MainOnboarding = () => {
 
     // 🔥 Step 4 (création user et agence)
     if (step === 3) {
-      try {
-        // 1️⃣ Création du user
-        const result = await signUp(formikRef.current.values.account);
-
-        const user = result?.data?.user;
-
-        if (!user) throw new Error("User creation failed");
-
-        // 2️⃣ Envoi email de vérification
-        await authClient.sendVerificationEmail({
-          email: user.email,
-          callbackURL: APP_ROUTES.AUTH.VERIFIED_EMAIL,
-        });
-
-        // 3️⃣ Création agence
-        const formData = new FormData();
-        const business = formikRef.current.values.business;
-
-        formData.append("userId", String(user.id));
-        formData.append("name", business.name);
-        formData.append("description", business.description);
-        formData.append("address", business.address);
-        formData.append("phone", business.phone);
-        formData.append("acceptTerms", String(business.acceptTerms));
-
-        if (business.documents?.length > 0) {
-          business.documents.forEach((file: File) => {
-            formData.append("documents", file);
-          });
-        }
-
-        await createAgency({
-          payload: formData as MODELS.ICreateAgency,
-        });
-
-        // 4️⃣ Aller au step final
-        setStep(TOTAL_ONBOARD_STEPS - 1);
-      } catch (error) {
-        console.error("Onboarding failed:", error);
-        // ici tu peux afficher un toast
-      }
-
+      await completeOnboarding();
       return;
     }
 
     if (step === TOTAL_ONBOARD_STEPS - 1) {
-      navigate.push("/dashboard");
+      localStorage.setItem(StorageKey.ENABLED_GUIDED_TOUR, "true");
+      navigate.push(APP_ROUTES.DASHBOARD);
       return;
     }
 

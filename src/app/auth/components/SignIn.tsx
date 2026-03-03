@@ -1,6 +1,6 @@
 "use client";
 
-import { BaseButton, BaseText, FormTextInput } from "_components/custom";
+import { BaseButton, BaseText, FormTextInput, Icons } from "_components/custom";
 import { APP_ROUTES } from "_config/routes";
 import { useRouter } from "next/navigation";
 import { VStack, HStack, Box, Separator } from "@chakra-ui/react";
@@ -78,12 +78,12 @@ export const SignIn = ({
                 width={"full"}
                 colorType={"neutral"}
                 isLoading={isGoogleLoading}
-                leftIcon={<CiCloudOn color={VariablesColors.black} />}
+                leftIcon={<Icons.Google color={VariablesColors.black} />}
                 onClick={async () => {
                   await handleGoogleLogin().then(() => setIsLoading(false));
                 }}
               >
-                <BaseText color={"black"}>Continuer avec le SSO</BaseText>
+                <BaseText color={"black"}>Continuer avec Google</BaseText>
               </BaseButton>
               <HStack
                 gap={"4"}

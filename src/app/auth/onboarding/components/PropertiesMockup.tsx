@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { TopBarMockup } from "./TopBarMockup";
 import { VariablesColors } from "_theme/variables";
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 const MotionTag = motion(BaseTag);
 
 export const PropertiesMockup = () => {

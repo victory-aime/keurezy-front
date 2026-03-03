@@ -81,12 +81,12 @@ export const SidebarV2 = ({
     <Box>
       {isMobile ? (
         <MobileSidebar
-          isOpen={sideToggled}
+          isOpen={!sideToggled}
           onClose={onShowSidebar}
           links={sidebarLinks}
           handleLogout={() => {
             dismissToast?.();
-            logout(APP_ROUTES.AUTH.SIGN_IN);
+            logout();
           }}
         />
       ) : (
@@ -102,6 +102,7 @@ export const SidebarV2 = ({
           display="flex"
           flexDirection="column"
           zIndex="10"
+          data-tour="sidebar"
         >
           <Flex
             align="center"
@@ -131,7 +132,7 @@ export const SidebarV2 = ({
                 leftIcon={<Icons.Logout />}
                 onClick={() => {
                   dismissToast?.();
-                  logout(APP_ROUTES.AUTH.SIGN_IN);
+                  logout();
                 }}
               >
                 {sideToggled ? "Déconnexion" : null}

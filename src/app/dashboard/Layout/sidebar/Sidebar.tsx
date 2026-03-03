@@ -79,7 +79,7 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
           isOpen={sideToggled}
           onClose={onShowSidebar}
           links={sidebarLinks}
-          handleLogout={() => logout(APP_ROUTES.AUTH.SIGN_IN)}
+          handleLogout={() => logout()}
         />
       ) : (
         <Box {...toggledSideBarStyle}>
@@ -139,7 +139,7 @@ export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
               colorType={"danger"}
               overflow={"hidden"}
               justifyContent={"center"}
-              onClick={() => logout(APP_ROUTES.AUTH.SIGN_IN)}
+              onClick={() => logout()}
               isLoading={isLoading}
               leftIcon={
                 <Icons.Logout

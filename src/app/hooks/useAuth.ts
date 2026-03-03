@@ -5,6 +5,7 @@ import { ProviderKeys } from "_constants/StorageKeys";
 import { handleApiError } from "_utils/handleApiError";
 import { handleApiSuccess } from "_utils/handleApiSuccess";
 import { authClient } from "../lib/auth-client";
+import { queryClient } from "../lib/query-client";
 
 interface AuthTypes {
   name?: string;
@@ -19,17 +20,16 @@ export const useAuth = () => {
   const router = useRouter();
   const { showLoader, hideLoader, isLoading } = useGlobalLoader();
 
-  const logout = async (callBackURL?: string) => {
+  const logout = async () => {
     try {
       showLoader();
       const { data } = await authClient.signOut();
-      if (data?.success && !callBackURL) {
-        window.location.reload();
-      } else {
-        router.push(callBackURL!);
+      if (data?.success) {
+        router.push(APP_ROUTES.ROOT);
       }
     } finally {
       hideLoader();
+      queryClient.clear();
     }
   };
 

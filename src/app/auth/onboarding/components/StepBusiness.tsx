@@ -27,7 +27,7 @@ import { DirectLive } from "./DirectLive";
 import { GridContainer } from "./GridContainer";
 import { MODELS } from "_types/*";
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const StepBusiness = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
