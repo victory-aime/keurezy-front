@@ -6,6 +6,14 @@ import { MODELS } from "_types/index";
  * such as fetching all rental and creating a new rental through API endpoints.
  */
 export class RentalAgreementService extends BaseApi {
+  getRentalAgreementByAgency(agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().RENTAL_AGREEMENT.GET_AGENCY_LIST,
+      {},
+      { params: { agencyId } },
+    );
+  }
+
   approveRequest(data: { requestId: string; agencyId: string }) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().RENTAL_AGREEMENT.APPROVE,

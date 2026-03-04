@@ -172,9 +172,9 @@ export const DataTableContainer: FC<TableProps> = ({
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {paginatedItems?.map((item) => (
+            {paginatedItems?.map((item, i) => (
               <Table.Row
-                key={item.id}
+                key={i}
                 data-selected={selection.includes(item.id) ? "" : undefined}
                 onClick={() => {
                   if (isOpenSelect) {

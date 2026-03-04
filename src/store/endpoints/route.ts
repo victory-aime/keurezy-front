@@ -183,6 +183,12 @@ export const APIS = (baseUrl?: string) => {
       }),
     },
     RENTAL_AGREEMENT: {
+      GET_AGENCY_LIST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.RENTAL_AGREEMENT}/rental-agreement-agency-list`,
+        method: "GET",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
       APPROVE: api({
         path: `${APIS_ROUTES_MODULES_PATH.RENTAL_AGREEMENT}/approve`,
         method: "POST",

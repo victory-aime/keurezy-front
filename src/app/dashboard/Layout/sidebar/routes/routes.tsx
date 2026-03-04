@@ -17,7 +17,11 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         path: DASHBOARD_ROUTES.APPART.LIST,
         icon: Icons.RiBuildingLine,
       },
-      { label: "Locataires", path: "/dashboard/tenants", icon: Icons.FaUsers },
+      {
+        label: "Locataires",
+        path: DASHBOARD_ROUTES.TENANTS.LIST,
+        icon: Icons.FaUsers,
+      },
       {
         label: "Candidatures",
         path: DASHBOARD_ROUTES.RENTAL_REQUEST,

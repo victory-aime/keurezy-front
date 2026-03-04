@@ -31,18 +31,32 @@ export const RentalList = () => {
     queryOptions: { enabled: false },
   });
 
+  const agencyId = user?.propertyOwner?.propertyAgency?.id;
+
   const {
     data: rentalList,
     isLoading: rentalLoad,
     refetch: refetchList,
   } = RentalModule.rentalAgencyRequestListQueries({
-    params: { agencyId: user?.propertyOwner?.propertyAgency?.id },
-    queryOptions: { enabled: !!user?.propertyOwner?.propertyAgency?.id },
+    params: { agencyId: agencyId },
+    queryOptions: { enabled: !!agencyId },
   });
+
+  const { refetch: refetchRentalAgreementList } =
+    RentalAgreementModule.getRentalAgreementListByAgencyQueries({
+      params: { agencyId: agencyId },
+      queryOptions: { enabled: !!agencyId },
+    });
 
   const { mutateAsync: approveRequest, isPending: approvePending } =
     RentalAgreementModule.approveRentalAgreementMutation({
-      mutationOptions: { onSuccess: async () => await refetchList() },
+      mutationOptions: {
+        onSuccess: async () => {
+          setOpen(false);
+          await refetchRentalAgreementList();
+          await refetchList();
+        },
+      },
     });
 
   const { mutateAsync: rejectRequest, isPending: rejectPending } =
@@ -63,7 +77,7 @@ export const RentalList = () => {
   const handleApprove = async () => {
     await approveRequest({
       params: {
-        agencyId: user?.propertyOwner?.propertyAgency?.id,
+        agencyId: agencyId,
         requestId: selectedValues?.id,
       },
     });
@@ -72,7 +86,7 @@ export const RentalList = () => {
   const handleReject = async () => {
     await rejectRequest({
       params: {
-        agencyId: user?.propertyOwner?.propertyAgency?.id,
+        agencyId: agencyId,
         requestId: selectedValues?.id,
       },
     });

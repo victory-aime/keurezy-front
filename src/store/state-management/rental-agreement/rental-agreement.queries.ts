@@ -3,6 +3,19 @@ import { rentalAgreementServiceInstance } from "./rental-agreement.service-insta
 import { MODELS } from "_types/index";
 import { QUERIES } from "rise-core-frontend";
 
+const getRentalAgreementListByAgencyQueries = (
+  args: QUERIES.QueryPayload<{ agencyId: string }>,
+) => {
+  return QUERIES.useCustomQuery<MODELS.IRentalAgencyListResponse[]>({
+    queryKey: [Constants.RENTAL_AGREEMENT_KEYS.RENTAL_AGREEMENT_AGENCY_LIST],
+    queryFn: () =>
+      rentalAgreementServiceInstance().getRentalAgreementByAgency(
+        args?.params?.agencyId!,
+      ),
+    options: args.queryOptions,
+  });
+};
+
 const approveRentalAgreementMutation = (
   args: QUERIES.MutationPayload<{ agencyId: string; requestId: string }>,
 ) => {
@@ -47,4 +60,5 @@ export {
   terminateRentalAgreementMutation,
   approveRentalAgreementMutation,
   rejectRentalAgreementMutation,
+  getRentalAgreementListByAgencyQueries,
 };

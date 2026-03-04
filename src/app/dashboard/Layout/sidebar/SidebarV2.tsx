@@ -11,6 +11,7 @@ import {
   ContactModule,
   PropertyModule,
   RentalModule,
+  RentalAgreementModule,
 } from "_store/state-management";
 import { ALL_CSA_ROUTES, MENU_BY_ROLE } from "./routes/routes";
 import { RenderGroupedLinks } from "./components/RenderGroupedLinks";
@@ -32,20 +33,31 @@ export const SidebarV2 = ({
   const { data: user } = UserModule.getUserInfo({
     queryOptions: { enabled: false },
   });
+  const agencyId = user?.propertyOwner?.propertyAgency?.id;
   const { data: requestList } = ContactModule.agencyRequestListQueries({
-    params: { agencyId: user?.propertyOwner?.propertyAgency?.id },
-    queryOptions: { enabled: !!user?.propertyOwner?.propertyAgency?.id },
+    params: { agencyId: agencyId },
+    queryOptions: { enabled: !!agencyId },
   });
 
   const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
-    params: { agencyId: user?.propertyOwner?.propertyAgency?.id },
-    queryOptions: { enabled: !!user?.propertyOwner?.propertyAgency?.id },
+    params: { agencyId: agencyId },
+    queryOptions: { enabled: !!agencyId },
   });
 
   const { data: rentalRequestList } =
     RentalModule.rentalAgencyRequestListQueries({
-      params: { agencyId: user?.propertyOwner?.propertyAgency?.id },
-      queryOptions: { enabled: !!user?.propertyOwner?.propertyAgency?.id },
+      params: { agencyId: agencyId },
+      queryOptions: { enabled: !!agencyId },
+    });
+
+  const { data: rentalAgreementList } =
+    RentalAgreementModule.getRentalAgreementListByAgencyQueries({
+      params: {
+        agencyId: agencyId,
+      },
+      queryOptions: {
+        enabled: !!agencyId,
+      },
     });
 
   const badgesByPath = useMemo(() => {
@@ -53,8 +65,14 @@ export const SidebarV2 = ({
       [DASHBOARD_ROUTES.REQUEST]: requestList?.length,
       [DASHBOARD_ROUTES.APPART.LIST]: propertyList?.length,
       [DASHBOARD_ROUTES.RENTAL_REQUEST]: rentalRequestList?.length,
+      [DASHBOARD_ROUTES.TENANTS.LIST]: rentalAgreementList?.length,
     };
-  }, [requestList?.length, propertyList?.length, rentalRequestList?.length]);
+  }, [
+    requestList?.length,
+    propertyList?.length,
+    rentalRequestList?.length,
+    rentalAgreementList?.length,
+  ]);
 
   const sidebarLinks = useMemo(() => {
     const baseLinks =

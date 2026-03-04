@@ -4,6 +4,7 @@ import {
   Loader,
   Icons,
   BaseButton,
+  BaseTooltip,
 } from "_components/custom";
 import { VariablesColors } from "_theme/variables";
 import { useTranslation } from "react-i18next";
@@ -63,6 +64,13 @@ const ACTION_CONFIG = {
     bg: "orange.800",
     color: "white",
     aria: "Restore",
+  },
+  chat: {
+    tooltip: "Discuter",
+    icon: Icons.Chat,
+    bg: "purple.800",
+    color: "white",
+    aria: "chat",
   },
   passkey: {
     tooltip: "COMMON.PASSKEY",
@@ -126,14 +134,16 @@ export const DataTableActionButtons = <T,>({
     const Icon = config.icon;
 
     return (
-      <IconButton
-        onClick={handleClick}
-        disabled={isDisabled || isLoading}
-        variant={"surface"}
-        size={"xs"}
-      >
-        {isLoading ? <Loader loader size="xs" /> : <Icon />}
-      </IconButton>
+      <BaseTooltip message={config.tooltip} show>
+        <IconButton
+          onClick={handleClick}
+          disabled={isDisabled || isLoading}
+          variant={"surface"}
+          size={"xs"}
+        >
+          {isLoading ? <Loader loader size="xs" /> : <Icon />}
+        </IconButton>
+      </BaseTooltip>
     );
   }
   return (

@@ -1,6 +1,7 @@
 import { Flex, Box } from "@chakra-ui/react";
 import { LinkFooter } from "./LinkFooter";
 import { BaseText, TextVariant } from "_components/custom";
+import { version } from "../../../../../package.json";
 
 export const FooterV2 = () => {
   return (
@@ -18,7 +19,7 @@ export const FooterV2 = () => {
       py={3}
     >
       <BaseText variant={TextVariant.XS} color="gray.600">
-        © 2026 RentFlow. Tous droits réservés.
+        © {new Date().getUTCFullYear()} MyImmo. Tous droits réservés.
       </BaseText>
       <Flex align="center" gap={2}>
         <Box bg="tertiary.400" h="8px" w="8px" borderRadius="full" />
@@ -26,7 +27,7 @@ export const FooterV2 = () => {
           Système opérationnel
         </BaseText>
         <BaseText variant={TextVariant.XS} color="gray.400">
-          v1.2.0
+          v{version}
         </BaseText>
       </Flex>
       <LinkFooter align="center" fontSize="xs" />

@@ -101,8 +101,8 @@ importers:
         specifier: ^17.6.0
         version: 17.6.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       rise-core-frontend:
-        specifier: ^4.4.1
-        version: 4.4.1(@types/react@19.2.14)(immer@11.1.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
+        specifier: ^4.4.2-alpha.0
+        version: 4.4.2-alpha.0(@types/react@19.2.14)(immer@11.1.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
       yup:
         specifier: ^1.7.1
         version: 1.7.1
@@ -2091,12 +2091,6 @@ packages:
       }
     engines: { node: ">= 4.0.0" }
 
-  axios@1.12.0:
-    resolution:
-      {
-        integrity: sha512-oXTDccv8PcfjZmPGlWsPSwtOJCZ/b6W5jAMCNcfwJbCzDckwG0jrYJFaWH1yvivfCXjVzV/SPDEhMB3Q+DSurg==,
-      }
-
   axios@1.13.5:
     resolution:
       {
@@ -3943,10 +3937,10 @@ packages:
     peerDependencies:
       jspdf: ^2 || ^3 || ^4
 
-  jspdf@4.0.0:
+  jspdf@4.2.0:
     resolution:
       {
-        integrity: sha512-w12U97Z6edKd2tXDn3LzTLg7C7QLJlx0BPfM3ecjK2BckUl9/81vZ+r5gK4/3KQdhAcEZhENUxRhtgYBj75MqQ==,
+        integrity: sha512-hR/hnRevAXXlrjeqU5oahOE+Ln9ORJUB5brLHHqH67A+RBQZuFr5GkbI9XQI8OUFSEezKegsi45QRpc4bGj75Q==,
       }
 
   kysely@0.28.11:
@@ -5082,10 +5076,10 @@ packages:
       }
     engines: { node: ">= 0.8.15" }
 
-  rise-core-frontend@4.4.1:
+  rise-core-frontend@4.4.2-alpha.0:
     resolution:
       {
-        integrity: sha512-M+rlkHxpeI4qhmrowYkSSrWOMBjOFVVTZBlQ8ZZjflL+9y6kNJknM9FpptmYuruPidUemdlzTywP9QgsTX0O6A==,
+        integrity: sha512-MvG483oAB2RV2FhaKiNtz8yFxB/4BKQaUsJ346NWVd2hesiME1CAB2/uo3KQ/U4Sxk4ywh4TqRY2ncI+zXTjzQ==,
       }
     peerDependencies:
       react: ^19
@@ -7645,14 +7639,6 @@ snapshots:
 
   at-least-node@1.0.0: {}
 
-  axios@1.12.0:
-    dependencies:
-      follow-redirects: 1.15.11
-      form-data: 4.0.5
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-
   axios@1.13.5:
     dependencies:
       follow-redirects: 1.15.11
@@ -8673,11 +8659,11 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
-  jspdf-autotable@5.0.7(jspdf@4.0.0):
+  jspdf-autotable@5.0.7(jspdf@4.2.0):
     dependencies:
-      jspdf: 4.0.0
+      jspdf: 4.2.0
 
-  jspdf@4.0.0:
+  jspdf@4.2.0:
     dependencies:
       "@babel/runtime": 7.28.6
       fast-png: 6.4.0
@@ -9267,14 +9253,14 @@ snapshots:
   rgbcolor@1.0.1:
     optional: true
 
-  rise-core-frontend@4.4.1(@types/react@19.2.14)(immer@11.1.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3)):
+  rise-core-frontend@4.4.2-alpha.0(@types/react@19.2.14)(immer@11.1.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3)):
     dependencies:
       "@tanstack/react-query": 5.90.21(react@19.2.3)
-      axios: 1.12.0
+      axios: 1.13.5
       browser-image-compression: 2.0.2
       dayjs: 1.11.19
-      jspdf: 4.0.0
-      jspdf-autotable: 5.0.7(jspdf@4.0.0)
+      jspdf: 4.2.0
+      jspdf-autotable: 5.0.7(jspdf@4.2.0)
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
       tslib: 2.8.1
