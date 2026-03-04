@@ -6,3 +6,4 @@ export * from "./contact";
 export * from "./rental";
 export * from "./auth";
 export * from "./rental-agreement";
+export * from "./chat";

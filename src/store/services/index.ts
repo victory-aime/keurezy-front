@@ -5,3 +5,4 @@ export * from "./property";
 export * from "./contact";
 export * from "./rental";
 export * from "./rental-agreement";
+export * from "./chat";

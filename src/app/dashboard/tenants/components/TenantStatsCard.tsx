@@ -6,7 +6,7 @@ export const TenantStatsCard = ({
   rentalAgreementList,
   isLoading,
 }: {
-  rentalAgreementList: MODELS.IRentalAgencyListResponse[];
+  rentalAgreementList: MODELS.IResponseRentalAgreementByAgency[];
   isLoading?: boolean;
 }) => {
   const stats = [

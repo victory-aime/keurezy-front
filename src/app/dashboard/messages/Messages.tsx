@@ -1,297 +1,330 @@
+"use client";
+
+import { ScrollArea, Box, Flex, VStack, Text, Center } from "@chakra-ui/react";
 import {
-  Input,
-  ScrollArea,
-  Badge,
-  Box,
-  Button,
-  Flex,
-  VStack,
-  InputGroup,
-  Span,
-  Text,
-} from "@chakra-ui/react";
-import { FormTextInput, Icons } from "_components/custom";
+  BaseContainer,
+  BaseIcon,
+  FormTextInput,
+  Icons,
+} from "_components/custom";
 import { Avatar } from "_components/ui/avatar";
-import { Formik } from "formik";
+import {
+  ChatModule,
+  RentalAgreementModule,
+  UserModule,
+} from "_store/state-management";
+import { MODELS } from "_types/*";
+import { Formik, FormikValues } from "formik";
 import { useState } from "react";
+import { formatCreatedAt } from "rise-core-frontend";
 
-const conversations = [
-  {
-    id: "1",
-    name: "Sophie Martin",
-    avatar: "SM",
-    lastMessage: "Bonjour, j'ai un souci avec le chauffe-eau...",
-    time: "10:32",
-    unread: 2,
-    online: true,
-  },
-  {
-    id: "2",
-    name: "Lucas Bernard",
-    avatar: "LB",
-    lastMessage: "Merci pour la réparation rapide !",
-    time: "Hier",
-    unread: 0,
-    online: false,
-  },
-  {
-    id: "3",
-    name: "Emma Petit",
-    avatar: "EP",
-    lastMessage: "Est-ce que je peux renouveler mon bail ?",
-    time: "Hier",
-    unread: 1,
-    online: true,
-  },
-  {
-    id: "4",
-    name: "Thomas Durand",
-    avatar: "TD",
-    lastMessage: "Le paiement sera effectué demain.",
-    time: "Lun",
-    unread: 0,
-    online: false,
-  },
-  {
-    id: "5",
-    name: "Camille Roux",
-    avatar: "CR",
-    lastMessage: "Je souhaite signaler un problème de plomberie.",
-    time: "Dim",
-    unread: 0,
-    online: false,
-  },
-];
+export const Messages = () => {
+  const [selectedConv, setSelectedConv] = useState<{
+    rentalAgreementId: string;
+    conversationId: string;
+    tenantName?: string;
+    tenantImg?: string;
+    propertyTitle?: string;
+    tenantId: string;
+  } | null>(null);
 
-const messages = [
-  {
-    id: "1",
-    sender: "them",
-    text: "Bonjour, j'ai un souci avec le chauffe-eau dans la salle de bain.",
-    time: "10:30",
-  },
-  {
-    id: "2",
-    sender: "them",
-    text: "Il ne chauffe plus depuis hier soir.",
-    time: "10:31",
-  },
-  {
-    id: "3",
-    sender: "me",
-    text: "Bonjour Sophie, merci de m'avoir prévenu. Je vais contacter un plombier dès aujourd'hui.",
-    time: "10:35",
-  },
-  {
-    id: "4",
-    sender: "them",
-    text: "Merci beaucoup ! C'est urgent car nous n'avons pas d'eau chaude.",
-    time: "10:36",
-  },
-  {
-    id: "5",
-    sender: "me",
-    text: "Je comprends, je fais le nécessaire dans l'heure. Vous recevrez un SMS avec le créneau d'intervention.",
-    time: "10:38",
-  },
-];
-
-export const DashboardMessages = () => {
-  const [selectedConv, setSelectedConv] = useState(conversations[0]);
   const [search, setSearch] = useState("");
-  const [newMessage, setNewMessage] = useState("");
 
-  const filteredConvs = conversations.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase()),
-  );
+  const { data: user } = UserModule.getUserInfo({
+    queryOptions: { enabled: false },
+  });
+
+  const { data: rentalAgreements } =
+    RentalAgreementModule.getRentalAgreementListByAgencyQueries({
+      queryOptions: { enabled: false },
+    });
+
+  const { data: getConversations, refetch: reloadConversation } =
+    ChatModule.getConversationQueries({
+      params: {
+        userId: user?.propertyOwner?.id,
+      },
+      queryOptions: {
+        enabled: !!user?.propertyOwner?.id,
+      },
+    });
+
+  const { mutateAsync: createConv } = ChatModule.createConversationtMutation({
+    mutationOptions: {
+      onSuccess: async (data) => {
+        setSelectedConv((prev) =>
+          prev
+            ? {
+                ...prev,
+                conversationId: data.id,
+              }
+            : null,
+        );
+        await reloadConversation();
+      },
+    },
+  });
+
+  const { mutateAsync: sendMessage } = ChatModule.sendMessageMutation({
+    mutationOptions: {
+      onSuccess: async () => {
+        await reloadConversation();
+      },
+    },
+  });
+
+  const { mutateAsync: readMessage } = ChatModule.readMessageMutation({});
+
+  // ✅ Récupère uniquement les messages de la conversation sélectionnée
+  const extractMessage = () => {
+    const conv = getConversations?.find(
+      (c) => c.rentalAgreementId === selectedConv?.rentalAgreementId,
+    );
+    return conv?.messages ?? [];
+  };
+
+  const extractUser = (rentalAgreementId: string) => {
+    const data = rentalAgreements?.find(
+      (data) => data?.id === rentalAgreementId,
+    );
+    return { tenants: data?.tenant, property: data?.property };
+  };
+
+  const handleSelect = (
+    conversation: MODELS.IConversationResponse,
+    data: {
+      tenants: { id: string; name: string; image: string } | undefined;
+      property: { title: string } | undefined;
+    },
+  ) => {
+    setSelectedConv({
+      conversationId: conversation.id,
+      rentalAgreementId: conversation.rentalAgreementId,
+      tenantName: data?.tenants?.name,
+      propertyTitle: data?.property?.title,
+      tenantId: data?.tenants?.id!,
+      tenantImg: data?.tenants?.image,
+    });
+  };
+
+  const handleSend = async (values: FormikValues) => {
+    if (!values?.message?.trim() || !selectedConv?.conversationId) return;
+
+    await sendMessage({
+      params: {
+        conversationId: selectedConv.conversationId,
+        userId: selectedConv?.tenantId,
+      },
+      payload: {
+        message: values?.message,
+      },
+    });
+  };
+
+  // useEffect(() => {
+  //   if (selectedConv?.conversationId) {
+  //     readMessage({ params: selectedConv.conversationId });
+  //   }
+  // }, []);
 
   return (
-    <Formik initialValues={{ search: "" }} onSubmit={() => {}}>
-      {({ values }) => (
-        <Flex overflow="hidden" width="full" mt="30px">
-          {/* Conversation List */}
+    <BaseContainer
+      title="Messages"
+      description="Communiquez avec vos locataires"
+      border={"none"}
+    >
+      <Formik
+        initialValues={{ message: "" }}
+        onSubmit={(values, actions) => {
+          handleSend(values);
+          actions.resetForm();
+        }}
+      >
+        {({ handleSubmit }) => (
           <Flex
-            flexDir="column"
-            w={{ base: "full", sm: "33%" }}
-            borderRight="1px solid"
-            borderColor="border"
-            p={3}
-            minH={0}
+            overflow="hidden"
+            width="full"
+            mt="30px"
+            flexDir={{ base: "column", sm: "row" }}
           >
-            {/* Search */}
-
-            <FormTextInput
-              name="search"
-              placeholder="Rechercher..."
-              value={search}
-              leftAccessory={<Icons.Search />}
-              onChangeFunction={(e: React.ChangeEvent<any, Element>) =>
-                setSearch(e?.target?.value)
-              }
-            />
-
-            {/* List */}
-            <Flex flex={1} flexDir="column" overflowY="auto" mt={5}>
-              {filteredConvs.map((c) => (
-                <Flex
-                  key={c.id}
-                  onClick={() => setSelectedConv(c)}
-                  w="full"
-                  align="center"
-                  p={3}
-                  gap={3}
-                  cursor="pointer"
-                  bgColor={
-                    selectedConv?.id === c.id ? "primary.50" : "transparent"
-                  }
-                  borderLeftWidth="3px"
-                  borderLeftStyle="solid"
-                  borderLeftColor={
-                    selectedConv?.id === c.id ? "primary.500" : "transparent"
-                  }
-                  _hover={{ bgColor: "bg.subtle" }}
-                  transition="all 0.15s"
-                >
-                  <Box position="relative" flexShrink={0}>
-                    <Avatar name={c.avatar} size="sm" />
-                    {c.online && (
-                      <Span
-                        position="absolute"
-                        bottom={0}
-                        right={0}
-                        h="3"
-                        w="3"
-                        rounded="full"
-                        bgColor="tertiary.500"
-                        border="2px solid"
-                        borderColor="bg"
-                      />
-                    )}
-                  </Box>
-
-                  <VStack flex={1} minW={0} align="stretch" gap={0.5}>
-                    <Flex justify="space-between">
-                      <Text fontWeight="medium" fontSize="sm" truncate>
-                        {c.name}
-                      </Text>
-                      <Text fontSize="10px" color="fg.muted" ml={2}>
-                        {c.time}
-                      </Text>
-                    </Flex>
-
-                    <Text fontSize="xs" color="fg.muted" truncate>
-                      {c.lastMessage}
-                    </Text>
-                  </VStack>
-
-                  {c.unread > 0 && <Badge flexShrink={0}>{c.unread}</Badge>}
-                </Flex>
-              ))}
-            </Flex>
-          </Flex>
-
-          {/* Chat Area */}
-          <Flex
-            flex={1}
-            flexDir="column"
-            display={{ base: "none", sm: "flex" }}
-            minH={0}
-          >
-            {/* Header */}
+            {/* LEFT PANEL - Locataires actifs */}
             <Flex
-              align="center"
-              p={4}
-              borderBottom="1px solid"
+              flexDir="column"
+              w={{ base: "full", sm: "33%" }}
+              borderRight="1px solid"
               borderColor="border"
+              p={3}
+              minH={0}
             >
-              <Flex align="center" gap={3}>
-                <Avatar name={selectedConv?.avatar} />
-                <Box>
-                  <Text fontWeight="medium" fontSize="sm">
-                    {selectedConv?.name}
-                  </Text>
-                  <Text fontSize="xs" color="fg.muted">
-                    {selectedConv?.online ? "En ligne" : "Hors ligne"}
-                  </Text>
-                </Box>
+              <FormTextInput
+                name="search"
+                placeholder="Rechercher un locataire..."
+                value={search}
+                leftAccessory={<Icons.Search />}
+                onChangeFunction={(e: any) => setSearch(e.target.value)}
+              />
+
+              <Flex flex={1} flexDir="column" overflowY="auto" mt={5}>
+                {getConversations?.map((data) => {
+                  const isActive =
+                    selectedConv?.rentalAgreementId === data?.rentalAgreementId;
+                  const { tenants, property } = extractUser(
+                    data.rentalAgreementId,
+                  );
+
+                  return (
+                    <Flex
+                      key={data.id}
+                      onClick={() => handleSelect(data, { tenants, property })}
+                      align="center"
+                      p={3}
+                      gap={3}
+                      cursor="pointer"
+                      bgColor={isActive ? "primary.50" : "transparent"}
+                      borderLeftWidth="3px"
+                      borderLeftColor={isActive ? "primary.500" : "transparent"}
+                      _hover={{ bgColor: "bg.subtle" }}
+                    >
+                      <Avatar
+                        name={tenants?.name}
+                        src={tenants?.image}
+                        size="sm"
+                      />
+                      <VStack flex={1} align="stretch" gap={0}>
+                        <Text fontWeight="medium" fontSize="sm">
+                          {tenants?.name}
+                        </Text>
+                        <Text fontSize="xs" color="fg.muted">
+                          {property?.title}
+                        </Text>
+                      </VStack>
+                    </Flex>
+                  );
+                })}
               </Flex>
             </Flex>
 
-            {/* Messages */}
-            <ScrollArea.Root flex="1" size="xs">
-              <ScrollArea.Viewport>
-                <ScrollArea.Content p={4}>
-                  <VStack align="stretch" gap={4}>
-                    {messages.map((m) => (
-                      <Flex
-                        key={m.id}
-                        justify={m.sender === "me" ? "flex-end" : "flex-start"}
-                      >
-                        <Box
-                          maxW="70%"
-                          rounded="2xl"
-                          roundedBottomRight={m.sender === "me" ? "sm" : "2xl"}
-                          roundedBottomLeft={m.sender === "them" ? "sm" : "2xl"}
-                          px={4}
-                          py={2.5}
-                          bgColor={
-                            m.sender === "me" ? "primary.500" : "bg.muted"
-                          }
-                        >
-                          <Text
-                            color={m.sender === "me" ? "white" : "fg"}
-                            fontSize="sm"
-                          >
-                            {m.text}
-                          </Text>
-                          <Text
-                            color={
-                              m.sender === "me" ? "whiteAlpha.700" : "fg.muted"
-                            }
-                            fontSize="xs"
-                            mt={0.5}
-                          >
-                            {m.time}
-                          </Text>
-                        </Box>
-                      </Flex>
-                    ))}
-                  </VStack>
-                </ScrollArea.Content>
-              </ScrollArea.Viewport>
-              <ScrollArea.Scrollbar>
-                <ScrollArea.Thumb />
-              </ScrollArea.Scrollbar>
-              <ScrollArea.Corner />
-            </ScrollArea.Root>
+            {/* RIGHT PANEL - Chat */}
+            <Flex flex={1} flexDir="column" minH={0} mt={{ base: "30px" }}>
+              {selectedConv ? (
+                <>
+                  {/* Header */}
+                  <Flex
+                    align="center"
+                    p={4}
+                    borderBottom="1px solid"
+                    borderColor="border"
+                  >
+                    <Avatar
+                      name={selectedConv.tenantName}
+                      src={selectedConv?.tenantImg}
+                    />
+                    <Box ml={3}>
+                      <Text fontWeight="medium" fontSize="sm">
+                        {selectedConv.tenantName}
+                      </Text>
+                      <Text fontSize="xs" color="fg.muted">
+                        {selectedConv.propertyTitle}
+                      </Text>
+                    </Box>
+                  </Flex>
 
-            {/* Input */}
+                  {/* Messages */}
 
-            <Flex
-              align="center"
-              gap={3}
-              p={4}
-              borderTop="1px solid"
-              borderColor="border"
-            >
-              <FormTextInput
-                name="message"
-                placeholder="Écrire un message..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && setNewMessage("")}
-              />
-              <Button
-                flexShrink={0}
-                bgColor="primary.500"
-                _hover={{ bgColor: "primary.600" }}
-              >
-                <Icons.Send />
-              </Button>
+                  <ScrollArea.Root
+                    height={{ base: "30rem", sm: "15rem" }}
+                    size="xs"
+                  >
+                    <ScrollArea.Viewport>
+                      <ScrollArea.Content p={4}>
+                        <VStack align="stretch">
+                          {extractMessage().length === 0 ? (
+                            <Center height={{ base: "30rem", sm: "15rem" }}>
+                              <Text
+                                textAlign="center"
+                                color="fg.muted"
+                                fontSize="sm"
+                              >
+                                Aucun message
+                              </Text>
+                            </Center>
+                          ) : (
+                            extractMessage().map((message) => {
+                              const isMe =
+                                message.senderId === selectedConv?.tenantId;
+
+                              return (
+                                <Flex
+                                  key={message.id}
+                                  justify={isMe ? "flex-end" : "flex-start"}
+                                >
+                                  <Box
+                                    maxW="70%"
+                                    rounded="2xl"
+                                    roundedBottomRight={isMe ? "sm" : "2xl"}
+                                    roundedBottomLeft={isMe ? "2xl" : "sm"}
+                                    px={4}
+                                    py={2.5}
+                                    bgColor={isMe ? "primary.500" : "bg.muted"}
+                                  >
+                                    <Text
+                                      color={isMe ? "white" : "fg"}
+                                      fontSize="sm"
+                                    >
+                                      {message.content}
+                                    </Text>
+                                    <Text
+                                      fontSize="xs"
+                                      mt={1}
+                                      color={
+                                        isMe ? "whiteAlpha.700" : "fg.muted"
+                                      }
+                                    >
+                                      {formatCreatedAt(message.createdAt)}
+                                    </Text>
+                                  </Box>
+                                </Flex>
+                              );
+                            })
+                          )}
+                        </VStack>
+                      </ScrollArea.Content>
+                    </ScrollArea.Viewport>
+                    <ScrollArea.Scrollbar>
+                      <ScrollArea.Thumb />
+                    </ScrollArea.Scrollbar>
+                  </ScrollArea.Root>
+
+                  {/* Input */}
+                  <Flex
+                    align="center"
+                    gap={3}
+                    p={4}
+                    borderTop="1px solid"
+                    borderColor="border"
+                  >
+                    <FormTextInput
+                      name="message"
+                      placeholder="Écrire un message..."
+                    />
+                    <BaseIcon
+                      boxSize={"40px"}
+                      cursor={"pointer"}
+                      onClick={() => handleSubmit()}
+                    >
+                      <Icons.Send />
+                    </BaseIcon>
+                  </Flex>
+                </>
+              ) : (
+                <Flex flex={1} align="center" justify="center" color="fg.muted">
+                  Sélectionnez un locataire pour démarrer la conversation
+                </Flex>
+              )}
             </Flex>
           </Flex>
-        </Flex>
-      )}
-    </Formik>
+        )}
+      </Formik>
+    </BaseContainer>
   );
 };

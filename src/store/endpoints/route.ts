@@ -14,6 +14,7 @@ const APIS_ROUTES_MODULES_PATH = {
   REQUEST: "/request",
   RENTAL: "/rental",
   RENTAL_AGREEMENT: "/rental-agreement",
+  CHAT: "/chat",
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -203,6 +204,38 @@ export const APIS = (baseUrl?: string) => {
       TERMINATE: api({
         path: `${APIS_ROUTES_MODULES_PATH.RENTAL_AGREEMENT}/terminate`,
         method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+    },
+    CHAT: {
+      CREATE_CONV: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/create-conversation`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      GET_CONV: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/get-conversation`,
+        method: "GET",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      GET_MESSAGE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/get-message`,
+        method: "GET",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      SEND_MESSAGE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/send-message`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      READ_MESSAGE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/read`,
+        method: "PATCH",
         pathBase: "SECURED_API",
         showResponse: false,
       }),

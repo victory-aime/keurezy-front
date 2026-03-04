@@ -20,7 +20,7 @@ export interface IRentalAgencyListResponse {
     city: string;
     price: string;
   };
-  tenant: {
+  tenant?: {
     id: string;
     email: string;
     name: string;

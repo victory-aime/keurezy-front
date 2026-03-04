@@ -107,7 +107,9 @@ export const TenantsList = () => {
       actions: [
         {
           name: "chat",
-          handleClick(data) {},
+          handleClick(data) {
+            router.push(DASHBOARD_ROUTES.MESSAGES);
+          },
         },
       ],
     },

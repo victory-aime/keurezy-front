@@ -6,7 +6,7 @@ import { QUERIES } from "rise-core-frontend";
 const getRentalAgreementListByAgencyQueries = (
   args: QUERIES.QueryPayload<{ agencyId: string }>,
 ) => {
-  return QUERIES.useCustomQuery<MODELS.IRentalAgencyListResponse[]>({
+  return QUERIES.useCustomQuery<MODELS.IResponseRentalAgreementByAgency[]>({
     queryKey: [Constants.RENTAL_AGREEMENT_KEYS.RENTAL_AGREEMENT_AGENCY_LIST],
     queryFn: () =>
       rentalAgreementServiceInstance().getRentalAgreementByAgency(

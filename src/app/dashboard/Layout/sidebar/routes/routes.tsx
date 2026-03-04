@@ -60,7 +60,7 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     links: [
       {
         label: "Messages",
-        path: "/dashboard/messages",
+        path: DASHBOARD_ROUTES.MESSAGES,
         icon: Icons.Chat,
         badge: 5,
       },
