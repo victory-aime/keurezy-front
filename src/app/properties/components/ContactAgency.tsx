@@ -78,9 +78,8 @@ export const ContactAgency = ({ id }: { id: string }) => {
           onSubmit={onSubmit}
           validationSchema={VALIDATION.CONTACT.ContactValidationSchema}
         >
-          {({ handleSubmit, values, isValid }) => (
+          {({ handleSubmit, isValid }) => (
             <Stack gap={4}>
-              {JSON.stringify(values)}
               <Box>
                 <BaseText
                   fontSize={{ base: "2xl", sm: "3xl" }}

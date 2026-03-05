@@ -4,6 +4,7 @@ import {
   CiBellOn,
   CiCloudOn,
   CiFilter,
+  CiGrid42,
   CiLogout,
   CiMapPin,
   CiMobile3,
@@ -148,4 +149,5 @@ export const Icons = {
   Rocket: IoRocketSharp,
   Cloud: CiCloudOn,
   Google: FcGoogle,
+  GridHome: CiGrid42,
 };

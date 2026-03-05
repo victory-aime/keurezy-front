@@ -12,6 +12,7 @@ export const DASHBOARD_ROUTES = {
   REQUEST: `${APP_ROUTES.DASHBOARD}/request`,
   RENTAL_REQUEST: `${APP_ROUTES.DASHBOARD}/rental`,
   MESSAGES: `${APP_ROUTES.DASHBOARD}/messages`,
+  NOTIFICATION: `${APP_ROUTES.DASHBOARD}/notifications`,
   TENANTS: {
     LIST: `${APP_ROUTES.DASHBOARD}/tenants`,
     ADD: `${APP_ROUTES.DASHBOARD}/tenants/add`,

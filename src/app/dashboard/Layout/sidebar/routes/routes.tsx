@@ -1,7 +1,6 @@
 import { SidebarNavGroupProps } from "../types";
 import { DASHBOARD_ROUTES } from "../../../routes";
 import { UserRole } from "../../../../../types/enum";
-import { APP_ROUTES } from "_config/routes";
 import { Icons } from "_components/custom";
 
 export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
@@ -32,18 +31,18 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
       //   path: "/dashboard/payments",
       //   icon: Icons.CreditCard,
       // },
-      {
-        label: "Voir la page d'accueil",
-        path: APP_ROUTES.ROOT,
-        icon: Icons.IoIosArrowRoundBack,
-      },
+      // {
+      //   label: "Voir la page d'accueil",
+      //   path: APP_ROUTES.ROOT,
+      //   icon: Icons.IoIosArrowRoundBack,
+      // },
     ],
     title: "Principal",
-    icon: Icons.Chart,
+    icon: Icons.GridHome,
   },
   {
     title: "Analytiques",
-    icon: Icons.RiBuildingLine,
+    icon: Icons.Chart,
     links: [
       { label: "Rapports", path: "/dashboard/reports", icon: Icons.Chart },
       { label: "Revenus", path: "/dashboard/revenue", icon: Icons.Payment },
@@ -58,22 +57,22 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     title: "Gestion",
     icon: Icons.FolderOpen,
     links: [
-      {
-        label: "Messages",
-        path: DASHBOARD_ROUTES.MESSAGES,
-        icon: Icons.Chat,
-        badge: 5,
-      },
+      // {
+      //   label: "Messages",
+      //   path: DASHBOARD_ROUTES.MESSAGES,
+      //   icon: Icons.Chat,
+      //   badge: 5,
+      // },
       {
         label: "Notifications",
-        path: "/dashboard/notifications",
+        path: DASHBOARD_ROUTES.NOTIFICATION,
         icon: Icons.Bell,
         badge: 12,
       },
       {
         label: "SIDE_BAR.AGENCY",
         path: DASHBOARD_ROUTES.AGENCY,
-        icon: Icons.Office /*FolderOpen*/,
+        icon: Icons.Office,
       },
       {
         label: "Demandes",

@@ -25,6 +25,7 @@ export const CustomSkeletonLoader: FunctionComponent<
   statisticBars = 4,
   colorButton = "info",
   count = 4,
+  raduis = "7px",
 }) => {
   const DefaultBlockLoader = <Skeleton height={height} variant={variant} />;
 
@@ -161,9 +162,18 @@ export const CustomSkeletonLoader: FunctionComponent<
     </Flex>
   );
 
+  const SkeletionCircle = (
+    <Flex width={width} alignItems={"center"} gap={4} flexDir={direction}>
+      <SkeletonCircle size="10" />
+      {numberOfLines && (
+        <SkeletonText noOfLines={numberOfLines} variant={variant} gap={3} />
+      )}
+    </Flex>
+  );
+
   const SkeletonButton = (
     <Skeleton asChild loading={true} width={width}>
-      <BaseButton width={width} colorType={colorButton} />
+      <BaseButton width={width} colorType={colorButton} borderRadius={raduis} />
     </Skeleton>
   );
 
@@ -207,6 +217,8 @@ export const CustomSkeletonLoader: FunctionComponent<
         return SkeletonFormLoader;
       case "DATA_GRID":
         return GridLoader;
+      case "CIRCLE":
+        return SkeletionCircle;
       default:
         return null;
     }

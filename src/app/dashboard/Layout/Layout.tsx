@@ -3,10 +3,10 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { Container } from "./container/Container";
 import { useAuthContext } from "_context/auth-context";
-import { SidebarV2 } from "./sidebar/SidebarV2";
+import { Sidebar } from "./sidebar/Sidebar";
 import { FooterV2 } from "./footer/FooterV2";
 import { SidebarInset } from "./sidebar/components/SidebarInset";
-import { HeaderV2 } from "./header/HeaderV2";
+import { Header } from "./header/Header";
 import { InitializeApp } from "_context/provider/initialize-app";
 import { GuidedTour } from "./guide-tour/GuidedTour";
 import { useBreakpointValue } from "@chakra-ui/react";
@@ -39,13 +39,13 @@ export const Layout: FunctionComponent<{
           tourStep={tourSteps}
         />
       )}
-      <SidebarV2
+      <Sidebar
         data={{ user }}
         onShowSidebar={() => setSidebarOpen(!isSidebarOpen)}
         sideToggled={isSidebarOpen}
       />
       <SidebarInset variant="inset" collapsed={!isSidebarOpen}>
-        <HeaderV2
+        <Header
           sideToggled={isSidebarOpen}
           onShowSidebar={() => setSidebarOpen(!isSidebarOpen)}
           data={{ session }}

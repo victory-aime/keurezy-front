@@ -12,7 +12,8 @@ type LoaderType =
   | "TEXT_IMAGE"
   | "BUTTON"
   | "DATA_GRID"
-  | "FORM";
+  | "FORM"
+  | "CIRCLE";
 
 interface CustomSkeletonLoaderProps {
   type?: LoaderType;
@@ -26,6 +27,7 @@ interface CustomSkeletonLoaderProps {
   direction?: any;
   numberOfLines?: number;
   colorButton?: variantColorType;
+  raduis?: number | string;
 }
 
 export type { LoaderType, CustomSkeletonLoaderProps };

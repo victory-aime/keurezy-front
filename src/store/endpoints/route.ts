@@ -15,6 +15,7 @@ const APIS_ROUTES_MODULES_PATH = {
   RENTAL: "/rental",
   RENTAL_AGREEMENT: "/rental-agreement",
   CHAT: "/chat",
+  NOTIFICATION: "/notif",
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -236,6 +237,33 @@ export const APIS = (baseUrl?: string) => {
       READ_MESSAGE: api({
         path: `${APIS_ROUTES_MODULES_PATH.CHAT}/read`,
         method: "PATCH",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+    },
+    NOTIFICATION: {
+      GET_ALL: api({
+        path: `${APIS_ROUTES_MODULES_PATH.NOTIFICATION}/get-all`,
+        method: "GET",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      GET_ALL_UNREAD: api({
+        path: `${APIS_ROUTES_MODULES_PATH.NOTIFICATION}/get-all-unread`,
+        method: "GET",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      READ_ALL: api({
+        path: `${APIS_ROUTES_MODULES_PATH.NOTIFICATION}/read-all`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+
+      READ_ONE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.NOTIFICATION}/read`,
+        method: "POST",
         pathBase: "SECURED_API",
         showResponse: false,
       }),

@@ -286,14 +286,7 @@ export const Navbar = () => {
                       >
                         Acceder au Tableau de bord
                       </BaseButton>
-                    ) : (
-                      <BaseButton
-                        width={"full"}
-                        onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
-                      >
-                        Commencer
-                      </BaseButton>
-                    )}
+                    ) : null}
                   </>
                 )}
               </Stack>

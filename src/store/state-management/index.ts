@@ -5,3 +5,4 @@ export * as ContactModule from "./contact";
 export * as RentalModule from "./rental";
 export * as RentalAgreementModule from "./rental-agreement";
 export * as ChatModule from "./chat";
+export * as NotificationsModule from "./notifications";

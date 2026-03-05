@@ -1,159 +1,168 @@
 "use client";
-import { Box, Flex, useBreakpointValue, VStack } from "@chakra-ui/react";
-import { MobileSidebar } from "./components/MobileSidebar";
-import { RenderLinks } from "./components/RenderLinks";
-import useSideBarStyle from "./hooks/useSidebarStyle";
-import { MENU_BY_ROLE } from "./routes/routes";
-import { SideBarProps } from "./types";
-import Image from "next/image";
-import { HiX } from "react-icons/hi";
-import { useEffect, useState } from "react";
-import { BaseButton, BaseIcon, BaseText, Icons } from "_components/custom";
-import { VariablesColors } from "_theme/variables";
-import { useAuth } from "_hooks/useAuth";
-import { useTranslation } from "react-i18next";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { APP_ROUTES } from "_config/routes";
-import { ASSETS } from "_assets/images";
-import { UserModule } from "_store/state-management";
 
-export const Sidebar = ({ sideToggled, onShowSidebar, data }: SideBarProps) => {
-  const { t } = useTranslation();
-  const { toggledSideBarStyle } = useSideBarStyle({
-    sideToggled,
-  });
+import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
+import { BaseButton, BaseText, Icons } from "_components/custom";
+import { MobileSidebar } from "./components/MobileSidebar";
+import { ASSETS } from "_assets/images";
+import Image from "next/image";
+import { SideBarProps } from "./types";
+import {
+  UserModule,
+  ContactModule,
+  PropertyModule,
+  RentalModule,
+  RentalAgreementModule,
+  NotificationsModule,
+} from "_store/state-management";
+import { ALL_CSA_ROUTES, MENU_BY_ROLE } from "./routes/routes";
+import { RenderGroupedLinks } from "./components/RenderGroupedLinks";
+import { useAuth } from "_hooks/useAuth";
+import { SideToolTip } from "./components/SideToolTip";
+import { useSessionRefreshContext } from "_context/SessionRefresh-context";
+import { useMemo } from "react";
+import { DASHBOARD_ROUTES } from "../../routes";
+
+export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const { logout } = useAuth();
+  const { dismissToast } = useSessionRefreshContext();
   const { data: user } = UserModule.getUserInfo({
     queryOptions: { enabled: false },
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const sidebarLinks =
-    (data?.user?.role ?? user?.role)
-      ? MENU_BY_ROLE[data?.user?.role! ?? user?.role] || []
-      : [];
-  const { logout, isLoading } = useAuth();
+  const agencyId = user?.propertyOwner?.propertyAgency?.id;
+  const { data: requestList } = ContactModule.agencyRequestListQueries({
+    params: { agencyId: agencyId },
+    queryOptions: { enabled: !!agencyId },
+  });
 
-  // const permissionsLink = useCallback(() => {
-  //   return (
-  //     sidebarLinks?.filter((menu: ILink) => {
-  //       if (session?.roles !== UserRole.ADMIN) {
-  //         menu.subItems = menu.subItems?.filter((subItem) => {
-  //           return (
-  //             !subItem?.permissionSubLink ||
-  //             hasFeatureAccess(menu.menuKey!, subItem?.permissionSubLink)
-  //           );
-  //         });
-  //         return hasModulesAccess(menu.menuKey!) || !menu.menuKey;
-  //       }
-  //       return true;
-  //     }) || []
-  //   );
-  // }, [sidebarLinks, session, hasFeatureAccess, hasModulesAccess]);
+  const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
+    params: { agencyId: agencyId },
+    queryOptions: { enabled: !!agencyId },
+  });
 
-  // useEffect(() => {
-  //   if (!data?.user?.role && !user?.role) {
-  //     window.location.reload();
-  //   }
-  // }, [data?.user?.role, user?.role]);
+  const { data: rentalRequestList } =
+    RentalModule.rentalAgencyRequestListQueries({
+      params: { agencyId: agencyId },
+      queryOptions: { enabled: !!agencyId },
+    });
+
+  const { data: rentalAgreementList } =
+    RentalAgreementModule.getRentalAgreementListByAgencyQueries({
+      params: {
+        agencyId: agencyId,
+      },
+      queryOptions: {
+        enabled: !!agencyId,
+      },
+    });
+
+  const { data: notificationsList } =
+    NotificationsModule.getAllNotificationsQueries({
+      params: { recipientId: user?.id },
+      queryOptions: { enabled: !!user?.id },
+    });
+
+  const badgesByPath = useMemo(() => {
+    return {
+      [DASHBOARD_ROUTES.REQUEST]: requestList?.length,
+      [DASHBOARD_ROUTES.APPART.LIST]: propertyList?.length,
+      [DASHBOARD_ROUTES.RENTAL_REQUEST]: rentalRequestList?.length,
+      [DASHBOARD_ROUTES.TENANTS.LIST]: rentalAgreementList?.length,
+      [DASHBOARD_ROUTES.NOTIFICATION]: notificationsList?.length,
+    };
+  }, [
+    requestList?.length,
+    propertyList?.length,
+    rentalRequestList?.length,
+    rentalAgreementList?.length,
+    notificationsList?.length,
+  ]);
+
+  const sidebarLinks = useMemo(() => {
+    const baseLinks =
+      (data?.user?.role ?? user?.role)
+        ? MENU_BY_ROLE[data?.user?.role! ?? user?.role] || []
+        : ALL_CSA_ROUTES;
+
+    return baseLinks.map((group) => ({
+      ...group,
+      links: group.links.map((link) => {
+        const badgeValue = badgesByPath[link.path as string];
+        return {
+          ...link,
+          badge:
+            typeof badgeValue === "number" && badgeValue > 0
+              ? badgeValue
+              : undefined,
+        };
+      }),
+    }));
+  }, [data?.user?.role, user?.role, badgesByPath]);
 
   return (
-    <>
-      {/* <BaseModal
-        isOpen={isModalOpen}
-        icon={<CiWarning />}
-        modalType={"alertdialog"}
-        title={"Aucun espace de travail associé"}
-        onClick={() => logout(APP_ROUTES.AUTH.SIGN_IN)}
-        isLoading={isLoading}
-        showCloseButton={false}
-        buttonSaveTitle={"COMMON.LOGOUT"}
-      >
-        <BaseText color="gray.600">
-          Il semble que votre compte n’a pas encore été associé à un workspace.
-          Veuillez contacter votre administrateur pour obtenir l’accès
-          nécessaire.
-        </BaseText>
-      </BaseModal> */}
+    <Box>
       {isMobile ? (
         <MobileSidebar
-          isOpen={sideToggled}
+          isOpen={!sideToggled}
           onClose={onShowSidebar}
           links={sidebarLinks}
-          handleLogout={() => logout()}
+          handleLogout={() => {
+            dismissToast?.();
+            logout();
+          }}
         />
       ) : (
-        <Box {...toggledSideBarStyle}>
-          <Box
-            display="flex"
-            width={"full"}
-            alignItems="center"
-            justifyContent="center"
-            onClick={onShowSidebar}
-            p={2}
-            cursor={"pointer"}
+        <Box
+          w={!sideToggled ? "80px" : "230px"}
+          h="100vh"
+          position="fixed"
+          transition="width 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)"
+          overflow="hidden"
+          boxShadow="lg"
+          borderRight="1px solid"
+          borderColor="gray.200"
+          display="flex"
+          flexDirection="column"
+          zIndex="10"
+          data-tour="sidebar"
+        >
+          <Flex
+            align="center"
+            justifyContent={!sideToggled ? "center" : "flex-start"}
+            gap={3}
+            px={3}
+            py={2}
+            borderBottom="1px solid"
+            borderColor="gray.200"
           >
-            {!sideToggled ? (
-              <Box mt={"5"}>
-                <RxHamburgerMenu size={18} />
-              </Box>
-            ) : (
-              <Flex
-                mt={"4"}
-                width={"full"}
-                alignItems="center"
-                justifyContent="space-around"
-              >
-                <Flex gap={2}>
-                  <Image src={ASSETS.LOGO} width={24} height={24} alt="logo" />
-                  <BaseText>{t("MyIMMO")}</BaseText>
-                </Flex>
-                <BaseIcon rounded={"full"} bgColor={"red.500"} boxSize={"25px"}>
-                  <HiX size={14} color={"white"} />
-                </BaseIcon>
-              </Flex>
+            <Image src={ASSETS.LOGO} alt="logo" width={45} height={45} />
+            {sideToggled && (
+              <BaseText fontSize="sm" fontWeight="medium">
+                MyImmo
+              </BaseText>
             )}
-          </Box>
-          <VStack
-            width={"full"}
-            overflowY={sideToggled ? "hidden" : "auto"}
-            overflowX={"hidden"}
-            mt={6}
-          >
-            <RenderLinks
-              links={[]}
-              sideToggled={sideToggled}
-              onShowSidebar={onShowSidebar}
-            />
-          </VStack>
-          <Box
-            pe={"20px"}
-            ps={"20px"}
-            mt={"10px"}
-            mb={"50px"}
-            position="sticky"
-            bottom="0"
-          >
-            <BaseButton
-              withGradient
-              p={!sideToggled ? 0 : "20px"}
-              colorType={"danger"}
-              overflow={"hidden"}
-              justifyContent={"center"}
-              onClick={() => logout()}
-              isLoading={isLoading}
-              leftIcon={
-                <Icons.Logout
-                  width="18px"
-                  height="18px"
-                  color={VariablesColors.white}
-                />
-              }
-            >
-              {sideToggled ? t("COMMON.LOGOUT") : null}
-            </BaseButton>
-          </Box>
+          </Flex>
+
+          {/* LINKS */}
+
+          <RenderGroupedLinks isCollapsed={sideToggled} links={sidebarLinks} />
+          <SideToolTip disabled={sideToggled} label={"Déconnexion"}>
+            <Box p={3} borderTop="1px solid" borderColor="gray.200">
+              <BaseButton
+                width={"full"}
+                colorType={"danger"}
+                leftIcon={<Icons.Logout />}
+                onClick={() => {
+                  dismissToast?.();
+                  logout();
+                }}
+              >
+                {sideToggled ? "Déconnexion" : null}
+              </BaseButton>
+            </Box>
+          </SideToolTip>
         </Box>
       )}
-    </>
+    </Box>
   );
 };

@@ -25,7 +25,7 @@ const getTagContent = (
     case "CLOSE":
       return { colorPalette: "red", label: t("COMMON.STATUS.CLOSE") };
     case "RENTED":
-      return { colorPalette: "blue", label: t("COMMON.STATUS.RENTED") };
+      return { colorPalette: "red", label: t("COMMON.STATUS.RENTED") };
     case "PENDING":
       return {
         icon: <Icons.Timer />,
