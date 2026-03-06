@@ -97,7 +97,7 @@ const BaseModal = ({
             {!ignoreFooter ? (
               <DialogFooter
                 mt={4}
-                p={0}
+                pr={3}
                 alignItems={"center"}
                 justifyContent={"center"}
                 gap={4}
@@ -129,6 +129,7 @@ const BaseModal = ({
                     {buttonRejectTitle && (
                       <BaseButton
                         variant="outline"
+                        disabled={disabled}
                         colorType={colorRejectButton ?? "danger"}
                         onClick={() => onReject?.()}
                         leftIcon={iconRejectButton}

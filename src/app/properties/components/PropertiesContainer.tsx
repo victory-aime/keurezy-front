@@ -1,9 +1,8 @@
-import { Box, Container, ContainerProps } from "@chakra-ui/react";
-import { motion } from "framer-motion";
+import { Container, ContainerProps } from "@chakra-ui/react";
 import { UserLayout } from "../../layout/Layout";
 import { GoBackPropertyList } from "./Goback";
+import { MotionBox } from "_constants/motion";
 
-const MotionBox = motion.create(Box);
 export const PropertiesContainer = ({
   children,
   link,

@@ -1,4 +1,4 @@
-import { Accordion, Badge, Flex, Icon, Link, VStack } from "@chakra-ui/react";
+import { Accordion, Badge, Flex, Icon, VStack } from "@chakra-ui/react";
 import { useIsActive } from "../hooks/useIsActive";
 import { SidebarNavGroupProps } from "../types";
 import { BaseText } from "_components/custom";

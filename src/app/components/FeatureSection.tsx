@@ -1,8 +1,8 @@
-import { motion } from "framer-motion";
 import { BaseIcon, BaseText, Icons, TextVariant } from "_components/custom";
 import { Box, Container, SimpleGrid } from "@chakra-ui/react";
 import { Colors, hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
+import { MotionBox } from "_constants/motion";
 
 const features = [
   {
@@ -51,7 +51,6 @@ const features = [
     color: "tertiary",
   },
 ];
-const MotionBox = motion.create(Box);
 
 export const FeaturesSection = () => {
   return (

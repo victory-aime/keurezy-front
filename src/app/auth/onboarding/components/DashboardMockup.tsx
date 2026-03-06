@@ -10,7 +10,7 @@ import {
 import { Icons, BaseTag } from "_components/custom";
 import { useColorModeValue } from "_components/ui/color-mode";
 import { ENUM } from "_types/*";
-import { motion } from "framer-motion";
+import { MotionBox } from "_constants/motion";
 import { FiBarChart2 } from "react-icons/fi";
 
 interface DashboardMockupProps {
@@ -25,8 +25,6 @@ interface DashboardMockupProps {
   activeTab?: number;
   animated?: boolean;
 }
-
-const MotionBox = motion.create(Box);
 
 export const DashboardMockup = ({
   userName = "Jean Dupont",

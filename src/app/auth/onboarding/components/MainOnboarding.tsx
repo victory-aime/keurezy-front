@@ -1,6 +1,6 @@
 "use client";
 import { JSX, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
   Box,
   Progress,
@@ -33,8 +33,8 @@ import {
   slideVariants,
 } from "../constants/onboard";
 import { StorageKey } from "_constants/StorageKeys";
-
-const MotionBox = motion.create(Box);
+import { MotionBox } from "_constants/motion";
+import { DASHBOARD_ROUTES } from "../../../dashboard/routes";
 
 export const MainOnboarding = () => {
   const navigate = useRouter();
@@ -124,7 +124,7 @@ export const MainOnboarding = () => {
       await authClient
         .sendVerificationEmail({
           email: user.email,
-          callbackURL: APP_ROUTES.AUTH.VERIFIED_EMAIL,
+          callbackURL: DASHBOARD_ROUTES.HOME,
         })
         .catch((error) => console.log("failed send email link", error));
 

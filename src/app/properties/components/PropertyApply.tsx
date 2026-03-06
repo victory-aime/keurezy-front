@@ -5,7 +5,6 @@ import {
   BaseIcon,
   BaseModal,
   BaseText,
-  BaseToast,
   FormPhonePicker,
   FormTextArea,
   Icons,
@@ -33,9 +32,11 @@ import { useRouter } from "next/navigation";
 import { PropertyApplySkeletonLoad } from "./PropertyApplySkeletonLoad";
 import { useState } from "react";
 import { PropertiesContainer } from "./PropertiesContainer";
+import { PropertyNotFound } from "./PropertyNotFound";
+import { FormDatePicker } from "_components/custom/form/FormDatePicker";
 
 export const PropertyApply = ({ id }: { id: string }) => {
-  const { session, user } = useAuthContext();
+  const { user } = useAuthContext();
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const router = useRouter();
 
@@ -60,6 +61,10 @@ export const PropertyApply = ({ id }: { id: string }) => {
 
   if (isLoading) {
     return <PropertyApplySkeletonLoad isLoading={isLoading} />;
+  }
+
+  if (!property) {
+    return <PropertyNotFound />;
   }
 
   const onSubmit = async (values: MODELS.IRentalRequest) => {
@@ -156,11 +161,20 @@ export const PropertyApply = ({ id }: { id: string }) => {
                 </BaseIcon>
                 <BaseText>Coordonnées</BaseText>
               </Flex>
-              <FormPhonePicker
+              <FormPhonePicker required name="phone" label="PROFILE.PHONE" />
+            </Box>
+            <Box width={"full"}>
+              <Flex gap={3} alignItems={"center"} mb={3}>
+                <BaseIcon color={hexToRGB("orange", 0.2)}>
+                  <Icons.Calendar color={VariablesColors.orange} />
+                </BaseIcon>
+                <BaseText>Date d'emménagement</BaseText>
+              </Flex>
+              <FormDatePicker
                 required
-                name="phone"
-                label="PROFILE.PHONE"
-                listAvailableCountries={["cd"]}
+                name="startDate"
+                label="Date d'emménagement souhaitée"
+                placeholder="Date d'emménagement souhaitée"
               />
             </Box>
 
@@ -263,7 +277,7 @@ export const PropertyApply = ({ id }: { id: string }) => {
           setOpenSuccessModal(false);
         }}
       >
-        <VStack gap={3}>
+        <VStack gap={5}>
           <Box maxW={"2xl"} textAlign={"center"}>
             <BaseText weight={TextWeight.Light}>
               Votre candidature a bien été transmise au propriétaire. Vous

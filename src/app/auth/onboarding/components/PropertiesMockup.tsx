@@ -3,12 +3,9 @@
 import { Box, Flex, Grid, Text, HStack } from "@chakra-ui/react";
 import { BaseTag, Icons } from "_components/custom";
 import { useColorModeValue } from "_components/ui/color-mode";
-import { motion } from "framer-motion";
 import { TopBarMockup } from "./TopBarMockup";
 import { VariablesColors } from "_theme/variables";
-
-const MotionBox = motion.create(Box);
-const MotionTag = motion(BaseTag);
+import { MotionBox, MotionTag } from "_constants/motion";
 
 export const PropertiesMockup = () => {
   const bg = useColorModeValue("white", "gray.400");

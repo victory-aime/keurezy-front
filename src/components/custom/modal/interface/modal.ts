@@ -1,4 +1,4 @@
-import { DialogFooterProps, DialogRootProps } from "@chakra-ui/react";
+import { DialogRootProps } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { variantColorType } from "_components/custom";
 import { ENUM } from "_types/*";

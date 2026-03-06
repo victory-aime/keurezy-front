@@ -13,6 +13,7 @@ export const RentalModal = ({
   data,
   callback,
   onReject,
+  isEmailVerified,
 }: ModalOpenProps) => {
   return (
     <BaseModal
@@ -23,6 +24,7 @@ export const RentalModal = ({
       title="Candidature"
       description={`Candidature pour : ${data?.property?.title}`}
       status={data?.status}
+      buttonCancelTitle="Fermer"
       buttonRejectTitle={
         data?.status === ENUM.COMMON.Status.PENDING ? "Rejeter" : ""
       }
@@ -34,6 +36,7 @@ export const RentalModal = ({
       alignItems={"flex-end"}
       justifyContent={"flex-end"}
       isLoading={isLoading}
+      disabled={!isEmailVerified}
     >
       <VStack alignItems="flex-start" gap={6}>
         {pendingRequestCountForSelected > 1 && (
@@ -97,12 +100,12 @@ export const RentalModal = ({
             />
             <RentalInfoItem
               icon={<Icons.User />}
-              label="Emménagement"
-              value={formatDisplayDate(data?.createdAt)}
+              label="Date d'emménagement"
+              value={formatDisplayDate(data?.startDate)}
             />
             <RentalInfoItem
               icon={<Icons.User />}
-              label="Candidature"
+              label="Date de Candidature"
               value={formatDisplayDate(data?.createdAt)}
             />
           </Flex>

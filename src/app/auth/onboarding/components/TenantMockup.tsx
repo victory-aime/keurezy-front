@@ -11,11 +11,9 @@ import { BaseTag, Icons } from "_components/custom";
 import { Avatar } from "_components/ui/avatar";
 import { useColorModeValue } from "_components/ui/color-mode";
 import { VariablesColors } from "_theme/variables";
-import { motion } from "framer-motion";
 import { TopBarMockup } from "./TopBarMockup";
 import { Colors, hexToRGB } from "_theme/colors";
-
-const MotionBox = motion.create(Box);
+import { MotionBox } from "_constants/motion";
 
 export const TenantsMockup = () => {
   const bg = useColorModeValue("white", "gray.900");

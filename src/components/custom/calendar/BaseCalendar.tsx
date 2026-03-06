@@ -7,7 +7,6 @@ import { useColorModeValue } from "_components/ui/color-mode";
 import { FC, useState } from "react";
 import { format } from "date-fns";
 import { IoIosClose } from "react-icons/io";
-import { COMMON_FORMAT_DATE_HEADER } from "rise-core-frontend";
 import { BaseIcon } from "_components/custom";
 import { fr } from "date-fns/locale";
 import { BaseCalendarProps } from "./types/calendar";
@@ -44,7 +43,7 @@ export const BaseCalendar: FC<BaseCalendarProps> = (props) => {
     locale: fr,
     formatters: {
       formatCaption: (date: Date, options: any) =>
-        format(date, COMMON_FORMAT_DATE_HEADER, options),
+        format(date, "MMM yyy", options),
     },
     modifiers: {
       booked: props.blockedDates,

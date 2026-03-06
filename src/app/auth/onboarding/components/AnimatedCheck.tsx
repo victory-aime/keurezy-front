@@ -1,10 +1,7 @@
-import { Box } from "@chakra-ui/react";
 import { Icons } from "_components/custom";
 import { hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
-import { motion } from "framer-motion";
-
-const MotionBox = motion.create(Box);
+import { MotionBox } from "_constants/motion";
 
 export const AnimatedCheckmark = () => (
   <MotionBox

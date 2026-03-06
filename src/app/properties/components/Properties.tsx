@@ -13,7 +13,6 @@ import {
   TextVariant,
   TextWeight,
 } from "_components/custom";
-import { motion } from "framer-motion";
 import {
   Box,
   Center,
@@ -27,6 +26,7 @@ import { Formik } from "formik";
 import { PropertyModule } from "_store/state-management";
 import { UserLayout } from "../../layout/Layout";
 import { CONSTANTS } from "_types/";
+import { MotionBox } from "_constants/motion";
 
 export const properties = [
   {
@@ -160,7 +160,6 @@ export const properties = [
     ],
   },
 ];
-const MotionBox = motion.create(Box);
 
 export const Properties = () => {
   const [search, setSearch] = useState("");

@@ -158,6 +158,7 @@ export const RentalList = () => {
       description={"Gérez les demandes de location sur vos biens"}
       withActionButtons
       actionsButtonProps={{
+        isEmailVerified: user?.emailVerified,
         onReload: async () => await refetchList(),
       }}
     >
@@ -184,6 +185,7 @@ export const RentalList = () => {
           setOpen(false);
         }}
         isLoading={approvePending || rejectPending}
+        isEmailVerified={user?.emailVerified}
         pendingRequestCountForSelected={pendingRequestCountForSelected}
       />
     </BaseContainer>

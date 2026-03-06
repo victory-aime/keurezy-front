@@ -12,7 +12,7 @@ import {
 import { BaseText, Icons, TextVariant } from "_components/custom";
 import { hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
-import { FOOTER_ROUTES } from "./routes";
+import { FOOTER_ROUTES } from "../layout/routes";
 import { useIsActive } from "_hooks/useActive";
 
 export const Footer = () => {

@@ -5,7 +5,6 @@ import {
   Heading,
   Span,
   HStack,
-  Box,
   Text,
 } from "@chakra-ui/react";
 import { Icons } from "_components/custom";
@@ -13,12 +12,10 @@ import { hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
 import { DashboardMockup } from "./DashboardMockup";
 import { OnboardCardWrapper } from "./OnboardCardWrapper";
-import { motion } from "framer-motion";
 import { GridContainer } from "./GridContainer";
+import { MotionBox } from "_constants/motion";
 
 /* ═══════════════ STEP 1: Introduction ═══════════════ */
-
-const MotionBox = motion.create(Box);
 
 export const StepIntro = () => (
   <GridContainer gap={{ base: 8, lg: 12 }}>

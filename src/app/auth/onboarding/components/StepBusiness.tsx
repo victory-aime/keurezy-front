@@ -26,8 +26,7 @@ import { HiInformationCircle } from "react-icons/hi2";
 import { DirectLive } from "./DirectLive";
 import { GridContainer } from "./GridContainer";
 import { MODELS } from "_types/*";
-
-const MotionBox = motion.create(Box);
+import { MotionBox } from "_constants/motion";
 
 export const StepBusiness = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -94,7 +93,6 @@ export const StepBusiness = () => {
                 required
                 name="business.phone"
                 label="Telephone"
-                listAvailableCountries={["tn", "cd", "cg"]}
               />
               <FormTextInput
                 required

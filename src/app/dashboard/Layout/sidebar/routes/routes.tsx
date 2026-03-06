@@ -40,19 +40,19 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     title: "Principal",
     icon: Icons.GridHome,
   },
-  {
-    title: "Analytiques",
-    icon: Icons.Chart,
-    links: [
-      { label: "Rapports", path: "/dashboard/reports", icon: Icons.Chart },
-      { label: "Revenus", path: "/dashboard/revenue", icon: Icons.Payment },
-      {
-        label: "Taux d'occupation",
-        path: "/dashboard/occupancy",
-        icon: Icons.Chart,
-      },
-    ],
-  },
+  // {
+  //   title: "Analytiques",
+  //   icon: Icons.Chart,
+  //   links: [
+  //     { label: "Rapports", path: "/dashboard/reports", icon: Icons.Chart },
+  //     { label: "Revenus", path: "/dashboard/revenue", icon: Icons.Payment },
+  //     {
+  //       label: "Taux d'occupation",
+  //       path: "/dashboard/occupancy",
+  //       icon: Icons.Chart,
+  //     },
+  //   ],
+  // },
   {
     title: "Gestion",
     icon: Icons.FolderOpen,
@@ -87,17 +87,17 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     icon: Icons.FaUsers,
     links: [
       { label: "Profil", path: DASHBOARD_ROUTES.PROFILE, icon: Icons.FaUsers },
-      { label: "Sécurité", path: "/dashboard/security", icon: Icons.Shield },
-      {
-        label: "Abonnement",
-        path: "/dashboard/billing",
-        icon: Icons.Wrench /*Receipt*/,
-      },
-      {
-        label: "Paramètres",
-        path: "/dashboard/settings",
-        icon: Icons.Bed /*Settings*/,
-      },
+      // { label: "Sécurité", path: "/dashboard/security", icon: Icons.Shield },
+      // {
+      //   label: "Abonnement",
+      //   path: "/dashboard/billing",
+      //   icon: Icons.Wrench /*Receipt*/,
+      // },
+      // {
+      //   label: "Paramètres",
+      //   path: "/dashboard/settings",
+      //   icon: Icons.Bed /*Settings*/,
+      // },
     ],
   },
 ];

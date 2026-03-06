@@ -6,10 +6,7 @@ import { ReactNode } from "react";
 import Image from "next/image";
 import { ASSETS } from "_assets/images";
 import { motion } from "framer-motion";
-
-const MotionCard = motion(Card.Root);
-const MotionHeader = motion(Card.Header);
-const MotionBody = motion(Card.Body);
+import { MotionCard, MotionHeader, MotionBody } from "_constants/motion";
 
 export const AuthBoxContainer = ({
   children,

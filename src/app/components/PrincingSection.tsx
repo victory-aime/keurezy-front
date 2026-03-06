@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import {
   BaseBadge,
   BaseButton,
@@ -16,7 +15,7 @@ import {
   List,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { VariablesColors } from "_theme/variables";
+import { MotionBox } from "_constants/motion";
 
 const pricingPlans = [
   {
@@ -63,8 +62,6 @@ const pricingPlans = [
     popular: false,
   },
 ];
-
-const MotionBox = motion.create(Box);
 
 export const PricingSection = () => {
   return (

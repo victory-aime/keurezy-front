@@ -18,9 +18,10 @@ import { APP_ROUTES } from "_config/routes";
 import { Colors, hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
 import { ENUM } from "_types/*";
-import { motion, useInView } from "framer-motion";
+import { useInView } from "framer-motion";
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
+import { MotionBox, MotionVStack } from "_constants/motion";
 
 const ownerFeatures = [
   {
@@ -106,9 +107,6 @@ const CountUp = ({
     </span>
   );
 };
-
-const MotionBox = motion.create(Box);
-const MotionVStack = motion.create(VStack);
 
 export const OwnerSection = () => {
   return (

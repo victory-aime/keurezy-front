@@ -7,13 +7,12 @@ import { Box, Flex } from "@chakra-ui/react";
 import { hexToRGB } from "_theme/colors";
 import { IGuidedTourProps, ITourStep } from "../interface/types";
 import { StorageKey } from "_constants/StorageKeys";
+import { MotionBox } from "_constants/motion";
 
 const CARD_WIDTH = 350;
 const CARD_HEIGHT = 240;
 const GAP = 24;
 const VIEWPORT_PADDING = 20;
-
-const MotionBox = motion.create(Box);
 
 export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
   const [currentStep, setCurrentStep] = useState(0);

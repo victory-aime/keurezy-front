@@ -1,7 +1,5 @@
 import { HStack, Box, Text } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-
-const MotionBox = motion.create(Box);
+import { MotionBox } from "_constants/motion";
 
 export const DirectLive = () => {
   return (

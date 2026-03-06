@@ -24,7 +24,7 @@ export const FormPhonePicker = ({
   infoMessage,
   onChangeFunction,
   hideDropdown = false,
-  listAvailableCountries = ["sn", "cg"],
+  listAvailableCountries = ["sn", "cg", "cd", "tn"],
 }: PhoneInputProps) => {
   const { t } = useTranslation();
   const [field, { touched, error }, helpers] = useField({ name, validate });

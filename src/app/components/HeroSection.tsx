@@ -10,14 +10,12 @@ import {
   VStack,
   Span,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
 import { BaseButton, BaseText, Icons } from "_components/custom";
 import { hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
 import Link from "next/link";
 import { APP_ROUTES } from "_config/routes";
-
-const MotionBox = motion.create(Box);
+import { MotionBox } from "_constants/motion";
 
 export const HeroSection = () => {
   return (

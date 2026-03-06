@@ -1,14 +1,12 @@
 "use client";
 
 import { Box, VStack } from "@chakra-ui/react";
-import { motion } from "framer-motion";
 import { BaseText, Icons } from "_components/custom";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { VariablesColors } from "_theme/variables";
 import { AnimatedCheckmark } from "./AnimatedCheck";
-
-const MotionBox = motion.create(Box);
+import { MotionBox } from "_constants/motion";
 
 /* ═══════════════ STEP 6: Celebration ═══════════════ */
 

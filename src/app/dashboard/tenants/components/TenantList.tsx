@@ -125,6 +125,7 @@ export const TenantsList = () => {
       withActionButtons
       actionsButtonProps={{
         validateTitle: "Ajouter un locataire",
+        isEmailVerified: user?.emailVerified,
         onReload: async () => {
           await refetchAgreementList();
         },

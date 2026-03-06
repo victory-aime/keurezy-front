@@ -161,7 +161,6 @@ export const AgencyInfo = () => {
                     <FormPhonePicker
                       name="phone"
                       label="Téléphone professionnel"
-                      listAvailableCountries={["tn"]}
                     />
                   </HStack>
                 </VStack>

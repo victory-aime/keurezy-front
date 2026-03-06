@@ -24,6 +24,7 @@ import { Formik } from "formik";
 import { Avatar } from "_components/ui/avatar";
 import { useRouter } from "next/navigation";
 import { hexToRGB } from "_theme/colors";
+import { PropertyNotFound } from "./PropertyNotFound";
 
 export const ContactAgency = ({ id }: { id: string }) => {
   const { user } = useAuthContext();
@@ -45,6 +46,10 @@ export const ContactAgency = ({ id }: { id: string }) => {
         onSuccess: () => router.push(APP_ROUTES.APPARTEMENTS),
       },
     });
+
+  if (!property) {
+    return <PropertyNotFound />;
+  }
 
   const onSubmit = async (values: MODELS.IContact) => {
     const request: MODELS.IContact = {

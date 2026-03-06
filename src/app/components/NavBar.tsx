@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
   BaseButton,
@@ -28,8 +28,7 @@ import { APP_ROUTES } from "_config/routes";
 import { UserRole } from "../../types/enum";
 import { useAuth } from "_hooks/useAuth";
 import { useIsActive } from "_hooks/useActive";
-
-const MotionBox = motion.create(Box);
+import { MotionBox } from "_constants/motion";
 
 export const Navbar = () => {
   const { session } = useAuthContext();
@@ -133,42 +132,44 @@ export const Navbar = () => {
             ) : (
               <>
                 {user ? (
-                  <Avatar
-                    name={user?.name}
-                    src={user?.image! ?? "https://avatar.iran.liara.run/public"}
-                  />
+                  <>
+                    <Avatar
+                      name={user?.name}
+                      src={
+                        user?.image! ?? "https://avatar.iran.liara.run/public"
+                      }
+                    />
+                    <BaseButton
+                      onClick={() => logout()}
+                      colorType={"danger"}
+                      leftIcon={<Icons.Logout />}
+                    >
+                      Deconnexion
+                    </BaseButton>
+                    {user?.role === UserRole.IMMO_OWNER && (
+                      <BaseButton
+                        onClick={() => router.push(APP_ROUTES.DASHBOARD)}
+                        colorType={"secondary"}
+                        leftIcon={<Icons.Home />}
+                      >
+                        Acceder au Tableau de bord
+                      </BaseButton>
+                    )}
+                  </>
                 ) : (
-                  <BaseButton
-                    variant="outline"
-                    onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
-                  >
-                    Connexion
-                  </BaseButton>
-                )}
-
-                {user && (
-                  <BaseButton
-                    onClick={() => logout()}
-                    colorType={"danger"}
-                    leftIcon={<Icons.Logout />}
-                  >
-                    Deconnexion
-                  </BaseButton>
-                )}
-                {user && user?.role === UserRole.IMMO_OWNER ? (
-                  <BaseButton
-                    onClick={() => router.push(APP_ROUTES.DASHBOARD)}
-                    colorType={"secondary"}
-                    leftIcon={<Icons.Home />}
-                  >
-                    Acceder au Tableau de bord
-                  </BaseButton>
-                ) : (
-                  <BaseButton
-                    onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
-                  >
-                    Commencer
-                  </BaseButton>
+                  <>
+                    <BaseButton
+                      variant="outline"
+                      onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
+                    >
+                      Connexion
+                    </BaseButton>
+                    <BaseButton
+                      onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
+                    >
+                      Commencer
+                    </BaseButton>
+                  </>
                 )}
               </>
             )}
@@ -238,55 +239,53 @@ export const Navbar = () => {
                 ) : (
                   <>
                     {user ? (
-                      <Flex
-                        alignItems={"center"}
-                        width={"full"}
-                        borderRadius={"12px"}
-                        gap={2}
-                      >
-                        <Avatar
-                          name={user?.name}
-                          src={
-                            user?.image! ??
-                            "https://avatar.iran.liara.run/public"
-                          }
-                        />
-                        <BaseText textTransform={"capitalize"}>
-                          {user?.name}
-                        </BaseText>
-                      </Flex>
+                      <>
+                        <Flex
+                          alignItems={"center"}
+                          width={"full"}
+                          borderRadius={"12px"}
+                          gap={2}
+                        >
+                          <Avatar
+                            name={user?.name}
+                            src={
+                              user?.image! ??
+                              "https://avatar.iran.liara.run/public"
+                            }
+                          />
+                          <BaseText textTransform={"capitalize"}>
+                            {user?.name}
+                          </BaseText>
+                        </Flex>
+
+                        {user?.role === UserRole.IMMO_OWNER && (
+                          <BaseButton
+                            onClick={() => router.push(APP_ROUTES.DASHBOARD)}
+                            width={"full"}
+                            colorType={"secondary"}
+                            leftIcon={<Icons.Home />}
+                          >
+                            Acceder au Tableau de bord
+                          </BaseButton>
+                        )}
+                      </>
                     ) : (
-                      <BaseButton
-                        width={"full"}
-                        variant="outline"
-                        onClick={() => {
-                          router.push(APP_ROUTES.AUTH.SIGN_IN);
-                          setIsOpen(false);
-                        }}
-                      >
-                        Connexion
-                      </BaseButton>
+                      <>
+                        <BaseButton
+                          variant="outline"
+                          width={"full"}
+                          onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
+                        >
+                          Connexion
+                        </BaseButton>
+                        <BaseButton
+                          width={"full"}
+                          onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
+                        >
+                          Commencer
+                        </BaseButton>
+                      </>
                     )}
-                    {user && (
-                      <BaseButton
-                        onClick={() => logout()}
-                        width={"full"}
-                        colorType={"danger"}
-                        leftIcon={<Icons.Logout />}
-                      >
-                        Deconnexion
-                      </BaseButton>
-                    )}
-                    {user && user?.role === UserRole.IMMO_OWNER ? (
-                      <BaseButton
-                        onClick={() => router.push(APP_ROUTES.DASHBOARD)}
-                        width={"full"}
-                        colorType={"secondary"}
-                        leftIcon={<Icons.Home />}
-                      >
-                        Acceder au Tableau de bord
-                      </BaseButton>
-                    ) : null}
                   </>
                 )}
               </Stack>

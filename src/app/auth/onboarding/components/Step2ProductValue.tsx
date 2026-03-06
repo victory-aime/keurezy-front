@@ -18,9 +18,7 @@ import { PaymentsMockup } from "./PaymentsMockup";
 import { PropertiesMockup } from "./PropertiesMockup";
 import { TenantsMockup } from "./TenantMockup";
 import { GridContainer } from "./GridContainer";
-
-const MotionBox = motion.create(Box);
-const MotionVStack = motion(VStack);
+import { MotionBox, MotionVStack } from "_constants/motion";
 
 /* ═══════════════ STEP 2: Product Value ═══════════════ */
 const tabData = [

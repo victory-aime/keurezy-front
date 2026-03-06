@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import {
   BaseText,
   Icons,
@@ -6,9 +5,11 @@ import {
   BaseIcon,
   TextWeight,
 } from "_components/custom";
-import { Box, Container, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Box, Container, SimpleGrid } from "@chakra-ui/react";
 import { VariablesColors } from "_theme/variables";
 import { hexToRGB } from "_theme/colors";
+import { MotionBox, MotionVStack } from "_constants/motion";
+
 const steps = [
   {
     icon: Icons.UserPlus,
@@ -32,9 +33,6 @@ const steps = [
       "Suivez les paiements, gérez les maintenances et maximisez votre rendement.",
   },
 ];
-
-const MotionBox = motion.create(Box);
-const MotionVstack = motion.create(VStack);
 
 export const HowItWorksSection = () => {
   return (
@@ -71,7 +69,7 @@ export const HowItWorksSection = () => {
         </MotionBox>
         <SimpleGrid columns={{ base: 1, sm: 3 }} gap={10} position={"relative"}>
           {steps.map((step, i) => (
-            <MotionVstack
+            <MotionVStack
               key={step.step}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -112,7 +110,7 @@ export const HowItWorksSection = () => {
               >
                 {step.description}
               </BaseText>
-            </MotionVstack>
+            </MotionVStack>
           ))}
         </SimpleGrid>
       </Container>

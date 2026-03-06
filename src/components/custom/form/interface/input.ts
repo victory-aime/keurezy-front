@@ -101,7 +101,7 @@ interface FormColorPickerProps extends TextInputProps {}
 
 interface FormDatePickerFieldProps extends TextInputProps {
   displayFormat?: "default" | "short";
-  mode: "single" | "range";
+  mode?: "single" | "range";
   isClearable?: boolean;
   disablePastDates?: boolean;
   disableWeeksDates?: boolean;

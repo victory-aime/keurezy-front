@@ -1,10 +1,8 @@
 import { Box, Flex, Grid, Separator, Text, VStack } from "@chakra-ui/react";
 import { useColorModeValue } from "_components/ui/color-mode";
-import { motion } from "framer-motion";
+import { MotionBox } from "_constants/motion";
 import { TopBarMockup } from "./TopBarMockup";
 import { ENUM } from "_types/*";
-
-const MotionBox = motion.create(Box);
 
 export const PaymentsMockup = () => {
   const bg = useColorModeValue("white", "gray.900");

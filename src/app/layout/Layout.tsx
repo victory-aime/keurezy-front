@@ -2,12 +2,11 @@
 
 import { ReactNode } from "react";
 import { Navbar } from "_component/NavBar";
-import { Footer } from "./Footer";
+import { Footer } from "../components/Footer";
 import { Box, IconButton, VStack } from "@chakra-ui/react";
 import { Icons } from "_components/custom";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-
-const MotionBox = motion.create(Box);
+import { MotionBox } from "_constants/motion";
 
 export const UserLayout = ({ children }: { children: ReactNode }) => {
   // Scroll progress (0 → 1)

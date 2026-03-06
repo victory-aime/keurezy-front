@@ -8,11 +8,8 @@ import {
 } from "_components/custom";
 import { APP_ROUTES } from "_config/routes";
 import { hexToRGB } from "_theme/colors";
-import { VariablesColors } from "_theme/variables";
-import { motion } from "framer-motion";
 import Link from "next/link";
-
-const MotionBox = motion.create(Box);
+import { MotionBox } from "_constants/motion";
 
 export const CTASection = () => {
   return (

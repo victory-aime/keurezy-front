@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  BaseBadge,
   BaseContainer,
   BaseFormatNumber,
   BaseRatio,
@@ -121,6 +120,7 @@ export const AppartList = () => {
       withActionButtons
       actionsButtonProps={{
         validateTitle: "Ajouter une propriété",
+        isEmailVerified: user?.emailVerified,
         onReload: async () => {
           await refectProperty();
         },

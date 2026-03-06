@@ -6,6 +6,6 @@ export const createRentalRequestSchema = Yup.object().shape({
     .required("L’adresse est obligatoire.")
     .min(4, "L’adresse doit contenir au moins 4 caractères.")
     .max(1000, "L’adresse ne doit pas dépasser 100 caractères."),
-
+  startDate: Yup.date().required("La date est obligatoire"),
   phone: phoneSchema(),
 });

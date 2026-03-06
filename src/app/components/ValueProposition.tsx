@@ -1,16 +1,7 @@
-import {
-  Box,
-  Container,
-  Flex,
-  List,
-  SimpleGrid,
-  Span,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, List, SimpleGrid, Span } from "@chakra-ui/react";
 import { BaseIcon, BaseText, Icons, TextVariant } from "_components/custom";
-import { hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
-import { motion } from "framer-motion";
+import { MotionBox, MotionVStack, MotionListItem } from "_constants/motion";
 
 const tenantBenefits = [
   "Recherche de logement simplifiée",
@@ -27,10 +18,6 @@ const ownerBenefits = [
   "Suivi des performances en temps réel",
   "Accès sécurisé par rôle",
 ];
-
-const MotionBox = motion.create(Box);
-const MotionVStack = motion.create(VStack);
-const MotionListItem = motion.create(List.Item);
 
 export const ValueProposition = () => {
   return (

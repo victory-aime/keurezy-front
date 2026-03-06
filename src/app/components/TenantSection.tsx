@@ -1,4 +1,4 @@
-import { Box, Container, Flex, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import {
   BaseButton,
   BaseIcon,
@@ -9,8 +9,8 @@ import {
 import { APP_ROUTES } from "_config/routes";
 import { Colors, hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { MotionBox, MotionVStack } from "_constants/motion";
 
 const tenantFeatures = [
   {
@@ -62,8 +62,6 @@ const tenantFeatures = [
     color: "tertiary",
   },
 ];
-const MotionBox = motion.create(Box);
-const MotionVStack = motion.create(VStack);
 
 export const TenantSection = () => {
   return (

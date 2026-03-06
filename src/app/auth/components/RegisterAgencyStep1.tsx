@@ -71,12 +71,7 @@ export const RegisterAgencyStep1 = ({
             width={"full"}
             flexDirection={{ base: "column-reverse", md: "row-reverse" }}
           >
-            <FormPhonePicker
-              required
-              name="phone"
-              label="Telephone"
-              listAvailableCountries={["tn"]}
-            />
+            <FormPhonePicker required name="phone" label="Telephone" />
             <FormTextInput
               required
               name="address"

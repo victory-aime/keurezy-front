@@ -20,6 +20,7 @@ import { MODELS, CONSTANTS } from "_types/";
 import { UserRole } from "../../../types/enum";
 import { PropertiesContainer } from "./PropertiesContainer";
 import { useRouter } from "next/navigation";
+import { PropertyNotFound } from "./PropertyNotFound";
 
 const InfoItem = ({
   icon,
@@ -57,6 +58,10 @@ export const PropertyDetails = ({ id }: { id: string }) => {
     id,
     allPublicProperties,
   );
+
+  if (!property) {
+    return <PropertyNotFound />;
+  }
 
   return (
     <PropertiesContainer>

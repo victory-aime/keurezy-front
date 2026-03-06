@@ -35,6 +35,8 @@ export interface ActionButtonTypes extends FlexProps {
   validateTitle?: string;
   downloadTitle?: string;
   refreshTitle?: string;
+  emailVerificationMessage?: string;
+  isEmailVerified?: boolean;
   cancelColor?: variantColorType;
   validateColor?: variantColorType;
   cancelVariant?: ButtonProps["variant"];

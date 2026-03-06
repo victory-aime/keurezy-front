@@ -98,7 +98,7 @@ export const TotpVerification = () => {
               width={"full"}
               variant={"outline"}
               colorType={"danger"}
-              onClick={() => logout(APP_ROUTES.AUTH.SIGN_IN)}
+              onClick={() => logout()}
               isLoading={logoutLoading}
               disabled={isLoading || logoutLoading}
             >

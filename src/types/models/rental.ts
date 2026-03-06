@@ -4,6 +4,7 @@ export interface IRentalRequest {
   propertyId: string;
   tenantId: string;
   phone?: string;
+  startDate?: string;
   message?: string;
 }
 
@@ -13,6 +14,7 @@ export interface IRentalAgencyListResponse {
   phone: string;
   message: string;
   status: ENUM.COMMON.Status;
+  startDate: string;
   createdAt: string;
   property: {
     id: string;

@@ -6,15 +6,13 @@ import {
   TextVariant,
   TextWeight,
 } from "_components/custom";
-import { motion } from "framer-motion";
 import { Box, Flex, HStack, Image, Span } from "@chakra-ui/react";
 import { VariablesColors } from "_theme/variables";
 import Link from "next/link";
 import { Button } from "_components/ui/button";
 import { APP_ROUTES } from "_config/routes";
 import { MODELS, CONSTANTS } from "_types/";
-
-const MotionBox = motion.create(Box);
+import { MotionBox } from "_constants/motion";
 
 export const PropertyCard = ({
   property,
