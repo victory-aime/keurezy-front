@@ -21,11 +21,14 @@ import { SideToolTip } from "./components/SideToolTip";
 import { useSessionRefreshContext } from "_context/SessionRefresh-context";
 import { useMemo } from "react";
 import { DASHBOARD_ROUTES } from "../../routes";
+import { useColorMode } from "_components/ui/color-mode";
 
 export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { logout } = useAuth();
   const { dismissToast } = useSessionRefreshContext();
+  const { colorMode } = useColorMode();
+
   const { data: user } = UserModule.getUserInfo({
     queryOptions: { enabled: false },
   });
@@ -120,7 +123,7 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
           overflow="hidden"
           boxShadow="lg"
           borderRight="1px solid"
-          borderColor="gray.200"
+          borderColor={colorMode === "light" ? "gray.200" : "gray.900"}
           display="flex"
           flexDirection="column"
           zIndex="10"
@@ -133,9 +136,14 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
             px={3}
             py={2}
             borderBottom="1px solid"
-            borderColor="gray.200"
+            borderColor={colorMode === "light" ? "gray.200" : "gray.900"}
           >
-            <Image src={ASSETS.LOGO} alt="logo" width={45} height={45} />
+            <Image
+              src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+              alt="logo"
+              width={45}
+              height={45}
+            />
             {sideToggled && (
               <BaseText fontSize="sm" fontWeight="medium">
                 MyImmo
@@ -147,7 +155,11 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
 
           <RenderGroupedLinks isCollapsed={sideToggled} links={sidebarLinks} />
           <SideToolTip disabled={sideToggled} label={"Déconnexion"}>
-            <Box p={3} borderTop="1px solid" borderColor="gray.200">
+            <Box
+              p={3}
+              borderTop="1px solid"
+              borderColor={colorMode === "light" ? "gray.200" : "gray.900"}
+            >
               <BaseButton
                 width={"full"}
                 colorType={"danger"}

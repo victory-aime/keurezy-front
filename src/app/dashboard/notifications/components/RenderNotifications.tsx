@@ -40,6 +40,7 @@ export const RenderNotifications = ({
       request={request}
       index={i}
       refetchNotificationList={refetchNotificationList}
+      isLast={i === list?.length - 1}
     />
   ));
 };

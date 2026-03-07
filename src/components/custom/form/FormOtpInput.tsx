@@ -6,7 +6,6 @@ import { useField, useFormikContext } from "formik";
 import { OtpInputProps } from "_components/custom/form/interface/input";
 import { FC } from "react";
 import { BaseText } from "_components/custom";
-import * as React from "react";
 import { hexToRGB } from "_theme/colors";
 
 export const FormOtpInput: FC<OtpInputProps> = ({
@@ -65,17 +64,22 @@ export const FormOtpInput: FC<OtpInputProps> = ({
                 key={index}
                 index={index}
                 borderRadius={8}
-                bg={field.value?.[index] ? "white" : hexToRGB("lighter", 0.4)}
+                bg={
+                  field.value?.[index]
+                    ? isError
+                      ? hexToRGB("danger", 0.3)
+                      : hexToRGB("primary", 0.3)
+                    : hexToRGB("lighter", 0.4)
+                }
                 borderColor={
                   field.value?.[index]
                     ? isError
                       ? "red"
-                      : "tertiary.500"
+                      : "primary.500"
                     : "bg.muted"
                 }
                 borderWidth={1.5}
                 animation={isError ? "shake" : undefined}
-                color={"black"}
                 boxShadow={field.value?.[index] ? "lg" : "none"}
                 placeholder="."
               />

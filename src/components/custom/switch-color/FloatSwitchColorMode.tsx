@@ -1,14 +1,14 @@
-import { IconButton } from "@chakra-ui/react";
+import { IconButton, IconButtonProps } from "@chakra-ui/react";
 import React from "react";
 import { SwitchColorMode } from "./SwitchColorMode";
 import { useColorMode } from "_components/ui/color-mode";
 
-export const FloatSwitchColorMode = () => {
+export const FloatSwitchColorMode = ({ ...props }: IconButtonProps) => {
   const { toggleColorMode } = useColorMode();
   return (
     <IconButton
       position="fixed"
-      bottom="45px"
+      bottom="85px"
       right="16px"
       zIndex="1000"
       onClick={toggleColorMode}
@@ -20,6 +20,7 @@ export const FloatSwitchColorMode = () => {
         transition: "transform 0.2s ease-in-out",
         filter: "brightness(1.2)",
       }}
+      {...props}
     >
       <SwitchColorMode hideIcon />
     </IconButton>

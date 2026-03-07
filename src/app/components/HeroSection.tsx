@@ -16,8 +16,10 @@ import { VariablesColors } from "_theme/variables";
 import Link from "next/link";
 import { APP_ROUTES } from "_config/routes";
 import { MotionBox } from "_constants/motion";
+import { useColorMode } from "_components/ui/color-mode";
 
 export const HeroSection = () => {
+  const { colorMode } = useColorMode();
   return (
     <Box
       py={24}
@@ -158,7 +160,6 @@ export const HeroSection = () => {
             <Box
               borderRadius="xl"
               borderWidth="1px"
-              bg="white"
               shadow="xl"
               overflow="hidden"
             >
@@ -169,7 +170,7 @@ export const HeroSection = () => {
                 px={4}
                 py={3}
                 borderBottomWidth="1px"
-                bg="gray.50"
+                bg="inherit"
               >
                 <Box
                   w={3}
@@ -210,7 +211,11 @@ export const HeroSection = () => {
                       key={kpi.label}
                       borderRadius="lg"
                       p={4}
-                      bg={`${kpi.color}.100`}
+                      bg={
+                        colorMode === "light"
+                          ? `${kpi.color}.100`
+                          : `${kpi.color}.900`
+                      }
                     >
                       <Text
                         fontSize="xs"
@@ -239,7 +244,6 @@ export const HeroSection = () => {
                     gridColumn="span 2"
                     h="128px"
                     borderRadius="lg"
-                    bg="gray.50"
                     borderWidth="1px"
                     align="flex-end"
                     p={4}
@@ -263,7 +267,6 @@ export const HeroSection = () => {
                   {/* Activity panel */}
                   <Flex
                     borderRadius="lg"
-                    bg="gray.50"
                     borderWidth="1px"
                     p={4}
                     direction="column"

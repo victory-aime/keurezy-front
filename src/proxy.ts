@@ -95,10 +95,8 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     `/dashboard/:path*`,
-    `/appartements/:path*`,
     `/auth/signin/totp`,
-    `/auth/forget-pass/validate`,
-    `/auth/register-agency/:path*`,
+    //`/auth/forget-pass/validate`,
     `/properties/apply/:path*`,
   ],
 };

@@ -25,7 +25,6 @@ export const SidebarInset: FC<SidebarInsetProps> = React.forwardRef(
           lg: collapsed ? "80px" : "230px",
         }}
         transition="margin 0.2s ease"
-        bg="white"
         {...(isInset && {})}
         {...props}
       />

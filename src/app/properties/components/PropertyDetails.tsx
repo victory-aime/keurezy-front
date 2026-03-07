@@ -21,6 +21,7 @@ import { UserRole } from "../../../types/enum";
 import { PropertiesContainer } from "./PropertiesContainer";
 import { useRouter } from "next/navigation";
 import { PropertyNotFound } from "./PropertyNotFound";
+import { useColorMode } from "_components/ui/color-mode";
 
 const InfoItem = ({
   icon,
@@ -36,15 +37,16 @@ const InfoItem = ({
 );
 
 const PriceRow = ({ label, value }: { label: string; value: number }) => (
-  <Flex justify="space-between" color="gray.500">
+  <Flex justify="space-between">
     <BaseText>{label}</BaseText>
-    <BaseText weight={TextWeight.Medium} color="black">
+    <BaseText weight={TextWeight.Medium}>
       <BaseFormatNumber value={value} />
     </BaseText>
   </Flex>
 );
 
 export const PropertyDetails = ({ id }: { id: string }) => {
+  const { colorMode } = useColorMode();
   const { user } = useAuthContext();
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
@@ -155,7 +157,7 @@ export const PropertyDetails = ({ id }: { id: string }) => {
             gap={6}
             py={4}
             borderY="1px solid"
-            borderColor="gray.200"
+            borderColor="inherit"
             wrap="wrap"
           >
             <InfoItem
@@ -190,11 +192,10 @@ export const PropertyDetails = ({ id }: { id: string }) => {
         {/* RIGHT SIDE - PRICE CARD */}
         <Box>
           <Box
-            bg="white"
             rounded="xl"
             p={6}
             border="1px solid"
-            borderColor="gray.200"
+            borderColor="inherit"
             boxShadow="lg"
             position="sticky"
             top="24"
@@ -231,7 +232,7 @@ export const PropertyDetails = ({ id }: { id: string }) => {
                   pt={2}
                   mt={3}
                   borderTop="1px solid"
-                  borderColor="gray.200"
+                  borderColor="inherit"
                   fontWeight="semibold"
                 >
                   <BaseText>Total 1er mois</BaseText>
@@ -269,7 +270,7 @@ export const PropertyDetails = ({ id }: { id: string }) => {
                   >
                     <BaseButton
                       variant="outline"
-                      colorType={"overlay"}
+                      colorType={colorMode === "light" ? "overlay" : "primary"}
                       w="full"
                       leftIcon={<Icons.Mail size={16} />}
                     >
@@ -280,7 +281,7 @@ export const PropertyDetails = ({ id }: { id: string }) => {
 
                 <BaseButton
                   variant="outline"
-                  colorType={"overlay"}
+                  colorType={colorMode === "light" ? "overlay" : "primary"}
                   w="full"
                   leftIcon={<Icons.Heart size={16} />}
                 >

@@ -141,6 +141,7 @@ export const ContactAgency = ({ id }: { id: string }) => {
                   validateTitle="Envoyer le message"
                   onClick={() => handleSubmit()}
                   isDisabled={isPending || !isValid}
+                  isEmailVerified
                   icon={<Icons.Send />}
                 />
               ) : (
@@ -159,10 +160,9 @@ export const ContactAgency = ({ id }: { id: string }) => {
         </Formik>
         <Stack gap={8}>
           <Box
-            bg="white"
             rounded="xl"
             border="1px solid"
-            borderColor="gray.200"
+            borderColor="inherit"
             overflow={"hidden"}
             boxShadow="lg"
           >
@@ -200,11 +200,10 @@ export const ContactAgency = ({ id }: { id: string }) => {
             </Stack>
           </Box>
           <Box
-            bg="white"
             rounded="xl"
             p={6}
             border="1px solid"
-            borderColor="gray.200"
+            borderColor="inherit"
             boxShadow="lg"
           >
             <Stack gap={3}>
@@ -258,11 +257,10 @@ export const ContactAgency = ({ id }: { id: string }) => {
           </Box>
           {user?.role !== UserRole?.IMMO_OWNER && (
             <Box
-              bg="gray.100"
               rounded="xl"
               p={6}
               border="1px solid"
-              borderColor="gray.200"
+              borderColor="inherit"
               boxShadow="lg"
             >
               <Stack gap={2}>

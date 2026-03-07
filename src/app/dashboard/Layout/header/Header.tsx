@@ -64,7 +64,6 @@ export const Header = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
           gap={3}
           px={4}
           pt={3}
-          bgColor={"white"}
           data-tour="header"
         >
           {sideToggled ? (

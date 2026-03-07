@@ -1,5 +1,6 @@
 export const ASSETS = {
   LOGO: "/assets/images/my-immo.png",
+  LOGO_DARK: "/assets/images/my-immo-dark.png",
   HERO: "/assets/images/hero-property.jpg",
   PROPERTY_1: "/assets/images/property-1.jpg",
   PROPERTY_2: "/assets/images/property-2.jpg",

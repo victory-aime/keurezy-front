@@ -142,7 +142,7 @@ const FormSelect: FC<FullSelectProps> = ({
               portalRef={ref}
               maxH="220px"
             >
-              {listItems?.items?.length > 4 && (
+              {listItems?.items?.length > 3 && (
                 <InputGroup
                   flex={1}
                   width={"full"}
@@ -164,7 +164,7 @@ const FormSelect: FC<FullSelectProps> = ({
                     size="lg"
                     height={"40px"}
                     variant={"outline"}
-                    borderColor={isError ? "red.500" : "bg.muted"}
+                    borderColor={isError ? "red.500" : "inherit"}
                     borderRadius={"12px"}
                     shadow={"xs"}
                     _placeholder={{ color: isError ? "red.500" : "gray.400" }}

@@ -34,9 +34,11 @@ import { useState } from "react";
 import { PropertiesContainer } from "./PropertiesContainer";
 import { PropertyNotFound } from "./PropertyNotFound";
 import { FormDatePicker } from "_components/custom/form/FormDatePicker";
+import { useColorMode } from "_components/ui/color-mode";
 
 export const PropertyApply = ({ id }: { id: string }) => {
   const { user } = useAuthContext();
+  const { colorMode } = useColorMode();
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const router = useRouter();
 
@@ -196,7 +198,6 @@ export const PropertyApply = ({ id }: { id: string }) => {
             <VStack
               p={4}
               border={"1px solid"}
-              bgColor={"gray.50"}
               borderColor={"border"}
               width={"full"}
               rounded={"lg"}
@@ -251,6 +252,8 @@ export const PropertyApply = ({ id }: { id: string }) => {
               icon={<Icons.Send />}
               onClick={() => handleSubmit()}
               isLoading={isPending}
+              isEmailVerified={!!user}
+              emailVerificationMessage="Vous devriez vous connecter pour acceder a cette fonctionnalité"
               validateTitle="Envoyer ma candidature"
             />
           </Stack>
@@ -286,16 +289,20 @@ export const PropertyApply = ({ id }: { id: string }) => {
             </BaseText>
           </Box>
           <Box
-            bg="gray.100"
             p={3}
             border={"1px solid"}
-            bgColor={"gray.50"}
+            bgColor={colorMode === "light" ? "gray.50" : "inherit"}
             borderColor={"border"}
             rounded={"lg"}
             width={"full"}
           >
             <BaseText weight={TextWeight.Regular}>Prochaines étapes</BaseText>
-            <VStack gap={3} alignItems={"flex-start"} mt={2} color={"gray.600"}>
+            <VStack
+              gap={3}
+              alignItems={"flex-start"}
+              mt={3}
+              color={colorMode === "light" ? "gray.600" : "primary.500"}
+            >
               {[
                 {
                   step: 1,

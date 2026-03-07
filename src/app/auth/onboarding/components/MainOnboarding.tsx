@@ -10,7 +10,13 @@ import {
   Span,
   Image,
 } from "@chakra-ui/react";
-import { BaseButton, BaseText, Icons, TextVariant } from "_components/custom";
+import {
+  BaseButton,
+  BaseText,
+  FloatSwitchColorMode,
+  Icons,
+  TextVariant,
+} from "_components/custom";
 import { useRouter } from "next/navigation";
 import { StepIntro } from "../components/StepIntro";
 import { Step2ProductValue } from "../components/Step2ProductValue";
@@ -35,8 +41,10 @@ import {
 import { StorageKey } from "_constants/StorageKeys";
 import { MotionBox } from "_constants/motion";
 import { DASHBOARD_ROUTES } from "../../../dashboard/routes";
+import { useColorMode } from "_components/ui/color-mode";
 
 export const MainOnboarding = () => {
+  const { colorMode } = useColorMode();
   const navigate = useRouter();
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -241,7 +249,6 @@ export const MainOnboarding = () => {
           as="header"
           borderBottom="1px solid"
           borderColor="border"
-          bg={"white"}
           backdropFilter="blur(8px)"
           position="sticky"
           top={0}
@@ -261,16 +268,17 @@ export const MainOnboarding = () => {
               onClick={() => navigate.push(APP_ROUTES.ROOT)}
               cursor={"pointer"}
             >
-              <Image src={ASSETS.LOGO} alt="logo" width={45} height={45} />
+              <Image
+                src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+                alt="logo"
+                width={45}
+                height={45}
+              />
               <BaseText variant={TextVariant.M}>MyImmo</BaseText>
             </Flex>
 
             <HStack gap={4}>
-              <Text
-                fontSize="sm"
-                color="gray.500"
-                display={{ base: "none", sm: "block" }}
-              >
+              <Text fontSize="sm" display={{ base: "none", sm: "block" }}>
                 Étape {step + 1} / {TOTAL_ONBOARD_STEPS}
               </Text>
               <Box w="128px">
@@ -337,7 +345,7 @@ export const MainOnboarding = () => {
                       display={{ base: "none", md: "block" }}
                       color={
                         i === step
-                          ? "gray.800"
+                          ? "primary.500"
                           : i < step
                             ? "tertiary.500"
                             : "gray.500"
@@ -391,8 +399,7 @@ export const MainOnboarding = () => {
         <Box
           as="footer"
           borderTop="1px solid"
-          borderColor="gray.200"
-          bg="white"
+          borderColor="inherit"
           position="sticky"
           bottom={0}
         >
@@ -456,12 +463,13 @@ export const MainOnboarding = () => {
                 "Continue Setup"
               ) : (
                 <Span display={{ base: "none", sm: "inline" }}>
-                  {step === 2 ? "Valider" : "Suivant"}
+                  {step === 3 ? "Valider" : "Suivant"}
                 </Span>
               )}
             </BaseButton>
           </Flex>
         </Box>
+        <FloatSwitchColorMode />
       </Flex>
     </Formik>
   );

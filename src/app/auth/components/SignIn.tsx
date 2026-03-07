@@ -9,7 +9,6 @@ import { useAuth } from "_hooks/useAuth";
 import { Formik, FormikValues } from "formik";
 import { VALIDATION } from "_types/index";
 import { useState } from "react";
-import { CiCloudOn, CiMail } from "react-icons/ci";
 import { AuthBoxContainer } from "./AuthBoxContainer";
 import { VariablesColors } from "_theme/variables";
 import { Navbar } from "_component/NavBar";
@@ -83,7 +82,7 @@ export const SignIn = ({
                   await handleGoogleLogin().then(() => setIsLoading(false));
                 }}
               >
-                <BaseText color={"black"}>Continuer avec Google</BaseText>
+                <BaseText>Continuer avec Google</BaseText>
               </BaseButton>
               <HStack
                 gap={"4"}
@@ -99,7 +98,7 @@ export const SignIn = ({
                 name="email"
                 placeholder={"FORM.EMAIL_PLACEHOLDER"}
                 value={values.email}
-                leftAccessory={<CiMail />}
+                leftAccessory={<Icons.Mail />}
               />
               <FormTextInput
                 name="password"

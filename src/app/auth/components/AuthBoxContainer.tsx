@@ -7,6 +7,8 @@ import Image from "next/image";
 import { ASSETS } from "_assets/images";
 import { motion } from "framer-motion";
 import { MotionCard, MotionHeader, MotionBody } from "_constants/motion";
+import { useColorMode } from "_components/ui/color-mode";
+import { FloatSwitchColorMode } from "_components/custom";
 
 export const AuthBoxContainer = ({
   children,
@@ -17,6 +19,7 @@ export const AuthBoxContainer = ({
   title: string;
   description?: ReactNode;
 }) => {
+  const { colorMode } = useColorMode();
   const { t } = useTranslation();
 
   return (
@@ -32,9 +35,9 @@ export const AuthBoxContainer = ({
         size="md"
         w="full"
         mt="5"
+        p={{ base: "4" }}
         maxW={{ base: "100%", sm: "700px" }}
         border="none"
-        borderRadius={{ base: "none", md: "2xl" }}
         initial={{ opacity: 0, y: 40, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -51,7 +54,12 @@ export const AuthBoxContainer = ({
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.4 }}
           >
-            <Image src={ASSETS.LOGO} width={45} height={45} alt="logo" />
+            <Image
+              src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+              width={45}
+              height={45}
+              alt="logo"
+            />
           </motion.div>
 
           <Card.Title fontSize="xl" textAlign="center">
@@ -72,6 +80,7 @@ export const AuthBoxContainer = ({
           {children}
         </MotionBody>
       </MotionCard>
+      <FloatSwitchColorMode />
     </Center>
   );
 };

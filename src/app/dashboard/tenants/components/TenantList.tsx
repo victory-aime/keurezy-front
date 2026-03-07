@@ -101,18 +101,18 @@ export const TenantsList = () => {
       accessor: "startDate",
       cell: (date: string) => <BaseText>{convertDateFormat(date)}</BaseText>,
     },
-    {
-      header: "Actions",
-      accessor: "actions",
-      actions: [
-        {
-          name: "chat",
-          handleClick(data) {
-            router.push(DASHBOARD_ROUTES.MESSAGES);
-          },
-        },
-      ],
-    },
+    // {
+    //   header: "Actions",
+    //   accessor: "actions",
+    //   actions: [
+    //     {
+    //       name: "chat",
+    //       handleClick(data) {
+    //         router.push(DASHBOARD_ROUTES.MESSAGES);
+    //       },
+    //     },
+    //   ],
+    // },
   ];
 
   return (

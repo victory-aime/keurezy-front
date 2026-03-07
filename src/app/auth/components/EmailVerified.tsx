@@ -23,12 +23,12 @@ export const EmailVerified = () => {
     const mapped = resolveState(searchParams);
     setState(mapped);
 
-    if (mapped === "success") {
-      setOpenSuccess(true);
-      setTimeout(() => {
-        router.replace(APP_ROUTES.REDIRECT);
-      }, 3000);
-    }
+    // if (mapped === "success") {
+    //   setOpenSuccess(true);
+    //   setTimeout(() => {
+    //     router.replace(APP_ROUTES.REDIRECT);
+    //   }, 3000);
+    // }
   }, [searchParams, router]);
 
   return (

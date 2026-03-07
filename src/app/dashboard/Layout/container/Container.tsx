@@ -2,7 +2,11 @@
 
 import { Flex } from "@chakra-ui/react";
 import { Suspense } from "react";
-import { BaseContainer } from "_components/custom";
+import {
+  BaseContainer,
+  FloatSwitchColorMode,
+  SwitchColorMode,
+} from "_components/custom";
 import { GlobalLoader } from "_components/custom/loader/Loader";
 
 export const Container = ({
@@ -18,6 +22,7 @@ export const Container = ({
         <BaseContainer mt={"60px"} p={0} border={"none"} position={"relative"}>
           {children}
         </BaseContainer>
+        <FloatSwitchColorMode />
       </Suspense>
     </Flex>
   );

@@ -4,6 +4,7 @@ import { VariablesColors } from "_theme/variables";
 import { ENUM } from "_types/*";
 import { formatDisplayDate } from "rise-core-frontend";
 import { RentalModalSection, RentalInfoItem } from "./RentalSection";
+import { useColorMode } from "_components/ui/color-mode";
 
 export const RentalModal = ({
   isOpen,
@@ -15,6 +16,8 @@ export const RentalModal = ({
   onReject,
   isEmailVerified,
 }: ModalOpenProps) => {
+  const { colorMode } = useColorMode();
+
   return (
     <BaseModal
       isOpen={isOpen}
@@ -44,7 +47,7 @@ export const RentalModal = ({
             width="full"
             p={4}
             rounded="lg"
-            bg="red.50"
+            bgColor={colorMode === "light" ? "red.100" : "red.900"}
             border="1px solid"
             borderColor="red.200"
           >
@@ -116,7 +119,7 @@ export const RentalModal = ({
             width="full"
             p={4}
             rounded="lg"
-            bgColor="gray.100"
+            bgColor={colorMode === "light" ? "gray.100" : "gray.900"}
             border="1px solid"
             borderColor="border"
           >

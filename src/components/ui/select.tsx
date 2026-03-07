@@ -4,7 +4,6 @@ import type { CollectionItem } from "@chakra-ui/react";
 import { Select as ChakraSelect, Portal } from "@chakra-ui/react";
 import { CloseButton } from "./close-button";
 import * as React from "react";
-import { VariablesColors } from "_theme/variables";
 
 interface SelectTriggerProps extends ChakraSelect.ControlProps {
   clearable?: boolean;
@@ -29,7 +28,7 @@ export const SelectTrigger = React.forwardRef<
     <ChakraSelect.Control {...rest}>
       <ChakraSelect.Trigger
         ref={ref}
-        bgColor={VariablesColors.white}
+        bgColor={"inherit"}
         border={"1px solid"}
         borderColor={isError ? "red.500" : "inherit"}
         borderRadius={customRadius}

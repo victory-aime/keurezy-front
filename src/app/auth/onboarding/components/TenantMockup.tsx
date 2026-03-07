@@ -9,17 +9,14 @@ import {
 } from "@chakra-ui/react";
 import { BaseTag, Icons } from "_components/custom";
 import { Avatar } from "_components/ui/avatar";
-import { useColorModeValue } from "_components/ui/color-mode";
 import { VariablesColors } from "_theme/variables";
 import { TopBarMockup } from "./TopBarMockup";
 import { Colors, hexToRGB } from "_theme/colors";
 import { MotionBox } from "_constants/motion";
+import { useStyles } from "../constants/style";
 
 export const TenantsMockup = () => {
-  const bg = useColorModeValue("white", "gray.900");
-  const muted = useColorModeValue("gray.50", "gray.800");
-  const border = useColorModeValue("gray.200", "gray.700");
-  const textMuted = useColorModeValue("gray.500", "gray.400");
+  const { bg, border, muted, textMuted } = useStyles();
 
   const tenants = [
     {

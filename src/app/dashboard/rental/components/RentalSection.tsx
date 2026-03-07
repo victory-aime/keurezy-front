@@ -28,10 +28,10 @@ export const RentalInfoItem = ({
   label: string;
   value?: React.ReactNode;
 }) => (
-  <HStack color={"gray.400"}>
+  <HStack>
     {icon}
     <BaseText>
-      {label}: <Span color={"black"}>{value ?? "-"}</Span>
+      {label}: <Span>{value ?? "-"}</Span>
     </BaseText>
   </HStack>
 );

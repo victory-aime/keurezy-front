@@ -4,9 +4,8 @@ import { IBoxProps } from "_components/custom";
 export const OnboardCardWrapper = ({ children, ...props }: IBoxProps) => {
   return (
     <Box
-      bg={"white"}
       border="1px solid"
-      borderColor="gray.200"
+      borderColor="inherit"
       borderRadius="xl"
       boxShadow="sm"
       p={4}

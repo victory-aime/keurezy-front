@@ -29,9 +29,11 @@ import { UserRole } from "../../types/enum";
 import { useAuth } from "_hooks/useAuth";
 import { useIsActive } from "_hooks/useActive";
 import { MotionBox } from "_constants/motion";
+import { useColorMode } from "_components/ui/color-mode";
 
 export const Navbar = () => {
   const { session } = useAuthContext();
+  const { colorMode } = useColorMode();
   const { logout } = useAuth();
   const { isActiveLink } = useIsActive();
   const router = useRouter();
@@ -55,7 +57,7 @@ export const Navbar = () => {
       right={0}
       zIndex={50}
       backdropFilter="blur(5px)"
-      bgColor={"white"}
+      bg={colorMode === "light" ? "white" : "black"}
       borderBottomWidth="1px"
       borderColor="border"
     >
@@ -72,7 +74,12 @@ export const Navbar = () => {
           width={"full"}
         >
           <Flex alignItems={"center"} gap={2}>
-            <Image src={ASSETS.LOGO} alt="logo" width={45} height={45} />
+            <Image
+              src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+              alt="logo"
+              width={45}
+              height={45}
+            />
             <BaseText variant={TextVariant.M}>MyImmo</BaseText>
           </Flex>
 

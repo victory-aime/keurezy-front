@@ -91,6 +91,7 @@ export const DashboardMockup = ({
       bg={bg}
       rounded="2xl"
       shadow="xl"
+      overflow={"hidden"}
     >
       {/* Top Bar */}
       <Flex

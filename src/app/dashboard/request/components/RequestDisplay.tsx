@@ -6,6 +6,7 @@ import {
   CustomSkeletonLoader,
   BaseModal,
 } from "_components/custom";
+import { useColorMode } from "_components/ui/color-mode";
 import { Tag } from "_components/ui/tag";
 import { ContactModule } from "_store/state-management";
 import { hexToRGB } from "_theme/colors";
@@ -19,12 +20,15 @@ export const RequestDisplay = ({
   index = 0,
   isLoading = false,
   refetchRequestList,
+  isLast,
 }: {
   request: MODELS.IAgencyRequestList;
   index?: number;
   isLoading?: boolean;
   refetchRequestList?: () => void;
+  isLast?: boolean;
 }) => {
+  const { colorMode } = useColorMode();
   const [readInfo, setReadInfo] = useState(false);
   const isClient = !!request?.userId;
   const { mutateAsync: changeStatus, isPending } =
@@ -46,13 +50,21 @@ export const RequestDisplay = ({
       width={"full"}
       border={"1px solid"}
       p={4}
-      roundedTop={"lg"}
+      borderRadius={
+        index === 0 ? "12px 12px 0 0" : isLast ? "0 0 12px 12px" : "0"
+      }
       borderColor={
-        request.status === ENUM.COMMON.Status.PENDING ? "blue.400" : "border"
+        request.status === ENUM.COMMON.Status.PENDING
+          ? colorMode === "light"
+            ? "blue.400"
+            : "blue.900"
+          : "border"
       }
       bg={
         request.status === ENUM.COMMON.Status.PENDING
-          ? "blue.50"
+          ? colorMode === "light"
+            ? "blue.50"
+            : "blue.900"
           : "transparent"
       }
     >

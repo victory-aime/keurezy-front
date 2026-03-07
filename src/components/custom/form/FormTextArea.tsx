@@ -44,6 +44,7 @@ const FormTextArea: FC<FormTextAreaProps> = ({
           gap={"6px"}
           justifyContent={"space-between"}
           width={"full"}
+          fontSize={{ base: "14px", md: "12px" }}
         >
           <Flex gap={"6px"}>
             {t(label)}

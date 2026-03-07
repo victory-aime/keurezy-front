@@ -40,6 +40,7 @@ export const RenderRequests = ({
       request={request}
       index={i}
       refetchRequestList={refetchRequestList}
+      isLast={i === list?.length - 1}
     />
   ));
 };

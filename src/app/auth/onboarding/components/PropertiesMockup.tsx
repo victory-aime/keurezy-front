@@ -2,17 +2,13 @@
 
 import { Box, Flex, Grid, Text, HStack } from "@chakra-ui/react";
 import { BaseTag, Icons } from "_components/custom";
-import { useColorModeValue } from "_components/ui/color-mode";
 import { TopBarMockup } from "./TopBarMockup";
 import { VariablesColors } from "_theme/variables";
 import { MotionBox, MotionTag } from "_constants/motion";
+import { useStyles } from "../constants/style";
 
 export const PropertiesMockup = () => {
-  const bg = useColorModeValue("white", "gray.400");
-  const muted = useColorModeValue("gray.50", "gray.800");
-  const border = useColorModeValue("gray.200", "gray.700");
-  const textMuted = useColorModeValue("gray.500", "gray.400");
-
+  const { bg, border, muted, textMuted } = useStyles();
   const properties = [
     {
       name: "Apt. Haussmann",

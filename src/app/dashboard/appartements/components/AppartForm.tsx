@@ -185,7 +185,7 @@ export const AppartForm = ({ appartId }: { appartId: string }) => {
                   name="status"
                   label="Statut du bien"
                   placeholder="Sélectionner un statut"
-                  listItems={propertyStatusList} // ⚠️ utiliser la bonne liste
+                  listItems={propertyStatusList}
                   setFieldValue={setFieldValue}
                 />
               </HStack>
@@ -301,6 +301,7 @@ export const AppartForm = ({ appartId }: { appartId: string }) => {
             onCancel={() => router.back()}
             isLoading={createPending}
             validateTitle={appartId ? "Modiler le bien" : "Ajouter le bien"}
+            isEmailVerified={user?.emailVerified}
             icon={<Icons.RiBuildingLine />}
           />
         </FormContainer>

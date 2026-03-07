@@ -22,6 +22,7 @@ import { useInView } from "framer-motion";
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
 import { MotionBox, MotionVStack } from "_constants/motion";
+import { useColorMode } from "_components/ui/color-mode";
 
 const ownerFeatures = [
   {
@@ -109,6 +110,7 @@ const CountUp = ({
 };
 
 export const OwnerSection = () => {
+  const { colorMode } = useColorMode();
   return (
     <Box py="24">
       <Container mx={"auto"} px={{ base: 4, sm: 6, lg: 8 }}>
@@ -170,28 +172,28 @@ export const OwnerSection = () => {
               suffix: ENUM.COMMON.Currency.XOF,
               prefix: "",
               label: "Revenu mensuel moyen",
-              color: "primary.50",
+              color: "primary",
             },
             {
               value: 94,
               suffix: "%",
               prefix: "",
               label: "Taux d'occupation",
-              color: "tertiary.50",
+              color: "tertiary",
             },
             {
               value: 2500,
               suffix: "+",
               prefix: "",
               label: "Biens gérés",
-              color: "secondary.50",
+              color: "secondary",
             },
             {
               value: 23,
               suffix: "%",
               prefix: "+",
               label: "Rendement amélioré",
-              color: "primary.50",
+              color: "primary",
             },
           ].map((kpi, i) => (
             <MotionBox
@@ -204,7 +206,9 @@ export const OwnerSection = () => {
               rounded={"xl"}
               border={"1px solid"}
               textAlign={"center"}
-              bgColor={kpi.color}
+              bgColor={
+                colorMode === "light" ? `${kpi.color}.50` : `${kpi.color}.900`
+              }
               borderColor={"border"}
             >
               <BaseText
@@ -233,7 +237,6 @@ export const OwnerSection = () => {
           <MotionBox
             borderRadius="xl"
             borderWidth="1px"
-            bg="white"
             shadow="xl"
             overflow="hidden"
             initial={{ opacity: 0, x: -30 }}
@@ -241,14 +244,7 @@ export const OwnerSection = () => {
             viewport={{ once: true }}
           >
             {/* Top bar */}
-            <Flex
-              align="center"
-              gap={2}
-              px={4}
-              py={3}
-              borderBottomWidth="1px"
-              bg="gray.50"
-            >
+            <Flex align="center" gap={2} px={4} py={3} borderBottomWidth="1px">
               <Box w={3} h={3} borderRadius="full" bg="red.400" opacity={0.6} />
               <Box
                 w={3}
@@ -324,7 +320,7 @@ export const OwnerSection = () => {
                     <Box
                       key={s.label}
                       borderRadius="lg"
-                      bg="gray.50"
+                      bg={colorMode === "light" ? "gray.50" : "gray.900"}
                       p={3}
                       textAlign="center"
                     >
@@ -349,7 +345,6 @@ export const OwnerSection = () => {
                 borderRadius="xl"
                 p={5}
                 borderWidth="1px"
-                bg="white"
                 shadow="md"
                 _hover={{
                   transform: "translateY(-4px)",

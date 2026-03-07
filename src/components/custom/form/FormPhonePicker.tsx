@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useColorModeValue } from "_components/ui/color-mode";
 import { VariablesColors } from "_theme/variables";
 import "./utils/phone-dropdown.css";
+import { hexToRGB } from "_theme/colors";
 
 export const FormPhonePicker = ({
   validate,
@@ -33,6 +34,10 @@ export const FormPhonePicker = ({
     ? !!error
     : !!(error && (touched || submitCount > 0));
 
+  const bgColor = useColorModeValue(
+    VariablesColors.white,
+    hexToRGB("overlay", 0.03),
+  );
   const colorBorder = useColorModeValue(
     VariablesColors.gray200,
     VariablesColors.black,
@@ -110,7 +115,7 @@ export const FormPhonePicker = ({
         countrySelectorStyleProps={{
           buttonStyle: {
             padding: "8px",
-            //backgroundColor: colorBorder,
+            backgroundColor: bgColor,
             borderTopLeftRadius: "12px",
             borderBottomLeftRadius: "12px",
             borderRight: "none",
@@ -134,7 +139,7 @@ export const FormPhonePicker = ({
           dropdownArrowStyle: { marginLeft: "4px" },
         }}
         inputStyle={{
-          //backgroundColor: colorBorder,
+          backgroundColor: bgColor,
           color: colorText,
           border: `1px solid ${isError ? VariablesColors.danger : colorBorder}`,
           borderTopRightRadius: "12px",

@@ -133,8 +133,9 @@ export const Step2ProductValue = () => {
               cursor: "pointer",
               transition: "all 0.2s",
             }}
-            border={activeTab === i ? "none" : "1px solid #e2e8f0"}
-            background={activeTab === i ? "primary.500" : "white"}
+            border={activeTab === i ? "none" : "1px solid"}
+            borderColor={activeTab === i ? "none" : "inherit"}
+            background={activeTab === i ? "primary.500" : "inherit"}
             color={activeTab === i ? "white" : "#6b7280"}
           >
             <t.icon size={16} />

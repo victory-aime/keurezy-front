@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { Navbar } from "_component/NavBar";
 import { Footer } from "../components/Footer";
 import { Box, IconButton, VStack } from "@chakra-ui/react";
-import { Icons } from "_components/custom";
+import { FloatSwitchColorMode, Icons } from "_components/custom";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { MotionBox } from "_constants/motion";
 
@@ -48,6 +48,7 @@ export const UserLayout = ({ children }: { children: ReactNode }) => {
       >
         {children}
       </VStack>
+      <FloatSwitchColorMode bottom="100px" right="25px" />
       <Footer />
       <MotionBox
         position="fixed"

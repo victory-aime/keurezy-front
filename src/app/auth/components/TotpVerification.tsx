@@ -59,18 +59,11 @@ export const TotpVerification = () => {
     >
       {({ handleSubmit }) => (
         <AuthBoxContainer
-          title={"Confirmer votre compte"}
+          title={"Vérification en deux étapes"}
           description={
             <BaseText>
-              Vous n'avez pas de compte ?{" "}
-              <Box
-                as="span"
-                cursor="pointer"
-                color="primary.500"
-                onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
-              >
-                S'inscrire
-              </Box>
+              Pour sécuriser votre compte, saisissez le code à 6 chiffres généré
+              par votre application d’authentification. ?{" "}
             </BaseText>
           }
         >
@@ -81,19 +74,12 @@ export const TotpVerification = () => {
               onChangeFunction={handleSubmit}
             />
             <BaseText color={"gray.400"}>
-              Veuillez saisir le code affiche sur votre application
-              d'authentification
+              Entrez le code à 6 chiffres affiché dans votre application
+              d’authentification (Google Authenticator, Microsoft Authenticator,
+              etc.). La vérification s’effectue automatiquement dès que les 6
+              chiffres sont saisis.
             </BaseText>
 
-            <BaseButton
-              width={"full"}
-              onClick={() => handleSubmit()}
-              colorType={"primary"}
-              isLoading={isLoading}
-              disabled={isLoading || logoutLoading}
-            >
-              Continue
-            </BaseButton>
             <BaseButton
               width={"full"}
               variant={"outline"}
@@ -102,7 +88,7 @@ export const TotpVerification = () => {
               isLoading={logoutLoading}
               disabled={isLoading || logoutLoading}
             >
-              {t("COMMON.LOGOUT")}
+              Se déconnecter
             </BaseButton>
           </VStack>
         </AuthBoxContainer>

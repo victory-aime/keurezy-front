@@ -5,6 +5,7 @@ import { BaseText } from "_components/custom";
 import { SideToolTip } from "./SideToolTip";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
+import { hexToRGB } from "_theme/colors";
 
 export const SidebarGroup = ({
   links,
@@ -61,7 +62,7 @@ export const SidebarGroup = ({
                     py={2}
                     borderRadius="md"
                     justifyContent={isCollapsed ? "center" : "flex-start"}
-                    bg={isActive ? "primary.50" : "transparent"}
+                    bg={isActive ? hexToRGB("primary", 0.2) : "transparent"}
                     color={isActive ? "primary.600" : "gray.600"}
                     fontWeight={isActive ? "semibold" : "normal"}
                     onClick={() => {
@@ -72,8 +73,8 @@ export const SidebarGroup = ({
                       isActive
                         ? {}
                         : {
-                            bg: "primary.100",
-                            color: "primary.900",
+                            bg: hexToRGB("primary", 0.2),
+                            color: "primary.600",
                           }
                     }
                     transition="all 0.2s"

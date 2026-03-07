@@ -6,6 +6,7 @@ import {
   BaseButton,
   BaseIcon,
   BaseText,
+  FloatSwitchColorMode,
   TextVariant,
   TextWeight,
 } from "_components/custom";
@@ -18,8 +19,10 @@ import { ASSETS } from "_assets/images";
 import { useAuthContext } from "_context/auth-context";
 import { Avatar } from "_components/ui/avatar";
 import { UserRole } from "../../types/enum";
+import { useColorMode } from "_components/ui/color-mode";
 
 export default function UnauthorizedPage() {
+  const { colorMode } = useColorMode();
   const { t } = useTranslation();
   const router = useRouter();
   const { user } = useAuthContext();
@@ -28,7 +31,12 @@ export default function UnauthorizedPage() {
     <>
       <Flex p={4} justifyContent={"space-between"}>
         <HStack>
-          <Image src={ASSETS.LOGO} width={45} height={45} alt="logo" />
+          <Image
+            src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+            width={45}
+            height={45}
+            alt="logo"
+          />
           <BaseText
             variant={TextVariant.L}
             weight={TextWeight.Bold}
@@ -59,7 +67,6 @@ export default function UnauthorizedPage() {
           w="full"
           maxW={{ base: "100%", md: "450px" }}
           border="none"
-          bg={{ base: "transparent", md: "rgba(255,255,255,0.75)" }}
           backdropFilter={{ base: "none", md: "blur(14px)" }}
           css={{
             WebkitBackdropFilter: { base: "none", md: "blur(14px)" },
@@ -122,6 +129,7 @@ export default function UnauthorizedPage() {
           </Card.Body>
         </Card.Root>
       </Center>
+      <FloatSwitchColorMode />
     </>
   );
 }

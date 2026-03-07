@@ -145,7 +145,7 @@ export const PricingSection = () => {
                 colorType={plan.popular ? "primary" : "neutral"}
                 onClick={() => {}}
               >
-                <BaseText color={plan.popular ? "inherit" : "black"}>
+                <BaseText color={plan.popular ? "inherit" : "none"}>
                   {plan.cta}
                 </BaseText>
               </BaseButton>

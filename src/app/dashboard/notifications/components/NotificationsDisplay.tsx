@@ -1,12 +1,4 @@
-import {
-  Box,
-  Flex,
-  VStack,
-  Span,
-  Text,
-  HStack,
-  ColorPalette,
-} from "@chakra-ui/react";
+import { Box, Flex, VStack, Span, Text, HStack } from "@chakra-ui/react";
 import {
   BaseIcon,
   Icons,
@@ -17,7 +9,7 @@ import { Tag } from "_components/ui/tag";
 import { NotificationsModule } from "_store/state-management";
 import { Colors, hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
-import { MODELS, ENUM } from "_types/*";
+import { MODELS } from "_types/*";
 import { useRouter } from "next/navigation";
 import { formatCreatedAt } from "rise-core-frontend";
 import { DASHBOARD_ROUTES } from "../../routes";
@@ -28,11 +20,13 @@ export const NotificationsDisplay = ({
   index = 0,
   isLoading = false,
   refetchNotificationList,
+  isLast = false,
 }: {
   request: MODELS.INotificationListResponse;
   index?: number;
   isLoading?: boolean;
   refetchNotificationList?: () => void;
+  isLast?: boolean;
 }) => {
   const router = useRouter();
   const config = notificationUIConfig[request?.type];
@@ -60,9 +54,11 @@ export const NotificationsDisplay = ({
       width={"full"}
       border={"1px solid"}
       p={4}
-      rounded={"lg"}
-      borderColor={request.isRead ? "gray.200" : `${config?.color}.400`}
-      bg={request.isRead ? "gray.50" : `${config?.color}.50`}
+      borderRadius={
+        index === 0 ? "12px 12px 0 0" : isLast ? "0 0 12px 12px" : "0"
+      }
+      borderColor={request.isRead ? "inherit" : `${config?.color}.400`}
+      bg={request.isRead ? "inherit" : `${config?.color}.50`}
       transition="all 0.2s ease"
       _hover={{ transform: "translateY(-2px)", shadow: "md" }}
     >

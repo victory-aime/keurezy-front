@@ -14,11 +14,17 @@ import { hexToRGB } from "_theme/colors";
 import { VariablesColors } from "_theme/variables";
 import { FOOTER_ROUTES } from "../layout/routes";
 import { useIsActive } from "_hooks/useActive";
+import { useColorMode } from "_components/ui/color-mode";
 
 export const Footer = () => {
+  const { colorMode } = useColorMode();
   const { isActiveLink } = useIsActive();
   return (
-    <Box bgColor={hexToRGB("overlay", 0.9)} color={"bg.muted"} py={10}>
+    <Box
+      bgColor={hexToRGB("overlay", 0.9)}
+      color={colorMode === "light" ? "bg.muted" : "inherit"}
+      py={10}
+    >
       <Container mx={"auto"} px={{ sm: 6, lg: 8 }} py={2}>
         <SimpleGrid columns={{ base: 1, md: 4 }} gap={6} mx={"auto"}>
           <Stack spaceY={1}>
@@ -83,10 +89,10 @@ export const Footer = () => {
           alignItems={"center"}
           width={"full"}
         >
-          <BaseText mt={2} opacity={0.4}>
+          <BaseText mt={2}>
             © {new Date().getUTCFullYear()} MyIMMO. Tous droits réservés.
           </BaseText>
-          <Flex gap={3} opacity={0.4}>
+          <Flex gap={3}>
             <BaseText
               _hover={{ color: VariablesColors.primary, cursor: "pointer" }}
             >

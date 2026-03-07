@@ -4,7 +4,7 @@ import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import { Container } from "./container/Container";
 import { useAuthContext } from "_context/auth-context";
 import { Sidebar } from "./sidebar/Sidebar";
-import { FooterV2 } from "./footer/FooterV2";
+import { Footer } from "./footer/Footer";
 import { SidebarInset } from "./sidebar/components/SidebarInset";
 import { Header } from "./header/Header";
 import { InitializeApp } from "_context/provider/initialize-app";
@@ -139,7 +139,7 @@ export const Layout: FunctionComponent<{
           data={{ session }}
         />
         <Container sidebarToggle={isSidebarOpen}>{children}</Container>
-        <FooterV2 />
+        <Footer />
       </SidebarInset>
     </InitializeApp>
   );
