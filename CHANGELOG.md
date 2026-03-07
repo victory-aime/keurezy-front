@@ -1,3 +1,14 @@
+# [1.3.0](https://github.com/victory-aime/my-immo-front/compare/v1.2.0...v1.3.0) (2026-03-07)
+
+
+### Features
+
+* **chat:** chat services and pages ([9a439a5](https://github.com/victory-aime/my-immo-front/commit/9a439a56f2186f9597e74c2cb29a24a6082caed9))
+* **guided-tour:** guided-tour ([98df6da](https://github.com/victory-aime/my-immo-front/commit/98df6daa33dddbab970cf5ae44ee7f2697f71d85))
+* **notifications:** notifications ([398e500](https://github.com/victory-aime/my-immo-front/commit/398e5002b4c05c9414ba9e56d60b618a706e937e))
+* **onboarding flow:** onboarding immo owner ([558c039](https://github.com/victory-aime/my-immo-front/commit/558c0394b7bb525943e5e010f5f07065b4eba1b7))
+* **tenants pages:** tenants ([cb4eb94](https://github.com/victory-aime/my-immo-front/commit/cb4eb94d96c931e82336757b9083af5ea7a2cb2c))
+
 # [1.2.0](https://github.com/victory-aime/my-immo-front/compare/v1.1.0...v1.2.0) (2026-02-26)
 
 ### Bug Fixes
