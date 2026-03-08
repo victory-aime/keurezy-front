@@ -45,12 +45,12 @@ export const RequestList = () => {
   return (
     <BaseTabs
       title="Demandes"
-      variant={"enclosed"}
       description="Listes des demandes de contact reçues"
       withActionButtons
       actionsButtonProps={{
         withGradient: false,
         validateTitle: "Marque tout comme lues",
+        isEmailVerified: user?.emailVerified,
         validatePermission: unreadRequests.length > 0,
         icon: <Icons.DoubleCheck />,
         onClick: async () => {

@@ -153,7 +153,6 @@ export const RentalList = () => {
     <BaseContainer
       title={"Candidatures"}
       border={"none"}
-      p={0}
       loader={rentalLoad}
       description={"Gérez les demandes de location sur vos biens"}
       withActionButtons

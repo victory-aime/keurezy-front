@@ -9,18 +9,16 @@ import { TokenExpired } from "./TokenExpired";
 import { TokenInvalid } from "./TokenInvalid";
 import { UnknownError } from "./UnknownError";
 import { CiMail } from "react-icons/ci";
-import { APP_ROUTES } from "_config/routes";
 import { Center } from "@chakra-ui/react";
 
-export const EmailVerified = () => {
-  const searchParams = useSearchParams();
+export const EmailVerified = ({ params }: { params: string }) => {
   const router = useRouter();
   const [openSuccess, setOpenSuccess] = useState(false);
 
   const [state, setState] = useState<VerificationState>("loading");
 
   useEffect(() => {
-    const mapped = resolveState(searchParams);
+    const mapped = resolveState(params);
     setState(mapped);
 
     // if (mapped === "success") {
@@ -29,7 +27,7 @@ export const EmailVerified = () => {
     //     router.replace(APP_ROUTES.REDIRECT);
     //   }, 3000);
     // }
-  }, [searchParams, router]);
+  }, [params, router]);
 
   return (
     <main>

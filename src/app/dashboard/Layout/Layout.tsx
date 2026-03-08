@@ -18,17 +18,19 @@ import { DASHBOARD_ROUTES } from "../routes";
 import { BaseToast, ToastStatus } from "_components/custom";
 import { resolveState } from "../../auth/resolve-state";
 import { useSearchParams } from "next/navigation";
+import { EmailVerifiedSuccessBanner } from "./email-banner/EmailVerifiedSuccessBanner";
 
 export const Layout: FunctionComponent<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()?.get("error");
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { session, user, isLoading, refetchSession } = useAuthContext();
   const [showTour, setShowTour] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const prevVerified = useRef<boolean | undefined>(user?.emailVerified);
+  const [showVerifiedBanner, setShowVerifiedBanner] = useState(false);
 
   const resendEmailLink = async () => {
     if (!user?.email) return;
@@ -72,23 +74,24 @@ export const Layout: FunctionComponent<{
   }, [isMobile]);
 
   useEffect(() => {
-    const mapped = resolveState(searchParams);
-    const alreadyShown = sessionStorage.getItem(
-      StorageKey.DASHBOARD_OWNER_EMAIL_VERIFIED,
-    );
+    if (user?.id) return;
+    const storageKey = `${StorageKey.DASHBOARD_OWNER_EMAIL_VERIFIED}_${user?.id?.slice(0.8)}`;
+
+    const mapped = resolveState(searchParams!);
+    const alreadyShown = localStorage.getItem(storageKey);
 
     /**
      * SUCCESS
      * emailVerified vient de passer de false -> true
      */
-    if (!prevVerified.current && user?.emailVerified && !alreadyShown) {
-      BaseToast({
-        title: "Email vérifié",
-        description:
-          "Votre adresse email a été confirmée. Toutes les fonctionnalités sont maintenant disponibles.",
-      });
+    if (
+      prevVerified.current === false &&
+      user?.emailVerified === true &&
+      !alreadyShown
+    ) {
+      setShowVerifiedBanner(true);
+      localStorage.setItem(storageKey, "true");
       refetchSession?.();
-      sessionStorage.setItem(StorageKey.DASHBOARD_OWNER_EMAIL_VERIFIED, "true");
     }
 
     /**
@@ -113,6 +116,16 @@ export const Layout: FunctionComponent<{
     prevVerified.current = user?.emailVerified;
   }, [user?.emailVerified, searchParams]);
 
+  useEffect(() => {
+    if (!showVerifiedBanner) return;
+
+    const timer = setTimeout(() => {
+      setShowVerifiedBanner(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [showVerifiedBanner]);
+
   return (
     <InitializeApp isLoading={isLoading}>
       {showTour && (
@@ -133,6 +146,8 @@ export const Layout: FunctionComponent<{
             isLoading={isResending}
           />
         )}
+        {showVerifiedBanner && <EmailVerifiedSuccessBanner />}
+
         <Header
           sideToggled={isSidebarOpen}
           onShowSidebar={() => setSidebarOpen(!isSidebarOpen)}

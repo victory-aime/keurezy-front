@@ -25,6 +25,7 @@ export const FormContainer = ({
     <Box
       width="full"
       maxW={{ base: "2xl", sm: "4xl" }}
+      p={{ base: 3, sm: 4 }}
       mx={"auto"}
       spaceY={"6"}
     >

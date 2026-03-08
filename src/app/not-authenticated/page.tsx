@@ -20,6 +20,7 @@ import { useAuthContext } from "_context/auth-context";
 import { Avatar } from "_components/ui/avatar";
 import { UserRole } from "../../types/enum";
 import { useColorMode } from "_components/ui/color-mode";
+import { hexToRGB } from "_theme/colors";
 
 export default function UnauthorizedPage() {
   const { colorMode } = useColorMode();
@@ -28,8 +29,8 @@ export default function UnauthorizedPage() {
   const { user } = useAuthContext();
 
   return (
-    <>
-      <Flex p={4} justifyContent={"space-between"}>
+    <Flex direction="column" minH="100vh">
+      <Flex width={"full"} p={4} justifyContent={"space-between"}>
         <HStack>
           <Image
             src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
@@ -61,7 +62,7 @@ export default function UnauthorizedPage() {
           </BaseButton>
         )}
       </Flex>
-      <Center w="full" px={4} py={{ base: 4, md: 16 }}>
+      <Center w="full" flex={1} px={4} py={{ base: 4, md: 16 }}>
         <Card.Root
           size="md"
           w="full"
@@ -77,8 +78,8 @@ export default function UnauthorizedPage() {
           <Card.Header alignItems="center" gap={3}>
             <BaseIcon
               borderRadius={"12px"}
-              color={"lighter.500"}
-              borderColor={"bg.muted"}
+              color={hexToRGB("red", 0.1)}
+              borderColor={hexToRGB("red", 0.5)}
               borderWidth={2}
               boxSize={"50px"}
             >
@@ -130,6 +131,6 @@ export default function UnauthorizedPage() {
         </Card.Root>
       </Center>
       <FloatSwitchColorMode />
-    </>
+    </Flex>
   );
 }

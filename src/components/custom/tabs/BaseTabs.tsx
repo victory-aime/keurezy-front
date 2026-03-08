@@ -1,11 +1,11 @@
 "use client";
-import { Box, Flex, Tabs, VStack } from "@chakra-ui/react";
+import { Tabs } from "@chakra-ui/react";
 import { TabsProps } from "./interface/tabs";
 import { useState } from "react";
 import { hexToRGB } from "_theme/colors";
 import { BaseContainer } from "../container";
-import { Icons } from "../icons";
 import { NoDataAnimation } from "../data-table/NoDataAnimation";
+import { useColorMode } from "_components/ui/color-mode";
 
 export const BaseTabs = ({
   items,
@@ -17,6 +17,7 @@ export const BaseTabs = ({
   actionsButtonProps,
   ...rest
 }: TabsProps) => {
+  const { colorMode } = useColorMode();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   return (
@@ -30,7 +31,7 @@ export const BaseTabs = ({
     >
       <Tabs.Root
         defaultValue={items[currentIndex]?.label}
-        variant={"plain"}
+        variant={"enclosed"}
         value={items[currentIndex]?.label}
         onValueChange={({ value }: { value: string }) => {
           const index = items?.findIndex(
@@ -40,11 +41,17 @@ export const BaseTabs = ({
         }}
         {...rest}
       >
-        <Tabs.List mt={5}>
+        <Tabs.List mt={{ base: 0, sm: 5 }}>
           {items.map((item, index) => (
             <Tabs.Trigger
               color={currentIndex === index ? "primary.500" : "gray.400"}
-              bgColor={currentIndex === index ? "white" : "none"}
+              bgColor={
+                currentIndex === index
+                  ? colorMode === "light"
+                    ? "white"
+                    : hexToRGB("primary", 0.1)
+                  : "none"
+              }
               key={index}
               value={item.label}
               p={5}
@@ -60,7 +67,7 @@ export const BaseTabs = ({
           <Tabs.Content
             key={index}
             value={item.label}
-            mt={rest.mt ?? 5}
+            mt={{ base: rest.mt ?? 2, sm: rest.mt ?? 4 }}
             _open={{
               animationName: "fade-in, scale-in",
               animationDuration: "300ms",

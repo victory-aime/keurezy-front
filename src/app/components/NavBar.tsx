@@ -264,6 +264,14 @@ export const Navbar = () => {
                             {user?.name}
                           </BaseText>
                         </Flex>
+                        <BaseButton
+                          onClick={() => logout()}
+                          colorType={"danger"}
+                          width={"full"}
+                          leftIcon={<Icons.Logout />}
+                        >
+                          Deconnexion
+                        </BaseButton>
 
                         {user?.role === UserRole.IMMO_OWNER && (
                           <BaseButton

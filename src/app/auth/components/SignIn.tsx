@@ -10,7 +10,6 @@ import { Formik, FormikValues } from "formik";
 import { VALIDATION } from "_types/index";
 import { useState } from "react";
 import { AuthBoxContainer } from "./AuthBoxContainer";
-import { VariablesColors } from "_theme/variables";
 import { Navbar } from "_component/NavBar";
 
 export const SignIn = ({
@@ -77,12 +76,12 @@ export const SignIn = ({
                 width={"full"}
                 colorType={"neutral"}
                 isLoading={isGoogleLoading}
-                leftIcon={<Icons.Google color={VariablesColors.black} />}
+                leftIcon={<Icons.Google />}
                 onClick={async () => {
                   await handleGoogleLogin().then(() => setIsLoading(false));
                 }}
               >
-                <BaseText>Continuer avec Google</BaseText>
+                Continuer avec Google
               </BaseButton>
               <HStack
                 gap={"4"}

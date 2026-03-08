@@ -87,6 +87,7 @@ export const RequestDisplay = ({
           alignItems={"flex-start"}
           cursor={"pointer"}
           onClick={() => setReadInfo(true)}
+          flexDir={{ base: "column", sm: "row" }}
         >
           <BaseIcon
             color={hexToRGB(
@@ -111,7 +112,7 @@ export const RequestDisplay = ({
               </Tag>
             </HStack>
 
-            <Text color={"gray.400"}>
+            <Text fontSize={{ base: "sm", sm: "md" }} color={"gray.400"}>
               {request?.fullName} veux avoir plus d'nformations sur le logement{" "}
               {request?.property?.title}
             </Text>
@@ -155,14 +156,8 @@ export const RequestDisplay = ({
               {formatCreatedAt(request.createdAt!)}
             </Text>
           </VStack>
-          <Box
-            bg="gray.50"
-            p={4}
-            rounded="md"
-            border="1px solid"
-            borderColor="gray.100"
-          >
-            <Text fontSize="sm" whiteSpace="pre-wrap" color="gray.700">
+          <Box p={4} rounded="md" border="1px solid" borderColor="inherit">
+            <Text fontSize="sm" whiteSpace="pre-wrap">
               {request.message}
             </Text>
           </Box>

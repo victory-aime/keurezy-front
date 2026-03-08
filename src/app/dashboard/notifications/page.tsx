@@ -1,5 +1,5 @@
 import { NotificationsList } from "./components/NotificationsList";
 
-export default function NotificationPafe() {
+export default function NotificationPage() {
   return <NotificationsList />;
 }

@@ -7,7 +7,7 @@ import {
   Separator,
   VStack,
 } from "@chakra-ui/react";
-import { BaseText, TextVariant, Icons } from "_components/custom";
+import { BaseText, Icons } from "_components/custom";
 import { VariablesColors } from "_theme/variables";
 import { MODELS } from "_types/*";
 import { NotificationsDisplay } from "./NotificationsDisplay";
@@ -28,8 +28,8 @@ export const NotificationHeaderMenu = ({
   return (
     <Menu.Root
       positioning={{ strategy: "fixed", hideWhenDetached: true }}
-      size={"md"}
       variant={"subtle"}
+      closeOnSelect
     >
       <Menu.Trigger asChild cursor={"pointer"}>
         <Flex
@@ -47,7 +47,7 @@ export const NotificationHeaderMenu = ({
       </Menu.Trigger>
       <Portal>
         <Menu.Positioner>
-          <Menu.Content p={3} minWidth="500px">
+          <Menu.Content p={3} minWidth={{ base: "xs", sm: "lg" }} h={"200px"}>
             <Flex
               justifyContent={"flex-end"}
               mb={2}
@@ -59,9 +59,10 @@ export const NotificationHeaderMenu = ({
               </BaseText>
             </Flex>
             <Separator mb={4} />
+
             {notifications.map((data, index) => {
               return (
-                <Menu.Item key={index} p={0} value={data?.id}>
+                <Menu.Item key={index} value={data?.id}>
                   <NotificationsDisplay
                     request={data}
                     index={index}

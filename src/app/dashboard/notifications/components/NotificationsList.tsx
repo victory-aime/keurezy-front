@@ -43,12 +43,12 @@ export const NotificationsList = () => {
   return (
     <BaseTabs
       title="Notifications"
-      variant={"enclosed"}
       description="Listes des notifications reçues"
       withActionButtons
       actionsButtonProps={{
         withGradient: false,
         validateTitle: "Marque tout comme lues",
+        isEmailVerified: user?.emailVerified,
         validatePermission: unreadRequests.length > 0,
         icon: <Icons.DoubleCheck />,
         onClick: async () => {

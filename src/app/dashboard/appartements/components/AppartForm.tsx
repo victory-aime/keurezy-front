@@ -172,7 +172,11 @@ export const AppartForm = ({ appartId }: { appartId: string }) => {
                 isLoading={fetchLoading}
               />
 
-              <HStack width="full" gap={4}>
+              <HStack
+                width="full"
+                flexDir={{ base: "column", sm: "row" }}
+                gap={4}
+              >
                 <FormSelect
                   name="type"
                   label="Type de propriété"
@@ -206,7 +210,11 @@ export const AppartForm = ({ appartId }: { appartId: string }) => {
                 name="address"
               />
 
-              <HStack width="full" gap={4}>
+              <HStack
+                width="full"
+                flexDir={{ base: "column", sm: "row" }}
+                gap={4}
+              >
                 <FormSelect
                   name="country"
                   label="Pays"
@@ -237,7 +245,11 @@ export const AppartForm = ({ appartId }: { appartId: string }) => {
 
             {/* ==================== CARACTÉRISTIQUES ==================== */}
             <FormCard title="Caractéristiques">
-              <HStack width="full" gap={4}>
+              <HStack
+                width="full"
+                flexDir={{ base: "column", sm: "row" }}
+                gap={4}
+              >
                 <FormTextInput
                   label="Surface (m²)"
                   placeholder="Ex: 120"
@@ -263,7 +275,11 @@ export const AppartForm = ({ appartId }: { appartId: string }) => {
 
             {/* ==================== TARIFICATION ==================== */}
             <FormCard title="Tarification">
-              <HStack width="full" gap={4}>
+              <HStack
+                width="full"
+                flexDir={{ base: "column", sm: "row" }}
+                gap={4}
+              >
                 <FormTextInput
                   label="Loyer mensuel"
                   placeholder="Ex: 1500"

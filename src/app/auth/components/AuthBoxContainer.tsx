@@ -1,12 +1,12 @@
 "use client";
 
-import { Card, Center, VStack } from "@chakra-ui/react";
+import { Center, Text, VStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { ReactNode } from "react";
 import Image from "next/image";
 import { ASSETS } from "_assets/images";
 import { motion } from "framer-motion";
-import { MotionCard, MotionHeader, MotionBody } from "_constants/motion";
+import { MotionBox, MotionVStack } from "_constants/motion";
 import { useColorMode } from "_components/ui/color-mode";
 import { FloatSwitchColorMode } from "_components/custom";
 
@@ -31,18 +31,16 @@ export const AuthBoxContainer = ({
       position="relative"
       overflow="hidden"
     >
-      <MotionCard
-        size="md"
+      <MotionBox
         w="full"
         mt="5"
         p={{ base: "4" }}
         maxW={{ base: "100%", sm: "700px" }}
-        border="none"
         initial={{ opacity: 0, y: 40, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <MotionHeader
+        <MotionVStack
           alignItems="center"
           gap={3}
           initial={{ opacity: 0, y: -20 }}
@@ -62,24 +60,25 @@ export const AuthBoxContainer = ({
             />
           </motion.div>
 
-          <Card.Title fontSize="xl" textAlign="center">
+          <Text fontSize="xl" textAlign="center">
             {t(title)}
-          </Card.Title>
+          </Text>
 
           <VStack fontSize="sm" color="gray.500" textAlign="center">
             {description}
           </VStack>
-        </MotionHeader>
+        </MotionVStack>
 
-        <MotionBody
+        <MotionBox
+          mt={4}
           px={{ base: 0, md: 6 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
           {children}
-        </MotionBody>
-      </MotionCard>
+        </MotionBox>
+      </MotionBox>
       <FloatSwitchColorMode />
     </Center>
   );

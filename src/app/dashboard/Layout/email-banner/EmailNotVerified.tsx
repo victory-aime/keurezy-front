@@ -2,7 +2,8 @@
 
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { BaseButton } from "_components/custom";
-import { MotionBox } from "_constants/motion";
+import { useColorMode } from "_components/ui/color-mode";
+import { EmailContainer } from "./email-container";
 
 export const EmailNotVerifiedBanner = ({
   onResend,
@@ -11,23 +12,13 @@ export const EmailNotVerifiedBanner = ({
   onResend?: () => void;
   isLoading: boolean;
 }) => {
+  const { colorMode } = useColorMode();
   return (
-    <MotionBox
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: -20, opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      position="absolute"
-      top="64px"
-      left="0"
-      right="0"
-      zIndex="50"
-      px={8}
-    >
+    <EmailContainer>
       <Box
-        bg="red.50"
+        bg={colorMode === "light" ? "red.50" : "red.900"}
         border="1px solid"
-        borderColor="red.200"
+        borderColor={colorMode === "light" ? "red.200" : "red.400"}
         rounded="xl"
         shadow="sm"
         px={5}
@@ -39,7 +30,10 @@ export const EmailNotVerifiedBanner = ({
           gap={4}
           flexDir={{ base: "column", sm: "row" }}
         >
-          <Text fontSize={{ base: "md", sm: "lg" }} color="red.700">
+          <Text
+            fontSize={{ base: "sm", sm: "md" }}
+            color={colorMode === "light" ? "red.700" : "white"}
+          >
             Votre email n'est pas encore vérifié. Vérifiez votre boîte mail pour
             activer votre compte.
           </Text>
@@ -57,6 +51,6 @@ export const EmailNotVerifiedBanner = ({
           )}
         </Flex>
       </Box>
-    </MotionBox>
+    </EmailContainer>
   );
 };

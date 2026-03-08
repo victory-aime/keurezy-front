@@ -1,8 +1,6 @@
 import { VerificationState } from "./auth.types";
 
-export function resolveState(params: URLSearchParams): VerificationState {
-  const error = params.get("error");
-
+export function resolveState(error: string): VerificationState {
   if (!error) return "success";
 
   switch (error) {

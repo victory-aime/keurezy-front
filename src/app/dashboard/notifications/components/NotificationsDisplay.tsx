@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { formatCreatedAt } from "rise-core-frontend";
 import { DASHBOARD_ROUTES } from "../../routes";
 import { notificationUIConfig } from "../constant/notification-config";
+import { useColorMode } from "_components/ui/color-mode";
 
 export const NotificationsDisplay = ({
   request,
@@ -28,6 +29,7 @@ export const NotificationsDisplay = ({
   refetchNotificationList?: () => void;
   isLast?: boolean;
 }) => {
+  const { colorMode } = useColorMode();
   const router = useRouter();
   const config = notificationUIConfig[request?.type];
   const IconComponent = Icons[config?.icon];
@@ -58,7 +60,13 @@ export const NotificationsDisplay = ({
         index === 0 ? "12px 12px 0 0" : isLast ? "0 0 12px 12px" : "0"
       }
       borderColor={request.isRead ? "inherit" : `${config?.color}.400`}
-      bg={request.isRead ? "inherit" : `${config?.color}.50`}
+      bg={
+        request.isRead
+          ? "inherit"
+          : colorMode === "light"
+            ? `${config?.color}.50`
+            : `${config?.color}.800`
+      }
       transition="all 0.2s ease"
       _hover={{ transform: "translateY(-2px)", shadow: "md" }}
     >
@@ -104,7 +112,7 @@ export const NotificationsDisplay = ({
               )}
             </HStack>
 
-            <Text color={"gray.600"} fontSize="sm">
+            <Text color={"gray.400"} fontSize="sm">
               {request?.content}
             </Text>
 
