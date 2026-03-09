@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
+//import withSerwistInit from "@serwist/next";
+import { withSerwist } from "@serwist/turbopack";
+//import path from "path";
+
+// const withSerwist1 = withSerwistInit({
+//   swSrc: path.join(process.cwd(), "app/sw.ts"),
+//   swDest: path.join(process.cwd(), "public/sw.js"),
+//   cacheOnNavigation: true,
+// });
 
 const nextConfig: NextConfig = {
+  turbopack: {},
   /* use redirect proxy for api calls
    * every request to /api/* will be redirected to the backend server
    * */
@@ -35,9 +45,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: true,
   },
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);

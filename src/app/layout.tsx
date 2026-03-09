@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Lato } from "next/font/google";
 import React from "react";
 import "react-day-picker/dist/style.css";
 import "react-international-phone/style.css";
@@ -11,26 +11,28 @@ import { Toaster } from "_components/ui/toaster";
 import { I18nProvider } from "_context/provider/i18n-provider";
 import { AuthContextProvider } from "_context/auth-context";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const lato = Lato({
+  variable: "--font-lato",
+  weight: ["100", "300", "400", "700", "900"],
+  subsets: ["latin-ext"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://app.myimmo-platform.com"),
-
   title: {
     default: "MyIMMO Platform",
     template: "%s | MyIMMO Platform",
   },
-
   description:
     "Plateforme moderne de gestion immobilière. Gérez vos biens, locataires et demandes de location facilement depuis un tableau de bord centralisé.",
+  icons: {
+    icon: [{ url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png" }],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+  },
 
   keywords: [
     "gestion immobilière",
@@ -39,9 +41,7 @@ export const metadata: Metadata = {
     "immobilier SaaS",
     "MyIMMO management",
   ],
-
   authors: [{ name: "MyIMMO Platform Team" }],
-
   openGraph: {
     title: "MyIMMO Platform",
     description:
@@ -51,18 +51,21 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     type: "website",
   },
-
   twitter: {
     card: "summary_large_image",
     title: "MyIMMO Platform",
     description:
       "Plateforme moderne pour gérer vos biens immobiliers et vos locataires.",
   },
-
   robots: {
     index: true,
     follow: true,
   },
+};
+
+export const viewport: Viewport = {
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -72,7 +75,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning suppressContentEditableWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${lato.variable}`}>
         <GlobalApplicationProvider>
           <ThemeProvider>
             <LoaderProvider>
