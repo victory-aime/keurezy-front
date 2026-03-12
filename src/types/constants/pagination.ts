@@ -1,0 +1,6 @@
+export const PAGINATION = {
+  INIT: 1,
+  FIVE_ITEMS_PER_PAGE: 5,
+  TEN_ITEMS_PER_PAGE: 10,
+  FULL_PAGE_SIZE: 10000,
+};

@@ -12,11 +12,11 @@ export class RentalService extends BaseApi {
       data,
     );
   }
-  agencyRentalRequestList(agencyId: string) {
+  agencyRentalRequestList(params: MODELS.IAgencyFilters) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().RENTAL.RENTAL_AGENCY_REQUEST_LIST,
       {},
-      { params: { agencyId } },
+      { params },
     );
   }
 

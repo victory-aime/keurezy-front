@@ -22,6 +22,7 @@ import { useSessionRefreshContext } from "_context/SessionRefresh-context";
 import { useMemo } from "react";
 import { DASHBOARD_ROUTES } from "../../routes";
 import { useColorMode } from "_components/ui/color-mode";
+import { CONSTANTS } from "_types/*";
 
 export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -39,13 +40,16 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
   });
 
   const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
-    params: { agencyId: agencyId },
+    params: { agencyId: agencyId, initialPage: CONSTANTS.PAGINATION.INIT },
     queryOptions: { enabled: !!agencyId },
   });
 
   const { data: rentalRequestList } =
     RentalModule.rentalAgencyRequestListQueries({
-      params: { agencyId: agencyId },
+      params: {
+        agencyId: agencyId,
+        initialPage: CONSTANTS.PAGINATION.INIT,
+      },
       queryOptions: { enabled: !!agencyId },
     });
 
@@ -53,6 +57,7 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
     RentalAgreementModule.getRentalAgreementListByAgencyQueries({
       params: {
         agencyId: agencyId,
+        initialPage: CONSTANTS.PAGINATION.INIT,
       },
       queryOptions: {
         enabled: !!agencyId,
@@ -68,16 +73,16 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
   const badgesByPath = useMemo(() => {
     return {
       [DASHBOARD_ROUTES.REQUEST]: requestList?.length,
-      [DASHBOARD_ROUTES.APPART.LIST]: propertyList?.length,
-      [DASHBOARD_ROUTES.RENTAL_REQUEST]: rentalRequestList?.length,
-      [DASHBOARD_ROUTES.TENANTS.LIST]: rentalAgreementList?.length,
+      [DASHBOARD_ROUTES.APPART.LIST]: propertyList?.totalItems,
+      [DASHBOARD_ROUTES.RENTAL_REQUEST]: rentalRequestList?.totalItems,
+      [DASHBOARD_ROUTES.TENANTS.LIST]: rentalAgreementList?.totalItems,
       [DASHBOARD_ROUTES.NOTIFICATION]: notificationsList?.length,
     };
   }, [
     requestList?.length,
-    propertyList?.length,
-    rentalRequestList?.length,
-    rentalAgreementList?.length,
+    propertyList?.totalItems,
+    rentalRequestList?.totalItems,
+    rentalAgreementList?.totalItems,
     notificationsList?.length,
   ]);
 

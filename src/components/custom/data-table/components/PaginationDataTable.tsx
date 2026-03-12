@@ -1,28 +1,39 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
 import { PaginationProps } from "../interface/data-types";
-import { Flex, Input, useBreakpointValue } from "@chakra-ui/react";
 import {
-  PaginationNextTrigger,
-  PaginationPrevTrigger,
-  PaginationRoot,
-} from "_components/ui/pagination";
-import { Button } from "_components/ui/button";
-import { BaseText, TextVariant } from "_components/custom";
+  ButtonGroup,
+  Flex,
+  IconButton,
+  Input,
+  useBreakpointValue,
+  Pagination,
+} from "@chakra-ui/react";
+import { BaseText, Icons, TextVariant } from "_components/custom";
 import { useTranslation } from "react-i18next";
 
 export const PaginationDataTable: FC<PaginationProps> = ({
   totalPages,
   totalDataPerPage,
   currentPage = 1,
+  totalItems,
   lazy,
   onLazyLoad,
 }) => {
-  if (lazy && (totalPages === undefined || currentPage === undefined)) {
-    throw new Error(
-      "With lazy loading, totalPages and current Page are required",
-    );
-  }
+  console.log(
+    "data",
+    totalPages,
+    totalDataPerPage,
+    currentPage,
+    totalItems,
+    lazy,
+  );
+
+  // if (lazy && (totalPages === undefined || currentPage === undefined)) {
+  //   throw new Error(
+  //     "With lazy loading, totalPages and current Page are required",
+  //   );
+  // }
 
   const responsiveMode = useBreakpointValue({ base: false, lg: true });
   const { t } = useTranslation();
@@ -45,18 +56,18 @@ export const PaginationDataTable: FC<PaginationProps> = ({
   const handleGoToPage = () => {
     const page = Number(inputPageValue);
     if (!isNaN(page) && page > 0 && page <= totalPages!) {
-      onLazyLoad?.(page);
+      handleClick(page);
     } else {
       setInputPageValue(currentPage.toString());
     }
   };
 
   const getPreviousPage = () => {
-    if (currentPage > 1) onLazyLoad?.(currentPage - 1);
+    if (currentPage > 1) handleClick(currentPage - 1);
   };
 
   const getNextPage = () => {
-    if (currentPage < totalPages!) onLazyLoad?.(currentPage + 1);
+    if (currentPage < totalPages!) handleClick(currentPage + 1);
   };
 
   return (
@@ -68,21 +79,41 @@ export const PaginationDataTable: FC<PaginationProps> = ({
       mb={8}
     >
       <Flex width={"full"}>
-        <PaginationRoot count={totalPages ?? 0} pageSize={totalDataPerPage}>
-          <PaginationPrevTrigger onClick={getPreviousPage} />
-          {Array.from({ length: totalPages! }).map((_, i) => (
-            <Button
-              key={i}
-              size="sm"
-              bg={currentPage === i + 1 ? "secondary.500" : "none"}
-              color={currentPage === i + 1 ? "white" : "gray.700"}
-              onClick={() => handleClick(i + 1)}
-            >
-              {i + 1}
-            </Button>
-          ))}
-          <PaginationNextTrigger onClick={getNextPage} />
-        </PaginationRoot>
+        <Pagination.Root
+          count={totalItems}
+          pageSize={totalDataPerPage}
+          page={currentPage}
+          onPageChange={(details) => handleClick(details.page)}
+          // boundaryCount={0}
+          // siblingCount={0}
+        >
+          <ButtonGroup variant="ghost" size="sm">
+            <Pagination.PrevTrigger asChild onClick={getPreviousPage}>
+              <IconButton>
+                <Icons.IoIosArrowRoundBack />
+              </IconButton>
+            </Pagination.PrevTrigger>
+
+            <Pagination.Items
+              render={(page) => (
+                <IconButton
+                  key={page.value}
+                  variant={{ base: "ghost", _selected: "solid" }}
+                  colorPalette={{ _selected: "purple" }}
+                  onClick={() => handleClick(page?.value)}
+                >
+                  {page?.value}
+                </IconButton>
+              )}
+            />
+
+            <Pagination.NextTrigger asChild onClick={getNextPage}>
+              <IconButton>
+                <Icons.ArrowRight />
+              </IconButton>
+            </Pagination.NextTrigger>
+          </ButtonGroup>
+        </Pagination.Root>
       </Flex>
       {responsiveMode && (
         <Flex
@@ -112,3 +143,14 @@ export const PaginationDataTable: FC<PaginationProps> = ({
     </Flex>
   );
 };
+//  {Array.from({ length: totalPages! }).map((_, i) => (
+//             <Button
+//               key={i}
+//               size={"xs"}
+//               bg={currentPage === i + 1 ? "primary.500" : "none"}
+//               color={currentPage === i + 1 ? "white" : "gray.700"}
+//               onClick={() => handleClick(i + 1)}
+//             >
+//               {i + 1}
+//             </Button>
+//           ))}

@@ -35,6 +35,7 @@ import { PropertiesContainer } from "./PropertiesContainer";
 import { PropertyNotFound } from "./PropertyNotFound";
 import { FormDatePicker } from "_components/custom/form/FormDatePicker";
 import { useColorMode } from "_components/ui/color-mode";
+import { UserRole } from "../../../types/enum";
 
 export const PropertyApply = ({ id }: { id: string }) => {
   const { user } = useAuthContext();
@@ -177,6 +178,7 @@ export const PropertyApply = ({ id }: { id: string }) => {
                 name="startDate"
                 label="Date d'emménagement souhaitée"
                 placeholder="Date d'emménagement souhaitée"
+                isDisabledPassDates
               />
             </Box>
 
@@ -253,7 +255,12 @@ export const PropertyApply = ({ id }: { id: string }) => {
               onClick={() => handleSubmit()}
               isLoading={isPending}
               isEmailVerified={!!user}
-              emailVerificationMessage="Vous devriez vous connecter pour acceder a cette fonctionnalité"
+              isDisabled={user?.role === UserRole.IMMO_OWNER}
+              emailVerificationMessage={
+                user?.role === UserRole.IMMO_OWNER || !!user
+                  ? "Vous ne pouvez pas acceder a cette fonctionnalité"
+                  : "Veuillez-vous connectez pour pourvoir continuer"
+              }
               validateTitle="Envoyer ma candidature"
             />
           </Stack>

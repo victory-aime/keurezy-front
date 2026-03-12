@@ -37,6 +37,8 @@ export const AppartForm = ({ appartId }: { appartId: string }) => {
   } = PropertyModule.getAllPropertiesByAgency({
     params: {
       agencyId: user?.propertyOwner?.propertyAgency?.id,
+      initialPage: CONSTANTS.PAGINATION.INIT,
+      limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
     },
     queryOptions: {
       enabled: !!user?.propertyOwner?.propertyAgency?.id && !!appartId,
@@ -84,7 +86,7 @@ export const AppartForm = ({ appartId }: { appartId: string }) => {
     }
   };
 
-  const getProperty = findDynamicIdInList(appartId, allProperties);
+  const getProperty = findDynamicIdInList(appartId, allProperties?.content);
 
   useEffect(() => {
     if (appartId && getProperty) {

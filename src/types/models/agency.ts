@@ -29,4 +29,16 @@ interface IAgency {
   documents: string[];
 }
 
-export type { ICreateAgency, IUpdateAgency, ICloseAgency, IAgency };
+interface IAgencyFilters {
+  agencyId: string;
+  initialPage: number;
+  limitPerPage: number;
+}
+
+export type {
+  ICreateAgency,
+  IUpdateAgency,
+  ICloseAgency,
+  IAgency,
+  IAgencyFilters,
+};

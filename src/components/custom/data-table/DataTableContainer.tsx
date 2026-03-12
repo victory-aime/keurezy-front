@@ -24,14 +24,14 @@ export const DataTableContainer: FC<TableProps> = ({
   handleRowSelection,
   onOpenSelectRow,
   handleDeleteActionBar,
-  onLazyLoad,
   hidePagination = false,
   isOpenSelect = false,
   isLoading,
-  totalPages,
   initialPage = 1,
-  totalDataPerPage = 5,
-  lazy = false,
+  paginationData = {
+    lazy: false,
+    totalDataPerPage: 5,
+  },
   animationType = "folder",
 }) => {
   const { t } = useTranslation();
@@ -65,11 +65,11 @@ export const DataTableContainer: FC<TableProps> = ({
         })
       : [];
 
-  const paginatedItems = lazy
+  const paginatedItems = paginationData?.lazy
     ? sortedData
     : sortedData.slice(
-        (currentPage - 1) * totalDataPerPage,
-        currentPage * totalDataPerPage,
+        (currentPage - 1) * paginationData?.totalDataPerPage,
+        currentPage * paginationData?.totalDataPerPage,
       );
 
   useEffect(() => {
@@ -251,11 +251,12 @@ export const DataTableContainer: FC<TableProps> = ({
 
       {!hidePagination && (
         <PaginationDataTable
-          totalPages={totalPages!}
-          totalDataPerPage={totalDataPerPage}
+          totalPages={paginationData?.totalPages!}
+          totalDataPerPage={paginationData?.totalDataPerPage || 0}
+          totalItems={paginationData?.totalItems || 0}
           currentPage={currentPage}
-          lazy={lazy}
-          onLazyLoad={onLazyLoad}
+          lazy={paginationData?.lazy || false}
+          onLazyLoad={paginationData?.onLazyLoad}
         />
       )}
     </Box>

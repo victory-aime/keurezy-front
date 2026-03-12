@@ -18,8 +18,10 @@ import { useRouter } from "next/navigation";
 import { DASHBOARD_ROUTES } from "../../routes";
 import { AppartGridView } from "./AppartCard";
 import { AppartStatsCard } from "./AppartStats";
+import { useState } from "react";
 
 export const AppartList = () => {
+  const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
 
   const { data: user } = UserModule.getUserInfo({
@@ -110,6 +112,10 @@ export const AppartList = () => {
     // },
   ];
 
+  const paginationAction = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <BaseContainer
       border={"none"}
@@ -129,13 +135,25 @@ export const AppartList = () => {
         },
       }}
     >
-      <AppartStatsCard properties={allProperties ?? []} isLoading={isLoading} />
+      <AppartStatsCard
+        properties={allProperties?.content ?? []}
+        isLoading={isLoading}
+      />
 
       <DataDisplayContainer
-        data={allProperties ?? []}
+        data={allProperties?.content ?? []}
         columns={appartColumns}
         isLoading={isLoading}
         renderGridItem={(item) => <AppartGridView property={item} />}
+        paginationData={{
+          lazy: true,
+          totalItems: allProperties?.totalItems,
+          totalDataPerPage: allProperties?.totalDataPerPages || 5,
+          onLazyLoad: (index) => paginationAction(index),
+          currentPage,
+          totalPages: allProperties?.totalPages,
+        }}
+        hidePagination={allProperties?.totalPages === 1}
         // actions={[
         //   {
         //     name: "view",
@@ -151,7 +169,6 @@ export const AppartList = () => {
         //     },
         //   },
         // ]}
-        hidePagination
       />
     </BaseContainer>
   );

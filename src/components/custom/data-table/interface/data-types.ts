@@ -51,11 +51,8 @@ type NoDataFoundType = "trash" | "folder";
 interface TableProps {
   data: any[];
   columns: ColumnsDataTable[];
-  totalPages?: number;
+  paginationData?: PaginationProps;
   initialPage?: number;
-  minH?: number | string;
-  page?: number;
-  totalDataPerPage?: number;
   lazy?: boolean;
   animationType?: NoDataFoundType;
   isOpenSelect?: boolean;
@@ -66,7 +63,6 @@ interface TableProps {
   enabledSort?: boolean;
   hidePagination?: boolean;
   isLoading?: boolean;
-  onLazyLoad?: (index: number) => void;
   isShow?: {
     edit?: boolean;
     delete?: boolean;

@@ -32,6 +32,9 @@ interface ICreateProperty extends IProperty {
 interface IPropertyResponse {
   content: IProperty[];
   totalDataPerPages: number;
+  currentPage: number;
+  totalItems: number;
+  totalPages: number;
 }
 
 export type { IProperty, IPropertyResponse, ICreateProperty };

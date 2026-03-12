@@ -2,7 +2,7 @@ import { VStack, Box, Flex } from "@chakra-ui/react";
 import { BaseModal, Icons, BaseText, ModalOpenProps } from "_components/custom";
 import { VariablesColors } from "_theme/variables";
 import { ENUM } from "_types/*";
-import { formatDisplayDate } from "rise-core-frontend";
+import { DAY_MONTH_YEAR_SHORT, formatDisplayDate } from "rise-core-frontend";
 import { RentalModalSection, RentalInfoItem } from "./RentalSection";
 import { useColorMode } from "_components/ui/color-mode";
 
@@ -104,7 +104,7 @@ export const RentalModal = ({
             <RentalInfoItem
               icon={<Icons.User />}
               label="Date d'emménagement"
-              value={formatDisplayDate(data?.startDate)}
+              value={formatDisplayDate(data?.startDate, DAY_MONTH_YEAR_SHORT)}
             />
             <RentalInfoItem
               icon={<Icons.User />}

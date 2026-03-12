@@ -11,16 +11,18 @@ import {
   DataTableContainer,
 } from "_components/custom";
 import { RentalAgreementModule, UserModule } from "_store/state-management";
-import { ENUM } from "_types/*";
+import { CONSTANTS, ENUM } from "_types/*";
 import { Flex, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { DASHBOARD_ROUTES } from "../../routes";
 import { TenantStatsCard } from "./TenantStatsCard";
 import { Avatar } from "_components/ui/avatar";
 import { convertDateFormat } from "rise-core-frontend";
+import { useState } from "react";
 
 export const TenantsList = () => {
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: user } = UserModule.getUserInfo({
     queryOptions: {
@@ -35,11 +37,17 @@ export const TenantsList = () => {
   } = RentalAgreementModule.getRentalAgreementListByAgencyQueries({
     params: {
       agencyId: user?.propertyOwner?.propertyAgency?.id,
+      initialPage: currentPage,
+      limitPerPage: CONSTANTS.PAGINATION.FIVE_ITEMS_PER_PAGE,
     },
     queryOptions: {
       enabled: !!user?.propertyOwner?.propertyAgency?.id,
     },
   });
+
+  const paginationAction = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const tenantsColumns: ColumnsDataTable[] = [
     {
@@ -135,14 +143,24 @@ export const TenantsList = () => {
       }}
     >
       <TenantStatsCard
-        rentalAgreementList={rentalAgreementList ?? []}
+        rentalAgreementList={rentalAgreementList}
         isLoading={isLoading}
       />
       <DataTableContainer
-        data={rentalAgreementList ?? []}
+        data={rentalAgreementList?.content ?? []}
+        paginationData={{
+          lazy: true,
+          currentPage: 1,
+          totalPages: rentalAgreementList?.totalPages,
+          totalItems: rentalAgreementList?.totalItems,
+          totalDataPerPage: rentalAgreementList?.totalDataPerPages!,
+          onLazyLoad(index) {
+            paginationAction(index);
+          },
+        }}
         columns={tenantsColumns}
         isLoading={isLoading}
-        hidePagination
+        hidePagination={rentalAgreementList?.totalPages === 1}
       />
     </BaseContainer>
   );

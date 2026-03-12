@@ -1,4 +1,4 @@
-import { ColorPalette, Tag } from "@chakra-ui/react";
+import { ColorPalette, Tag, TagCloseTrigger } from "@chakra-ui/react";
 import React, { FC, ReactNode } from "react";
 import { BaseTagProps } from "./interface/tag";
 import { useTranslation } from "react-i18next";
@@ -54,6 +54,9 @@ export const BaseTag: FC<BaseTagProps> = ({
   variant = "subtle",
   label: customLabel,
   color = "red",
+  iconPosition = "start",
+  icon: customIcon,
+  onCloseIconTrigger,
   status,
   ...props
 }) => {
@@ -65,6 +68,8 @@ export const BaseTag: FC<BaseTagProps> = ({
     icon,
   } = getTagContent(status, color as ColorPalette, t);
 
+  const renderedIcon = customIcon ?? icon;
+
   return (
     <Tag.Root
       variant={variant}
@@ -74,11 +79,31 @@ export const BaseTag: FC<BaseTagProps> = ({
       py={1}
       {...props}
     >
-      {icon && <Tag.StartElement>{icon}</Tag.StartElement>}
-
+      {iconPosition === "start" && (
+        <>
+          {renderedIcon ? (
+            <Tag.StartElement>{renderedIcon}</Tag.StartElement>
+          ) : onCloseIconTrigger ? (
+            <Tag.StartElement>
+              <TagCloseTrigger onClick={onCloseIconTrigger} />
+            </Tag.StartElement>
+          ) : null}
+        </>
+      )}
       <Tag.Label textTransform="capitalize">
         {customLabel ?? resolvedLabel}
       </Tag.Label>
+      {iconPosition === "end" && (
+        <>
+          {renderedIcon ? (
+            <Tag.StartElement>{renderedIcon}</Tag.StartElement>
+          ) : onCloseIconTrigger ? (
+            <Tag.StartElement>
+              <TagCloseTrigger onClick={onCloseIconTrigger} />
+            </Tag.StartElement>
+          ) : null}
+        </>
+      )}
     </Tag.Root>
   );
 };

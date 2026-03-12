@@ -1,13 +1,12 @@
 import type { NextConfig } from "next";
-//import withSerwistInit from "@serwist/next";
-import { withSerwist } from "@serwist/turbopack";
-//import path from "path";
+import withSerwistInit from "@serwist/next";
+import path from "path";
 
-// const withSerwist1 = withSerwistInit({
-//   swSrc: path.join(process.cwd(), "app/sw.ts"),
-//   swDest: path.join(process.cwd(), "public/sw.js"),
-//   cacheOnNavigation: true,
-// });
+const withSerwist = withSerwistInit({
+  swSrc: path.join(process.cwd(), "app/sw.ts"),
+  swDest: path.join(process.cwd(), "public/sw.js"),
+  cacheOnNavigation: true,
+});
 
 const nextConfig: NextConfig = {
   turbopack: {},
@@ -46,9 +45,9 @@ const nextConfig: NextConfig = {
     ],
   },
   reactStrictMode: true,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  // typescript: {
+  //   ignoreBuildErrors: true,
+  // },
 };
 
 export default withSerwist(nextConfig);

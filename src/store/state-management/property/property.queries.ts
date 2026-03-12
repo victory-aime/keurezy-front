@@ -14,14 +14,16 @@ const getAllPublicProperties = (args: QUERIES.QueryPayload) => {
 };
 
 const getAllPropertiesByAgency = (
-  args: QUERIES.QueryPayload<{ agencyId: string }>,
+  args: QUERIES.QueryPayload<MODELS.IAgencyFilters>,
 ) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<MODELS.IProperty[]>({
-    queryKey: [Constants.PROPERTIES_KEYS.ALL_PROPERTIES_BY_AGENCY],
+  return QUERIES.useCustomQuery<MODELS.IPropertyResponse>({
+    queryKey: [Constants.PROPERTIES_KEYS.ALL_PROPERTIES_BY_AGENCY, params],
     queryFn: () =>
-      propertyServiceInstance().getAllPropertyByAgency(params?.agencyId),
+      propertyServiceInstance().getAllPropertyByAgency(
+        params as MODELS.IAgencyFilters,
+      ),
     options: queryOptions,
   });
 };

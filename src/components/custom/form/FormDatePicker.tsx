@@ -1,217 +1,213 @@
 "use client";
 
+import React, { useCallback, memo } from "react";
 import {
-  Input,
-  InputGroup,
-  Popover,
   Field,
   Portal,
   Flex,
+  DatePicker,
+  parseDate,
+  DateValue,
+  HStack,
 } from "@chakra-ui/react";
 import { useField, useFormikContext } from "formik";
-import { BaseCalendar } from "../calendar/BaseCalendar";
-import { DateRange } from "react-day-picker";
-import { format } from "date-fns";
-import { useId, useState } from "react";
-import { PiCalendarThin } from "react-icons/pi";
-import { IoIosClose } from "react-icons/io";
+import { useTranslation } from "react-i18next";
 import { FormDatePickerFieldProps } from "./interface/input";
 import { BaseText } from "../base-text";
-import { useTranslation } from "react-i18next";
-import { APP_DATE_PATTERN } from "rise-core-frontend";
-import { BaseIcon, CustomSkeletonLoader } from "_components/custom";
+import { BaseButton, CustomSkeletonLoader, Icons } from "_components/custom";
+import {
+  DatePickerInputByMode,
+  disabledPastDates,
+  disabledWeekends,
+} from "./utils/DatePickerUtils";
 
-export const FormDatePicker = ({
-  name,
-  displayFormat,
-  label,
-  mode = "single",
-  placeholder = "",
-  isReadOnly,
-  isDisabled,
-  required,
-  hideNavigation = false,
-  activeCaptionLayout = false,
-  disablePastDates = true,
-  disableWeeksDates,
-  isClearable = true,
-  startMonth = new Date(2025, 0),
-  endMonth = new Date(2030, 11),
-  isLoading = false,
-}: FormDatePickerFieldProps) => {
-  const id = useId();
-  const { t } = useTranslation();
-  const [field, { touched, error }, helpers] = useField(name);
-  const { submitCount } = useFormikContext();
-  const isError = isReadOnly
-    ? !!error
-    : !!(error && (touched || submitCount > 0));
-  const [open, setOpen] = useState(false);
+export const FormDatePicker = memo(
+  ({
+    name,
+    label,
+    placeholder = "",
+    isReadOnly,
+    isDisabled,
+    required,
+    startMonth = new Date(2026, 0),
+    endMonth = new Date(2030, 12),
+    isLoading = false,
+    mode = "single",
+    isDisabledPassDates,
+    isDisabledWeekDates,
+    ...rest
+  }: FormDatePickerFieldProps) => {
+    const { t } = useTranslation();
 
-  const handleChange = (value: Date | DateRange | Date[] | undefined) => {
-    helpers.setValue(value);
+    const [field, { touched, error }, { setValue, setTouched }] =
+      useField(name);
+    const { submitCount } = useFormikContext();
 
-    if (mode === "single") {
-      setOpen(false);
-    }
+    const isError = isReadOnly
+      ? !!error
+      : !!(error && (touched || submitCount > 0));
 
-    if (mode === "range") {
-      const range = value as DateRange;
-      const { from, to } = range || {};
+    const handleChange = useCallback(
+      (date: DatePicker.ValueChangeDetails) => {
+        if (mode === "single") {
+          setValue(date?.valueAsString?.[0]);
+          return;
+        }
 
-      if (from && to && from.getTime() !== to.getTime()) {
-        setOpen(false);
-      }
-    }
-  };
+        if (mode === "range" || mode === "multiple") {
+          setValue(date?.valueAsString);
+        }
+      },
+      [mode, setValue],
+    );
 
-  const handleReset = () => {
-    helpers.setValue(undefined);
-    helpers.setTouched(true);
-  };
+    const formatDate = useCallback((date: DateValue) => {
+      const day = date.day.toString().padStart(2, "0");
+      const month = date.month.toString().padStart(2, "0");
+      const year = (date.year % 100).toString().padStart(2, "0");
 
-  const getDisplayValue = (): string => {
-    const value = field.value;
-    if (!value) return "";
+      return `${day}/${month}/${year}`;
+    }, []);
 
-    if (mode === "single" && value instanceof Date) {
-      return format(value, "dd/MM/yyyy");
-    }
+    const formatWithDay = useCallback((date: DateValue) => {
+      const jsDate = date.toDate("UTC");
+      return jsDate.toLocaleDateString("fr-FR", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      });
+    }, []);
 
-    if (mode === "range") {
-      const { from, to } = value as DateRange;
-      if (!from) return "";
+    return (
+      <Field.Root id={name} invalid={isError}>
+        {isLoading ? (
+          <CustomSkeletonLoader type="FORM" height="40px" width="100%" />
+        ) : (
+          <DatePicker.Root
+            format={formatDate}
+            isDateUnavailable={
+              isDisabledPassDates
+                ? disabledPastDates
+                : isDisabledWeekDates
+                  ? disabledWeekends
+                  : undefined
+            }
+            outsideDaySelectable
+            onOpenChange={(e) => setTouched(!e.open)}
+            positioning={{ strategy: "fixed", placement: "bottom" }}
+            invalid={isError}
+            disabled={isDisabled}
+            readOnly={isReadOnly}
+            onBlur={field.onBlur}
+            min={parseDate(startMonth)}
+            max={parseDate(endMonth)}
+            onValueChange={handleChange}
+            selectionMode={mode}
+            locale="fr-FR"
+            {...rest}
+          >
+            {label && (
+              <DatePicker.Label display="flex" gap="6px" fontSize="12px">
+                {t(label)}
+                {required && <BaseText color="red"> *</BaseText>}
+              </DatePicker.Label>
+            )}
 
-      const formatShort = (date: Date) => format(date, APP_DATE_PATTERN); // 01 Jan 2026
-
-      if (!to || from.getTime() === to.getTime()) {
-        return `${displayFormat === "short" ? formatShort(from) : format(from, "dd/MM/yyyy")}`;
-      }
-
-      if (displayFormat === "short") {
-        return `${formatShort(from)} - ${formatShort(to)}`;
-      }
-
-      return `${format(from, "dd/MM/yyyy")}-${format(to, "dd/MM/yyyy")}`;
-    }
-
-    return "";
-  };
-
-  return (
-    <Field.Root id={name} invalid={isError}>
-      {label && (
-        <Field.Label
-          display={"flex"}
-          gap={"6px"}
-          fontSize={{ base: "14px", md: "12px" }}
-        >
-          {isLoading ? (
-            <CustomSkeletonLoader type="TEXT" numberOfLines={1} />
-          ) : (
-            <>
-              {t(label)}
-              {required && <BaseText color={"red"}> * </BaseText>}
-            </>
-          )}
-        </Field.Label>
-      )}
-      {isLoading ? (
-        <CustomSkeletonLoader type="FORM" height={"40px"} width={"100%"} />
-      ) : (
-        <Popover.Root
-          open={open}
-          portalled={true}
-          ids={{ trigger: id }}
-          onPointerDownOutside={(e) => e.stopPropagation()}
-          onInteractOutside={(e) => e.stopPropagation()}
-          closeOnInteractOutside={false}
-        >
-          <Popover.Trigger asChild>
-            <InputGroup
-              flex={1}
-              width={"full"}
-              onClick={() => setOpen(true)}
-              endElement={
-                !!field.value && !isReadOnly && !isDisabled ? (
-                  <>
-                    {isClearable ? (
-                      <BaseIcon
-                        color={"red"}
-                        borderRadius={"full"}
-                        boxSize={"15px"}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleReset();
-                        }}
-                      >
-                        <IoIosClose size={14} />
-                      </BaseIcon>
-                    ) : null}
-                  </>
-                ) : (
-                  <Flex alignItems="center" justifyContent="center" mt="5px">
-                    <PiCalendarThin />
-                  </Flex>
-                )
-              }
-            >
-              <Input
-                {...field}
-                name={field.name}
-                onBlur={(e) => field?.onBlur(e)}
-                value={getDisplayValue()}
-                placeholder={t(placeholder)}
-                borderRadius={"12px"}
-                border={"1px solid"}
-                borderColor={isError ? "red.500" : "inherit"}
-                _focus={{ borderColor: isError ? "red.500" : "primary.500" }}
-                _placeholder={{ color: isError ? "red.500" : "gray.400" }}
-                pl={3}
-                mt={"5px"}
-                variant={"outline"}
-                //bg={"bg.muted"}
-                readOnly
-                disabled={isDisabled}
-                fontSize={{ base: "16px", md: "14px" }}
-                height={"40px"}
-                autoCapitalize="none"
+            <DatePicker.Control>
+              <DatePickerInputByMode
+                placeholder={placeholder}
+                formatWithDay={formatWithDay}
+                isError={isError}
               />
-            </InputGroup>
-          </Popover.Trigger>
-          <Portal>
-            <Popover.Positioner>
-              <Popover.Content width={"fit-content"}>
-                <BaseCalendar
-                  mode={mode}
-                  disablePastDates={disablePastDates}
-                  disableWeeksDates={disableWeeksDates}
-                  selected={field.value}
-                  onSelect={handleChange}
-                  startMonth={startMonth}
-                  endMonth={endMonth}
-                  hideNavigation={hideNavigation}
-                  activeCaptionLayout={activeCaptionLayout}
-                  onCloseButton={() => setOpen(false)}
-                />
-              </Popover.Content>
-            </Popover.Positioner>
-          </Portal>
-        </Popover.Root>
-      )}
 
-      {isError && (
-        <Flex gap={1} mt={1} alignItems={"center"}>
-          <Field.ErrorIcon width={2.5} height={2.5} color={"red.500"} />
-          <Field.ErrorText>
-            {typeof error === "string"
-              ? error
-              : typeof error === "object"
-                ? Object.values(error).join(" | ")
-                : null}
-          </Field.ErrorText>
-        </Flex>
-      )}
-    </Field.Root>
-  );
-};
+              <DatePicker.Context>
+                {(api) => (
+                  <DatePicker.IndicatorGroup>
+                    {api.value.length > 0 && <DatePicker.ClearTrigger />}
+                    <DatePicker.Trigger>
+                      <Icons.Calendar />
+                    </DatePicker.Trigger>
+                  </DatePicker.IndicatorGroup>
+                )}
+              </DatePicker.Context>
+            </DatePicker.Control>
+
+            <Portal>
+              <DatePicker.Positioner>
+                <DatePicker.Content>
+                  <DatePicker.View view="day">
+                    <HStack
+                      width={"full"}
+                      justifyContent={"space-between"}
+                      alignItems={"center"}
+                    >
+                      <DatePicker.PrevTrigger
+                        _hover={{ color: "purple.500" }}
+                      />
+                      <DatePicker.ViewTrigger asChild>
+                        <DatePicker.RangeText
+                          color={"primary.500"}
+                          fontWeight={"bold"}
+                          textTransform={"capitalize"}
+                          cursor={"pointer"}
+                          onClick={() => {}}
+                        />
+                      </DatePicker.ViewTrigger>
+
+                      <DatePicker.NextTrigger
+                        _hover={{ color: "purple.500" }}
+                      />
+                    </HStack>
+
+                    <Flex gap="4">
+                      <DatePicker.DayTable />
+                      {rest.numOfMonths === 2 && (
+                        <DatePicker.DayTable offset={1} />
+                      )}
+                    </Flex>
+
+                    <DatePicker.Context>
+                      {(api) =>
+                        api.selectionMode === "single" && (
+                          <BaseButton
+                            variant="outline"
+                            onClick={api.selectToday}
+                          >
+                            Today
+                          </BaseButton>
+                        )
+                      }
+                    </DatePicker.Context>
+                  </DatePicker.View>
+
+                  <DatePicker.View view="month">
+                    <DatePicker.Header />
+                    <DatePicker.MonthTable />
+                  </DatePicker.View>
+
+                  <DatePicker.View view="year">
+                    <DatePicker.Header />
+                    <DatePicker.YearTable />
+                  </DatePicker.View>
+                </DatePicker.Content>
+              </DatePicker.Positioner>
+            </Portal>
+          </DatePicker.Root>
+        )}
+
+        {isError && (
+          <Flex gap={1} mt={1} alignItems="center">
+            <Field.ErrorIcon width={2.5} height={2.5} color="red.500" />
+            <Field.ErrorText>
+              {typeof error === "string"
+                ? error
+                : typeof error === "object"
+                  ? Object.values(error).join(" | ")
+                  : null}
+            </Field.ErrorText>
+          </Flex>
+        )}
+      </Field.Root>
+    );
+  },
+);

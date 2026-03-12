@@ -11,11 +11,11 @@ export class PropertyService extends BaseApi {
       this.applicationContext.getApiConfig().PROPERTY.ALL_PROPERTIES_PUBLIC,
     );
   }
-  getAllPropertyByAgency(agencyId: string) {
+  getAllPropertyByAgency(params: MODELS.IAgencyFilters) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().PROPERTY.ALL_PROPERTIES_BY_AGENCY,
       {},
-      { params: { agencyId } },
+      { params },
     );
   }
   create_property(data: MODELS.IProperty | FormData) {

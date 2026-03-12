@@ -1,9 +1,14 @@
 "use client";
 
 import { Formik, FormikHelpers, FormikValues } from "formik";
-import { BaseButton, BaseText, FormOtpInput } from "_components/custom";
+import {
+  BaseButton,
+  BaseText,
+  FormCheckbox,
+  FormOtpInput,
+} from "_components/custom";
 import React from "react";
-import { Box, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { APP_ROUTES } from "_config/routes";
 import { useRouter } from "next/navigation";
@@ -23,7 +28,10 @@ export const TotpVerification = () => {
     formikHelpers: FormikHelpers<FormikValues>,
   ) => {
     try {
-      const result = await verifyTotp(values.totpCode.join(""));
+      const result = await verifyTotp(
+        values.totpCode.join(""),
+        values?.trustedDevice,
+      );
       if (!result || "status" in result) {
         if (result?.status === 401 || result?.status === 400) {
           formikHelpers?.setFieldError("totpCode", "Code invalide ou expiré");
@@ -48,7 +56,7 @@ export const TotpVerification = () => {
   return (
     <Formik
       enableReinitialize
-      initialValues={{ totpCode: Array(6).fill("") }}
+      initialValues={{ totpCode: Array(6).fill(""), trustedDevice: false }}
       onSubmit={async (values, formikHelpers) =>
         await handleValidateTotp(
           values,
@@ -79,7 +87,15 @@ export const TotpVerification = () => {
               etc.). La vérification s’effectue automatiquement dès que les 6
               chiffres sont saisis.
             </BaseText>
-
+            <FormCheckbox
+              name="trustedDevice"
+              label="Faire confiance à cet appareil"
+              isReadOnly={isLoading}
+            />
+            <BaseText fontSize={"sm"} color={"gray.400"}>
+              Si vous faites confiance à cet appareil, nous ne vous demanderons
+              plus de code lors de vos prochaines connexions
+            </BaseText>
             <BaseButton
               width={"full"}
               variant={"outline"}

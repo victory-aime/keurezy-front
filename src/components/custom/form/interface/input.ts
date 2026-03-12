@@ -1,4 +1,9 @@
-import { HTMLChakraProps, ListCollection } from "@chakra-ui/react";
+import {
+  DatePickerInputProps,
+  DatePickerRootProps,
+  HTMLChakraProps,
+  ListCollection,
+} from "@chakra-ui/react";
 import React, {
   ElementType,
   HTMLInputTypeAttribute,
@@ -99,17 +104,21 @@ interface SwitchProps extends HTMLChakraProps<"switch"> {
 
 interface FormColorPickerProps extends TextInputProps {}
 
-interface FormDatePickerFieldProps extends TextInputProps {
-  displayFormat?: "default" | "short";
-  mode?: "single" | "range";
-  isClearable?: boolean;
-  disablePastDates?: boolean;
-  disableWeeksDates?: boolean;
+interface FormDatePickerFieldProps extends DatePickerRootProps {
+  isReadOnly?: boolean;
+  isDisabled?: boolean;
+  isLoading?: boolean;
+  isDisabledPassDates?: boolean;
+  isDisabledWeekDates?: boolean;
+  name: string;
+  label?: string;
+  mode?: "single" | "range" | "multiple";
   startMonth?: Date;
   endMonth?: Date;
-  hideNavigation?: boolean;
-  activeCaptionLayout?: boolean;
 }
+type DatePickerInputContainerProps = DatePickerInputProps & {
+  isError?: boolean;
+};
 
 interface TimeInputProps extends TextInputProps {
   variant?: "outline" | "subtle" | "plain";
@@ -139,4 +148,5 @@ export type {
   OtpInputProps,
   PhoneInputProps,
   countriesList,
+  DatePickerInputContainerProps,
 };

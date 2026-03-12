@@ -6,25 +6,25 @@ export const TenantStatsCard = ({
   rentalAgreementList,
   isLoading,
 }: {
-  rentalAgreementList: MODELS.IResponseRentalAgreementByAgency[];
+  rentalAgreementList?: MODELS.IResponseRentalAgreementByAgency;
   isLoading?: boolean;
 }) => {
   const stats = [
     {
       label: "Total locataires",
-      value: rentalAgreementList?.length,
+      value: rentalAgreementList?.content?.length,
       color: "primary.500",
     },
     {
       label: "Actifs",
-      value: rentalAgreementList?.filter(
+      value: rentalAgreementList?.content?.filter(
         (p) => p.status === ENUM.COMMON.Status.ACTIVE,
       ).length,
       color: "tertiary.500",
     },
     {
       label: "En retard",
-      value: rentalAgreementList?.filter(
+      value: rentalAgreementList?.content?.filter(
         (p) => p.status !== ENUM.COMMON.Status.ACTIVE,
       ).length,
       color: "danger.500",

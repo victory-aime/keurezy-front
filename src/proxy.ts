@@ -28,8 +28,10 @@ export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
   const sessionCookie = getSessionCookie(request);
-  const totpCookie = request.cookies.get("better-auth.two_factor");
   const session = await getCookieCache(request);
+  const totpCookie =
+    request.cookies.get("__Secure-better-auth.two_factor") ??
+    request.cookies.get("better-auth.two_factor");
 
   // 🔐 RESET PASSWORD
   if (pathname === RESET_PASSWORD_ROUTE && !searchParams.get("token")) {
@@ -61,6 +63,7 @@ export async function proxy(request: NextRequest) {
     console.log(
       "route access",
       PROTECTED_ROUTES[matchedRoute].includes(userRole),
+      matchedRoute,
     );
 
     if (
@@ -78,6 +81,7 @@ export async function proxy(request: NextRequest) {
   /**
    * 🔐 TOTP FLOW
    */
+  console.log("totpCooki", totpCookie);
   if (totpCookie && pathname !== TOTP_ROUTE) {
     const url = request.nextUrl.clone();
     url.pathname = TOTP_ROUTE;

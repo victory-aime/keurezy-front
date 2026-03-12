@@ -1,6 +1,6 @@
 import { ENUM } from "..";
 
-export interface IResponseRentalAgreementByAgency {
+export interface IRentalAgreement {
   id: string;
   tenant: {
     id: string;
@@ -15,4 +15,12 @@ export interface IResponseRentalAgreementByAgency {
   status: ENUM.COMMON.Status;
   startDate: string;
   endDate: string;
+}
+
+export interface IResponseRentalAgreementByAgency {
+  content: IRentalAgreement[];
+  totalDataPerPages: number;
+  currentPage: number;
+  totalItems: number;
+  totalPages: number;
 }

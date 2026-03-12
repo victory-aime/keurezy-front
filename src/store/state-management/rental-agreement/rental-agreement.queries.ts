@@ -4,13 +4,17 @@ import { MODELS } from "_types/index";
 import { QUERIES } from "rise-core-frontend";
 
 const getRentalAgreementListByAgencyQueries = (
-  args: QUERIES.QueryPayload<{ agencyId: string }>,
+  args: QUERIES.QueryPayload<MODELS.IAgencyFilters>,
 ) => {
-  return QUERIES.useCustomQuery<MODELS.IResponseRentalAgreementByAgency[]>({
-    queryKey: [Constants.RENTAL_AGREEMENT_KEYS.RENTAL_AGREEMENT_AGENCY_LIST],
+  const { params } = args;
+  return QUERIES.useCustomQuery<MODELS.IResponseRentalAgreementByAgency>({
+    queryKey: [
+      Constants.RENTAL_AGREEMENT_KEYS.RENTAL_AGREEMENT_AGENCY_LIST,
+      params,
+    ],
     queryFn: () =>
       rentalAgreementServiceInstance().getRentalAgreementByAgency(
-        args?.params?.agencyId!,
+        params as MODELS.IAgencyFilters,
       ),
     options: args.queryOptions,
   });

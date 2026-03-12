@@ -1,6 +1,6 @@
 import { ColorPalette, TagRootProps } from "@chakra-ui/react";
 import { ENUM } from "_types/";
-import { TextVariant } from "../../base-text";
+import { ReactNode } from "react";
 
 type TagType = "icon" | "default";
 type StatusType = ENUM.COMMON.Status;
@@ -8,9 +8,10 @@ type StatusType = ENUM.COMMON.Status;
 interface BaseTagProps extends TagRootProps {
   label?: string;
   color?: ColorPalette;
+  icon?: ReactNode;
   status?: StatusType;
-  textSize?: TextVariant;
-  type?: TagType;
+  onCloseIconTrigger?: () => void;
+  iconPosition?: "start" | "end";
   variant?: "outline" | "solid" | "subtle" | "surface" | undefined;
 }
 

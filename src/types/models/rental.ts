@@ -8,7 +8,7 @@ export interface IRentalRequest {
   message?: string;
 }
 
-export interface IRentalAgencyListResponse {
+export interface IRentalAgency {
   id: string;
   propertyId: string;
   phone: string;
@@ -27,4 +27,12 @@ export interface IRentalAgencyListResponse {
     email: string;
     name: string;
   };
+}
+
+export interface IRentalAgencyListResponse {
+  content: IRentalAgency[];
+  totalDataPerPage: number;
+  currentPage: number;
+  totalItems: number;
+  totalPages: number;
 }

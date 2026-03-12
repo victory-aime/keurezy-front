@@ -6,11 +6,12 @@ import { handleApiError } from "_utils/handleApiError";
 export const useTotp = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const verifyTotp = async (totpCode: string) => {
+  const verifyTotp = async (totpCode: string, trustedDevice?: boolean) => {
     setIsLoading(true);
     try {
       const { data, error } = await authClient.twoFactor.verifyTotp({
         code: totpCode,
+        trustDevice: trustedDevice ?? false,
       });
       if (error) {
         return {

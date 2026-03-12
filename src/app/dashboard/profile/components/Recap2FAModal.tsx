@@ -44,7 +44,7 @@ export const Recap2FAModal = ({
           </BaseText>
           <FormTextInput
             name={"password"}
-            label={"FORM.PASSWORD"}
+            type={"password"}
             placeholder={"FORM.PASSWORD_PLACEHOLDER"}
           />
         </BaseModal>

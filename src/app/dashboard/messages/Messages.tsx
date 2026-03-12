@@ -84,7 +84,7 @@ export const Messages = () => {
   };
 
   const extractUser = (rentalAgreementId: string) => {
-    const data = rentalAgreements?.find(
+    const data = rentalAgreements?.content?.find(
       (data) => data?.id === rentalAgreementId,
     );
     return { tenants: data?.tenant, property: data?.property };

@@ -14,7 +14,7 @@ import {
   RentalModule,
   UserModule,
 } from "_store/state-management";
-import { ENUM, MODELS } from "_types/*";
+import { CONSTANTS, ENUM, MODELS } from "_types/*";
 import { useMemo, useState } from "react";
 import { formatDisplayDate } from "rise-core-frontend";
 import { RentalStatsCard } from "./RentalStatsCard";
@@ -22,10 +22,10 @@ import { RentalModal } from "./RentalModal";
 
 export const RentalList = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const [selectedValues, setSelectedValues] =
-    useState<MODELS.IRentalAgencyListResponse>(
-      {} as MODELS.IRentalAgencyListResponse,
-    );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedValues, setSelectedValues] = useState<MODELS.IRentalAgency>(
+    {} as MODELS.IRentalAgency,
+  );
 
   const { data: user } = UserModule.getUserInfo({
     queryOptions: { enabled: false },
@@ -38,7 +38,11 @@ export const RentalList = () => {
     isLoading: rentalLoad,
     refetch: refetchList,
   } = RentalModule.rentalAgencyRequestListQueries({
-    params: { agencyId: agencyId },
+    params: {
+      agencyId: agencyId,
+      initialPage: currentPage,
+      limitPerPage: CONSTANTS.PAGINATION.FIVE_ITEMS_PER_PAGE,
+    },
     queryOptions: { enabled: !!agencyId },
   });
 
@@ -65,9 +69,9 @@ export const RentalList = () => {
     });
 
   const pendingRequestCountForSelected = useMemo(() => {
-    if (!rentalList || !selectedValues?.property?.id) return 0;
+    if (!rentalList?.content || !selectedValues?.property?.id) return 0;
 
-    return rentalList.filter(
+    return rentalList?.content.filter(
       (r) =>
         r.property?.id === selectedValues.property.id &&
         r.status === ENUM.COMMON.Status.PENDING,
@@ -149,6 +153,10 @@ export const RentalList = () => {
     },
   ];
 
+  const paginationAction = async (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <BaseContainer
       title={"Candidatures"}
@@ -161,18 +169,30 @@ export const RentalList = () => {
         onReload: async () => await refetchList(),
       }}
     >
-      <RentalStatsCard rentalList={rentalList ?? []} isLoading={rentalLoad} />
+      <RentalStatsCard
+        rentalList={rentalList?.content ?? []}
+        isLoading={rentalLoad}
+      />
 
       <DataTableContainer
-        data={rentalList ?? []}
+        isOpenSelect
+        data={rentalList?.content ?? []}
         columns={rentalColumns}
         isLoading={rentalLoad}
-        isOpenSelect
-        onOpenSelectRow={(row: MODELS.IRentalAgencyListResponse) => {
+        initialPage={currentPage}
+        paginationData={{
+          lazy: true,
+          currentPage: currentPage,
+          onLazyLoad: (index) => paginationAction(index),
+          totalItems: rentalList?.totalItems,
+          totalPages: rentalList?.totalPages,
+          totalDataPerPage: rentalList?.totalDataPerPage!,
+        }}
+        hidePagination={rentalList?.totalPages === 1}
+        onOpenSelectRow={(row: MODELS.IRentalAgency) => {
           setSelectedValues(row);
           setOpen(true);
         }}
-        hidePagination
       />
       <RentalModal
         onChange={setOpen}
