@@ -121,12 +121,16 @@ export const BaseContainer = React.memo(
                     )}
                   </>
                 )}
-                <BaseText
-                  variant={textVariant ? TextVariant.XS : TextVariant.S}
-                  textAlign={rest.textAlign}
-                >
-                  {t(description)}
-                </BaseText>
+                {typeof description === "string" ? (
+                  <BaseText
+                    variant={textVariant ? TextVariant.XS : TextVariant.S}
+                    textAlign={rest.textAlign}
+                  >
+                    {t(description)}
+                  </BaseText>
+                ) : (
+                  description
+                )}
               </>
             )}
           </Stack>

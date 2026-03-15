@@ -36,7 +36,6 @@ export function DataDisplayContainer<T>({
           data={data}
           columns={columns}
           isLoading={isLoading}
-          totalDataPerPage={6}
           {...rest}
         />
       ) : (

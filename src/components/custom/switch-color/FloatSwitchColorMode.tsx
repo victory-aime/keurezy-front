@@ -15,6 +15,7 @@ export const FloatSwitchColorMode = ({ ...props }: IconButtonProps) => {
       aria-label="change color-mode"
       borderRadius="50px"
       animation={"bounce"}
+      cursor={"pointer"}
       _hover={{
         transform: "scale(1.1)",
         transition: "transform 0.2s ease-in-out",

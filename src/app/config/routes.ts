@@ -16,7 +16,6 @@ export const APP_ROUTES = {
   SECURITY: "/security",
   PRIVACY_POLICY: "/privacy-policy",
   TERMS_OF_USE: "/terms-and-conditions",
-  BO: "/dashboard/back-office",
   DASHBOARD: "/dashboard",
   APPARTEMENTS: "/properties",
   APPARTEMENT_DETAIL: "/properties/details",

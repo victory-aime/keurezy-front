@@ -18,7 +18,6 @@ const PROTECTED_ROUTES: Record<string, string[]> = {
   ...Object.fromEntries(
     Object.values(USERS_ROUTES).map((route) => [route, [UserRole.USER]]),
   ),
-  [`${APP_ROUTES.BO}`]: [UserRole.ADMIN],
 };
 const RESET_PASSWORD_ROUTE = APP_ROUTES.AUTH.RESET_PASSWORD_VALIDATE;
 const CREATE_AGENCY_ROUTE = APP_ROUTES.AUTH.REGISTER_AGENCY;

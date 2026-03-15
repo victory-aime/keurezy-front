@@ -21,12 +21,9 @@ const getRentalAgreementListByAgencyQueries = (
 };
 
 const approveRentalAgreementMutation = (
-  args: QUERIES.MutationPayload<{ agencyId: string; requestId: string }>,
+  args: QUERIES.MutationPayload<MODELS.IAgencyCommonParams>,
 ) => {
-  return QUERIES.useCustomMutation<
-    { agencyId: string; requestId: string },
-    any
-  >({
+  return QUERIES.useCustomMutation({
     mutationKey: [Constants.RENTAL_AGREEMENT_KEYS.APPROVE],
     mutationFn: ({ params }) =>
       rentalAgreementServiceInstance().approveRequest(params!),
@@ -34,12 +31,9 @@ const approveRentalAgreementMutation = (
   });
 };
 const rejectRentalAgreementMutation = (
-  args: QUERIES.MutationPayload<{ agencyId: string; requestId: string }>,
+  args: QUERIES.MutationPayload<MODELS.IAgencyCommonParams>,
 ) => {
-  return QUERIES.useCustomMutation<
-    { agencyId: string; requestId: string },
-    any
-  >({
+  return QUERIES.useCustomMutation({
     mutationKey: [Constants.RENTAL_AGREEMENT_KEYS.REJECT],
     mutationFn: ({ params }) =>
       rentalAgreementServiceInstance().rejectRequest(params!),
@@ -47,12 +41,9 @@ const rejectRentalAgreementMutation = (
   });
 };
 const terminateRentalAgreementMutation = (
-  args: QUERIES.MutationPayload<{ agencyId: string; propertyId: string }>,
+  args: QUERIES.MutationPayload<MODELS.IAgencyCommonParams>,
 ) => {
-  return QUERIES.useCustomMutation<
-    { agencyId: string; propertyId: string },
-    any
-  >({
+  return QUERIES.useCustomMutation({
     mutationKey: [Constants.RENTAL_AGREEMENT_KEYS.TERMINATE],
     mutationFn: ({ params }) =>
       rentalAgreementServiceInstance().terminateRental(params),

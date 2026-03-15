@@ -8,11 +8,8 @@ const APIS_ROUTES_MODULES_PATH = {
   USER: "/user",
   AGENCY: "/agency",
   PROPERTY: "/property",
-  AUTH: "/auth",
-  FAQ: "/faq",
   CONTACT: "/contact",
-  REQUEST: "/request",
-  RENTAL: "/rental",
+  APPLICATION: "/application",
   RENTAL_AGREEMENT: "/rental-agreement",
   CHAT: "/chat",
   NOTIFICATION: "/notif",
@@ -101,84 +98,60 @@ export const APIS = (baseUrl?: string) => {
         pathBase: "SECURED_API",
         showResponse: false,
       }),
-      CHECK_NAME: api({
-        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/verified-name`,
-        method: "POST",
-        pathBase: "UNSECURED_API",
-        showResponse: false,
-        handleErrorManually: false,
-      }),
-    },
-    AUTH: {
-      LOGIN: api({
-        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/login`,
-        method: "POST",
-        pathBase: "UNSECURED_API",
-        showResponse: false,
-      }),
-      SSO_GOOGLE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/sso/google`,
-        method: "POST",
+
+      OCCUPATION_RATE_BY_PROPERTY_TYPE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/occupation-rate-property-type`,
+        method: "GET",
         pathBase: "SECURED_API",
         showResponse: false,
       }),
-      REFRESH: api({
-        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/refresh-token`,
-        method: "POST",
+
+      MONTHLY_REVENUE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/monthly-revenue`,
+        method: "GET",
         pathBase: "SECURED_API",
         showResponse: false,
-      }),
-      LOGOUT: api({
-        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/logout`,
-        method: "POST",
-        pathBase: "SECURED_API",
-        showResponse: false,
-      }),
-      RESET_PASSWORD: api({
-        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/reset-password`,
-        method: "POST",
-        pathBase: "SECURED_API",
       }),
     },
     CONTACT: {
-      PUBLIC_REQUEST: api({
-        path: `${APIS_ROUTES_MODULES_PATH.CONTACT}/public-request`,
+      PUBLIC_CONTACT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CONTACT}/public`,
         method: "POST",
         pathBase: "UNSECURED_API",
       }),
-      AGENCY_REQUEST_LIST: api({
-        path: `${APIS_ROUTES_MODULES_PATH.REQUEST}/list`,
+      AGENCY_CONTACT_LIST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CONTACT}/agency-contact-list`,
         method: "GET",
         pathBase: "SECURED_API",
         showResponse: false,
       }),
-      CHANGE_REQUEST_STATUS: api({
-        path: `${APIS_ROUTES_MODULES_PATH.REQUEST}/status`,
+      AGENCY_CONTACT_UPDATE_STATUS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CONTACT}/agency-update-status`,
         method: "POST",
         pathBase: "SECURED_API",
         showResponse: false,
       }),
-      READ_ALL_REQUESTS: api({
-        path: `${APIS_ROUTES_MODULES_PATH.REQUEST}/read-all`,
+      AGENCY_CONTACT_READ_ALL: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CONTACT}/agency-update-status`,
         method: "POST",
         pathBase: "SECURED_API",
         showResponse: false,
       }),
     },
-    RENTAL: {
+    APPLICATION: {
       CREATE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.RENTAL}/create`,
+        path: `${APIS_ROUTES_MODULES_PATH.APPLICATION}/create`,
         method: "POST",
         pathBase: "SECURED_API",
       }),
-      RENTAL_AGENCY_REQUEST_LIST: api({
-        path: `${APIS_ROUTES_MODULES_PATH.RENTAL}/agency-list`,
+      AGENCY_APPLICATION_LIST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.APPLICATION}/agency-application-list`,
         method: "GET",
         pathBase: "SECURED_API",
         showResponse: false,
       }),
-      RENTAL_USER_REQUEST_LIST: api({
-        path: `${APIS_ROUTES_MODULES_PATH.RENTAL}/user-list`,
+      USER_APPLICATION_LIST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.APPLICATION}/user-application-list`,
         method: "GET",
         pathBase: "SECURED_API",
         showResponse: false,
@@ -266,29 +239,6 @@ export const APIS = (baseUrl?: string) => {
         method: "POST",
         pathBase: "SECURED_API",
         showResponse: false,
-      }),
-    },
-    FAQ: {
-      GET_FAQS: api({
-        path: `${APIS_ROUTES_MODULES_PATH.FAQ}/list`,
-        method: "GET",
-        pathBase: "SECURED_API",
-        showResponse: false,
-      }),
-      CREATE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.FAQ}/create-faq`,
-        method: "POST",
-        pathBase: "SECURED_API",
-      }),
-      UPDATE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.FAQ}/update-faq`,
-        method: "POST",
-        pathBase: "SECURED_API",
-      }),
-      DELETE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.FAQ}/delete-faq`,
-        method: "DELETE",
-        pathBase: "SECURED_API",
       }),
     },
   };

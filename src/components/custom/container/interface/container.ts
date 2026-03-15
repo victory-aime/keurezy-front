@@ -6,7 +6,7 @@ import { Colors } from "_theme/colors";
 
 export interface IBoxProps extends BoxProps {
   title?: string;
-  description?: string;
+  description?: string | ReactNode;
   buttonTitle?: string;
   onClick?: () => void;
   withActionButtons?: boolean;

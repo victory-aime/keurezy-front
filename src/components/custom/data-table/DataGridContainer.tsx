@@ -63,6 +63,7 @@ export function DataGridContainer<T>({
                   px={2}
                   py={1}
                   borderRadius={"full"}
+                  color={actions?.length === 1 ? "none" : "primary.500"}
                 >
                   <DataTableActionButtons actions={actions} item={item} />
                 </BaseIcon>

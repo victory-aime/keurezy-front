@@ -10,11 +10,11 @@ import {
   UserModule,
   ContactModule,
   PropertyModule,
-  RentalModule,
+  ApplicationModule,
   RentalAgreementModule,
   NotificationsModule,
 } from "_store/state-management";
-import { ALL_CSA_ROUTES, MENU_BY_ROLE } from "./routes/routes";
+import { ALL_CSA_ROUTES } from "./routes/routes";
 import { RenderGroupedLinks } from "./components/RenderGroupedLinks";
 import { useAuth } from "_hooks/useAuth";
 import { SideToolTip } from "./components/SideToolTip";
@@ -22,7 +22,6 @@ import { useSessionRefreshContext } from "_context/SessionRefresh-context";
 import { useMemo } from "react";
 import { DASHBOARD_ROUTES } from "../../routes";
 import { useColorMode } from "_components/ui/color-mode";
-import { CONSTANTS } from "_types/*";
 
 export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -34,33 +33,35 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
     queryOptions: { enabled: false },
   });
   const agencyId = user?.propertyOwner?.propertyAgency?.id;
-  const { data: requestList } = ContactModule.agencyRequestListQueries({
-    params: { agencyId: agencyId },
-    queryOptions: { enabled: !!agencyId },
+  const ownerId = user?.propertyOwner?.id;
+
+  const { data: requestList } = ContactModule.agencyContactListQueries({
+    params: { agencyId, ownerId },
+    queryOptions: { enabled: !!agencyId && !!ownerId },
   });
 
   const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
-    params: { agencyId: agencyId, initialPage: CONSTANTS.PAGINATION.INIT },
-    queryOptions: { enabled: !!agencyId },
+    params: { agencyId, ownerId },
+    queryOptions: { enabled: !!agencyId && !!ownerId },
   });
 
   const { data: rentalRequestList } =
-    RentalModule.rentalAgencyRequestListQueries({
+    ApplicationModule.agencyApplicationListQueries({
       params: {
-        agencyId: agencyId,
-        initialPage: CONSTANTS.PAGINATION.INIT,
+        agencyId,
+        ownerId,
       },
-      queryOptions: { enabled: !!agencyId },
+      queryOptions: { enabled: !!agencyId && !!ownerId },
     });
 
   const { data: rentalAgreementList } =
     RentalAgreementModule.getRentalAgreementListByAgencyQueries({
       params: {
-        agencyId: agencyId,
-        initialPage: CONSTANTS.PAGINATION.INIT,
+        agencyId,
+        ownerId,
       },
       queryOptions: {
-        enabled: !!agencyId,
+        enabled: !!agencyId && !!ownerId,
       },
     });
 
@@ -72,8 +73,8 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
 
   const badgesByPath = useMemo(() => {
     return {
-      [DASHBOARD_ROUTES.REQUEST]: requestList?.length,
-      [DASHBOARD_ROUTES.APPART.LIST]: propertyList?.totalItems,
+      [DASHBOARD_ROUTES.CONTACT_REQUEST]: requestList?.length,
+      [DASHBOARD_ROUTES.PROPERTIES.LIST]: propertyList?.totalItems,
       [DASHBOARD_ROUTES.RENTAL_REQUEST]: rentalRequestList?.totalItems,
       [DASHBOARD_ROUTES.TENANTS.LIST]: rentalAgreementList?.totalItems,
       [DASHBOARD_ROUTES.NOTIFICATION]: notificationsList?.length,
@@ -87,12 +88,7 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
   ]);
 
   const sidebarLinks = useMemo(() => {
-    const baseLinks =
-      (data?.user?.role ?? user?.role)
-        ? MENU_BY_ROLE[data?.user?.role! ?? user?.role] || []
-        : ALL_CSA_ROUTES;
-
-    return baseLinks.map((group) => ({
+    return ALL_CSA_ROUTES.map((group) => ({
       ...group,
       links: group.links.map((link) => {
         const badgeValue = badgesByPath[link.path as string];

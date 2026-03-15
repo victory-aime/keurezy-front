@@ -6,33 +6,34 @@ import { MODELS } from "_types/index";
  * such as fetching all Contact and creating a new Contact through API endpoints.
  */
 export class ContactService extends BaseApi {
-  publicRequest(data: MODELS.IContact) {
+  publicContact(data: MODELS.IContact) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().CONTACT.PUBLIC_REQUEST,
       data,
     );
   }
-  agencyRequestList(agencyId: string) {
+  agencyContactList(params: MODELS.IAgencyCommonParams) {
     return this.apiService.invoke(
-      this.applicationContext.getApiConfig().CONTACT.AGENCY_REQUEST_LIST,
+      this.applicationContext.getApiConfig().CONTACT.AGENCY_CONTACT_LIST,
       {},
-      { params: { agencyId } },
+      { params },
     );
   }
 
-  changeRequestStatus(requestId: string) {
+  agencyChangeContactStatus(params: MODELS.IAgencyCommonParams) {
     return this.apiService.invoke(
-      this.applicationContext.getApiConfig().CONTACT.CHANGE_REQUEST_STATUS,
+      this.applicationContext.getApiConfig().CONTACT
+        .AGENCY_CONTACT_UPDATE_STATUS,
       {},
-      { params: { requestId } },
+      { params },
     );
   }
 
-  readAllRequests(agencyId: string) {
+  readAllAgencyContact(params: MODELS.IAgencyCommonParams) {
     return this.apiService.invoke(
-      this.applicationContext.getApiConfig().CONTACT.READ_ALL_REQUESTS,
+      this.applicationContext.getApiConfig().CONTACT.AGENCY_CONTACT_READ_ALL,
       {},
-      { params: { agencyId } },
+      { params },
     );
   }
 }

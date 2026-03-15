@@ -84,15 +84,16 @@ export const Layout: FunctionComponent<{
      * SUCCESS
      * emailVerified vient de passer de false -> true
      */
-    if (
-      prevVerified.current === false &&
-      user?.emailVerified === true &&
-      !alreadyShown
-    ) {
+    if (prevVerified.current && user?.emailVerified && !alreadyShown) {
       setShowVerifiedBanner(true);
       localStorage.setItem(storageKey, "true");
       refetchSession?.();
     }
+
+    console.log(
+      "verif",
+      prevVerified.current && user?.emailVerified && !alreadyShown,
+    );
 
     /**
      * TOKEN EXPIRED
@@ -139,7 +140,11 @@ export const Layout: FunctionComponent<{
         onShowSidebar={() => setSidebarOpen(!isSidebarOpen)}
         sideToggled={isSidebarOpen}
       />
-      <SidebarInset variant="inset" collapsed={!isSidebarOpen}>
+      <SidebarInset
+        variant="inset"
+        collapsed={!isSidebarOpen}
+        data-tour="finish"
+      >
         {!user?.emailVerified && (
           <EmailNotVerifiedBanner
             onResend={resendEmailLink}

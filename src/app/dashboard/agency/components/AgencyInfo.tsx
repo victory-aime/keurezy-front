@@ -37,7 +37,12 @@ export const AgencyInfo = () => {
     isLoading: loadInfo,
     refetch: refetchAgencyInfo,
   } = AgencyModule.getAgencyInfo({
-    params: { agencyId: user?.propertyOwner?.propertyAgency?.id },
+    params: {
+      data: {
+        agencyId: user?.propertyOwner?.propertyAgency?.id,
+        ownerId: user?.propertyOwner?.id,
+      },
+    },
     queryOptions: {
       enabled: !!user?.propertyOwner?.propertyAgency?.id,
     },

@@ -7,7 +7,7 @@ const getAllNotificationsQueries = (
   args: QUERIES.QueryPayload<{ recipientId: string }>,
 ) => {
   return QUERIES.useCustomQuery<MODELS.INotificationListResponse[]>({
-    queryKey: [Constants.NOTIFICATIONS_KEYS.GET_ALL],
+    queryKey: [Constants.NOTIFICATIONS_KEYS.GET_ALL_NOTIFICATIONS],
     queryFn: () =>
       notificationsServiceInstance().getAllNotifications(
         args?.params?.recipientId!,
@@ -20,7 +20,7 @@ const getAllUnreadNotificationsQueries = (
   args: QUERIES.QueryPayload<{ recipientId: string }>,
 ) => {
   return QUERIES.useCustomQuery<MODELS.INotificationListResponse[]>({
-    queryKey: [Constants.NOTIFICATIONS_KEYS.GET_ALL_UNREAD],
+    queryKey: [Constants.NOTIFICATIONS_KEYS.GET_ALL_UNREAD_NOTIFICATION],
     queryFn: () =>
       notificationsServiceInstance().getAllUnreadNotifications(
         args?.params?.recipientId!,
@@ -33,7 +33,7 @@ const readAllNotificationsMutation = (
   args: QUERIES.MutationPayload<{ recipientId: string }>,
 ) => {
   return QUERIES.useCustomMutation({
-    mutationKey: [Constants.NOTIFICATIONS_KEYS.READ_ALL],
+    mutationKey: [Constants.NOTIFICATIONS_KEYS.READ_ALL_NOTIFICATION],
     mutationFn: ({ params }) =>
       notificationsServiceInstance().readAllNotifications(params!),
     options: args.mutationOptions,
@@ -50,7 +50,7 @@ const readNotificationMutation = (
     { notificationId: string; recipientId: string },
     any
   >({
-    mutationKey: [Constants.NOTIFICATIONS_KEYS.READ_ONE],
+    mutationKey: [Constants.NOTIFICATIONS_KEYS.READ_ONE_NOTIFICATION],
     mutationFn: ({ params }) =>
       notificationsServiceInstance().readNotification(params),
     options: args.mutationOptions,

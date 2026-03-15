@@ -1,3 +1,4 @@
+import { ENUM } from "..";
 import { COMMON, PropertyType } from "../enum";
 
 interface IProperty {
@@ -37,4 +38,21 @@ interface IPropertyResponse {
   totalPages: number;
 }
 
-export type { IProperty, IPropertyResponse, ICreateProperty };
+interface IMonthlyRevenueStats {
+  month: string;
+  receivedAmount: number;
+  remainingAmount: number;
+}
+
+interface IOccupationRateStats {
+  propertyType: ENUM.PropertyType;
+  occupationRate: number;
+}
+
+export type {
+  IProperty,
+  IPropertyResponse,
+  ICreateProperty,
+  IMonthlyRevenueStats,
+  IOccupationRateStats,
+};

@@ -31,8 +31,16 @@ interface IAgency {
 
 interface IAgencyFilters {
   agencyId: string;
+  ownerId: string;
   initialPage: number;
   limitPerPage: number;
+}
+
+interface IAgencyCommonParams {
+  agencyId: string;
+  ownerId: string;
+  requestId?: string;
+  propertyId?: string;
 }
 
 export type {
@@ -41,4 +49,5 @@ export type {
   ICloseAgency,
   IAgency,
   IAgencyFilters,
+  IAgencyCommonParams,
 };

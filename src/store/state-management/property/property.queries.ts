@@ -28,19 +28,65 @@ const getAllPropertiesByAgency = (
   });
 };
 
+const getOccupationRateByTypeQueries = (
+  args: QUERIES.QueryPayload<MODELS.IAgencyFilters>,
+) => {
+  const { params, queryOptions } = args;
+
+  return QUERIES.useCustomQuery<MODELS.IOccupationRateStats[]>({
+    queryKey: [
+      Constants.PROPERTIES_KEYS.OCCUPATION_RATE_BY_PROPERTY_TYPE,
+      params,
+    ],
+    queryFn: () =>
+      propertyServiceInstance().getOccupationRateByType(
+        params as MODELS.IAgencyFilters,
+      ),
+    options: queryOptions,
+  });
+};
+const getMonthlyRevenueQueries = (
+  args: QUERIES.QueryPayload<MODELS.IAgencyFilters>,
+) => {
+  const { params, queryOptions } = args;
+
+  return QUERIES.useCustomQuery<MODELS.IMonthlyRevenueStats[]>({
+    queryKey: [Constants.PROPERTIES_KEYS.MONTHLY_REVENUE, params],
+    queryFn: () =>
+      propertyServiceInstance().getMonthlyRevenue(
+        params as MODELS.IAgencyFilters,
+      ),
+    options: queryOptions,
+  });
+};
+
 const createPropertyMutation = (
   args: QUERIES.MutationPayload<MODELS.IProperty>,
 ) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.PROPERTIES_KEYS.CREATE_PROPERTY],
-    mutationFn: ({ payload }) =>
-      propertyServiceInstance().create_property(payload!),
+    mutationFn: ({ payload, params }) =>
+      propertyServiceInstance().create_property(payload!, params),
+    options: args.mutationOptions,
+  });
+};
+
+const updatePropertyMutation = (
+  args: QUERIES.MutationPayload<MODELS.IProperty>,
+) => {
+  return QUERIES.useCustomMutation({
+    mutationKey: [Constants.PROPERTIES_KEYS.UPDATE_PROPERTY],
+    mutationFn: ({ payload, params }) =>
+      propertyServiceInstance().update_property(payload!, params),
     options: args.mutationOptions,
   });
 };
 
 export {
   getAllPropertiesByAgency,
+  getMonthlyRevenueQueries,
+  getOccupationRateByTypeQueries,
   createPropertyMutation,
+  updatePropertyMutation,
   getAllPublicProperties,
 };

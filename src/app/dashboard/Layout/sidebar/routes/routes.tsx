@@ -1,6 +1,5 @@
 import { SidebarNavGroupProps } from "../types";
 import { DASHBOARD_ROUTES } from "../../../routes";
-import { UserRole } from "../../../../../types/enum";
 import { Icons } from "_components/custom";
 
 export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
@@ -13,7 +12,7 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
       },
       {
         label: "Propriétés",
-        path: DASHBOARD_ROUTES.APPART.LIST,
+        path: DASHBOARD_ROUTES.PROPERTIES.LIST,
         icon: Icons.RiBuildingLine,
       },
       {
@@ -67,17 +66,17 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         label: "Notifications",
         path: DASHBOARD_ROUTES.NOTIFICATION,
         icon: Icons.Bell,
-        badge: 12,
+      },
+
+      {
+        label: "Demandes",
+        path: DASHBOARD_ROUTES.CONTACT_REQUEST,
+        icon: Icons.Request,
       },
       {
         label: "SIDE_BAR.AGENCY",
         path: DASHBOARD_ROUTES.AGENCY,
         icon: Icons.Office,
-      },
-      {
-        label: "Demandes",
-        path: DASHBOARD_ROUTES.REQUEST,
-        icon: Icons.Request,
       },
     ],
   },
@@ -101,14 +100,3 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     ],
   },
 ];
-
-const ADMIN_ROUTES: SidebarNavGroupProps[] = [];
-
-export const MENU_BY_ROLE: Record<string, SidebarNavGroupProps[]> = {
-  ADMIN: ADMIN_ROUTES,
-};
-const COMMON_ROLES = [UserRole.IMMO_OWNER];
-
-for (const role of COMMON_ROLES) {
-  MENU_BY_ROLE[role] = ALL_CSA_ROUTES;
-}

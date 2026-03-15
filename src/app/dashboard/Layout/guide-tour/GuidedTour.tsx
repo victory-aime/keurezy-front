@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { BaseButton, Icons } from "_components/custom";
+import { BaseButton, BaseIcon, Icons } from "_components/custom";
 import { Box, Flex } from "@chakra-ui/react";
 import { hexToRGB } from "_theme/colors";
 import { IGuidedTourProps, ITourStep } from "../interface/types";
@@ -24,6 +24,14 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
     (rect: DOMRect, preferred: ITourStep["position"]) => {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
+
+      // ⭐ center
+      if (preferred === "center") {
+        return {
+          top: (viewportHeight - CARD_HEIGHT) / 2,
+          left: (viewportWidth - CARD_WIDTH) / 2,
+        };
+      }
 
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
@@ -56,14 +64,17 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
           top = rect.bottom + GAP;
           left = centerX - CARD_WIDTH / 2;
           break;
+
         case "top":
           top = rect.top - GAP - CARD_HEIGHT;
           left = centerX - CARD_WIDTH / 2;
           break;
+
         case "right":
           top = centerY - CARD_HEIGHT / 2;
           left = rect.right + GAP;
           break;
+
         case "left":
           top = centerY - CARD_HEIGHT / 2;
           left = rect.left - GAP - CARD_WIDTH;
@@ -83,11 +94,16 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
     },
     [],
   );
-
   const updatePosition = useCallback(() => {
     const step = tourStep?.[currentStep];
-    const el = document.querySelector(step?.target);
 
+    if (step?.position === "center") {
+      setTargetRect(null);
+      setTooltipPos(computeTooltipPosition(new DOMRect(), "center"));
+      return;
+    }
+
+    const el = document.querySelector(step?.target);
     if (!el) return;
 
     const rect = el.getBoundingClientRect();
@@ -140,7 +156,6 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
         exit={{ opacity: 0 }}
         position="absolute"
         inset={0}
-        onClick={finish}
       >
         <svg width="100%" height="100%">
           <defs>
@@ -221,17 +236,9 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
           {/* HEADER */}
           <Flex justifyContent="space-between" mb={4}>
             <Flex align="center" gap={2}>
-              <Box
-                h="28px"
-                w="28px"
-                borderRadius="lg"
-                bg="primary.100"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
+              <BaseIcon h="28px" w="28px">
                 <Icons.TbSparkles size={14} />
-              </Box>
+              </BaseIcon>
 
               <Box fontSize="xs" color="gray.500">
                 Étape {currentStep + 1} / {tourStep?.length}

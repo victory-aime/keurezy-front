@@ -18,10 +18,39 @@ export class PropertyService extends BaseApi {
       { params },
     );
   }
-  create_property(data: MODELS.IProperty | FormData) {
+  create_property(
+    data: MODELS.IProperty | FormData,
+    params: { ownerId: string },
+  ) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().PROPERTY.CREATE_PROPERTY,
       data,
+      { params },
+    );
+  }
+  update_property(
+    data: MODELS.IProperty | FormData,
+    params: { ownerId: string; appartId: string },
+  ) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().PROPERTY.UPDATE_PROPERTY,
+      data,
+      { params },
+    );
+  }
+  getOccupationRateByType(data: MODELS.IAgencyCommonParams) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().PROPERTY
+        .OCCUPATION_RATE_BY_PROPERTY_TYPE,
+      {},
+      { params: data },
+    );
+  }
+  getMonthlyRevenue(data: MODELS.IAgencyCommonParams) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().PROPERTY.MONTHLY_REVENUE,
+      {},
+      { params: data },
     );
   }
 }

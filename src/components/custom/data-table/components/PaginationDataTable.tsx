@@ -20,20 +20,11 @@ export const PaginationDataTable: FC<PaginationProps> = ({
   lazy,
   onLazyLoad,
 }) => {
-  console.log(
-    "data",
-    totalPages,
-    totalDataPerPage,
-    currentPage,
-    totalItems,
-    lazy,
-  );
-
-  // if (lazy && (totalPages === undefined || currentPage === undefined)) {
-  //   throw new Error(
-  //     "With lazy loading, totalPages and current Page are required",
-  //   );
-  // }
+  if (lazy && (totalPages === undefined || currentPage === undefined)) {
+    throw new Error(
+      "With lazy loading, totalPages and current Page are required",
+    );
+  }
 
   const responsiveMode = useBreakpointValue({ base: false, lg: true });
   const { t } = useTranslation();

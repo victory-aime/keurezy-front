@@ -14,14 +14,14 @@ export class RentalAgreementService extends BaseApi {
     );
   }
 
-  approveRequest(data: { requestId: string; agencyId: string }) {
+  approveRequest(data: MODELS.IAgencyCommonParams) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().RENTAL_AGREEMENT.APPROVE,
       {},
       { params: data },
     );
   }
-  rejectRequest(data: { requestId: string; agencyId: string }) {
+  rejectRequest(data: MODELS.IAgencyCommonParams) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().RENTAL_AGREEMENT.REJECT,
       {},
@@ -29,7 +29,7 @@ export class RentalAgreementService extends BaseApi {
     );
   }
 
-  terminateRental(data: { propertyId: string; agencyId: string }) {
+  terminateRental(data: MODELS.IAgencyCommonParams) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().RENTAL_AGREEMENT.TERMINATE,
       {},

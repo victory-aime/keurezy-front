@@ -23,7 +23,7 @@ import {
 import { APP_ROUTES } from "_config/routes";
 import { VariablesColors } from "_theme/variables";
 import { useAuthContext } from "_context/auth-context";
-import { PropertyModule, RentalModule } from "_store/state-management";
+import { PropertyModule, ApplicationModule } from "_store/state-management";
 import { findDynamicIdInList } from "rise-core-frontend";
 import { MODELS, CONSTANTS, VALIDATION } from "_types/";
 import { Formik } from "formik";
@@ -49,7 +49,7 @@ export const PropertyApply = ({ id }: { id: string }) => {
     });
 
   const { mutateAsync: createRental, isPending } =
-    RentalModule.createRentalMutation({
+    ApplicationModule.createApplicationMutation({
       mutationOptions: {
         onSuccess: () => {
           setOpenSuccessModal(true);
@@ -70,7 +70,7 @@ export const PropertyApply = ({ id }: { id: string }) => {
     return <PropertyNotFound />;
   }
 
-  const onSubmit = async (values: MODELS.IRentalRequest) => {
+  const onSubmit = async (values: MODELS.IApplicationRequest) => {
     await createRental({ payload: values });
   };
 
@@ -85,7 +85,7 @@ export const PropertyApply = ({ id }: { id: string }) => {
           {
             propertyId: id,
             tenantId: user?.id,
-          } as MODELS.IRentalRequest
+          } as MODELS.IApplicationRequest
         }
         onSubmit={onSubmit}
         validationSchema={VALIDATION.RENTAL.createRentalRequestSchema}
