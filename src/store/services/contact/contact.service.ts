@@ -8,7 +8,7 @@ import { MODELS } from "_types/index";
 export class ContactService extends BaseApi {
   publicContact(data: MODELS.IContact) {
     return this.apiService.invoke(
-      this.applicationContext.getApiConfig().CONTACT.PUBLIC_REQUEST,
+      this.applicationContext.getApiConfig().CONTACT.PUBLIC_CONTACT,
       data,
     );
   }

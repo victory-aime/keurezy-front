@@ -5,7 +5,7 @@ import {
 } from "rise-core-frontend";
 
 const APIS_ROUTES_MODULES_PATH = {
-  USER: "/user",
+  USER: "/users",
   AGENCY: "/agency",
   PROPERTY: "/property",
   CONTACT: "/contact",

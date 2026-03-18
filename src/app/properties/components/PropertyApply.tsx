@@ -81,6 +81,7 @@ export const PropertyApply = ({ id }: { id: string }) => {
       maxW={"4xl"}
     >
       <Formik
+        enableReinitialize
         initialValues={
           {
             propertyId: id,
@@ -254,12 +255,14 @@ export const PropertyApply = ({ id }: { id: string }) => {
               icon={<Icons.Send />}
               onClick={() => handleSubmit()}
               isLoading={isPending}
-              isEmailVerified={!!user}
+              isEmailVerified={user?.emailVerified}
               isDisabled={user?.role === UserRole.IMMO_OWNER}
               emailVerificationMessage={
-                user?.role === UserRole.IMMO_OWNER || !!user
-                  ? "Vous ne pouvez pas acceder a cette fonctionnalité"
-                  : "Veuillez-vous connectez pour pourvoir continuer"
+                user?.role === UserRole.IMMO_OWNER
+                  ? "Vous ne pouvez pas accéder à cette fonctionnalité"
+                  : !user?.emailVerified
+                    ? "Un email de vérification vous a été envoyé. Veuillez le valider pour continuer."
+                    : ""
               }
               validateTitle="Envoyer ma candidature"
             />

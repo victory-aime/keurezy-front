@@ -135,6 +135,7 @@ export const ContactAgency = ({ id }: { id: string }) => {
                 name="message"
                 label="Message"
                 placeholder="Bonjour, je suis interessé"
+                maxCharacters={1000}
               />
               {user?.role !== UserRole?.IMMO_OWNER ? (
                 <ActionsButton

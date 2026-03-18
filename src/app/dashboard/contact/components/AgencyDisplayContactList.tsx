@@ -45,7 +45,7 @@ export const AgencyDisplayContactList = ({
 
   const onChangeStatus = async (id: string, agencyId: string) => {
     await changeStatus({
-      params: { id, agencyId, ownerId: user?.propertyOwner?.id },
+      params: { requestId: id, agencyId, ownerId: user?.propertyOwner?.id },
     });
   };
 

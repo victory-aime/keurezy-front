@@ -17,13 +17,13 @@ export function DataGridContainer<T>({
   isLoading = false,
   renderItem,
   displayRows = { base: 1, sm: 2, lg: 3 },
+  paginationData = {
+    totalDataPerPage: 6,
+    lazy: false,
+  },
   spacing = 6,
   actions,
-  totalPages,
-  totalDataPerPage = 6,
   initialPage = 1,
-  lazy = false,
-  onLazyLoad,
   hidePagination,
 }: DataGridProps<T>) {
   const { t } = useTranslation();
@@ -41,11 +41,11 @@ export function DataGridContainer<T>({
     return <NoDataAnimation />;
   }
 
-  const paginatedItems = lazy
+  const paginatedItems = paginationData?.lazy
     ? data
     : data.slice(
-        (currentPage - 1) * totalDataPerPage,
-        currentPage * totalDataPerPage,
+        (currentPage - 1) * paginationData?.totalDataPerPage,
+        currentPage * paginationData?.totalDataPerPage,
       );
 
   return (
@@ -75,11 +75,12 @@ export function DataGridContainer<T>({
 
       {!hidePagination && (
         <PaginationDataTable
-          totalPages={totalPages}
-          totalDataPerPage={totalDataPerPage}
+          totalPages={paginationData?.totalPages!}
+          totalDataPerPage={paginationData?.totalDataPerPage || 0}
+          totalItems={paginationData?.totalItems || 0}
           currentPage={currentPage}
-          lazy={lazy}
-          onLazyLoad={lazy ? onLazyLoad : setCurrentPage}
+          lazy={paginationData?.lazy || false}
+          onLazyLoad={paginationData?.onLazyLoad}
         />
       )}
     </main>

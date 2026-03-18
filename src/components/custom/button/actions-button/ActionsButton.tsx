@@ -46,7 +46,7 @@ export const ActionsButton = React.memo(
     const { t } = useTranslation();
     const router = useRouter();
 
-    const disabledBecauseEmail = !isEmailVerified;
+    const disabledBecauseEmail = isEmailVerified === false;
 
     // icon memo
     const validateIcon = useMemo(() => {

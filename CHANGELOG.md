@@ -1,16 +1,14 @@
 # [1.4.0](https://github.com/victory-aime/my-immo-front/compare/v1.3.0...v1.4.0) (2026-03-15)
 
-
 ### Bug Fixes
 
-* display app in mobile ([43a9f1f](https://github.com/victory-aime/my-immo-front/commit/43a9f1f92a007f4aff1082b2fab7df2364782b7b))
-* **totp and services:** tOTP and services ([daedb46](https://github.com/victory-aime/my-immo-front/commit/daedb4678fcef5ac3ef5b20142d23fae14379cf3))
-
+- display app in mobile ([43a9f1f](https://github.com/victory-aime/my-immo-front/commit/43a9f1f92a007f4aff1082b2fab7df2364782b7b))
+- **totp and services:** tOTP and services ([daedb46](https://github.com/victory-aime/my-immo-front/commit/daedb4678fcef5ac3ef5b20142d23fae14379cf3))
 
 ### Features
 
-* **analytics:** analytics and refactor functions ([b034ce5](https://github.com/victory-aime/my-immo-front/commit/b034ce5cb74625482b19016258ffccf8efe19c8c))
-* **pwa:** pWA ([bfb8c21](https://github.com/victory-aime/my-immo-front/commit/bfb8c21e86f747722be3f0eb394c2f7804b22511))
+- **analytics:** analytics and refactor functions ([b034ce5](https://github.com/victory-aime/my-immo-front/commit/b034ce5cb74625482b19016258ffccf8efe19c8c))
+- **pwa:** pWA ([bfb8c21](https://github.com/victory-aime/my-immo-front/commit/bfb8c21e86f747722be3f0eb394c2f7804b22511))
 
 # [1.3.0](https://github.com/victory-aime/my-immo-front/compare/v1.2.0...v1.3.0) (2026-03-07)
 

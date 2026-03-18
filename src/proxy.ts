@@ -99,7 +99,7 @@ export const config = {
   matcher: [
     `/dashboard/:path*`,
     `/auth/signin/totp`,
-    //`/auth/forget-pass/validate`,
+    `/auth/forget-pass/validate`,
     `/properties/apply/:path*`,
   ],
 };

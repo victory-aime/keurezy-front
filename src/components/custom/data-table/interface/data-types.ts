@@ -83,12 +83,9 @@ interface HoverActionButtonProps {
 }
 
 interface DataGridProps<T> extends BaseDataViewProps {
-  totalPages?: number;
-  totalDataPerPage?: number;
+  paginationData?: PaginationProps;
   initialPage?: number;
-  lazy?: boolean;
   hidePagination?: boolean;
-  onLazyLoad?: (page: number) => void;
   renderItem: (item: T, index: number) => React.ReactNode;
   displayRows?: {
     base?: number;
