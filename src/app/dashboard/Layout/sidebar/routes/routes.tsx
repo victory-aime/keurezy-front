@@ -86,7 +86,11 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     icon: Icons.FaUsers,
     links: [
       { label: "Profil", path: DASHBOARD_ROUTES.PROFILE, icon: Icons.FaUsers },
-      // { label: "Sécurité", path: "/dashboard/security", icon: Icons.Shield },
+      {
+        label: "Sécurité",
+        path: DASHBOARD_ROUTES.SECURITY,
+        icon: Icons.Shield,
+      },
       // {
       //   label: "Abonnement",
       //   path: "/dashboard/billing",

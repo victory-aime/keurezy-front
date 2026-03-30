@@ -7,6 +7,7 @@ export const DASHBOARD_ROUTES = {
     ADD: `${APP_ROUTES.DASHBOARD}/properties/add`,
   },
   PROFILE: `${APP_ROUTES.DASHBOARD}/profile`,
+  SECURITY: `${APP_ROUTES.DASHBOARD}/security`,
   AGENCY: `${APP_ROUTES.DASHBOARD}/agency`,
   CONTACT_REQUEST: `${APP_ROUTES.DASHBOARD}/contact`,
   RENTAL_REQUEST: `${APP_ROUTES.DASHBOARD}/application`,

@@ -10,6 +10,7 @@ import {
   FormPhonePicker,
   Icons,
   BaseModal,
+  BaseText,
 } from "_components/custom";
 import { Formik, FormikValues } from "formik";
 import { t } from "i18next";
@@ -21,8 +22,11 @@ import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "_config/routes";
 import { authClient } from "../../../lib/auth-client";
 import { useGlobalLoader } from "_context/loaderContext";
+import { DocumentPreviewModal } from "./DocumentPreviewModal";
 
 export const AgencyInfo = () => {
+  const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [closeAgencyOpen, setCloseAgencyOpen] = useState(false);
   const router = useRouter();
   const { showLoader, hideLoader } = useGlobalLoader();
@@ -91,6 +95,19 @@ export const AgencyInfo = () => {
   }) => {
     showLoader();
     await closeAgency({ params: values });
+  };
+
+  const handleOpenDoc = (url: string) => {
+    setSelectedDoc(url);
+    setIsOpen(true);
+  };
+
+  const getFileNameFromUrl = (url: string) => {
+    try {
+      return url.split("/").pop()?.split("?")[0];
+    } catch {
+      return "document";
+    }
   };
 
   useEffect(() => {
@@ -182,6 +199,36 @@ export const AgencyInfo = () => {
                   : "Votre agence est active et visible par les utilisateurs de la plateforme."}
               </ProfileForm>
               <ProfileForm
+                title="Documents de l'agence"
+                description="Consultez les documents officiels de votre agence (contrats, certificats, pièces administratives, etc.). Ces informations sont affichées à titre informatif."
+              >
+                <VStack gap={3} alignItems={"flex-start"} width={"full"}>
+                  {values.documents?.map((doc, idx) => (
+                    <Flex
+                      key={idx}
+                      width={"full"}
+                      p={2}
+                      border="1px solid"
+                      borderColor="border"
+                      borderRadius="md"
+                      align="center"
+                      justify="space-between"
+                      _hover={{ bgColor: "bg.muted" }}
+                      onClick={() => handleOpenDoc(doc)}
+                      cursor={"pointer"}
+                    >
+                      <HStack>
+                        <Icons.Paper />
+                        <BaseText fontSize="sm">
+                          {getFileNameFromUrl(doc)}
+                        </BaseText>
+                      </HStack>
+                      <Icons.View size={16} />
+                    </Flex>
+                  ))}
+                </VStack>
+              </ProfileForm>
+              <ProfileForm
                 title="PROFILE.DANGER_ZONE.TITLE"
                 description="Cette section regroupe des actions sensibles pouvant impacter définitivement votre compte. Merci de procéder avec prudence."
                 borderColor="red"
@@ -221,6 +268,11 @@ export const AgencyInfo = () => {
               définitivement l’accès à votre espace propriétaire ainsi qu’aux
               services associés. Êtes-vous certain de vouloir poursuivre ?
             </BaseModal>
+            <DocumentPreviewModal
+              onChange={setIsOpen}
+              isOpen={isOpen}
+              data={selectedDoc}
+            />
           </>
         );
       }}

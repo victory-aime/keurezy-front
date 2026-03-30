@@ -14,6 +14,20 @@ export interface IUser {
   propertyOwner?: { id: string; propertyAgency: { id: string } };
 }
 
+export interface IUserPasskeyList {
+  name?: string;
+  publicKey?: string;
+  userId?: string;
+  credentialID?: string;
+  counter?: number;
+  deviceType?: string;
+  backedUp?: boolean;
+  transports?: string;
+  createdAt?: string | Date | any;
+  aaguid?: string;
+  id?: string;
+}
+
 export interface IAccountUsers {
   id?: string;
   accountId?: string;

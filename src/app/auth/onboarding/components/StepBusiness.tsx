@@ -15,6 +15,7 @@ import {
   BaseDragDropZone,
   BaseText,
   FormCheckbox,
+  BaseUploadMultipleFiles,
 } from "_components/custom";
 import { hexToRGB } from "_theme/colors";
 import { useFormikContext } from "formik";
@@ -102,12 +103,10 @@ export const StepBusiness = () => {
               />
             </HStack>
 
-            <BaseDragDropZone
+            <BaseUploadMultipleFiles
               getFilesUploaded={(files) =>
                 setFieldValue("business.documents", files)
               }
-              initialImageUrls={[]}
-              maxFiles={5}
               label={
                 <Flex fontSize={"sm"} alignItems={"center"} gap={2}>
                   <Icons.Paper />

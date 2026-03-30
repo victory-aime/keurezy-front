@@ -176,7 +176,9 @@ const FormTextInput = ({
       {infoMessage && !isLoading && (
         <Flex gap={1} mt={1} alignItems={"center"}>
           <Field.ErrorIcon width={2} height={2} color={"info.500"} />
-          <Field.HelperText p={1}>{t(infoMessage)}</Field.HelperText>
+          <Field.HelperText fontSize={"x-small"}>
+            {t(infoMessage)}
+          </Field.HelperText>
         </Flex>
       )}
     </Field.Root>

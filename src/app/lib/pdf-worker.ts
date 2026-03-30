@@ -1,0 +1,5 @@
+// app/lib/pdf-worker.ts
+"use client";
+
+import { pdfjs } from "react-pdf";
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;

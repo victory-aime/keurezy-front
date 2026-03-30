@@ -26,10 +26,10 @@ export const useAuth = () => {
       const { data } = await authClient.signOut();
       if (data?.success) {
         router.push(APP_ROUTES.ROOT);
+        queryClient.clear();
       }
     } finally {
       hideLoader();
-      queryClient.clear();
     }
   };
 

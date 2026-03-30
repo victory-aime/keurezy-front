@@ -51,7 +51,7 @@ export const ActionsButton = React.memo(
     // icon memo
     const validateIcon = useMemo(() => {
       if (icon) return icon;
-      return requestId ? <Icons.Save /> : <Icons.Minus />;
+      return requestId ? <Icons.Save /> : <Icons.PlusMinus />;
     }, [icon, requestId]);
 
     const cancelBtnIcon = useMemo(() => {

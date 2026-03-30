@@ -73,7 +73,7 @@ import { CiGrid31 } from "react-icons/ci";
 import { ImOffice } from "react-icons/im";
 import { GoZap } from "react-icons/go";
 import { BiWorld } from "react-icons/bi";
-import { FiTarget } from "react-icons/fi";
+import { FiMinus, FiTarget } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 
 export const Icons = {
@@ -88,7 +88,7 @@ export const Icons = {
   IoIosHelpCircle,
   Home: HiHome,
   TbTax: TbTaxEuro,
-  Minus: HiMiniPlusSmall,
+  PlusMinus: HiMiniPlusSmall,
   Filter: CiFilter,
   Save: CiSaveDown2,
   Refresh: CgSync,
@@ -150,4 +150,5 @@ export const Icons = {
   Cloud: CiCloudOn,
   Google: FcGoogle,
   GridHome: CiGrid42,
+  Minus: FiMinus,
 };

@@ -1,9 +1,8 @@
 ## [1.4.1](https://github.com/victory-aime/my-immo-front/compare/v1.4.0...v1.4.1) (2026-03-18)
 
-
 ### Bug Fixes
 
-* **uat-bug:** uat-bug ([7027ff3](https://github.com/victory-aime/my-immo-front/commit/7027ff3683a48e8bfda114e7cc6123b9b74d9f7a))
+- **uat-bug:** uat-bug ([7027ff3](https://github.com/victory-aime/my-immo-front/commit/7027ff3683a48e8bfda114e7cc6123b9b74d9f7a))
 
 # [1.4.0](https://github.com/victory-aime/my-immo-front/compare/v1.3.0...v1.4.0) (2026-03-15)
 
