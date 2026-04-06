@@ -15,7 +15,7 @@ export const NotificationsList = () => {
     refetch: refetchNotificationList,
   } = NotificationsModule.getAllNotificationsQueries({
     params: { recipientId: user?.id },
-    queryOptions: { enabled: !!user?.id },
+    queryOptions: { enabled: false },
   });
 
   const { mutateAsync: readAll, isPending } =

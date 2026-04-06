@@ -4,46 +4,43 @@ import { Formik, FormikValues } from "formik";
 import { VStack } from "@chakra-ui/react";
 import { BaseButton, BaseText, FormTextInput } from "_components/custom";
 import { VALIDATION } from "_types/";
-import { authClient } from "../../lib/auth-client";
 import { APP_ROUTES } from "_config/routes";
 import { useState } from "react";
 import { handleApiSuccess } from "_utils/handleApiSuccess";
 import { SendEmailRecap } from "./SendEmailRecap";
 import { useRouter } from "next/navigation";
-import { handleApiError } from "_utils/handleApiError";
-import { UserModule } from "_store/state-management";
+import { AuthModule } from "_store/state-management";
 
 export const TokenExpired = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [openRecap, setOpenRecap] = useState(false);
   const router = useRouter();
 
-  const { mutateAsync: checkEmail, isPending } = UserModule.checkEmailMutation(
+  const { mutateAsync: checkEmail, isPending } = AuthModule.checkEmailMutation(
     {},
   );
 
-  const resendEmailVerification = async (values: FormikValues) => {
-    try {
-      setIsLoading(true);
-      const { data, error } = await authClient.sendVerificationEmail({
-        email: values?.email,
-        callbackURL: APP_ROUTES.AUTH.VERIFIED_EMAIL,
-      });
-      if (data?.status) {
+  const {
+    mutateAsync: sendEmailVerification,
+    isPending: isSendingEmailVerification,
+  } = AuthModule.sendEmailVerificationMutation({
+    mutationOptions: {
+      onSuccess: () => {
         setOpenRecap(true);
         handleApiSuccess({
           status: 201,
           message: "Le lien a été renvoyé",
         });
-      }
-      if (error) {
-        handleApiError({ status: error.status, message: error?.message! });
-      }
-    } catch (e) {
-      console.log("error resend link", e);
-    } finally {
-      setIsLoading(false);
-    }
+      },
+    },
+  });
+
+  const resendEmailVerification = async (values: FormikValues) => {
+    await sendEmailVerification({
+      payload: {
+        email: values?.email,
+        callbackURL: APP_ROUTES.AUTH.VERIFIED_EMAIL,
+      },
+    });
   };
 
   return (
@@ -73,7 +70,7 @@ export const TokenExpired = () => {
               isVerified={isPending}
             />
             <BaseButton
-              isLoading={isLoading}
+              isLoading={isSendingEmailVerification}
               width={"full"}
               onClick={() => handleSubmit()}
               isDisabled={!isValid || !dirty}

@@ -37,7 +37,7 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
 
   const { data: requestList } = ContactModule.agencyContactListQueries({
     params: { agencyId, ownerId },
-    queryOptions: { enabled: !!agencyId && !!ownerId },
+    queryOptions: { enabled: false },
   });
 
   const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
@@ -51,7 +51,7 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
         agencyId,
         ownerId,
       },
-      queryOptions: { enabled: !!agencyId && !!ownerId },
+      queryOptions: { enabled: false },
     });
 
   const { data: rentalAgreementList } =
@@ -61,14 +61,14 @@ export const Sidebar = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
         ownerId,
       },
       queryOptions: {
-        enabled: !!agencyId && !!ownerId,
+        enabled: false,
       },
     });
 
   const { data: notificationsList } =
     NotificationsModule.getAllNotificationsQueries({
       params: { recipientId: user?.id },
-      queryOptions: { enabled: !!user?.id },
+      queryOptions: { enabled: false },
     });
 
   const badgesByPath = useMemo(() => {

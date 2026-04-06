@@ -3,7 +3,7 @@ import { DASHBOARD_ROUTES } from "../dashboard/routes";
 
 const roleToDashboardMap: Record<string, string> = {
   USER: APP_ROUTES.ROOT,
-  IMMO_OWNER: DASHBOARD_ROUTES.HOME,
+  OWNER: DASHBOARD_ROUTES.HOME,
 };
 
 export { roleToDashboardMap };

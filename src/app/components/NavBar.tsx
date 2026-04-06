@@ -153,7 +153,7 @@ export const Navbar = () => {
                     >
                       Deconnexion
                     </BaseButton>
-                    {user?.role === UserRole.IMMO_OWNER && (
+                    {user?.role === UserRole.OWNER && (
                       <BaseButton
                         onClick={() => router.push(APP_ROUTES.DASHBOARD)}
                         colorType={"secondary"}
@@ -273,7 +273,7 @@ export const Navbar = () => {
                           Deconnexion
                         </BaseButton>
 
-                        {user?.role === UserRole.IMMO_OWNER && (
+                        {user?.role === UserRole.OWNER && (
                           <BaseButton
                             onClick={() => router.push(APP_ROUTES.DASHBOARD)}
                             width={"full"}

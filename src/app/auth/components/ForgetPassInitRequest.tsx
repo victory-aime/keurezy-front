@@ -11,7 +11,7 @@ import { authClient } from "../../lib/auth-client";
 import { useState } from "react";
 import { handleApiSuccess } from "_utils/handleApiSuccess";
 import { handleApiError } from "_utils/handleApiError";
-import { UserModule } from "_store/state-management";
+import { AuthModule } from "_store/state-management";
 import { Navbar } from "_component/NavBar";
 
 export const ForgetPassInitRequest = () => {
@@ -20,7 +20,7 @@ export const ForgetPassInitRequest = () => {
   const [status, setStatus] = useState(false);
   const router = useRouter();
 
-  const { mutateAsync: checkEmail, isPending } = UserModule.checkEmailMutation(
+  const { mutateAsync: checkEmail, isPending } = AuthModule.checkEmailMutation(
     {},
   );
   const resetPasswordInit = async (values: FormikValues) => {

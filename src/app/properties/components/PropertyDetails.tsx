@@ -246,7 +246,7 @@ export const PropertyDetails = ({ id }: { id: string }) => {
               </Stack>
 
               {/* Buttons */}
-              {user?.role !== UserRole.IMMO_OWNER && (
+              {user?.role !== UserRole.OWNER && (
                 <BaseButton
                   w="full"
                   onClick={() => {
@@ -264,7 +264,7 @@ export const PropertyDetails = ({ id }: { id: string }) => {
               )}
 
               <Stack gap={3} pt={2}>
-                {user?.role !== UserRole.IMMO_OWNER && (
+                {user?.role !== UserRole.OWNER && (
                   <Link
                     href={`${APP_ROUTES.APPARTEMENT_CONTACT_AGENCY}?id=${id}`}
                   >

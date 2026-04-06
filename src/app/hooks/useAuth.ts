@@ -87,25 +87,5 @@ export const useAuth = () => {
     }
   };
 
-  const signUp = async ({ name, email, password }: AuthTypes) => {
-    try {
-      const result = await authClient.signUp.email({
-        name: name!,
-        email: email!,
-        password: password!,
-      });
-      if (result.error) {
-        handleApiError({
-          status: result.error.status,
-          message: result.error.message!,
-        });
-        return;
-      }
-      return result;
-    } catch (error) {
-      console.log("error signUp", error);
-    }
-  };
-
-  return { logout, login, signUp, isLoading };
+  return { logout, login, isLoading };
 };

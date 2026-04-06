@@ -13,16 +13,16 @@ export class UserService extends BaseApi {
     );
   }
 
-  regenerate_password(data: MODELS.IUser) {
+  register_user(data: MODELS.ICreateUser) {
     return this.apiService.invoke(
-      this.applicationContext.getApiConfig().USER.REGENERATE_PASSWORD,
+      this.applicationContext.getApiConfig().USER.REGISTER,
       data,
     );
   }
 
-  reset_password(data: MODELS.IUser) {
+  resend_email_verification(data: { email: string }) {
     return this.apiService.invoke(
-      this.applicationContext.getApiConfig().AUTH.RESET_PASSWORD,
+      this.applicationContext.getApiConfig().AUTH.RESEND_EMAIL_VERIFICATION,
       data,
     );
   }

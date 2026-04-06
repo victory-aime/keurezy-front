@@ -6,14 +6,13 @@ import { MODELS } from "_types/index";
  * such as fetching all agency and creating a new agency through API endpoints.
  */
 export class AgencyService extends BaseApi {
-  agency_info(data: { agencyId: string; ownerId: string }) {
+  agency_info(agencyId: string, ownerId: string) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().AGENCY.AGENCY_INFO,
       {},
-      { params: data },
+      { params: { agencyId, ownerId } },
     );
   }
-
   create_agency(data: MODELS.ICreateAgency | FormData) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().AGENCY.CREATE_AGENCY,

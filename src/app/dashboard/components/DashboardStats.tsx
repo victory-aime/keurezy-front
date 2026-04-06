@@ -65,7 +65,7 @@ export const DashboardStats = () => {
     isLoading: notificationLoad,
   } = NotificationsModule.getAllNotificationsQueries({
     params: { recipientId: user?.id },
-    queryOptions: { enabled: !!user?.id },
+    queryOptions: { enabled: false },
   });
 
   const revenues = allProperties?.content?.reduce(

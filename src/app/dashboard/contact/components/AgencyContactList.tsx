@@ -18,7 +18,7 @@ export const AgencyContactList = () => {
       agencyId: user?.propertyOwner?.propertyAgency?.id,
       ownerId: user?.propertyOwner?.id,
     },
-    queryOptions: { enabled: !!user?.propertyOwner?.propertyAgency?.id },
+    queryOptions: { enabled: false },
   });
 
   const { mutateAsync: readAll, isPending } =

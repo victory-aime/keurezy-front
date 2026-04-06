@@ -11,7 +11,10 @@ import {
 import { useColorMode } from "_components/ui/color-mode";
 
 export const toaster = createToaster({
-  placement: "top",
+  placement: "top-end",
+  removeDelay: 4000,
+  duration: 3000,
+  gap: 3,
   offsets: { left: "20px", top: "20px", right: "20px", bottom: "20px" },
   overlap: true,
   max: 2,

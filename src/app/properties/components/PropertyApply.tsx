@@ -256,9 +256,9 @@ export const PropertyApply = ({ id }: { id: string }) => {
               onClick={() => handleSubmit()}
               isLoading={isPending}
               isEmailVerified={user?.emailVerified}
-              isDisabled={user?.role === UserRole.IMMO_OWNER}
+              isDisabled={user?.role === UserRole.OWNER}
               emailVerificationMessage={
-                user?.role === UserRole.IMMO_OWNER
+                user?.role === UserRole.OWNER
                   ? "Vous ne pouvez pas accéder à cette fonctionnalité"
                   : !user?.emailVerified
                     ? "Un email de vérification vous a été envoyé. Veuillez le valider pour continuer."

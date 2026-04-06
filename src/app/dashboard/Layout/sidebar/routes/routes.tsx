@@ -15,16 +15,16 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         path: DASHBOARD_ROUTES.PROPERTIES.LIST,
         icon: Icons.RiBuildingLine,
       },
-      {
-        label: "Locataires",
-        path: DASHBOARD_ROUTES.TENANTS.LIST,
-        icon: Icons.FaUsers,
-      },
-      {
-        label: "Candidatures",
-        path: DASHBOARD_ROUTES.RENTAL_REQUEST,
-        icon: Icons.Clipboard,
-      },
+      // {
+      //   label: "Locataires",
+      //   path: DASHBOARD_ROUTES.TENANTS.LIST,
+      //   icon: Icons.FaUsers,
+      // },
+      // {
+      //   label: "Candidatures",
+      //   path: DASHBOARD_ROUTES.RENTAL_REQUEST,
+      //   icon: Icons.Clipboard,
+      // },
       // {
       //   label: "Paiements",
       //   path: "/dashboard/payments",
@@ -68,11 +68,11 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         icon: Icons.Bell,
       },
 
-      {
-        label: "Demandes",
-        path: DASHBOARD_ROUTES.CONTACT_REQUEST,
-        icon: Icons.Request,
-      },
+      // {
+      //   label: "Demandes",
+      //   path: DASHBOARD_ROUTES.CONTACT_REQUEST,
+      //   icon: Icons.Request,
+      // },
       {
         label: "SIDE_BAR.AGENCY",
         path: DASHBOARD_ROUTES.AGENCY,

@@ -11,6 +11,7 @@ import { VALIDATION } from "_types/index";
 import { useState } from "react";
 import { AuthBoxContainer } from "./AuthBoxContainer";
 import { Navbar } from "_component/NavBar";
+import { AuthModule } from "_store/state-management";
 
 export const SignIn = ({
   callbackUrl = APP_ROUTES.REDIRECT,

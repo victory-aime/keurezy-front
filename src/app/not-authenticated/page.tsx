@@ -99,7 +99,7 @@ export default function UnauthorizedPage() {
             {user ? (
               <BaseButton
                 onClick={() => {
-                  if (user?.role === UserRole.IMMO_OWNER) {
+                  if (user?.role === UserRole.OWNER) {
                     router.push(APP_ROUTES.DASHBOARD);
                   } else {
                     router.push(APP_ROUTES.ROOT);
@@ -107,7 +107,7 @@ export default function UnauthorizedPage() {
                 }}
                 colorType="danger"
               >
-                {user?.role === UserRole.IMMO_OWNER
+                {user?.role === UserRole.OWNER
                   ? "Retour au tableau de bord"
                   : "Retourner à l’accueil"}
               </BaseButton>

@@ -44,13 +44,13 @@ export const ApplicationList = () => {
       initialPage: currentPage,
       limitPerPage: CONSTANTS.PAGINATION.FIVE_ITEMS_PER_PAGE,
     },
-    queryOptions: { enabled: !!agencyId },
+    queryOptions: { enabled: false },
   });
 
   const { refetch: refetchRentalAgreementList } =
     RentalAgreementModule.getRentalAgreementListByAgencyQueries({
       params: { agencyId, ownerId: user?.propertyOwner?.id },
-      queryOptions: { enabled },
+      queryOptions: { enabled: false },
     });
 
   const { mutateAsync: approveRequest, isPending: approvePending } =

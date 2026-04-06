@@ -24,6 +24,9 @@ export const onboardUserAgencySchema = Yup.object({
       .required("Le nom de l'agence est requise")
       .min(4, "le nom doit contenir au moins 4 caractères")
       .max(20, "le nom ne doit pas depasser 20 caractères"),
+    email: Yup.string()
+      .required("L'email est obligatoire")
+      .email("Adresse e-mail invalide"),
     address: Yup.string()
       .required("l'addresse est obligatoire")
       .min(4, "l'addresse ne doit au moins avoir 4 caractères")

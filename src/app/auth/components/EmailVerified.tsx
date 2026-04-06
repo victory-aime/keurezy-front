@@ -10,24 +10,41 @@ import { TokenInvalid } from "./TokenInvalid";
 import { UnknownError } from "./UnknownError";
 import { CiMail } from "react-icons/ci";
 import { Center } from "@chakra-ui/react";
+import { authClient } from "../../lib/auth-client";
+import { handleApiError } from "_utils/handleApiError";
+import { APP_ROUTES } from "_config/routes";
 
 export const EmailVerified = ({ params }: { params: string }) => {
   const router = useRouter();
   const [openSuccess, setOpenSuccess] = useState(false);
-
   const [state, setState] = useState<VerificationState>("loading");
 
-  useEffect(() => {
-    const mapped = resolveState(params);
-    setState(mapped);
+  console.log("params", params);
 
-    // if (mapped === "success") {
-    //   setOpenSuccess(true);
-    //   setTimeout(() => {
-    //     router.replace(APP_ROUTES.REDIRECT);
-    //   }, 3000);
-    // }
-  }, [params, router]);
+  const handleVerifyEmail = async (token: string) => {
+    const { data, error } = await authClient.verifyEmail({
+      query: { token },
+    });
+
+    if (error) {
+      handleApiError({ status: error.status, message: error?.message! });
+    }
+    if (data?.status) {
+      setOpenSuccess(true);
+      setState("success");
+      setTimeout(() => {
+        router.replace(APP_ROUTES.REDIRECT);
+      }, 3000);
+    }
+  };
+
+  useEffect(() => {
+    if (params) {
+      const mapped = resolveState(params);
+      setState(mapped);
+      handleVerifyEmail(params);
+    }
+  }, [params]);
 
   return (
     <main>

@@ -27,7 +27,6 @@ import { APP_ROUTES } from "_config/routes";
 import { MODELS } from "_types/*";
 import { OnboardFinish } from "../components/FinalStep";
 import { Formik } from "formik";
-import { authClient } from "../../../lib/auth-client";
 import { useAuth } from "_hooks/useAuth";
 import { AgencyModule } from "_store/state-management";
 import { AgencyNameWatcher } from "../../components/AgencyNameWatcher";
@@ -53,7 +52,7 @@ export const MainOnboarding = () => {
   const [, setIsCheckingName] = useState(false);
   const formikRef = useRef<any>(null);
 
-  const { signUp, login } = useAuth();
+  const { login } = useAuth();
   const { mutateAsync: verifiedAgencyName } = AgencyModule.checkNameMutation(
     {},
   );
@@ -123,25 +122,17 @@ export const MainOnboarding = () => {
     try {
       // 1️⃣ Création du user
       setIsLoading(true);
-      const result = await signUp(formikRef.current.values.account);
-      const user = result?.data?.user;
-
-      if (!user) throw new Error("User creation failed");
-
-      // 2️⃣ Envoi email de vérification
-      await authClient
-        .sendVerificationEmail({
-          email: user.email,
-          callbackURL: DASHBOARD_ROUTES.HOME,
-        })
-        .catch((error) => console.log("failed send email link", error));
 
       // 3️⃣ Création agence
       const formData = new FormData();
       const business = formikRef.current.values.business;
+      const account = formikRef.current.values.account;
 
-      formData.append("userId", String(user.id));
       formData.append("name", business.name);
+      formData.append("username", account.name);
+      formData.append("userEmail", account.email);
+      formData.append("password", account.password);
+      formData.append("email", business.email);
       formData.append("description", business.description);
       formData.append("address", business.address);
       formData.append("phone", business.phone);

@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { Layout } from "./Layout/Layout";
 import { SessionRefreshProvider } from "_context/SessionRefresh-context";
 
@@ -9,9 +8,7 @@ export default async function DashboardLayout({
 }>) {
   return (
     <SessionRefreshProvider>
-      <Suspense>
-        <Layout>{children}</Layout>
-      </Suspense>
+      <Layout>{children}</Layout>
     </SessionRefreshProvider>
   );
 }

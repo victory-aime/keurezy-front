@@ -11,7 +11,20 @@ export interface IUser {
   status?: Status | undefined;
   role?: UserRole | undefined;
   accounts?: IAccountUsers[];
-  propertyOwner?: { id: string; propertyAgency: { id: string } };
+  owner?: { id: string; agency: { id: string } };
+}
+
+export interface ICreateUser extends IUser {
+  password: string;
+}
+
+export interface IForgotPasswordInit extends IUser {
+  callbackURL: string;
+}
+
+export interface IResetPassword {
+  token: string;
+  newPassword: string;
 }
 
 export interface IUserPasskeyList {

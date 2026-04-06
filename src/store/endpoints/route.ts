@@ -5,6 +5,7 @@ import {
 } from "rise-core-frontend";
 
 const APIS_ROUTES_MODULES_PATH = {
+  AUTH: "/auth",
   USER: "/users",
   AGENCY: "/agency",
   PROPERTY: "/property",
@@ -20,6 +21,38 @@ export const APIS = (baseUrl?: string) => {
     createApiAction({ ...args, baseUrl });
 
   return {
+    AUTH: {
+      SEND_EMAIL_VERIFICATION: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/send-email-verification`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      REGISTER: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/register`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      FORGET_PASSWORD_INIT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/forgot-password`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      RESET_PASSWORD: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/reset-password`,
+        method: "POST",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      CHECK_EMAIL: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/verified-email`,
+        method: "POST",
+        pathBase: "UNSECURED_API",
+        showResponse: false,
+      }),
+    },
     USER: {
       INFO: api({
         path: `${APIS_ROUTES_MODULES_PATH.USER}/info`,
@@ -27,12 +60,6 @@ export const APIS = (baseUrl?: string) => {
         pathBase: "SECURED_API",
         showResponse: false,
         handleErrorManually: false,
-      }),
-      CHECK_EMAIL: api({
-        path: `${APIS_ROUTES_MODULES_PATH.USER}/verified-email`,
-        method: "POST",
-        pathBase: "UNSECURED_API",
-        showResponse: false,
       }),
     },
     AGENCY: {

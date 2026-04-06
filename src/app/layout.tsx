@@ -1,15 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Lato } from "next/font/google";
 import React from "react";
-import "react-day-picker/dist/style.css";
 import "react-international-phone/style.css";
-import "_components/custom/agenda/index.css";
 import GlobalApplicationProvider from "_context/provider/GlobalApplicationProvider";
 import { ThemeProvider } from "_components/ui/provider";
 import { LoaderProvider } from "_context/loaderContext";
 import { Toaster } from "_components/ui/toaster";
 import { I18nProvider } from "_context/provider/i18n-provider";
 import { AuthContextProvider } from "_context/auth-context";
+import { authClient } from "./lib/auth-client";
+import { headers } from "next/headers";
 
 const lato = Lato({
   variable: "--font-lato",
@@ -68,11 +68,17 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await authClient.getSession({
+    fetchOptions: {
+      headers: await headers(),
+    },
+  });
+
   return (
     <html lang="en" suppressHydrationWarning suppressContentEditableWarning>
       <body className={`${lato.variable}`}>
@@ -80,9 +86,11 @@ export default function RootLayout({
           <ThemeProvider>
             <LoaderProvider>
               <Toaster />
-              <AuthContextProvider>
-                <I18nProvider>{children}</I18nProvider>
-              </AuthContextProvider>
+              <I18nProvider>
+                <AuthContextProvider session={session?.data}>
+                  {children}
+                </AuthContextProvider>
+              </I18nProvider>
             </LoaderProvider>
           </ThemeProvider>
         </GlobalApplicationProvider>

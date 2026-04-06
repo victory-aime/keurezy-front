@@ -33,13 +33,13 @@ export const Header = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
   const { data: unreadNotificationsList, isLoading: unreadListLoad } =
     NotificationsModule.getAllUnreadNotificationsQueries({
       params: { recipientId: user?.id },
-      queryOptions: { enabled: !!user?.id },
+      queryOptions: { enabled: false },
     });
 
   const { refetch: refetchNotificationList } =
     NotificationsModule.getAllNotificationsQueries({
       params: { recipientId: user?.id },
-      queryOptions: { enabled: !!user?.id },
+      queryOptions: { enabled: false },
     });
 
   const links = [
@@ -121,11 +121,11 @@ export const Header = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
               </>
             ) : (
               <>
-                <NotificationHeaderMenu
+                {/* <NotificationHeaderMenu
                   notifications={unreadNotificationsList ?? []}
                   isLoading={unreadListLoad}
                   refetchUnreadList={refetchNotificationList}
-                />
+                /> */}
 
                 <Separator orientation="vertical" height={6} mx={1} />
 

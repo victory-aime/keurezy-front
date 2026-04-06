@@ -3,6 +3,10 @@ interface ICreateAgency {
   name?: string;
   address?: string;
   description?: string;
+  username?: string;
+  userEmail?: string;
+  password?: string;
+  email?: string;
   phone?: string;
   userId?: string;
   acceptTerms?: boolean;

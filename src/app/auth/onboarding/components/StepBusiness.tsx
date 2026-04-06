@@ -73,12 +73,21 @@ export const StepBusiness = () => {
 
         <OnboardCardWrapper>
           <VStack gap={5} align="stretch">
-            <FormTextInput
-              required
-              name="business.name"
-              label="Société"
-              placeholder="Nom de votre société"
-            />
+            <HStack width={"full"} gap={2}>
+              <FormTextInput
+                required
+                name="business.name"
+                label="Société"
+                placeholder="Nom de votre société"
+              />
+              <FormTextInput
+                required
+                name="business.email"
+                label="Email"
+                placeholder="Email de votre agence"
+              />
+            </HStack>
+
             <FormTextArea
               required
               name="business.description"

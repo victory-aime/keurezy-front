@@ -137,7 +137,7 @@ export const ContactAgency = ({ id }: { id: string }) => {
                 placeholder="Bonjour, je suis interessé"
                 maxCharacters={1000}
               />
-              {user?.role !== UserRole?.IMMO_OWNER ? (
+              {user?.role !== UserRole?.OWNER ? (
                 <ActionsButton
                   validateTitle="Envoyer le message"
                   onClick={() => handleSubmit()}
@@ -256,7 +256,7 @@ export const ContactAgency = ({ id }: { id: string }) => {
               </Box>
             </Stack>
           </Box>
-          {user?.role !== UserRole?.IMMO_OWNER && (
+          {user?.role !== UserRole?.OWNER && (
             <Box
               rounded="xl"
               p={6}

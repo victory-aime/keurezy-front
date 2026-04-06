@@ -14,109 +14,92 @@ import { tourSteps } from "_constants/tourStep";
 import { StorageKey } from "_constants/StorageKeys";
 import { EmailNotVerifiedBanner } from "./email-banner/EmailNotVerified";
 import { authClient } from "../../lib/auth-client";
-import { DASHBOARD_ROUTES } from "../routes";
 import { BaseToast, ToastStatus } from "_components/custom";
 import { resolveState } from "../../auth/resolve-state";
 import { useSearchParams } from "next/navigation";
 import { EmailVerifiedSuccessBanner } from "./email-banner/EmailVerifiedSuccessBanner";
+import { handleApiError } from "_utils/handleApiError";
+import { AuthModule } from "_store/state-management";
 
 export const Layout: FunctionComponent<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const searchParams = useSearchParams()?.get("error");
+  const token = useSearchParams().get("token");
+
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const { session, user, isLoading, refetchSession } = useAuthContext();
+
+  const { session, user, isLoading } = useAuthContext();
+
   const [showTour, setShowTour] = useState(false);
-  const [isResending, setIsResending] = useState(false);
-  const prevVerified = useRef<boolean | undefined>(user?.emailVerified);
   const [showVerifiedBanner, setShowVerifiedBanner] = useState(false);
 
-  const resendEmailLink = async () => {
-    if (!user?.email) return;
+  const prevVerified = useRef<boolean | undefined>(user?.emailVerified);
 
-    try {
-      setIsResending(true);
+  const { mutateAsync: sendVerificationEmail, isPending } =
+    AuthModule.sendEmailVerificationMutation({});
 
-      const { data, error } = await authClient.sendVerificationEmail({
-        email: user.email,
-        callbackURL: DASHBOARD_ROUTES.HOME,
+  // 🔹 Verify email via token
+  useEffect(() => {
+    if (!token) return;
+
+    const verify = async () => {
+      const { data, error } = await authClient.verifyEmail({
+        query: { token },
       });
 
-      if (data?.status) {
-        BaseToast({
-          title: "Email envoyé",
-          description:
-            "Un nouveau lien de vérification vient d’être envoyé à votre adresse email.",
-        });
-      }
-
       if (error) {
-        BaseToast({
-          title: "Erreur",
-          description:
-            "Impossible d’envoyer le lien de vérification. Veuillez réessayer.",
-        });
+        handleApiError({ status: error.status, message: error.message! });
+        return;
       }
-    } finally {
-      setIsResending(false);
-    }
-  };
 
+      if (data?.status) {
+        setShowVerifiedBanner(true);
+      }
+    };
+
+    verify();
+  }, [token]);
+
+  // 🔹 Handle token state (expired / invalid)
   useEffect(() => {
-    if (isMobile) return;
-    const shouldShow = localStorage.getItem(StorageKey.ENABLED_GUIDED_TOUR);
+    if (!token) return;
 
-    if (shouldShow === "true") {
-      const timer = setTimeout(() => setShowTour(true), 800);
-      return () => clearTimeout(timer);
-    }
-  }, [isMobile]);
+    const state = resolveState(token);
 
-  useEffect(() => {
-    if (user?.id) return;
-    const storageKey = `${StorageKey.DASHBOARD_OWNER_EMAIL_VERIFIED}_${user?.id?.slice(0.8)}`;
-
-    const mapped = resolveState(searchParams!);
-    const alreadyShown = localStorage.getItem(storageKey);
-
-    /**
-     * SUCCESS
-     * emailVerified vient de passer de false -> true
-     */
-    if (prevVerified.current && user?.emailVerified && !alreadyShown) {
-      setShowVerifiedBanner(true);
-      localStorage.setItem(storageKey, "true");
-      refetchSession?.();
-    }
-
-    console.log(
-      "verif",
-      prevVerified.current && user?.emailVerified && !alreadyShown,
-    );
-
-    /**
-     * TOKEN EXPIRED
-     */
-    if (mapped === "token_expired") {
+    if (state === "token_expired") {
       BaseToast({
         title: "Lien expiré",
-        description:
-          "Ce lien de vérification a expiré. Vous pouvez en demander un nouveau.",
+        description: "Ce lien a expiré. Demandez-en un nouveau.",
         type: ToastStatus.WARNING,
       });
     }
-    if (mapped === "invalid_token") {
+
+    if (state === "invalid_token") {
       BaseToast({
         title: "Lien invalide",
-        description:
-          "Ce lien de vérification est invalide. Vous pouvez en demander un nouveau.",
+        description: "Ce lien est invalide.",
         type: ToastStatus.INFO,
       });
     }
-    prevVerified.current = user?.emailVerified;
-  }, [user?.emailVerified, searchParams]);
+  }, [token]);
 
+  // 🔹 Detect email verification change
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const storageKey = `${StorageKey.DASHBOARD_OWNER_EMAIL_VERIFIED}_${user.id.slice(0, 8)}`;
+    const alreadyShown = localStorage.getItem(storageKey);
+
+    if (prevVerified.current === false && user.emailVerified && !alreadyShown) {
+      setShowVerifiedBanner(true);
+      localStorage.setItem(storageKey, "true");
+    }
+
+    prevVerified.current = user.emailVerified;
+  }, [user?.emailVerified]);
+
+  // 🔹 Auto hide banner
   useEffect(() => {
     if (!showVerifiedBanner) return;
 
@@ -127,6 +110,28 @@ export const Layout: FunctionComponent<{
     return () => clearTimeout(timer);
   }, [showVerifiedBanner]);
 
+  useEffect(() => {
+    if (isMobile) return;
+
+    const enabled = localStorage.getItem(StorageKey.ENABLED_GUIDED_TOUR);
+
+    if (enabled === "true") {
+      const timer = setTimeout(() => setShowTour(true), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [isMobile]);
+
+  const resendEmailLink = async () => {
+    if (!user?.email) return;
+
+    await sendVerificationEmail({
+      payload: {
+        email: user.email,
+        callbackURL: process.env.NEXT_PUBLIC_DASHBOARD_URL!,
+      },
+    });
+  };
+
   return (
     <InitializeApp isLoading={isLoading}>
       {showTour && (
@@ -135,11 +140,13 @@ export const Layout: FunctionComponent<{
           tourStep={tourSteps}
         />
       )}
+
       <Sidebar
         data={{ user }}
-        onShowSidebar={() => setSidebarOpen(!isSidebarOpen)}
+        onShowSidebar={() => setSidebarOpen((prev) => !prev)}
         sideToggled={isSidebarOpen}
       />
+
       <SidebarInset
         variant="inset"
         collapsed={!isSidebarOpen}
@@ -148,14 +155,15 @@ export const Layout: FunctionComponent<{
         {!user?.emailVerified && (
           <EmailNotVerifiedBanner
             onResend={resendEmailLink}
-            isLoading={isResending}
+            isLoading={isPending}
           />
         )}
+
         {showVerifiedBanner && <EmailVerifiedSuccessBanner />}
 
         <Header
           sideToggled={isSidebarOpen}
-          onShowSidebar={() => setSidebarOpen(!isSidebarOpen)}
+          onShowSidebar={() => setSidebarOpen((prev) => !prev)}
           data={{ session }}
         />
         <Container sidebarToggle={isSidebarOpen}>{children}</Container>

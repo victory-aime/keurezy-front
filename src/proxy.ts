@@ -10,10 +10,7 @@ import { getCookieCache, getSessionCookie } from "better-auth/cookies";
  */
 const PROTECTED_ROUTES: Record<string, string[]> = {
   ...Object.fromEntries(
-    Object.values(DASHBOARD_ROUTES).map((route) => [
-      route,
-      [UserRole.IMMO_OWNER],
-    ]),
+    Object.values(DASHBOARD_ROUTES).map((route) => [route, [UserRole.OWNER]]),
   ),
   ...Object.fromEntries(
     Object.values(USERS_ROUTES).map((route) => [route, [UserRole.USER]]),
@@ -36,14 +33,6 @@ export async function proxy(request: NextRequest) {
   if (pathname === RESET_PASSWORD_ROUTE && !searchParams.get("token")) {
     const url = request.nextUrl.clone();
     url.pathname = APP_ROUTES.AUTH.SIGN_IN;
-    url.search = "";
-    return NextResponse.redirect(url);
-  }
-
-  // 🔐 CREATE AGENCY
-  if (pathname === CREATE_AGENCY_ROUTE && !searchParams.get("token")) {
-    const url = request.nextUrl.clone();
-    url.pathname = APP_ROUTES.AUTH.SIGN_UP;
     url.search = "";
     return NextResponse.redirect(url);
   }
