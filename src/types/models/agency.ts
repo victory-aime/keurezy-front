@@ -1,4 +1,5 @@
-import { COMMON } from "../enum";
+import { COMMON, PropertyType } from "../enum";
+import { IPagination } from "./pagination";
 interface ICreateAgency {
   name?: string;
   address?: string;
@@ -33,11 +34,10 @@ interface IAgency {
   documents: string[];
 }
 
-interface IAgencyFilters {
-  agencyId: string;
-  ownerId: string;
-  initialPage: number;
-  limitPerPage: number;
+interface IAgencyFilters extends IPagination {
+  title?: string;
+  status?: COMMON.Status;
+  type?: PropertyType;
 }
 
 interface IAgencyCommonParams {

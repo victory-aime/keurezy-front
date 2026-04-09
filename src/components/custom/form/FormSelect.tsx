@@ -92,8 +92,7 @@ const FormSelect: FC<FullSelectProps> = ({
           <SelectLabel
             display={"flex"}
             gap={"6px"}
-            mb={"4px"}
-            fontSize={{ base: "14px", md: "12px" }}
+            fontSize={"14px"}
             alignItems={"center"}
           >
             {isLoading ? (
@@ -131,7 +130,7 @@ const FormSelect: FC<FullSelectProps> = ({
                 <SelectValueText
                   placeholder={t(placeholder)}
                   color={isError ? "red.500" : "inherit"}
-                  fontSize={{ base: "16px", md: "12px" }}
+                  fontSize={{ base: "16px", sm: "14px" }}
                 />
               )}
             </SelectTrigger>
@@ -207,7 +206,7 @@ const FormSelect: FC<FullSelectProps> = ({
       </SelectRoot>
       {isError && (
         <Flex gap={1} mt={1} alignItems={"center"}>
-          <Field.ErrorIcon width={4} height={4} color={"red.500"} />
+          <Field.ErrorIcon width={2.5} height={2.5} color={"red.500"} />
           <Field.ErrorText>{error}</Field.ErrorText>
         </Flex>
       )}

@@ -1,11 +1,9 @@
 "use client";
 
 import { Center } from "@chakra-ui/react";
-import { BaseModal, DeleteModalActions } from "_components/custom";
+import { BaseModal, DeleteModalActions, Icons } from "_components/custom";
 import React, { FC, useEffect, useState } from "react";
 import { DeleteLottie } from "_lottie/animations/LottieAnimation";
-import { VariablesColors } from "_theme/variables";
-import { FaTrashAlt } from "react-icons/fa";
 
 export const DeleteModalAnimation: FC<DeleteModalActions> = ({
   isOpen,
@@ -15,6 +13,8 @@ export const DeleteModalAnimation: FC<DeleteModalActions> = ({
   children,
   callback,
   ignoreFooter = true,
+  buttonSaveTitle = "COMMON.VALIDATE",
+  size = "sm",
 }) => {
   const [showAnimation, setShowAnimation] = useState(false);
 
@@ -32,7 +32,8 @@ export const DeleteModalAnimation: FC<DeleteModalActions> = ({
 
   return (
     <BaseModal
-      icon={<FaTrashAlt color={VariablesColors.white} />}
+      icon={<Icons.Trash />}
+      size={size}
       title={title}
       isOpen={isOpen}
       onChange={onChange}
@@ -40,6 +41,7 @@ export const DeleteModalAnimation: FC<DeleteModalActions> = ({
       ignoreFooter={ignoreFooter}
       isLoading={isLoading}
       onClick={callback}
+      buttonSaveTitle={buttonSaveTitle}
     >
       {showAnimation ? (
         <Center>

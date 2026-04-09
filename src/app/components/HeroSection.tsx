@@ -107,7 +107,7 @@ export const HeroSection = () => {
 
             {/* Buttons */}
             <Flex flexDirection={{ base: "column", sm: "row" }} gap={4} mb={10}>
-              <Link href={APP_ROUTES.AUTH.SIGN_UP}>
+              {/* <Link href={APP_ROUTES.AUTH.SIGN_UP}>
                 <BaseButton
                   variant="outline"
                   leftIcon={<Icons.FaUsers />}
@@ -115,7 +115,7 @@ export const HeroSection = () => {
                 >
                   Je suis Locataire
                 </BaseButton>
-              </Link>
+              </Link> */}
 
               <Link href={APP_ROUTES.AUTH.ONBOARD}>
                 <BaseButton

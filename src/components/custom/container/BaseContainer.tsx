@@ -53,7 +53,8 @@ export const BaseContainer = React.memo(
       <Box {...boxStyle} {...rest}>
         <Flex
           width={"full"}
-          flexDir={{ base: "column", md: "row" }}
+          flexDir={{ base: "column", sm: "row" }}
+          alignItems={"flex-start"}
           justifyContent={"space-between"}
           gap={5}
         >
@@ -146,7 +147,6 @@ export const BaseContainer = React.memo(
               width={"full"}
               alignItems={"flex-start"}
               justifyContent={"flex-end"}
-              mt={{ base: "30px", md: "0" }}
             >
               {isForm && formComponent}
               {withActionButtons && (
@@ -159,8 +159,8 @@ export const BaseContainer = React.memo(
           <Box
             mt={"20px"}
             mb={"30px"}
-            bgColor={hexToRGB("lighter", 0.1)}
-            p={15}
+            p={5}
+            boxShadow={"md"}
             borderRadius={"7px"}
             animation={"slideIn"}
           >

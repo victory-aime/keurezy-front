@@ -1,7 +1,22 @@
 import { APP_ROUTES } from "_config/routes";
 
+enum PATHS {
+  PROPERTIES = "properties",
+  BUILDING = "building",
+  LAND = "land",
+}
+
 export const DASHBOARD_ROUTES = {
   HOME: `${APP_ROUTES.DASHBOARD}`,
+  LAND: {
+    LIST: `${APP_ROUTES.DASHBOARD}/${PATHS.LAND}`,
+    DETAILS: ``,
+    ADD: `${APP_ROUTES.DASHBOARD}/${PATHS.LAND}/add`,
+  },
+  BUILDING: {
+    LIST: `${APP_ROUTES.DASHBOARD}/${PATHS.BUILDING}`,
+    ADD: `${APP_ROUTES.DASHBOARD}/${PATHS.BUILDING}/add`,
+  },
   PROPERTIES: {
     LIST: `${APP_ROUTES.DASHBOARD}/properties`,
     ADD: `${APP_ROUTES.DASHBOARD}/properties/add`,

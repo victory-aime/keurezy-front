@@ -52,11 +52,7 @@ const FormTextInput = ({
   return (
     <Field.Root id={name} invalid={isError}>
       {label && (
-        <Field.Label
-          display={"flex"}
-          gap={"6px"}
-          fontSize={{ base: "14px", md: "12px" }}
-        >
+        <Field.Label display={"flex"} gap={"6px"} fontSize={"14px"}>
           {isLoading ? (
             <CustomSkeletonLoader type="TEXT" numberOfLines={1} />
           ) : (
@@ -151,7 +147,7 @@ const FormTextInput = ({
             //bg={"bg.muted"}
             readOnly={isReadOnly}
             disabled={isDisabled || isLoading}
-            fontSize={{ base: "16px", md: "14px" }}
+            fontSize={{ base: "16px", sm: "14px" }}
             height={height}
             autoCapitalize="none"
             autoCorrect="off"

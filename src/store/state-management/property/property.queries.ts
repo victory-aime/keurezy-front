@@ -18,7 +18,9 @@ const getAllPropertiesByAgency = (
 ) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<MODELS.IPropertyResponse>({
+  return QUERIES.useCustomQuery<
+    MODELS.IPaginatedResponse<MODELS.IPropertyResponse>
+  >({
     queryKey: [Constants.PROPERTIES_KEYS.ALL_PROPERTIES_BY_AGENCY, params],
     queryFn: () =>
       propertyServiceInstance().getAllPropertyByAgency(
@@ -40,7 +42,7 @@ const getOccupationRateByTypeQueries = (
     ],
     queryFn: () =>
       propertyServiceInstance().getOccupationRateByType(
-        params as MODELS.IAgencyFilters,
+        params as MODELS.IAgencyCommonParams,
       ),
     options: queryOptions,
   });
@@ -54,7 +56,7 @@ const getMonthlyRevenueQueries = (
     queryKey: [Constants.PROPERTIES_KEYS.MONTHLY_REVENUE, params],
     queryFn: () =>
       propertyServiceInstance().getMonthlyRevenue(
-        params as MODELS.IAgencyFilters,
+        params as MODELS.IAgencyCommonParams,
       ),
     options: queryOptions,
   });

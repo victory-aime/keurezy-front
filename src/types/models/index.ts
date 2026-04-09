@@ -8,3 +8,5 @@ export * from "./auth";
 export * from "./rental-agreement";
 export * from "./chat";
 export * from "./notifications";
+export * from "./building";
+export * from "./pagination";

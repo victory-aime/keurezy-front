@@ -26,16 +26,47 @@ interface IProperty {
   };
 }
 
-interface ICreateProperty extends IProperty {
-  galleryImages?: File[] | null;
+interface ICreateProperty {
+  title?: string;
+  type?: PropertyType;
+  propertyNumber?: string;
+  address?: string;
+  city?: string;
+  district?: string;
+  rooms?: number;
+  bathrooms?: number;
+  area?: number;
+  status?: COMMON.Status;
+  documents?: string[];
+  agencyId?: string;
+  batimentId?: string;
+  hasBatiment?: boolean;
 }
 
 interface IPropertyResponse {
-  content: IProperty[];
-  totalDataPerPages: number;
-  currentPage: number;
-  totalItems: number;
-  totalPages: number;
+  id: string;
+  title: string;
+  type: PropertyType;
+  propertyNumber: string;
+  propertyOwner: string;
+  address: string;
+  city: string;
+  district: string;
+  rooms: number;
+  bathrooms: number;
+  price: number;
+  caution: number;
+  area: number;
+  status: COMMON.Status;
+  documents: [];
+  agencyId: string;
+  batimentId: string;
+  batiment: {
+    id: string;
+    name: string;
+  };
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface IMonthlyRevenueStats {

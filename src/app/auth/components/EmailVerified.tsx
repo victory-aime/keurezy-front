@@ -19,8 +19,6 @@ export const EmailVerified = ({ params }: { params: string }) => {
   const [openSuccess, setOpenSuccess] = useState(false);
   const [state, setState] = useState<VerificationState>("loading");
 
-  console.log("params", params);
-
   const handleVerifyEmail = async (token: string) => {
     const { data, error } = await authClient.verifyEmail({
       query: { token },
@@ -28,6 +26,7 @@ export const EmailVerified = ({ params }: { params: string }) => {
 
     if (error) {
       handleApiError({ status: error.status, message: error?.message! });
+      setState(error?.message as VerificationState);
     }
     if (data?.status) {
       setOpenSuccess(true);

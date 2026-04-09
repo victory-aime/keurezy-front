@@ -38,11 +38,11 @@ export const BaseStats: FC<BaseStatsProps> = ({
     <Stat.Root
       p={0}
       gap={4}
-      {...boxStyle}
-      {...rest}
       borderLeftColor={iconBgColor}
       size={"sm"}
       transition={"all 400ms cubic-bezier(0.25, 0.1, 0.25, 1)"}
+      {...boxStyle}
+      {...rest}
     >
       <VStack alignItems={"flex-start"} gap={5}>
         <Flex alignItems={"center"} gap={5}>

@@ -21,7 +21,11 @@ const getTagContent = (
     case "INACTIVE":
       return { colorPalette: "red", label: t("COMMON.STATUS.INACTIVE") };
     case "AVAILABLE":
-      return { colorPalette: "green", label: t("COMMON.STATUS.AVAILABLE") };
+      return {
+        icon: <Icons.Check />,
+        colorPalette: "green",
+        label: t("COMMON.STATUS.AVAILABLE"),
+      };
     case "CLOSE":
       return { colorPalette: "red", label: t("COMMON.STATUS.CLOSE") };
     case "RENTED":
@@ -43,6 +47,18 @@ const getTagContent = (
         icon: <Icons.Close />,
         colorPalette: "red",
         label: t("COMMON.STATUS.REJECTED"),
+      };
+    case "UNAVAILABLE":
+      return {
+        icon: <Icons.Close />,
+        colorPalette: "orange",
+        label: t("COMMON.STATUS.UNAVAILABLE"),
+      };
+    case "MAINTENANCE":
+      return {
+        icon: <Icons.Wrench />,
+        colorPalette: "yellow",
+        label: t("COMMON.STATUS.MAINTENANCE"),
       };
     default:
       return { colorPalette: color, label: t("COMMON.STATUS.UNKNOWN") };

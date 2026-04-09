@@ -24,7 +24,7 @@ export const FormContainer = ({
   return (
     <Box
       width="full"
-      maxW={{ base: "2xl", sm: "4xl" }}
+      // maxW={{ base: "2xl", sm: "4xl" }}
       p={{ base: 3, sm: 4 }}
       mx={"auto"}
       spaceY={"6"}
@@ -39,7 +39,7 @@ export const FormContainer = ({
           ))}
         </>
       ) : (
-        <>
+        <VStack width={"full"} alignItems={"flex-start"}>
           <HStack gap={8} alignItems={"center"}>
             <Icons.IoIosArrowRoundBack
               onClick={() => router.back()}
@@ -54,8 +54,8 @@ export const FormContainer = ({
               </BaseText>
             </Stack>
           </HStack>
-          {children}
-        </>
+          <Box width={"full"}>{children}</Box>
+        </VStack>
       )}
     </Box>
   );

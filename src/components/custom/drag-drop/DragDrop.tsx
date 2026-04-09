@@ -264,16 +264,32 @@ const SimpleImageFileUpload = ({
 export const MultipleFilesUpload = ({
   getFilesUploaded,
   label,
+  initialImageUrls,
 }: {
   getFilesUploaded: (files: File[]) => void;
   label?: string | ReactNode;
+  initialImageUrls?: string[];
 }) => {
   const { t } = useTranslation();
+  const fileUpload = useFileUploadContext();
   const { error, errorType } = useFileUploadErrors({
     onValidFiles: getFilesUploaded,
   });
+
+  useEffect(() => {
+    if (
+      initialImageUrls &&
+      initialImageUrls.length > 0 &&
+      fileUpload.acceptedFiles.length === 0
+    ) {
+      convertUrlsToFiles(initialImageUrls).then((files) => {
+        fileUpload.setFiles([...files]);
+      });
+    }
+  }, [initialImageUrls]);
+
   return (
-    <>
+    <VStack alignItems={"flex-start"} mt={1} gap={3} width={"full"}>
       {label === "string" ? (
         <BaseText fontSize={"sm"}>{label}</BaseText>
       ) : (
@@ -281,8 +297,8 @@ export const MultipleFilesUpload = ({
       )}
       <FileUpload.HiddenInput />
       <FileUpload.Trigger asChild>
-        <Button variant="outline" size="sm">
-          <HiUpload /> Upload file
+        <Button variant="outline" size="sm" width={"full"}>
+          <HiUpload /> Télecharger vos fichiers
         </Button>
       </FileUpload.Trigger>
       <FileUpload.List showSize clearable />
@@ -302,7 +318,7 @@ export const MultipleFilesUpload = ({
           </Alert.Content>
         </Alert.Root>
       )}
-    </>
+    </VStack>
   );
 };
 
@@ -378,6 +394,7 @@ export const BaseDragDropZone = ({
     </FileUpload.Root>
   );
 };
+
 export const UploadAvatar = ({
   getFileUploaded,
   avatarImage,
@@ -433,6 +450,7 @@ export const UploadAvatar = ({
 
 export const BaseUploadMultipleFiles = ({
   getFilesUploaded,
+  initialImageUrls,
   maxFiles = MAX_FILES,
   maxFileSize = MAX_FILE_SIZE,
   messageInfo,
@@ -443,6 +461,7 @@ export const BaseUploadMultipleFiles = ({
   maxFileSize?: number;
   label?: string | ReactNode;
   messageInfo?: string;
+  initialImageUrls?: string[];
 }) => {
   const { getRootProps } = useFileUpload();
   return (
@@ -455,7 +474,11 @@ export const BaseUploadMultipleFiles = ({
       cursor={"pointer"}
       _dragging={{ borderColor: "primary.500" }}
     >
-      <MultipleFilesUpload label={label} getFilesUploaded={getFilesUploaded} />
+      <MultipleFilesUpload
+        label={label}
+        getFilesUploaded={getFilesUploaded}
+        initialImageUrls={initialImageUrls}
+      />
       {messageInfo && (
         <Flex
           gap={2}

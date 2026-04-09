@@ -133,7 +133,7 @@ export const Layout: FunctionComponent<{
   };
 
   return (
-    <InitializeApp isLoading={isLoading}>
+    <>
       {showTour && (
         <GuidedTour
           onComplete={() => setShowTour(false)}
@@ -144,6 +144,7 @@ export const Layout: FunctionComponent<{
       <Sidebar
         data={{ user }}
         onShowSidebar={() => setSidebarOpen((prev) => !prev)}
+        isLoading={isLoading}
         sideToggled={isSidebarOpen}
       />
 
@@ -166,9 +167,9 @@ export const Layout: FunctionComponent<{
           onShowSidebar={() => setSidebarOpen((prev) => !prev)}
           data={{ session }}
         />
-        <Container sidebarToggle={isSidebarOpen}>{children}</Container>
+        <Container isLoading={isLoading}>{children}</Container>
         <Footer />
       </SidebarInset>
-    </InitializeApp>
+    </>
   );
 };

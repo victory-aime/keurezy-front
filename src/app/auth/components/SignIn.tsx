@@ -3,7 +3,7 @@
 import { BaseButton, BaseText, FormTextInput, Icons } from "_components/custom";
 import { APP_ROUTES } from "_config/routes";
 import { useRouter } from "next/navigation";
-import { VStack, HStack, Box, Separator } from "@chakra-ui/react";
+import { VStack, Box } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "_hooks/useAuth";
 import { Formik, FormikValues } from "formik";
@@ -11,7 +11,6 @@ import { VALIDATION } from "_types/index";
 import { useState } from "react";
 import { AuthBoxContainer } from "./AuthBoxContainer";
 import { Navbar } from "_component/NavBar";
-import { AuthModule } from "_store/state-management";
 
 export const SignIn = ({
   callbackUrl = APP_ROUTES.REDIRECT,
@@ -21,7 +20,6 @@ export const SignIn = ({
   const { t } = useTranslation();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [isGoogleLoading, setGoogleIsLoading] = useState(false);
   const { login } = useAuth();
 
   const handleSubmit = async (values: FormikValues) => {
@@ -33,16 +31,6 @@ export const SignIn = ({
     })
       .catch((error) => console.log("error", error))
       .finally(() => setIsLoading(false));
-  };
-
-  const handleGoogleLogin = async () => {
-    setGoogleIsLoading(true);
-    await login({
-      providerType: "google",
-      callbackUrl,
-    })
-      .catch((error) => console.log("error", error))
-      .finally(() => setGoogleIsLoading(false));
   };
 
   return (
@@ -57,7 +45,7 @@ export const SignIn = ({
               as="span"
               cursor="pointer"
               color="primary.500"
-              onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
+              onClick={() => router.push(APP_ROUTES.AUTH.ONBOARD)}
             >
               S'inscrire
             </Box>
@@ -72,28 +60,6 @@ export const SignIn = ({
         >
           {({ values, handleSubmit }) => (
             <VStack width="full" gap={4}>
-              <BaseButton
-                variant={"outline"}
-                width={"full"}
-                colorType={"neutral"}
-                isLoading={isGoogleLoading}
-                leftIcon={<Icons.Google />}
-                onClick={async () => {
-                  await handleGoogleLogin().then(() => setIsLoading(false));
-                }}
-              >
-                Continuer avec Google
-              </BaseButton>
-              <HStack
-                gap={"4"}
-                width={"full"}
-                alignItems={"center"}
-                justifyContent={"center"}
-              >
-                <Separator width={"full"} />
-                ou
-                <Separator width={"full"} />
-              </HStack>
               <FormTextInput
                 name="email"
                 placeholder={"FORM.EMAIL_PLACEHOLDER"}

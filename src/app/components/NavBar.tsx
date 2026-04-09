@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import {
-  BaseButton,
-  BaseText,
-  CustomSkeletonLoader,
-  Icons,
-  TextVariant,
-} from "_components/custom";
+import { BaseButton, BaseText, Icons, TextVariant } from "_components/custom";
 import {
   Box,
   Flex,
@@ -19,35 +13,19 @@ import {
 import Image from "next/image";
 import { ASSETS } from "_assets/images";
 import { hexToRGB } from "_theme/colors";
-import { UserModule } from "_store/state-management";
-import { useAuthContext } from "_context/auth-context";
 import { HEADER_LINKS } from "../layout/routes";
-import { Avatar } from "_components/ui/avatar";
 import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "_config/routes";
-import { UserRole } from "../../types/enum";
-import { useAuth } from "_hooks/useAuth";
 import { useIsActive } from "_hooks/useActive";
 import { MotionBox } from "_constants/motion";
 import { useColorMode } from "_components/ui/color-mode";
 
 export const Navbar = () => {
-  const { session } = useAuthContext();
   const { colorMode } = useColorMode();
-  const { logout } = useAuth();
   const { isActiveLink } = useIsActive();
   const router = useRouter();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isOpen, setIsOpen] = useState(false);
-
-  const { data: user, isLoading } = UserModule.getUserInfo({
-    params: { userId: session?.userId },
-    queryOptions: {
-      enabled: !!session?.userId,
-    },
-  });
-
-  const links = HEADER_LINKS(!!session?.token, user?.role!);
 
   return (
     <Box
@@ -73,15 +51,17 @@ export const Navbar = () => {
           justifyContent={"space-between"}
           width={"full"}
         >
-          <Flex alignItems={"center"} gap={2}>
-            <Image
-              src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
-              alt="logo"
-              width={45}
-              height={45}
-            />
-            <BaseText variant={TextVariant.M}>MyImmo</BaseText>
-          </Flex>
+          <Link href={APP_ROUTES.ROOT}>
+            <Flex alignItems={"center"} gap={2}>
+              <Image
+                src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+                alt="logo"
+                width={45}
+                height={45}
+              />
+              <BaseText variant={TextVariant.M}>MyImmo</BaseText>
+            </Flex>
+          </Link>
 
           {/* Desktop nav */}
           <Flex
@@ -91,7 +71,7 @@ export const Navbar = () => {
             justifyContent={"center"}
             width={"full"}
           >
-            {links.map((link, i) => {
+            {HEADER_LINKS.map((link, i) => {
               const isActive = isActiveLink(link.url);
               return (
                 <Link key={link.url} href={link.url}>
@@ -127,59 +107,15 @@ export const Navbar = () => {
             ml={"auto"}
             display={{ base: "none", sm: "flex" }}
           >
-            {isLoading ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <CustomSkeletonLoader
-                  type={"BUTTON"}
-                  colorButton="neutral"
-                  width={100}
-                  key={i}
-                />
-              ))
-            ) : (
-              <>
-                {user ? (
-                  <>
-                    <Avatar
-                      name={user?.name}
-                      src={
-                        user?.image! ?? "https://avatar.iran.liara.run/public"
-                      }
-                    />
-                    <BaseButton
-                      onClick={() => logout()}
-                      colorType={"danger"}
-                      leftIcon={<Icons.Logout />}
-                    >
-                      Deconnexion
-                    </BaseButton>
-                    {user?.role === UserRole.OWNER && (
-                      <BaseButton
-                        onClick={() => router.push(APP_ROUTES.DASHBOARD)}
-                        colorType={"secondary"}
-                        leftIcon={<Icons.Home />}
-                      >
-                        Acceder au Tableau de bord
-                      </BaseButton>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <BaseButton
-                      variant="outline"
-                      onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
-                    >
-                      Connexion
-                    </BaseButton>
-                    <BaseButton
-                      onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
-                    >
-                      Commencer
-                    </BaseButton>
-                  </>
-                )}
-              </>
-            )}
+            <BaseButton
+              variant="outline"
+              onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
+            >
+              Connexion
+            </BaseButton>
+            <BaseButton onClick={() => router.push(APP_ROUTES.AUTH.ONBOARD)}>
+              Commencer
+            </BaseButton>
           </Flex>
 
           <Stack
@@ -202,7 +138,7 @@ export const Navbar = () => {
             overflow={"hidden"}
           >
             <Box px={4} py={4} spaceY={2}>
-              {links.map((link) => {
+              {HEADER_LINKS.map((link) => {
                 const isActive = isActiveLink(link.url);
                 return (
                   <Link
@@ -234,75 +170,19 @@ export const Navbar = () => {
                 );
               })}
               <Stack alignItems={"center"} pt={2} gap={2} width={"full"}>
-                {isLoading ? (
-                  Array.from({ length: 3 }).map((_, i) => (
-                    <CustomSkeletonLoader
-                      type={"BUTTON"}
-                      colorButton="neutral"
-                      width={"full"}
-                      key={i}
-                    />
-                  ))
-                ) : (
-                  <>
-                    {user ? (
-                      <>
-                        <Flex
-                          alignItems={"center"}
-                          width={"full"}
-                          borderRadius={"12px"}
-                          gap={2}
-                        >
-                          <Avatar
-                            name={user?.name}
-                            src={
-                              user?.image! ??
-                              "https://avatar.iran.liara.run/public"
-                            }
-                          />
-                          <BaseText textTransform={"capitalize"}>
-                            {user?.name}
-                          </BaseText>
-                        </Flex>
-                        <BaseButton
-                          onClick={() => logout()}
-                          colorType={"danger"}
-                          width={"full"}
-                          leftIcon={<Icons.Logout />}
-                        >
-                          Deconnexion
-                        </BaseButton>
-
-                        {user?.role === UserRole.OWNER && (
-                          <BaseButton
-                            onClick={() => router.push(APP_ROUTES.DASHBOARD)}
-                            width={"full"}
-                            colorType={"secondary"}
-                            leftIcon={<Icons.Home />}
-                          >
-                            Acceder au Tableau de bord
-                          </BaseButton>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        <BaseButton
-                          variant="outline"
-                          width={"full"}
-                          onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
-                        >
-                          Connexion
-                        </BaseButton>
-                        <BaseButton
-                          width={"full"}
-                          onClick={() => router.push(APP_ROUTES.AUTH.SIGN_UP)}
-                        >
-                          Commencer
-                        </BaseButton>
-                      </>
-                    )}
-                  </>
-                )}
+                <BaseButton
+                  variant="outline"
+                  width={"full"}
+                  onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}
+                >
+                  Connexion
+                </BaseButton>
+                <BaseButton
+                  width={"full"}
+                  onClick={() => router.push(APP_ROUTES.AUTH.ONBOARD)}
+                >
+                  Commencer
+                </BaseButton>
               </Stack>
             </Box>
           </MotionBox>

@@ -6,6 +6,7 @@ import {
   CiFilter,
   CiGrid42,
   CiLogout,
+  CiMap,
   CiMapPin,
   CiMobile3,
   CiPlay1,
@@ -44,6 +45,7 @@ import {
 } from "react-icons/io5";
 import { RiSearch2Line } from "react-icons/ri";
 import {
+  TbFileDownload,
   TbLayoutSidebarRightCollapse,
   TbLayoutSidebarRightExpand,
   TbSparkles,
@@ -78,6 +80,7 @@ import { FcGoogle } from "react-icons/fc";
 
 export const Icons = {
   MapPin: CiMapPin,
+  Map: CiMap,
   Mail: HiOutlineMail,
   User: CiUser,
   Close: IoIosClose,
@@ -95,6 +98,7 @@ export const Icons = {
   Paper: IoDocumentTextOutline,
   Copy: IoCopyOutline,
   Download: IoDownloadOutline,
+  DownloadPaper: TbFileDownload,
   Key: IoKeyOutline,
   Share: IoShareOutline,
   Edit: MdEdit,

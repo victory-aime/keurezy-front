@@ -9,45 +9,15 @@ export const USERS_ROUTES = {
   PROFILE: `/profile`,
   FAVORITE: `/favorite`,
   REQUEST: `/my-requests`,
-  //PROPERTIES_APPLY: APP_ROUTES.APPARTEMENT_APPLY,
 };
 
-export const HEADER_LINKS = (isAuthenticated: boolean, role: UserRole) => {
-  const publicLinks = [
-    {
-      icon: Icons.Home,
-      name: "Accueil",
-      url: APP_ROUTES.ROOT,
-    },
-    {
-      icon: Icons.RiBuildingLine,
-      name: "Propriétes",
-      url: APP_ROUTES.APPARTEMENTS,
-    },
-  ];
-
-  const privateUserLinks = [
-    {
-      icon: Icons.Heart,
-      name: "Favoris",
-      url: USERS_ROUTES.FAVORITE,
-    },
-    {
-      icon: Icons.Clipboard,
-      name: "Mes demandes",
-      url: USERS_ROUTES.REQUEST,
-    },
-    {
-      icon: Icons.User,
-      name: "Profil",
-      url: USERS_ROUTES.PROFILE,
-    },
-  ];
-
-  return isAuthenticated && role === UserRole.USER
-    ? [...publicLinks, ...privateUserLinks]
-    : publicLinks;
-};
+export const HEADER_LINKS = [
+  {
+    icon: Icons.Home,
+    name: "Accueil",
+    url: APP_ROUTES.ROOT,
+  },
+];
 
 export const FOOTER_ROUTES: Array<{
   name: string;

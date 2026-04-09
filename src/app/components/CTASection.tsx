@@ -87,7 +87,7 @@ export const CTASection = () => {
               justifyContent={"center"}
               flexDirection={{ base: "column", md: "row" }}
             >
-              <Link href={APP_ROUTES.AUTH.SIGN_UP}>
+              {/* <Link href={APP_ROUTES.AUTH.SIGN_UP}>
                 <BaseButton
                   width={{ base: "full", md: "fit-content" }}
                   colorType="secondary"
@@ -95,13 +95,12 @@ export const CTASection = () => {
                 >
                   Rejoindre en tant que locataire
                 </BaseButton>
-              </Link>
+              </Link> */}
 
               <Link href={APP_ROUTES.AUTH.ONBOARD}>
                 <BaseButton
                   width={{ base: "full", md: "fit-content" }}
-                  variant="outline"
-                  colorType="neutral"
+                  colorType="secondary"
                   leftIcon={<Icons.RiBuildingLine />}
                 >
                   Rejoindre en tant que propriétaire

@@ -26,8 +26,8 @@ export const DashboardStats = () => {
     queryOptions: { enabled: false },
   });
 
-  const agencyId = user?.propertyOwner?.propertyAgency?.id;
-  const ownerId = user?.propertyOwner?.id;
+  const agencyId = user?.owner?.agency?.id;
+  const ownerId = user?.owner?.id;
   const enabled = !!agencyId && !!ownerId;
 
   const { data: allProperties, isLoading: propertiesLoad } =
@@ -44,7 +44,7 @@ export const DashboardStats = () => {
         agencyId,
         ownerId,
       },
-      queryOptions: { enabled },
+      queryOptions: { enabled: false },
     });
   const { data: monthlyRevenueData, isLoading: monthlyRevenueLoad } =
     PropertyModule.getMonthlyRevenueQueries({
@@ -52,12 +52,12 @@ export const DashboardStats = () => {
         agencyId,
         ownerId,
       },
-      queryOptions: { enabled },
+      queryOptions: { enabled: false },
     });
   const { data: allRentalAgreement, isLoading: rentalAgreementLoad } =
     RentalAgreementModule.getRentalAgreementListByAgencyQueries({
       params: { agencyId, ownerId },
-      queryOptions: { enabled },
+      queryOptions: { enabled: false },
     });
   const {
     data: allActivities,

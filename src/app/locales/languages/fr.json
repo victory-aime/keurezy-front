@@ -117,6 +117,7 @@
       "CANCELED": "Annulée",
       "EXPIRED": "Expiree",
       "AVAILABLE": "Disponible",
+      "UNAVAILABLE": "Indisponible",
       "RENTED": "Occupé",
       "RESERVED": "Réserver",
       "CLOSED": "Fermer",

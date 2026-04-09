@@ -1,4 +1,4 @@
-import { AppartForm } from "../components/AppartForm";
+import { PropertyForm } from "../components/AppartForm";
 
 export default async function CreateProperty({
   searchParams,
@@ -6,5 +6,5 @@ export default async function CreateProperty({
   searchParams: Promise<{ requestId: string }>;
 }) {
   const params = await searchParams;
-  return <AppartForm appartId={params.requestId} />;
+  return <PropertyForm appartId={params.requestId} />;
 }

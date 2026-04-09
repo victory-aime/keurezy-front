@@ -7,3 +7,4 @@ export * from "./rental-agreement";
 export * from "./chat";
 export * from "./notifications";
 export * from "./auth";
+export * from "./building";

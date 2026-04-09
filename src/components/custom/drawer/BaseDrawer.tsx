@@ -17,7 +17,7 @@ import {
 } from "_components/ui/drawer";
 import { useTranslation } from "react-i18next";
 import React from "react";
-import { Flex } from "@chakra-ui/react";
+import { DrawerDescription, Flex } from "@chakra-ui/react";
 import { DialogActionTrigger } from "_components/ui/dialog";
 import { useColorModeValue } from "_components/ui/color-mode";
 
@@ -51,6 +51,7 @@ export const BaseDrawer: React.FC<DrawerProps> = ({
   buttonCancelTitle = "COMMON.CANCEL",
   iconBackgroundColor = "primary.500",
   drawerContentColor = "white",
+  description,
   ref,
 }) => {
   const { t } = useTranslation();
@@ -71,9 +72,9 @@ export const BaseDrawer: React.FC<DrawerProps> = ({
           display={"flex"}
           alignItems={"center"}
           justifyContent={"space-between"}
-          p={5}
+          p={4}
         >
-          <Flex alignItems={"center"} gap={4} mb={4}>
+          <Flex alignItems={"center"} gap={4}>
             {icon && (
               <BaseIcon borderRadius={"7px"} color={iconBackgroundColor}>
                 {icon}
@@ -93,7 +94,15 @@ export const BaseDrawer: React.FC<DrawerProps> = ({
             )}
           </Flex>
         </DrawerHeader>
-        <DrawerBody width={"full"} height={"full"} ref={ref}>
+        {description && (
+          <DrawerDescription
+            px={4}
+            color={drawerContentColor !== "white" ? "white" : "none"}
+          >
+            {description}
+          </DrawerDescription>
+        )}
+        <DrawerBody width={"full"} height={"full"} ref={ref} mt={2} p={4}>
           {children}
         </DrawerBody>
 

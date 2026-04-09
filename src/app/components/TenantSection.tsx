@@ -147,7 +147,7 @@ export const TenantSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <Link href={APP_ROUTES.APPARTEMENTS}>
+          <Link href={APP_ROUTES.ROOT}>
             <BaseButton
               colorType={"tertiary"}
               rightIcon={<Icons.ArrowRight />}

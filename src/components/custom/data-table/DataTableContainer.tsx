@@ -1,5 +1,12 @@
 "use client";
-import { ActionBar, Box, CloseButton, Flex, Table } from "@chakra-ui/react";
+import {
+  ActionBar,
+  Box,
+  CloseButton,
+  Flex,
+  Span,
+  Table,
+} from "@chakra-ui/react";
 import React, { FC, useEffect, useState } from "react";
 import { Checkbox } from "_components/ui/checkbox";
 import {
@@ -24,6 +31,7 @@ export const DataTableContainer: FC<TableProps> = ({
   handleRowSelection,
   onOpenSelectRow,
   handleDeleteActionBar,
+  notFoundTitle,
   hidePagination = false,
   isOpenSelect = false,
   isLoading,
@@ -86,7 +94,12 @@ export const DataTableContainer: FC<TableProps> = ({
   }
 
   if (data?.length === 0) {
-    return <NoDataAnimation animationType={animationType} />;
+    return (
+      <NoDataAnimation
+        animationType={animationType}
+        notFoundTitle={notFoundTitle}
+      />
+    );
   }
 
   return (
@@ -161,10 +174,18 @@ export const DataTableContainer: FC<TableProps> = ({
                     />
                   ) : (
                     <>
-                      {t(col.header)}{" "}
+                      {
+                        <Span textTransform={"uppercase"} fontSize={"xs"}>
+                          {t(col.header)}{" "}
+                        </Span>
+                      }{" "}
                       {sortConfig?.key === col.accessor &&
                         col.accessor !== "actions" &&
-                        (sortConfig.direction === "asc" ? "⬆" : "⬇")}
+                        (data?.length > 1
+                          ? sortConfig.direction === "asc"
+                            ? "⬆"
+                            : "⬇"
+                          : null)}
                     </>
                   )}
                 </Table.ColumnHeader>

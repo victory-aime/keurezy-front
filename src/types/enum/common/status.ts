@@ -14,4 +14,6 @@ export enum Status {
   RENTED = "RENTED",
   READ = "READ",
   REPLIED = "REPLIED",
+  UNAVAILABLE = "UNAVAILABLE",
+  MAINTENANCE = "MAINTENANCE",
 }

@@ -2,27 +2,31 @@
 
 import {
   BaseContainer,
-  BaseFormatNumber,
-  BaseRatio,
   BaseText,
   ColumnsDataTable,
-  TextVariant,
-  TextWeight,
-  DataDisplayContainer,
   BaseTag,
+  DataTableContainer,
+  BaseFormatNumber,
 } from "_components/custom";
-import { PropertyModule, UserModule } from "_store/state-management";
-import { CONSTANTS, ENUM } from "_types/*";
-import { Flex, VStack } from "@chakra-ui/react";
+import {
+  BuildingModule,
+  PropertyModule,
+  UserModule,
+} from "_store/state-management";
+import { CONSTANTS, ENUM, MODELS } from "_types/*";
 import { useRouter } from "next/navigation";
 import { DASHBOARD_ROUTES } from "../../routes";
-import { AppartGridView } from "./AppartCard";
-import { AppartStatsCard } from "./AppartStats";
-import { useState } from "react";
+import { PropertyStatsCard } from "./AppartStats";
+import { useMemo, useState } from "react";
+import { FormikValues } from "formik";
+import { PropertyFilter } from "./PropertyFilter";
 
-export const AppartList = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+export const PropertyList = () => {
   const router = useRouter();
+  const [toggleFilter, setToggleFilter] = useState<boolean>(false);
+  const [filterValues, setFilterValues] =
+    useState<MODELS.IAgencyFilters | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: user } = UserModule.getUserInfo({
     queryOptions: {
@@ -30,20 +34,65 @@ export const AppartList = () => {
     },
   });
 
+  const agencyId = user?.owner?.agency?.id;
+  const ownerId = user?.owner?.id;
+
+  const queryPayload = useMemo(
+    () => ({
+      params: {
+        ...filterValues,
+        agencyId,
+        ownerId,
+        initialPage: currentPage,
+        limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
+      },
+      queryOptions: {
+        enabled: !!agencyId && !!ownerId,
+      },
+    }),
+    [filterValues, currentPage],
+  );
+
   const {
     data: allProperties,
     isLoading,
-    refetch: refectProperty,
-  } = PropertyModule.getAllPropertiesByAgency({
+    refetch: refetchProperty,
+  } = PropertyModule.getAllPropertiesByAgency(queryPayload);
+
+  const { data: allBuildings } = BuildingModule.getAllBuildingByAgencyQueries({
     params: {
-      agencyId: user?.propertyOwner?.propertyAgency?.id,
-      ownerId: user?.propertyOwner?.id,
-      limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
+      agencyId,
+      ownerId,
+      limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
     },
     queryOptions: {
-      enabled: !!user?.propertyOwner?.propertyAgency?.id,
+      enabled: !!agencyId && !!ownerId,
     },
   });
+
+  const handleFilter = async (values: FormikValues) => {
+    setFilterValues({
+      ...values,
+      type: values?.type && values?.type[0],
+      status: values?.status && values?.status[0],
+    });
+    setCurrentPage(currentPage);
+  };
+
+  const handleResetFilter = async () => {
+    setFilterValues(null);
+    setCurrentPage(currentPage);
+    await refetchProperty();
+  };
+
+  const paginationAction = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const extractName = (buildingId: string) => {
+    const data = allBuildings?.content.find((item) => item.id === buildingId);
+    return data?.name;
+  };
 
   const appartColumns: ColumnsDataTable[] = [
     {
@@ -51,37 +100,27 @@ export const AppartList = () => {
       accessor: "select",
     },
     {
-      header: "Bien",
-      accessor: "fullObject",
-      cell: (data) => {
-        const city = CONSTANTS.citiesByCountry?.[data.country || ""]?.find(
-          (item) => item.value === data.city,
-        )?.label;
-        return (
-          <Flex
-            width={"full"}
-            gap={4}
-            alignItems={"center"}
-            justifyContent={"flex-start"}
-          >
-            <BaseRatio image={data?.galleryImages?.[0]} width={100} />
-            <VStack alignItems={"flex-start"} gap={0}>
-              <BaseText variant={TextVariant.XS} weight={TextWeight.SemiBold}>
-                {data?.title}
-              </BaseText>
-              <BaseText
-                variant={TextVariant.XS}
-                lineClamp={1}
-                color={"gray.600"}
-              >
-                {data?.address} , {city}
-              </BaseText>
-            </VStack>
-          </Flex>
-        );
-      },
+      header: "Propriété",
+      accessor: "title",
     },
-
+    {
+      header: "Immeuble/proprietaire",
+      accessor: "fullObject",
+      cell: (values) => (
+        <BaseText>
+          {values.batimentId
+            ? extractName(values?.batimentId)
+            : values?.propertyOwner}
+        </BaseText>
+      ),
+    },
+    {
+      header: "Numéro",
+      accessor: "propertyNumber",
+      cell: (propertyNumber) => (
+        <BaseText>{propertyNumber ?? "Aucun"}</BaseText>
+      ),
+    },
     {
       header: "Type",
       accessor: "type",
@@ -116,58 +155,58 @@ export const AppartList = () => {
     },
   ];
 
-  const paginationAction = (page: number) => {
-    setCurrentPage(page);
-  };
-
   return (
     <BaseContainer
       border={"none"}
       title={"Propriétes"}
-      description={"Gérez l'ensemble de vos biens immobiliers"}
+      description={
+        "Gérez l'ensemble de vos propriétes locative avec efficacité"
+      }
       loader={isLoading}
       numberOfLines={2}
       withActionButtons
+      isFilterActive={toggleFilter}
+      onToggleFilter={() => setToggleFilter(!toggleFilter)}
+      filterComponent={
+        <PropertyFilter
+          isOpen={false}
+          onChange={async () => {
+            setToggleFilter(!toggleFilter);
+            await handleResetFilter();
+          }}
+          data={filterValues}
+          callback={handleFilter}
+        />
+      }
       actionsButtonProps={{
         validateTitle: "Ajouter une propriété",
         isEmailVerified: user?.emailVerified,
         onReload: async () => {
-          await refectProperty();
+          await refetchProperty();
         },
         onClick: () => {
           router.push(DASHBOARD_ROUTES.PROPERTIES.ADD);
         },
       }}
     >
-      <AppartStatsCard
+      <PropertyStatsCard
         properties={allProperties?.content ?? []}
         isLoading={isLoading}
       />
 
-      <DataDisplayContainer
+      <DataTableContainer
         data={allProperties?.content ?? []}
         columns={appartColumns}
         isLoading={isLoading}
-        renderGridItem={(item) => <AppartGridView property={item} />}
         paginationData={{
           lazy: true,
           totalItems: allProperties?.totalItems,
-          totalDataPerPage: allProperties?.totalDataPerPages || 6,
+          totalDataPerPage: allProperties?.totalDataPerPages || 5,
           onLazyLoad: (index) => paginationAction(index),
           currentPage,
           totalPages: allProperties?.totalPages,
         }}
         hidePagination={allProperties?.totalPages === 1}
-        actions={[
-          {
-            name: "edit",
-            handleClick(data) {
-              router.push(
-                `${DASHBOARD_ROUTES.PROPERTIES.ADD}?requestId=${data?.id}`,
-              );
-            },
-          },
-        ]}
       />
     </BaseContainer>
   );

@@ -44,6 +44,7 @@ export interface ActionButtonTypes extends FlexProps {
   downloadPermission?: boolean;
   validatePermission?: boolean;
   reloadPermission?: boolean;
+  cancelShow?: boolean;
   cancelIcon?: ReactNode;
   requestId?: string;
   isLoading?: boolean;

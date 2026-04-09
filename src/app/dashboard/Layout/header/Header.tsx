@@ -1,10 +1,17 @@
-import { Flex, Group, Separator, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  Group,
+  Separator,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { Menu, Portal } from "@chakra-ui/react";
 import {
   BaseText,
   CustomSkeletonLoader,
   FormTextInput,
   Icons,
+  SwitchColorMode,
   TextVariant,
   TextWeight,
 } from "_components/custom";
@@ -17,9 +24,9 @@ import { useAuth } from "_hooks/useAuth";
 import { VariablesColors } from "_theme/variables";
 import { Formik } from "formik";
 import { useTranslation } from "react-i18next";
-import { NotificationHeaderMenu } from "../../notifications/components/NotificationHeaderMenu";
 
 export const Header = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
+  const isNotMobile = useBreakpointValue({ base: false, sm: true });
   const { t } = useTranslation();
   const router = useRouter();
   const { logout } = useAuth();
@@ -66,7 +73,7 @@ export const Header = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
           pt={3}
           data-tour="header"
         >
-          {sideToggled ? (
+          {sideToggled && !isLoading ? (
             <Icons.SideOpen
               size={18}
               color={VariablesColors.grayScale}
@@ -126,6 +133,7 @@ export const Header = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
                   isLoading={unreadListLoad}
                   refetchUnreadList={refetchNotificationList}
                 /> */}
+                {isNotMobile && <SwitchColorMode />}
 
                 <Separator orientation="vertical" height={6} mx={1} />
 
@@ -146,7 +154,14 @@ export const Header = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
                           user?.image ?? "https://avatar.iran.liara.run/public"
                         }
                       />
-                      <Text>{user?.name}</Text>
+                      <Text
+                        truncate
+                        lineBreak={"auto"}
+                        lineClamp={1}
+                        maxW={"120px"}
+                      >
+                        {user?.name}
+                      </Text>
                     </Flex>
                   </Menu.Trigger>
                   <Portal>

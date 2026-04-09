@@ -49,6 +49,8 @@ interface DeleteModalActions extends ModalOpenProps {
   title: string;
   children: React.ReactNode;
   ignoreFooter?: boolean;
+  buttonSaveTitle?: string;
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "cover" | "full" | undefined;
 }
 
 export type { DeleteModalActions, ModalProps, ModalOpenProps };

@@ -1,20 +1,29 @@
 "use client";
 
-import { Flex } from "@chakra-ui/react";
-import { Suspense } from "react";
+import { Center, Flex, Spinner, useBreakpointValue } from "@chakra-ui/react";
 import { BaseContainer, FloatSwitchColorMode } from "_components/custom";
-import { GlobalLoader } from "_components/custom/loader/Loader";
 
 export const Container = ({
   children,
-  sidebarToggle,
+  isLoading,
 }: {
   children: React.ReactNode;
-  sidebarToggle: boolean;
+  isLoading?: boolean;
 }) => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   return (
     <Flex flex={1} h="100%" width="100%">
-      <Suspense fallback={<GlobalLoader loader />}>
+      {isLoading ? (
+        <Center
+          alignItems={"center"}
+          justifyContent={"center"}
+          height={"100vh"}
+          width={"100%"}
+        >
+          <Spinner color="primary.500" animationDuration="0.4s" size={"xl"} />
+        </Center>
+      ) : (
         <BaseContainer
           mt={{ base: "0", sm: "20px" }}
           p={{ base: 2, sm: 4 }}
@@ -23,8 +32,8 @@ export const Container = ({
         >
           {children}
         </BaseContainer>
-        <FloatSwitchColorMode />
-      </Suspense>
+      )}
+      {isMobile && <FloatSwitchColorMode />}
     </Flex>
   );
 };

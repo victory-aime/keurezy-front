@@ -55,6 +55,7 @@ interface TableProps {
   initialPage?: number;
   lazy?: boolean;
   animationType?: NoDataFoundType;
+  notFoundTitle?: string;
   isOpenSelect?: boolean;
   handleRowSelection?: (item: any) => void;
   onOpenSelectRow?: (item: any) => void;

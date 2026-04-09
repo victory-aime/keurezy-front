@@ -1,20 +1,17 @@
 # [2.0.0](https://github.com/victory-aime/my-immo-front/compare/v1.4.1...v2.0.0) (2026-04-06)
 
-
 ### Bug Fixes
 
-* **cleanup app:** cleanup app ([87c20a1](https://github.com/victory-aime/my-immo-front/commit/87c20a158e2871ba132d4da53562bcc4bcafc2c0))
-
+- **cleanup app:** cleanup app ([87c20a1](https://github.com/victory-aime/my-immo-front/commit/87c20a158e2871ba132d4da53562bcc4bcafc2c0))
 
 ### Features
 
-* **passkey:** passkey ([5de8dff](https://github.com/victory-aime/my-immo-front/commit/5de8dfff90d658b5d040756d68835af18a885327))
-
+- **passkey:** passkey ([5de8dff](https://github.com/victory-aime/my-immo-front/commit/5de8dfff90d658b5d040756d68835af18a885327))
 
 ### BREAKING CHANGES
 
-* **cleanup app:** Pending news test for onboarding
-* **passkey:** delete session not working
+- **cleanup app:** Pending news test for onboarding
+- **passkey:** delete session not working
 
 ## [1.4.1](https://github.com/victory-aime/my-immo-front/compare/v1.4.0...v1.4.1) (2026-03-18)
 

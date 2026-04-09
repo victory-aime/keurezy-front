@@ -1,6 +1,8 @@
-import { AccordionRootProps } from "@chakra-ui/react";
+import {
+  AccordionItemContentProps,
+  AccordionRootProps,
+} from "@chakra-ui/react";
 import { ReactNode } from "react";
-import { Colors } from "_theme/colors";
 
 interface AccordionProps extends AccordionRootProps {
   items: {
@@ -12,5 +14,8 @@ interface AccordionProps extends AccordionRootProps {
   activeBg?: boolean;
   multipleOpen?: boolean;
 }
+type BaseAccordionProps = AccordionProps & {
+  itemContentProps?: AccordionItemContentProps;
+};
 
-export type { AccordionProps };
+export type { AccordionProps, BaseAccordionProps };

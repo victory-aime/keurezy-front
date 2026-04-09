@@ -3,12 +3,10 @@ export const APP_ROUTES = {
   REDIRECT: "/redirect",
   AUTH: {
     SIGN_IN: "/auth/signin",
-    SIGN_UP: "/auth/signup",
     _2FA: "/auth/signin/totp",
     RESET_PASSWORD: "/auth/forget-pass/request",
     RESET_PASSWORD_VALIDATE: "/auth/forget-pass/validate",
     VERIFIED_EMAIL: "/auth/email-verified",
-    REGISTER_AGENCY: "/auth/register-agency",
     ONBOARD: "/auth/onboarding",
   },
   PROTECTED: "/not-authenticated",
@@ -17,8 +15,4 @@ export const APP_ROUTES = {
   PRIVACY_POLICY: "/privacy-policy",
   TERMS_OF_USE: "/terms-and-conditions",
   DASHBOARD: "/dashboard",
-  APPARTEMENTS: "/properties",
-  APPARTEMENT_DETAIL: "/properties/details",
-  APPARTEMENT_APPLY: "/properties/apply",
-  APPARTEMENT_CONTACT_AGENCY: "/properties/contact",
 };

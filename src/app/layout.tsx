@@ -7,9 +7,6 @@ import { ThemeProvider } from "_components/ui/provider";
 import { LoaderProvider } from "_context/loaderContext";
 import { Toaster } from "_components/ui/toaster";
 import { I18nProvider } from "_context/provider/i18n-provider";
-import { AuthContextProvider } from "_context/auth-context";
-import { authClient } from "./lib/auth-client";
-import { headers } from "next/headers";
 
 const lato = Lato({
   variable: "--font-lato",
@@ -68,17 +65,11 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
-  });
-
   return (
     <html lang="en" suppressHydrationWarning suppressContentEditableWarning>
       <body className={`${lato.variable}`}>
@@ -86,11 +77,7 @@ export default async function RootLayout({
           <ThemeProvider>
             <LoaderProvider>
               <Toaster />
-              <I18nProvider>
-                <AuthContextProvider session={session?.data}>
-                  {children}
-                </AuthContextProvider>
-              </I18nProvider>
+              <I18nProvider>{children}</I18nProvider>
             </LoaderProvider>
           </ThemeProvider>
         </GlobalApplicationProvider>

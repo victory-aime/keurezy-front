@@ -35,6 +35,7 @@ export const ActionsButton = React.memo(
     downloadPermission = true,
     validatePermission = true,
     reloadPermission = true,
+    cancelShow = true,
 
     withGradient = true,
 
@@ -104,7 +105,7 @@ export const ActionsButton = React.memo(
                   onClick={onDownload}
                   isLoading={isLoading}
                   disabled={isLoading || isDisabled || disabledBecauseEmail}
-                  leftIcon={<Icons.Paper />}
+                  leftIcon={<Icons.DownloadPaper />}
                 >
                   <Box display={{ base: "none", md: "inline" }}>
                     {t(downloadTitle)}
@@ -114,6 +115,7 @@ export const ActionsButton = React.memo(
 
             {/* CANCEL */}
             {onCancel &&
+              cancelShow &&
               wrapTooltip(
                 <BaseButton
                   px={{ base: "10px", md: "15px" }}

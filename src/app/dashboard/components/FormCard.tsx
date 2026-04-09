@@ -1,5 +1,6 @@
 import { Box, VStack } from "@chakra-ui/react";
 import {
+  BaseContainer,
   BaseText,
   CustomSkeletonLoader,
   TextVariant,
@@ -24,19 +25,13 @@ export const FormCard = ({
       <CustomSkeletonLoader type="FORM" width={"full"} />
     </VStack>
   ) : (
-    <Box
-      p={5}
-      mt={5}
-      border={"1px solid"}
-      borderColor={"border"}
-      width={"full"}
-      rounded={"lg"}
+    <BaseContainer
+      mt={4}
+      title={title}
+      description={description}
+      textVariant={TextVariant.M}
     >
-      <BaseText weight={TextWeight.Medium}>{title}</BaseText>
-      <BaseText variant={TextVariant.XS}>{description}</BaseText>
-      <VStack width={"full"} mt={4} gap={4}>
-        {children}
-      </VStack>
-    </Box>
+      {children}
+    </BaseContainer>
   );
 };

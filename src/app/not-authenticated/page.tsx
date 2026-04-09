@@ -16,51 +16,43 @@ import { VariablesColors } from "_theme/variables";
 import { FaLock } from "react-icons/fa6";
 import { APP_ROUTES } from "_config/routes";
 import { ASSETS } from "_assets/images";
-import { useAuthContext } from "_context/auth-context";
-import { Avatar } from "_components/ui/avatar";
-import { UserRole } from "../../types/enum";
 import { useColorMode } from "_components/ui/color-mode";
 import { hexToRGB } from "_theme/colors";
+import Link from "next/link";
 
 export default function UnauthorizedPage() {
   const { colorMode } = useColorMode();
   const { t } = useTranslation();
   const router = useRouter();
-  const { user } = useAuthContext();
 
   return (
     <Flex direction="column" minH="100vh">
       <Flex width={"full"} p={4} justifyContent={"space-between"}>
-        <HStack>
-          <Image
-            src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
-            width={45}
-            height={45}
-            alt="logo"
-          />
-          <BaseText
-            variant={TextVariant.L}
-            weight={TextWeight.Bold}
-            color={"primary.500"}
-          >
-            MyImmo
-          </BaseText>
-        </HStack>
+        <Link href={APP_ROUTES.ROOT}>
+          <HStack>
+            <Image
+              src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+              width={45}
+              height={45}
+              alt="logo"
+            />
+            <BaseText
+              variant={TextVariant.L}
+              weight={TextWeight.Bold}
+              color={"primary.500"}
+            >
+              MyImmo
+            </BaseText>
+          </HStack>
+        </Link>
 
-        {user ? (
-          <Flex alignItems={"center"} gap={2}>
-            <Avatar name={user?.name} size={"sm"} />
-            <BaseText textTransform={"capitalize"}>{user?.name}</BaseText>
-          </Flex>
-        ) : (
-          <BaseButton
-            variant={"outline"}
-            colorType={"neutral"}
-            onClick={() => router.replace(APP_ROUTES.AUTH.SIGN_IN)}
-          >
-            <BaseText color={"gray.500"}>{t("COMMON.LOGIN")}</BaseText>
-          </BaseButton>
-        )}
+        <BaseButton
+          variant={"outline"}
+          colorType={"neutral"}
+          onClick={() => router.replace(APP_ROUTES.AUTH.SIGN_IN)}
+        >
+          <BaseText color={"gray.500"}>{t("COMMON.LOGIN")}</BaseText>
+        </BaseButton>
       </Flex>
       <Center w="full" flex={1} px={4} py={{ base: 4, md: 16 }}>
         <Card.Root
@@ -86,47 +78,24 @@ export default function UnauthorizedPage() {
               <FaLock size={22} color={VariablesColors.red} />
             </BaseIcon>
 
-            <Card.Title fontSize="xl">
-              {user ? "Accès restreint" : "Connexion requise"}
-            </Card.Title>
+            <Card.Title fontSize="xl">{"Accès restreint"}</Card.Title>
             <VStack fontSize="sm" color="gray.500" textAlign="center">
-              {user
-                ? "Vous ne disposez pas des autorisations nécessaires pour afficher cette page.Si vous pensez qu’il s’agit d’une erreur, contactez votre administrateur."
-                : "Cette ressource est protégée connectez-vous ou créez un compte pour continuer."}
+              Vous ne disposez pas des autorisations nécessaires pour afficher
+              cette page.Si vous pensez qu’il s’agit d’une erreur, contactez
+              votre administrateur.
             </VStack>
           </Card.Header>
           <Card.Body px={{ base: 0, md: 6 }} gap={3}>
-            {user ? (
-              <BaseButton
-                onClick={() => {
-                  if (user?.role === UserRole.OWNER) {
-                    router.push(APP_ROUTES.DASHBOARD);
-                  } else {
-                    router.push(APP_ROUTES.ROOT);
-                  }
-                }}
-                colorType="danger"
-              >
-                {user?.role === UserRole.OWNER
-                  ? "Retour au tableau de bord"
-                  : "Retourner à l’accueil"}
-              </BaseButton>
-            ) : (
-              <>
-                <BaseButton
-                  onClick={() => router.replace(APP_ROUTES.AUTH.SIGN_IN)}
-                >
-                  {t("COMMON.LOGIN")}
-                </BaseButton>
-                <BaseButton
-                  variant={"outline"}
-                  colorType={"neutral"}
-                  onClick={() => router.replace(APP_ROUTES.AUTH.SIGN_UP)}
-                >
-                  <BaseText color={"gray.500"}>S'inscrire</BaseText>
-                </BaseButton>
-              </>
-            )}
+            <BaseButton onClick={() => router.replace(APP_ROUTES.AUTH.SIGN_IN)}>
+              {t("COMMON.LOGIN")}
+            </BaseButton>
+            <BaseButton
+              variant={"outline"}
+              colorType={"neutral"}
+              onClick={() => router.replace(APP_ROUTES.AUTH.ONBOARD)}
+            >
+              <BaseText color={"gray.500"}>S'inscrire</BaseText>
+            </BaseButton>
           </Card.Body>
         </Card.Root>
       </Center>

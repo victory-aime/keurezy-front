@@ -22,7 +22,7 @@ export function AuthContextProvider({
     <AuthContext.Provider
       value={{
         session: session?.session,
-        isLoading: !session?.session,
+        isLoading: !session?.session?.token,
         user: session?.user,
       }}
     >

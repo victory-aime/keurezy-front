@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@chakra-ui/react";
+import { Icon, AccordionItemContentProps } from "@chakra-ui/react";
 import {
   AccordionItem,
   AccordionItemContent,
@@ -15,12 +15,14 @@ import {
 } from "_components/custom";
 import { hexToRGB } from "_theme/colors";
 import { NoDataAnimation } from "_components/custom/data-table/NoDataAnimation";
+import { BaseAccordionProps } from "./interface/accordion";
 
-export const BaseAccordion: FC<AccordionProps> = ({
+export const BaseAccordion: FC<BaseAccordionProps> = ({
   items,
   activeBg = true,
   multipleOpen = false,
   isLoading,
+  itemContentProps,
   ...rest
 }) => {
   const [openValues, setOpenValues] = useState<string[]>(
@@ -48,12 +50,8 @@ export const BaseAccordion: FC<AccordionProps> = ({
             return (
               <AccordionItem key={index} value={item.label} mt="3">
                 <AccordionItemTrigger
-                  bgColor={
-                    isOpen ? hexToRGB("success", 0.3) : hexToRGB("lighter", 0.5)
-                  }
-                  borderColor={
-                    isOpen ? hexToRGB("success", 0.3) : hexToRGB("lighter", 0.5)
-                  }
+                  bgColor={isOpen ? hexToRGB("primary", 0.3) : "none"}
+                  borderColor={isOpen ? hexToRGB("primary", 0.3) : "none"}
                   borderWidth={1.5}
                   p="3"
                   borderRadius="7px"
@@ -84,6 +82,7 @@ export const BaseAccordion: FC<AccordionProps> = ({
                     mt="4"
                     bgColor={activeBg ? hexToRGB("lighter", 0.1) : "none"}
                     borderRadius="7px"
+                    {...itemContentProps}
                   >
                     {item.content}
                   </AccordionItemContent>

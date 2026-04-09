@@ -2,7 +2,7 @@ import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { BaseStats, Icons } from "_components/custom";
 import { MODELS, ENUM } from "_types/*";
 
-export const AppartStatsCard = ({
+export const PropertyStatsCard = ({
   properties,
   isLoading,
 }: {
@@ -13,11 +13,10 @@ export const AppartStatsCard = ({
     (acc, p) => {
       if (p.status !== ENUM.COMMON.Status.AVAILABLE) {
         acc.count += 1;
-        acc.revenue += Number(p.price ?? 0);
       }
       return acc;
     },
-    { count: 0, revenue: 0 },
+    { count: 0 },
   );
 
   const stats = [
@@ -41,20 +40,13 @@ export const AppartStatsCard = ({
       color: "danger.500",
       icon: <Icons.Close />,
     },
-    {
-      label: "Revenu mensuel",
-      value: values?.revenue,
-      color: "secondary.500",
-      isAmount: true,
-      icon: <Icons.Payment />,
-    },
   ];
   return (
     <Flex width={"full"} gap={4}>
       <SimpleGrid
         width={"full"}
         mt={"40px"}
-        columns={{ base: 1, sm: 4 }}
+        columns={{ base: 1, sm: 3 }}
         gap={4}
       >
         {stats.map((s, i) => (
@@ -64,7 +56,6 @@ export const AppartStatsCard = ({
             iconBgColor={s.color}
             title={s.label}
             value={s.value || 0}
-            isNumber={s.isAmount}
             currency={ENUM.COMMON.Currency.XOF}
             isLoading={isLoading}
           />

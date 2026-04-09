@@ -11,9 +11,19 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         icon: Icons.Home,
       },
       {
+        label: "Terrains",
+        path: DASHBOARD_ROUTES.LAND.LIST,
+        icon: Icons.Map,
+      },
+      {
+        label: "Bâtiments",
+        path: DASHBOARD_ROUTES.BUILDING.LIST,
+        icon: Icons.RiBuildingLine,
+      },
+      {
         label: "Propriétés",
         path: DASHBOARD_ROUTES.PROPERTIES.LIST,
-        icon: Icons.RiBuildingLine,
+        icon: Icons.Home,
       },
       // {
       //   label: "Locataires",
@@ -36,7 +46,7 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
       //   icon: Icons.IoIosArrowRoundBack,
       // },
     ],
-    title: "Principal",
+    title: "Gestion Immobiliers",
     icon: Icons.GridHome,
   },
   // {

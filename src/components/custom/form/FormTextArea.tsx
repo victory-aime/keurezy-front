@@ -44,7 +44,7 @@ const FormTextArea: FC<FormTextAreaProps> = ({
           gap={"6px"}
           justifyContent={"space-between"}
           width={"full"}
-          fontSize={{ base: "14px", md: "12px" }}
+          fontSize={"14px"}
         >
           <Flex gap={"6px"}>
             {t(label)}
@@ -60,13 +60,14 @@ const FormTextArea: FC<FormTextAreaProps> = ({
       <Textarea
         {...field}
         //bg={"bg.muted"}
+        size={"xl"}
         autoresize={autoresize}
         border={"1px solid"}
         borderColor={isError ? "red.500" : "inherit"}
         _focus={{ borderColor: isError ? "red.500" : "primary.500" }}
         _placeholder={{ color: isError ? "red.500" : "gray.400" }}
         placeholder={t(placeholder)}
-        fontSize={{ base: "16px", md: "12px" }}
+        fontSize={{ base: "16px", sm: "14px" }}
         width={width}
         height={minHeight}
         p={3}

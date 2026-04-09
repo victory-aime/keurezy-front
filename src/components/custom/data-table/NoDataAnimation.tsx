@@ -6,8 +6,10 @@ import { useTranslation } from "react-i18next";
 
 export const NoDataAnimation = ({
   animationType = "folder",
+  notFoundTitle = "COMMON.NO_DATA",
 }: {
   animationType?: "folder" | "trash";
+  notFoundTitle?: string;
 }) => {
   let content = null;
   const { t } = useTranslation();
@@ -19,7 +21,7 @@ export const NoDataAnimation = ({
           <Flex alignItems="center" justifyContent="center" width="50%" mt={20}>
             {/* <TrashLottieAnimationV2 /> */}
           </Flex>
-          <BaseText variant={TextVariant.M}>{t("COMMON.NO_DATA")}</BaseText>
+          <BaseText variant={TextVariant.M}>{t(notFoundTitle)}</BaseText>
         </>
       );
       break;
@@ -34,7 +36,7 @@ export const NoDataAnimation = ({
           >
             <NoDataFoundLottieAnimation />
           </Flex>
-          <BaseText variant={TextVariant.M}>{t("COMMON.NO_DATA")}</BaseText>
+          <BaseText variant={TextVariant.M}>{t(notFoundTitle)}</BaseText>
         </>
       );
       break;

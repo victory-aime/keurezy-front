@@ -7,3 +7,4 @@ export * as ApplicationModule from "./application";
 export * as RentalAgreementModule from "./rental-agreement";
 export * as ChatModule from "./chat";
 export * as NotificationsModule from "./notifications";
+export * as BuildingModule from "./building";

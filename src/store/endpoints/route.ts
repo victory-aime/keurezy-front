@@ -14,6 +14,7 @@ const APIS_ROUTES_MODULES_PATH = {
   RENTAL_AGREEMENT: "/rental-agreement",
   CHAT: "/chat",
   NOTIFICATION: "/notif",
+  BUILDING: "/building",
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -266,6 +267,32 @@ export const APIS = (baseUrl?: string) => {
         method: "POST",
         pathBase: "SECURED_API",
         showResponse: false,
+      }),
+    },
+    BUILDING: {
+      ALL_BUILDING_BY_AGENCY: api({
+        path: `${APIS_ROUTES_MODULES_PATH.BUILDING}`,
+        method: "GET",
+        showResponse: false,
+        pathBase: "SECURED_API",
+      }),
+      CREATE_BUILDING: api({
+        path: `${APIS_ROUTES_MODULES_PATH.BUILDING}/create-building`,
+        method: "POST",
+        showResponse: false,
+        pathBase: "SECURED_API",
+      }),
+      UPDATE_BUILDING: api({
+        path: `${APIS_ROUTES_MODULES_PATH.BUILDING}/update-building`,
+        method: "POST",
+        showResponse: false,
+        pathBase: "SECURED_API",
+      }),
+      DELETE_BUILDING: api({
+        path: `${APIS_ROUTES_MODULES_PATH.BUILDING}/delete-building`,
+        method: "DELETE",
+        showResponse: false,
+        pathBase: "SECURED_API",
       }),
     },
   };
