@@ -35,22 +35,22 @@ export type subItems = SimpleSubItem[];
 export interface SideBarProps {
   onShowSidebar: () => void;
   sideToggled: boolean;
-  data: {
-    session?: Session;
-    user?:
-      | {
-          id: string;
-          createdAt: Date;
-          updatedAt: Date;
-          email: string;
-          emailVerified: boolean;
-          name: string;
-          image?: string | null | undefined;
-          role?: string;
-        }
-      | null
-      | undefined;
-  };
+  // data: {
+  //   session?: Session;
+  //   user?:
+  //     | {
+  //         id: string;
+  //         createdAt: Date;
+  //         updatedAt: Date;
+  //         email: string;
+  //         emailVerified: boolean;
+  //         name: string;
+  //         image?: string | null | undefined;
+  //         role?: string;
+  //       }
+  //     | null
+  //     | undefined;
+  // };
 }
 
 export interface SimpleSubItem {

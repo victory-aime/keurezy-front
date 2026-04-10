@@ -10,7 +10,7 @@ export interface CreateBuildingDto {
   description?: string;
   buildingOwner?: string;
   floors?: number;
-  status?: COMMON.Status;
+  status?: COMMON.Status | any;
   documents?: string[];
   agencyId?: string;
   landId?: string;
@@ -42,6 +42,10 @@ export interface IBuilding {
   createdAt?: string;
   updatedAt?: string;
   properties?: IPropertyResponse[];
+  land?: {
+    id: string;
+    title: string;
+  } | null;
 }
 
 export interface IBuildingFilter extends IPagination, IBuilding {}

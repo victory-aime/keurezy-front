@@ -1,5 +1,5 @@
 import { createListCollection } from "@chakra-ui/react";
-import { CONSTANTS } from "_types/*";
+import { CONSTANTS, MODELS } from "_types/*";
 
 const buildingStatusList = createListCollection({
   items: CONSTANTS.buildingStatus.map((type) => ({
@@ -8,11 +8,14 @@ const buildingStatusList = createListCollection({
   })),
 });
 
-const cityList = createListCollection({
-  items:
-    CONSTANTS.SENEGAL_CITIES.map((city) => ({
-      label: city.label,
-      value: city.value,
-    })) || [],
-});
-export { buildingStatusList, cityList };
+const getLandsList = (allBuildings: { content: MODELS.LandResponseDto[] }) => {
+  return createListCollection({
+    items:
+      allBuildings?.content?.map((city) => ({
+        label: city.title,
+        value: city.id,
+      })) || [],
+  });
+};
+
+export { buildingStatusList, getLandsList };

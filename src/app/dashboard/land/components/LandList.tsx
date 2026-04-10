@@ -1,7 +1,7 @@
 "use client";
-import { VStack } from "@chakra-ui/react";
 import {
   BaseContainer,
+  BaseFormatNumber,
   BaseTag,
   BaseText,
   BaseToast,
@@ -10,20 +10,20 @@ import {
   ToastStatus,
 } from "_components/custom";
 import { useMemo, useState } from "react";
-import { BuildingFilter } from "./BuildingFilter";
-import { LandModule, BuildingModule } from "_store/state-management";
+import { LandFilter } from "./LandFilter";
+import { LandModule } from "_store/state-management";
 import { useRouter } from "next/navigation";
 import { DASHBOARD_ROUTES } from "../../routes";
 import { CONSTANTS, MODELS } from "_types/*";
-import { BuildingDelete } from "./BuildingDelete";
-import { BuildingDetails } from "./BuildingDetail";
+import { LandDelete } from "./LandDelete";
+import { LandDetails } from "./LandDetails";
 import { FormikValues } from "formik";
 import { IuseExportData, PDFService } from "rise-core-frontend";
 import { useTranslation } from "react-i18next";
-import { BuildingStatsCard } from "./BuildingStats";
+import { LandStatsCard } from "./LandStats";
 import { useUserContext } from "_context/user-context";
 
-export const BuildingList = () => {
+export const LandList = () => {
   const router = useRouter();
   const { t } = useTranslation();
   const { user: currentUser } = useUserContext();
@@ -33,11 +33,11 @@ export const BuildingList = () => {
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
-  const [selectedValues, setSelectedValues] = useState<MODELS.IBuilding | null>(
+  const [selectedValues, setSelectedValues] =
+    useState<MODELS.LandResponseDto | null>(null);
+  const [filterValues, setFilterValues] = useState<MODELS.ILandFilter | null>(
     null,
   );
-  const [filterValues, setFilterValues] =
-    useState<MODELS.IBuildingFilter | null>(null);
 
   const agencyId = currentUser?.owner?.agency?.id;
   const ownerId = currentUser?.owner?.id;
@@ -59,64 +59,44 @@ export const BuildingList = () => {
   );
 
   const {
-    data: allBuildings,
-    isLoading: isBuildingLoad,
-    refetch: reloadBuildingList,
-  } = BuildingModule.getAllBuildingByAgencyQueries(queryPayload);
+    data: allLands,
+    isLoading: isLandLoad,
+    refetch: reloadLandsList,
+  } = LandModule.getAllLandsByAgencyQueries(queryPayload);
 
-  const { data: allLands } = LandModule.getAllLandsByAgencyQueries({
-    params: {
-      agencyId,
-      ownerId,
-      initialPage: currentPage,
-      limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
-    },
-    queryOptions: {
-      enabled: !!agencyId && !!ownerId,
-    },
-  });
-
-  const { mutateAsync: deleteBuilding, isPending: isDeletePending } =
-    BuildingModule.deleteBuildingMutation({
+  const { mutateAsync: deleteLand, isPending: isLandPending } =
+    LandModule.deleteLandMutation({
       mutationOptions: {
         onSuccess: async () => {
           setFilterValues(null);
-          await reloadBuildingList();
+          await reloadLandsList();
         },
       },
     });
 
-  const buildingColumns: ColumnsDataTable[] = [
-    { header: "Bâtiment", accessor: "name" },
+  const landColumns: ColumnsDataTable[] = [
+    { header: "Terrain", accessor: "title" },
     {
-      header: "Structure",
-      accessor: "fullObject",
+      header: "Prix de vente",
+      accessor: "purchasePrice",
+      cell: (value) => <BaseFormatNumber value={value} />,
+    },
+    {
+      header: "ville",
+      accessor: "city",
       cell: (value) => (
-        <VStack alignItems={"flex-start"} gap={0}>
-          <BaseText>{value?.floors} étages</BaseText>
-          <BaseText fontSize={"xs"}>
-            {value?.nombre_appartements ?? 0} apparts
-          </BaseText>
-        </VStack>
+        <BaseText textTransform={"capitalize"} fontSize={"sm"}>
+          {value}
+        </BaseText>
       ),
     },
     {
       header: "adresse",
-      accessor: "fullObject",
+      accessor: "address",
       cell: (value) => (
-        <VStack alignItems={"flex-start"} gap={0}>
-          <BaseText>{value?.address}</BaseText>
-          <BaseText fontSize={"xs"}>
-            {value?.city} ,{value?.district}
-          </BaseText>
-        </VStack>
+        <BaseText fontSize={"sm"}>{value ?? "Aucune addresse"}</BaseText>
       ),
     },
-    // {
-    //   header: "Loyer",
-    //   accessor: "loyer_mensuel",
-    //   cell: (value) => <BaseFormatNumber value={value} />,
-    // },
     {
       header: "Status",
       accessor: "status",
@@ -136,9 +116,7 @@ export const BuildingList = () => {
         {
           name: "edit",
           handleClick(data) {
-            router.push(
-              `${DASHBOARD_ROUTES.BUILDING.ADD}?buildingId=${data?.id}`,
-            );
+            router.push(`${DASHBOARD_ROUTES.LAND.ADD}?landId=${data?.id}`);
           },
         },
         {
@@ -152,8 +130,8 @@ export const BuildingList = () => {
     },
   ];
 
-  const handleDeleteBuilding = async (data: MODELS.IDeleteBuilding) => {
-    await deleteBuilding({ params: data });
+  const handleDeleteLand = async (data: any) => {
+    await deleteLand({ params: data });
   };
 
   const handleFilter = async (values: FormikValues) => {
@@ -168,7 +146,7 @@ export const BuildingList = () => {
   const handleResetFilter = async () => {
     setFilterValues(null);
     setCurrentPage(currentPage);
-    await reloadBuildingList();
+    await reloadLandsList();
   };
 
   const paginationAction = (page: number) => {
@@ -176,36 +154,36 @@ export const BuildingList = () => {
   };
 
   const handleExportPdf = async () => {
-    if (allBuildings?.content?.length === 0) {
+    if (allLands?.content?.length === 0) {
       return BaseToast({
         title: "Export impossible",
         description:
-          "Vous ne pouvez pas exporter la liste car vous ne disposer d'aucun bâtiment",
+          "Vous ne pouvez pas exporter la liste car vous ne disposer d'aucun terrain",
         type: ToastStatus.INFO,
       });
     }
     setExportLoading(true);
-    const translatedColumns = buildingColumns.map((col) => ({
+    const translatedColumns = landColumns.map((col) => ({
       ...col,
       header: t(col.header),
     }));
     await exportTableToPdf(
-      allBuildings?.content as unknown as IuseExportData[],
-      "Liste des Bâtiments",
+      allLands?.content as unknown as IuseExportData[],
+      "Liste des Terrains",
       translatedColumns,
     );
   };
 
   return (
     <BaseContainer
-      title="Gestion des Bâtiments"
-      description="Gérez vos bâtiments avec efficacité"
+      title="Gestion des Terrains"
+      description="Gérez vos terrains avec efficacité"
       border={"none"}
       withActionButtons
       isFilterActive={toggleFilter}
       onToggleFilter={() => setToggleFilter(!toggleFilter)}
       filterComponent={
-        <BuildingFilter
+        <LandFilter
           isOpen={false}
           onChange={async () => {
             setToggleFilter(!toggleFilter);
@@ -217,61 +195,52 @@ export const BuildingList = () => {
       }
       actionsButtonProps={{
         validateTitle: "Ajouter",
-        downloadTitle: `Exporter PDF (${allBuildings?.content?.length ?? 0})`,
+        downloadTitle: `Exporter PDF (${allLands?.content?.length ?? 0})`,
         onClick() {
-          router.push(DASHBOARD_ROUTES.BUILDING.ADD);
+          router.push(DASHBOARD_ROUTES.LAND.ADD);
         },
         onDownload: async () => {
           await handleExportPdf().then(() => !exportLoading);
         },
         onReload: async () => {
-          await reloadBuildingList();
+          await reloadLandsList();
         },
         onToggleFilter() {
           setToggleFilter(true);
         },
       }}
     >
-      <BuildingStatsCard
-        buildings={allBuildings?.content ?? []}
-        isLoading={isBuildingLoad}
-      />
+      <LandStatsCard lands={allLands?.content ?? []} isLoading={isLandLoad} />
 
       <DataTableContainer
-        isLoading={isBuildingLoad}
-        data={allBuildings?.content ?? []}
+        isLoading={isLandLoad}
+        data={allLands?.content ?? []}
         paginationData={{
           lazy: true,
           currentPage: 1,
-          totalDataPerPage: allBuildings?.totalDataPerPages || 5,
+          totalDataPerPage: allLands?.totalDataPerPages || 5,
           onLazyLoad(index) {
             paginationAction(index);
           },
-          totalItems: allBuildings?.totalItems,
-          totalPages: allBuildings?.totalPages,
+          totalItems: allLands?.totalItems,
+          totalPages: allLands?.totalPages,
         }}
-        hidePagination={allBuildings?.totalPages === 1}
-        columns={buildingColumns}
-        notFoundTitle="Aucun bâtiment trouvé"
+        hidePagination={allLands?.totalPages === 1}
+        columns={landColumns}
+        notFoundTitle="Aucun Terrain trouvé"
       />
-      <BuildingDelete
+      <LandDelete
         onChange={setOpenDelete}
         isOpen={openDelete}
-        isLoading={isDeletePending}
+        isLoading={isLandPending}
         data={selectedValues}
-        callback={() =>
-          handleDeleteBuilding({
-            agencyId: agencyId!,
-            ownerId: ownerId!,
-            id: selectedValues?.id!,
-          })
-        }
+        callback={() => handleDeleteLand({})}
       />
-      <BuildingDetails
+      <LandDetails
         onChange={setOpenDetails}
         isOpen={openDetails}
         data={selectedValues}
-        isLoading={isBuildingLoad}
+        isLoading={isLandLoad}
         callback={() => {
           setOpenDetails(false);
           setOpenDelete(true);

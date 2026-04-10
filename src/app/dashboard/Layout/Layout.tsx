@@ -7,7 +7,6 @@ import { Sidebar } from "./sidebar/Sidebar";
 import { Footer } from "./footer/Footer";
 import { SidebarInset } from "./sidebar/components/SidebarInset";
 import { Header } from "./header/Header";
-import { InitializeApp } from "_context/provider/initialize-app";
 import { GuidedTour } from "./guide-tour/GuidedTour";
 import { useBreakpointValue } from "@chakra-ui/react";
 import { tourSteps } from "_constants/tourStep";
@@ -25,11 +24,9 @@ export const Layout: FunctionComponent<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const token = useSearchParams().get("token");
-
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const isMobile = useBreakpointValue({ base: true, md: false });
-
-  const { session, user, isLoading } = useAuthContext();
+  const { isLoading, user } = useAuthContext();
 
   const [showTour, setShowTour] = useState(false);
   const [showVerifiedBanner, setShowVerifiedBanner] = useState(false);
@@ -142,7 +139,6 @@ export const Layout: FunctionComponent<{
       )}
 
       <Sidebar
-        data={{ user }}
         onShowSidebar={() => setSidebarOpen((prev) => !prev)}
         isLoading={isLoading}
         sideToggled={isSidebarOpen}
@@ -165,7 +161,6 @@ export const Layout: FunctionComponent<{
         <Header
           sideToggled={isSidebarOpen}
           onShowSidebar={() => setSidebarOpen((prev) => !prev)}
-          data={{ session }}
         />
         <Container isLoading={isLoading}>{children}</Container>
         <Footer />

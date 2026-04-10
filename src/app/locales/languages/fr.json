@@ -122,7 +122,9 @@
       "RESERVED": "Réserver",
       "CLOSED": "Fermer",
       "REJECTED": "Rejetée",
-      "ACCEPTED": "Acceptée"
+      "ACCEPTED": "Acceptée",
+      "CURRENTLY_ON_SALE": "vente en cours",
+      "SOLD": "Vendu"
     },
     "TODAY": "Aujourd'hui",
     "MONTH": "Mois",

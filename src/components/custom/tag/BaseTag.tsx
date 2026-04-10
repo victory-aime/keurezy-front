@@ -2,67 +2,36 @@ import { ColorPalette, Tag, TagCloseTrigger } from "@chakra-ui/react";
 import React, { FC, ReactNode } from "react";
 import { BaseTagProps } from "./interface/tag";
 import { useTranslation } from "react-i18next";
-import { Icons } from "../icons";
 import { ENUM } from "_types/*";
+import { STATUS_ICONS, STATUS_META, VARIANT_CONFIG } from "../utils";
 
 const getTagContent = (
-  status: ENUM.COMMON.Status | undefined,
-  color: ColorPalette = "red",
+  status?: ENUM.COMMON.Status,
+  fallbackColor: ColorPalette = "red",
   t?: (key: string) => string,
 ): { colorPalette: ColorPalette; label: string; icon?: ReactNode } => {
-  if (!t) return { colorPalette: "blue", label: "Inconnu" };
-
-  switch (status) {
-    case "ACTIVE":
-      return {
-        colorPalette: "green",
-        label: t("COMMON.STATUS.ACTIVE"),
-      };
-    case "INACTIVE":
-      return { colorPalette: "red", label: t("COMMON.STATUS.INACTIVE") };
-    case "AVAILABLE":
-      return {
-        icon: <Icons.Check />,
-        colorPalette: "green",
-        label: t("COMMON.STATUS.AVAILABLE"),
-      };
-    case "CLOSE":
-      return { colorPalette: "red", label: t("COMMON.STATUS.CLOSE") };
-    case "RENTED":
-      return { colorPalette: "red", label: t("COMMON.STATUS.RENTED") };
-    case "PENDING":
-      return {
-        icon: <Icons.Timer />,
-        colorPalette: "orange",
-        label: t("COMMON.STATUS.PENDING"),
-      };
-    case "ACCEPTED":
-      return {
-        icon: <Icons.Check />,
-        colorPalette: "green",
-        label: t("COMMON.STATUS.ACCEPTED"),
-      };
-    case "REJECTED":
-      return {
-        icon: <Icons.Close />,
-        colorPalette: "red",
-        label: t("COMMON.STATUS.REJECTED"),
-      };
-    case "UNAVAILABLE":
-      return {
-        icon: <Icons.Close />,
-        colorPalette: "orange",
-        label: t("COMMON.STATUS.UNAVAILABLE"),
-      };
-    case "MAINTENANCE":
-      return {
-        icon: <Icons.Wrench />,
-        colorPalette: "yellow",
-        label: t("COMMON.STATUS.MAINTENANCE"),
-      };
-    default:
-      return { colorPalette: color, label: t("COMMON.STATUS.UNKNOWN") };
+  if (!t) {
+    return { colorPalette: "blue", label: "Inconnu" };
   }
+
+  if (!status || !STATUS_META[status as keyof typeof STATUS_META]) {
+    return {
+      colorPalette: fallbackColor,
+      label: t("COMMON.STATUS.UNKNOWN"),
+    };
+  }
+
+  const variant = STATUS_META[status as keyof typeof STATUS_META];
+  const { colorPalette } = VARIANT_CONFIG[variant] ?? {
+    colorPalette: fallbackColor,
+  };
+  const Icon = STATUS_ICONS[status];
+
+  return {
+    colorPalette,
+    label: t(`COMMON.STATUS.${status}`),
+    icon: Icon ? <Icon /> : undefined,
+  };
 };
 
 export const BaseTag: FC<BaseTagProps> = ({

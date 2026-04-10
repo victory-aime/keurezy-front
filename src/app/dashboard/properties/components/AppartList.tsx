@@ -20,19 +20,15 @@ import { PropertyStatsCard } from "./AppartStats";
 import { useMemo, useState } from "react";
 import { FormikValues } from "formik";
 import { PropertyFilter } from "./PropertyFilter";
+import { useUserContext } from "_context/user-context";
 
 export const PropertyList = () => {
   const router = useRouter();
+  const { user } = useUserContext();
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
   const [filterValues, setFilterValues] =
     useState<MODELS.IAgencyFilters | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const { data: user } = UserModule.getUserInfo({
-    queryOptions: {
-      enabled: false,
-    },
-  });
 
   const agencyId = user?.owner?.agency?.id;
   const ownerId = user?.owner?.id;
@@ -50,7 +46,7 @@ export const PropertyList = () => {
         enabled: !!agencyId && !!ownerId,
       },
     }),
-    [filterValues, currentPage],
+    [filterValues, currentPage, agencyId, ownerId],
   );
 
   const {

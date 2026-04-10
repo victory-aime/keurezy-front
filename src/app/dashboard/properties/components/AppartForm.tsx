@@ -20,7 +20,7 @@ import {
   UserModule,
 } from "_store/state-management";
 import { findDynamicIdInList } from "rise-core-frontend";
-import { cityList } from "../../building/constants/building";
+import { cityList } from "_constants/city";
 import { DASHBOARD_ROUTES } from "../../routes";
 import {
   getBuildingsList,

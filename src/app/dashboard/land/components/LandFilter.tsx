@@ -7,12 +7,11 @@ import {
   ModalOpenProps,
 } from "_components/custom";
 import { Formik } from "formik";
-import { buildingStatusList } from "../constants/building";
-import { cityList } from "_constants/city";
 import { MODELS } from "_types/*";
 import { useEffect, useState } from "react";
+import { cityList } from "_constants/city";
 
-export const BuildingFilter = ({
+export const LandFilter = ({
   onChange,
   isLoading,
   callback = () => {},
@@ -42,7 +41,7 @@ export const BuildingFilter = ({
         >
           <HStack width={"full"}>
             <FormTextInput
-              name="name"
+              name="title"
               label="Nom"
               placeholder="rechercher par nom"
             />
@@ -61,7 +60,7 @@ export const BuildingFilter = ({
             <FormSelect
               name="status"
               label="Statut"
-              listItems={buildingStatusList}
+              listItems={[]}
               setFieldValue={setFieldValue}
             />
           </HStack>

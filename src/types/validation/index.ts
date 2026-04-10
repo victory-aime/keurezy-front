@@ -7,3 +7,5 @@ export * as PROPERTY_VALIDATION from "./property";
 export * as CONTACT from "./contact";
 export * as RENTAL from "./rental";
 export * as ONBOARD from "./onboard";
+export * as LAND from "./land";
+export * as BULDING from "./building";

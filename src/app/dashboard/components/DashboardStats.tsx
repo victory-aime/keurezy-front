@@ -20,11 +20,10 @@ import { RenderNotifications } from "../notifications/components/RenderNotificat
 import { hexToRGB } from "_theme/colors";
 import { OccupationRateByType } from "./OccupationRateByType";
 import { MonthlyRevenueAreaChart } from "./MonthlyRevenueAreaChart";
+import { useUserContext } from "_context/user-context";
 
 export const DashboardStats = () => {
-  const { data: user } = UserModule.getUserInfo({
-    queryOptions: { enabled: false },
-  });
+  const { user } = useUserContext();
 
   const agencyId = user?.owner?.agency?.id;
   const ownerId = user?.owner?.id;

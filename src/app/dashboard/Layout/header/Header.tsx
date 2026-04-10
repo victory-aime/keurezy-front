@@ -24,18 +24,14 @@ import { useAuth } from "_hooks/useAuth";
 import { VariablesColors } from "_theme/variables";
 import { Formik } from "formik";
 import { useTranslation } from "react-i18next";
+import { useUserContext } from "_context/user-context";
 
-export const Header = ({ data, onShowSidebar, sideToggled }: SideBarProps) => {
+export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
   const isNotMobile = useBreakpointValue({ base: false, sm: true });
   const { t } = useTranslation();
   const router = useRouter();
   const { logout } = useAuth();
-  const { data: user, isLoading } = UserModule.getUserInfo({
-    params: { userId: data?.session?.userId },
-    queryOptions: {
-      enabled: !!data?.session?.userId,
-    },
-  });
+  const { user, isLoading } = useUserContext();
 
   const { data: unreadNotificationsList, isLoading: unreadListLoad } =
     NotificationsModule.getAllUnreadNotificationsQueries({

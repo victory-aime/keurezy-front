@@ -1,3 +1,5 @@
+import { LandList } from "./components/LandList";
+
 export default function LandPage() {
-  return "Gestion des terrains comming soon";
+  return <LandList />;
 }

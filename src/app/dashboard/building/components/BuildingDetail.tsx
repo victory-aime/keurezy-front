@@ -87,6 +87,11 @@ export const BuildingDetails = ({
             </Flex>
             <Separator />
             <Flex py={2} justify="space-between">
+              <BaseText color="gray.500">Terrain associé</BaseText>
+              <BaseText>{data?.land?.title ?? "Aucun"}</BaseText>
+            </Flex>
+            <Separator />
+            <Flex py={2} justify="space-between">
               <BaseText color="gray.500">Status</BaseText>
               <BaseTag status={data?.status} />
             </Flex>

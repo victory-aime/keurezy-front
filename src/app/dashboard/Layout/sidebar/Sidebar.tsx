@@ -7,9 +7,9 @@ import { ASSETS } from "_assets/images";
 import Image from "next/image";
 import { SideBarProps } from "./types";
 import {
-  UserModule,
   PropertyModule,
   BuildingModule,
+  LandModule,
 } from "_store/state-management";
 import { ALL_CSA_ROUTES } from "./routes/routes";
 import { RenderGroupedLinks } from "./components/RenderGroupedLinks";
@@ -19,9 +19,9 @@ import { useSessionRefreshContext } from "_context/SessionRefresh-context";
 import { useMemo } from "react";
 import { DASHBOARD_ROUTES } from "../../routes";
 import { useColorMode } from "_components/ui/color-mode";
+import { useUserContext } from "_context/user-context";
 
 export const Sidebar = ({
-  data,
   onShowSidebar,
   sideToggled,
   isLoading,
@@ -30,10 +30,7 @@ export const Sidebar = ({
   const { logout } = useAuth();
   const { dismissToast } = useSessionRefreshContext();
   const { colorMode } = useColorMode();
-
-  const { data: user } = UserModule.getUserInfo({
-    queryOptions: { enabled: false },
-  });
+  const { user } = useUserContext();
   const agencyId = user?.owner?.agency?.id;
   const ownerId = user?.owner?.id;
 
@@ -52,12 +49,27 @@ export const Sidebar = ({
     },
   });
 
+  const { data: allLandsList } = LandModule.getAllLandsByAgencyQueries({
+    params: {
+      agencyId,
+      ownerId,
+    },
+    queryOptions: {
+      enabled: !!agencyId && !!ownerId,
+    },
+  });
+
   const badgesByPath = useMemo(() => {
     return {
+      [DASHBOARD_ROUTES.LAND.LIST]: allLandsList?.totalItems,
       [DASHBOARD_ROUTES.BUILDING.LIST]: buildingList?.totalItems,
       [DASHBOARD_ROUTES.PROPERTIES.LIST]: propertyList?.totalItems,
     };
-  }, [propertyList?.totalItems, buildingList?.totalItems]);
+  }, [
+    propertyList?.totalItems,
+    buildingList?.totalItems,
+    allLandsList?.totalItems,
+  ]);
 
   const sidebarLinks = useMemo(() => {
     return ALL_CSA_ROUTES.map((group) => ({

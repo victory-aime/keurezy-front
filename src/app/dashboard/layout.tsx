@@ -1,26 +1,27 @@
 import { AuthContextProvider } from "_context/auth-context";
 import { headers } from "next/headers";
-import { authClient } from "../lib/auth-client";
 import { Layout } from "./Layout/Layout";
 import { SessionRefreshProvider } from "_context/SessionRefresh-context";
-import { InitializeApp } from "_context/provider/initialize-app";
+import { UserProvider } from "_context/user-context";
+import { safeGetServerSession } from "_hooks/get-server-session";
 
 export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await authClient.getSession({
+  const session = await safeGetServerSession({
     fetchOptions: {
       headers: await headers(),
     },
   });
+
   return (
     <AuthContextProvider session={session?.data}>
-      <SessionRefreshProvider>
-        <InitializeApp isLoading={!session?.data}>
+      <SessionRefreshProvider error={session?.error?.toString()}>
+        <UserProvider userId={session?.data?.user?.id}>
           <Layout>{children}</Layout>
-        </InitializeApp>
+        </UserProvider>
       </SessionRefreshProvider>
     </AuthContextProvider>
   );

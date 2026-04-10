@@ -20,13 +20,20 @@ const SessionContext = createContext<
   | undefined
 >(undefined);
 
-export function SessionRefreshProvider({ children }: { children: ReactNode }) {
-  const { error, refetch: refetchSession } = authClient.useSession();
+export function SessionRefreshProvider({
+  children,
+  error,
+}: {
+  children: ReactNode;
+  error?: string;
+}) {
+  const { refetch: refetchSession } = authClient.useSession();
   const isRetryingRef = useRef(false);
   const toastId = "session-error-toast";
 
-  const isServerError =
-    error?.status === 500 || error?.statusText === "Internal Server Error";
+  console.log("error session refresh", error);
+
+  const isServerError = error;
 
   const startRetry = useCallback(async () => {
     if (!navigator.onLine) return;

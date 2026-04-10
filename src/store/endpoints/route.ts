@@ -15,6 +15,7 @@ const APIS_ROUTES_MODULES_PATH = {
   CHAT: "/chat",
   NOTIFICATION: "/notif",
   BUILDING: "/building",
+  LAND: "/land",
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -100,7 +101,6 @@ export const APIS = (baseUrl?: string) => {
         path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/create`,
         method: "POST",
         pathBase: "SECURED_API",
-        showResponse: false,
       }),
       ALL_PROPERTIES_BY_AGENCY: api({
         path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/all`,
@@ -124,7 +124,6 @@ export const APIS = (baseUrl?: string) => {
         path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/close`,
         method: "POST",
         pathBase: "SECURED_API",
-        showResponse: false,
       }),
 
       OCCUPATION_RATE_BY_PROPERTY_TYPE: api({
@@ -279,19 +278,45 @@ export const APIS = (baseUrl?: string) => {
       CREATE_BUILDING: api({
         path: `${APIS_ROUTES_MODULES_PATH.BUILDING}/create-building`,
         method: "POST",
-        showResponse: false,
+
         pathBase: "SECURED_API",
       }),
       UPDATE_BUILDING: api({
         path: `${APIS_ROUTES_MODULES_PATH.BUILDING}/update-building`,
         method: "POST",
-        showResponse: false,
+
         pathBase: "SECURED_API",
       }),
       DELETE_BUILDING: api({
         path: `${APIS_ROUTES_MODULES_PATH.BUILDING}/delete-building`,
         method: "DELETE",
+
+        pathBase: "SECURED_API",
+      }),
+    },
+    LAND: {
+      ALL_LAND_BY_AGENCY: api({
+        path: `${APIS_ROUTES_MODULES_PATH.LAND}`,
+        method: "GET",
         showResponse: false,
+        pathBase: "SECURED_API",
+      }),
+      CREATE_LAND: api({
+        path: `${APIS_ROUTES_MODULES_PATH.LAND}/create-land`,
+        method: "POST",
+
+        pathBase: "SECURED_API",
+      }),
+      UPDATE_LAND: api({
+        path: `${APIS_ROUTES_MODULES_PATH.LAND}/update-land`,
+        method: "POST",
+
+        pathBase: "SECURED_API",
+      }),
+      DELETE_LAND: api({
+        path: `${APIS_ROUTES_MODULES_PATH.LAND}/delete-land`,
+        method: "DELETE",
+
         pathBase: "SECURED_API",
       }),
     },
