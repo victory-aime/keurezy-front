@@ -9,3 +9,4 @@ export * as RENTAL from "./rental";
 export * as ONBOARD from "./onboard";
 export * as LAND from "./land";
 export * as BULDING from "./building";
+export * as TEAM from "./team";

@@ -21,18 +21,16 @@ export const LandForm = ({ landId }: { landId: string }) => {
       enabled: false,
     },
   });
-  const agencyId = currentUser?.owner?.agency?.id;
-  const ownerId = currentUser?.owner?.id;
+  const agencyId = currentUser?.agencyId;
 
   const { data: allLands, isLoading: isAllLandsLoad } =
     LandModule.getAllLandsByAgencyQueries({
       params: {
         agencyId,
-        ownerId,
         initialPage: CONSTANTS.PAGINATION.INIT,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
-      queryOptions: { enabled: !!agencyId && !!ownerId },
+      queryOptions: { enabled: !!agencyId },
     });
 
   const { mutateAsync: createLand, isPending: isCreateLand } =
@@ -75,9 +73,6 @@ export const LandForm = ({ landId }: { landId: string }) => {
 
     if (landId) {
       formData.append("id", landId);
-    }
-    if (ownerId) {
-      formData.append("ownerId", ownerId);
     }
 
     if (landId) {

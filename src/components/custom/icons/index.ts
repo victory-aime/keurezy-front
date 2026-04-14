@@ -40,10 +40,11 @@ import {
   IoChatbubblesOutline,
   IoCheckmarkDone,
   IoDocumentTextOutline,
+  IoLockClosed,
   IoRocketSharp,
   IoShieldCheckmarkSharp,
 } from "react-icons/io5";
-import { RiSearch2Line } from "react-icons/ri";
+import { RiMailSendLine, RiSearch2Line } from "react-icons/ri";
 import {
   TbFileDownload,
   TbLayoutSidebarRightCollapse,
@@ -155,4 +156,6 @@ export const Icons = {
   Google: FcGoogle,
   GridHome: CiGrid42,
   Minus: FiMinus,
+  SendMail: RiMailSendLine,
+  Lock: IoLockClosed,
 };

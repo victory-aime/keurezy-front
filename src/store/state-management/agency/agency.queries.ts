@@ -16,6 +16,19 @@ const getAgencyInfo = (
   });
 };
 
+const getAgencySubscriptionInfo = (
+  args: QUERIES.QueryPayload<{ agencyId: string }>,
+) => {
+  const { params, queryOptions } = args;
+
+  return QUERIES.useCustomQuery<MODELS.IAgencySubscriptionInfo>({
+    queryKey: [Constants.AGENCY_KEYS.AGENCY_SUBSCRIPTION_INFO],
+    queryFn: () =>
+      agencyServiceInstance().agency_subscription_info(params?.agencyId),
+    options: queryOptions,
+  });
+};
+
 const createAgencyMutation = (
   args: QUERIES.MutationPayload<MODELS.ICreateAgency>,
 ) => {
@@ -63,4 +76,5 @@ export {
   getAgencyInfo,
   updateAgencyMutation,
   closeAgencyMutation,
+  getAgencySubscriptionInfo,
 };

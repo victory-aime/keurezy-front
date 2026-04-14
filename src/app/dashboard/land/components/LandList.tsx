@@ -39,23 +39,21 @@ export const LandList = () => {
     null,
   );
 
-  const agencyId = currentUser?.owner?.agency?.id;
-  const ownerId = currentUser?.owner?.id;
+  const agencyId = currentUser?.agencyId;
 
   const queryPayload = useMemo(
     () => ({
       params: {
         ...filterValues,
         agencyId,
-        ownerId,
         initialPage: currentPage,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
       queryOptions: {
-        enabled: !!agencyId && !!ownerId,
+        enabled: !!agencyId,
       },
     }),
-    [filterValues, currentPage, agencyId, ownerId],
+    [filterValues, currentPage, agencyId],
   );
 
   const {

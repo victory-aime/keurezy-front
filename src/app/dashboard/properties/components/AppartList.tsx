@@ -21,32 +21,33 @@ import { useMemo, useState } from "react";
 import { FormikValues } from "formik";
 import { PropertyFilter } from "./PropertyFilter";
 import { useUserContext } from "_context/user-context";
+import { usePermissions } from "_hooks/usePermissions";
+import { AppPermissions } from "_utils/app-permissions";
 
 export const PropertyList = () => {
   const router = useRouter();
   const { user } = useUserContext();
+  const { hasPermission } = usePermissions();
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
   const [filterValues, setFilterValues] =
     useState<MODELS.IAgencyFilters | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const agencyId = user?.owner?.agency?.id;
-  const ownerId = user?.owner?.id;
+  const agencyId = user?.agencyId;
 
   const queryPayload = useMemo(
     () => ({
       params: {
         ...filterValues,
         agencyId,
-        ownerId,
         initialPage: currentPage,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
       queryOptions: {
-        enabled: !!agencyId && !!ownerId,
+        enabled: !!agencyId,
       },
     }),
-    [filterValues, currentPage, agencyId, ownerId],
+    [filterValues, currentPage, agencyId],
   );
 
   const {
@@ -58,11 +59,10 @@ export const PropertyList = () => {
   const { data: allBuildings } = BuildingModule.getAllBuildingByAgencyQueries({
     params: {
       agencyId,
-      ownerId,
       limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
     },
     queryOptions: {
-      enabled: !!agencyId && !!ownerId,
+      enabled: !!agencyId,
     },
   });
 
@@ -141,6 +141,7 @@ export const PropertyList = () => {
       actions: [
         {
           name: "edit",
+          isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.UPDATE),
           handleClick(data) {
             router.push(
               `${DASHBOARD_ROUTES.PROPERTIES.ADD}?requestId=${data?.id}`,

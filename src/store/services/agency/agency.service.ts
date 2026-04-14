@@ -13,6 +13,13 @@ export class AgencyService extends BaseApi {
       { params: { agencyId, ownerId } },
     );
   }
+  agency_subscription_info(agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.AGENCY_SUBSCRIPTION_INFO,
+      {},
+      { params: { agencyId } },
+    );
+  }
   create_agency(data: MODELS.ICreateAgency | FormData) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().AGENCY.CREATE_AGENCY,

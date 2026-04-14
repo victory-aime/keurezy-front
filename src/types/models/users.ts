@@ -11,16 +11,16 @@ export interface IUser {
   status?: Status | undefined;
   role?: UserRole | undefined;
   accounts?: IAccountUsers[];
-  owner?: { id: string; agency: { id: string } };
+  ownerId: string | null;
+  staffId: string | null;
+  agencyId: string | null;
 }
 
 export interface ICreateUser extends IUser {
   password: string;
 }
 
-export interface IForgotPasswordInit extends IUser {
-  callbackURL: string;
-}
+export interface IForgotPasswordInit extends IUser {}
 
 export interface IResetPassword {
   token: string;

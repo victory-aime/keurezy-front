@@ -16,6 +16,10 @@ const APIS_ROUTES_MODULES_PATH = {
   NOTIFICATION: "/notif",
   BUILDING: "/building",
   LAND: "/land",
+  COMMON: {
+    PERMS: "/common/perms",
+  },
+  INVITATION: "/invitation",
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -27,26 +31,24 @@ export const APIS = (baseUrl?: string) => {
       SEND_EMAIL_VERIFICATION: api({
         path: `${APIS_ROUTES_MODULES_PATH.AUTH}/send-email-verification`,
         method: "POST",
-        pathBase: "SECURED_API",
+        pathBase: "UNSECURED_API",
         showResponse: false,
       }),
       REGISTER: api({
         path: `${APIS_ROUTES_MODULES_PATH.AUTH}/register`,
         method: "POST",
-        pathBase: "SECURED_API",
+        pathBase: "UNSECURED_API",
         showResponse: false,
       }),
       FORGET_PASSWORD_INIT: api({
         path: `${APIS_ROUTES_MODULES_PATH.AUTH}/forgot-password`,
         method: "POST",
-        pathBase: "SECURED_API",
-        showResponse: false,
+        pathBase: "UNSECURED_API",
       }),
       RESET_PASSWORD: api({
         path: `${APIS_ROUTES_MODULES_PATH.AUTH}/reset-password`,
         method: "POST",
-        pathBase: "SECURED_API",
-        showResponse: false,
+        pathBase: "UNSECURED_API",
       }),
       CHECK_EMAIL: api({
         path: `${APIS_ROUTES_MODULES_PATH.AUTH}/verified-email`,
@@ -73,6 +75,12 @@ export const APIS = (baseUrl?: string) => {
       }),
       AGENCY_INFO: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}`,
+        method: "GET",
+        pathBase: "SECURED_API",
+        showResponse: false,
+      }),
+      AGENCY_SUBSCRIPTION_INFO: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription-info`,
         method: "GET",
         pathBase: "SECURED_API",
         showResponse: false,
@@ -318,6 +326,40 @@ export const APIS = (baseUrl?: string) => {
         method: "DELETE",
 
         pathBase: "SECURED_API",
+      }),
+    },
+    COMMON: {
+      PERMS: {
+        ALL_PERMS: api({
+          path: `${APIS_ROUTES_MODULES_PATH.COMMON.PERMS}`,
+          pathBase: "SECURED_API",
+          method: "GET",
+          showResponse: false,
+        }),
+      },
+    },
+    INVITATION: {
+      ALL_INVITATIONS_AGENCY: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INVITATION}/agency-invite-list`,
+        pathBase: "SECURED_API",
+        method: "GET",
+        showResponse: false,
+      }),
+      ACCEPT_INVITATION: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INVITATION}/accept-invitation`,
+        pathBase: "UNSECURED_API",
+        method: "POST",
+      }),
+
+      CREATE_INVITATION: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INVITATION}/create-invitation`,
+        pathBase: "SECURED_API",
+        method: "POST",
+      }),
+      CANCEL_INVITATION: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INVITATION}/cancel-invitation`,
+        pathBase: "SECURED_API",
+        method: "POST",
       }),
     },
   };

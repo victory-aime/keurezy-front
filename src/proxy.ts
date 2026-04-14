@@ -6,7 +6,10 @@ import { getCookieCache, getSessionCookie } from "better-auth/cookies";
 
 const PROTECTED_ROUTES: Record<string, string[]> = {
   ...Object.fromEntries(
-    Object.values(DASHBOARD_ROUTES).map((route) => [route, [UserRole.OWNER]]),
+    Object.values(DASHBOARD_ROUTES).map((route) => [
+      route,
+      [UserRole.OWNER, UserRole.AGENCY_ADMIN, UserRole.AGENT],
+    ]),
   ),
 };
 

@@ -7,46 +7,33 @@ import { VALIDATION } from "_types/";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 import { PasswordIndicator } from "_component/PasswordIndicator";
-import { authClient } from "../../lib/auth-client";
-import React, { useState } from "react";
-import { handleApiSuccess } from "_utils/handleApiSuccess";
-import { handleApiError } from "_utils/handleApiError";
 import { APP_ROUTES } from "_config/routes";
+import { AuthModule } from "_store/state-management";
 
 export const ForgetPassword = ({ token }: { token: string }) => {
   const { t } = useTranslation();
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const isValidPassword = (password: string) => {
     return VALIDATION.AUTH.passwordValidations(password)?.every((v) => v.test);
   };
 
+  const { mutateAsync: resetPasswordMutation, isPaused: isLoading } =
+    AuthModule.resetPasswordMutation({
+      mutationOptions: {
+        onSuccess: () => {
+          setTimeout(() => router.replace(APP_ROUTES.AUTH.SIGN_IN), 2000);
+        },
+      },
+    });
+
   const resetPassword = async (values: FormikValues) => {
-    try {
-      setIsLoading(true);
-      const { data, error } = await authClient.resetPassword({
+    await resetPasswordMutation({
+      payload: {
         newPassword: values?.newPassword,
-        token: token!,
-      });
-      if (data?.status) {
-        handleApiSuccess({
-          status: 201,
-          message: "Mot de passe réinitialiser avec success",
-        });
-        setTimeout(() => router.replace(APP_ROUTES.AUTH.SIGN_IN), 2000);
-      }
-      if (error) {
-        handleApiError({
-          status: error.status,
-          message: error.message!,
-        });
-      }
-    } catch (error) {
-      console.log("error", error);
-    } finally {
-      setIsLoading(false);
-    }
+        token,
+      },
+    });
   };
 
   return (

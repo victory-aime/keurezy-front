@@ -10,7 +10,7 @@ import { MotionBox } from "_constants/motion";
 
 /* ═══════════════ STEP 6: Celebration ═══════════════ */
 
-const confettiColors = [
+export const confettiColors = [
   VariablesColors.primary,
   VariablesColors.secondary,
   VariablesColors.tertiary,

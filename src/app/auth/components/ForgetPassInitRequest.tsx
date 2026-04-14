@@ -1,50 +1,40 @@
 "use client";
 import { AuthBoxContainer } from "./AuthBoxContainer";
 import { Formik, FormikValues } from "formik";
-import { Box, VStack } from "@chakra-ui/react";
+import { Box, Center, VStack } from "@chakra-ui/react";
 import { BaseButton, BaseText, FormTextInput } from "_components/custom";
 import { VALIDATION } from "_types/";
 import { APP_ROUTES } from "_config/routes";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
-import { authClient } from "../../lib/auth-client";
 import { useState } from "react";
-import { handleApiSuccess } from "_utils/handleApiSuccess";
-import { handleApiError } from "_utils/handleApiError";
 import { AuthModule } from "_store/state-management";
 import { Navbar } from "_component/NavBar";
+import { MotionBox } from "_constants/motion";
+import { AnimatedCheckmark } from "../onboarding/components/AnimatedCheck";
 
 export const ForgetPassInitRequest = () => {
   const { t } = useTranslation();
-  const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState(false);
   const router = useRouter();
 
   const { mutateAsync: checkEmail, isPending } = AuthModule.checkEmailMutation(
     {},
   );
+
+  const { mutateAsync: forgotPasswordRequest, isPending: isForgotPending } =
+    AuthModule.forgotPasswordInitMutation({
+      mutationOptions: {
+        onSuccess: () => {
+          setStatus(true);
+        },
+      },
+    });
+
   const resetPasswordInit = async (values: FormikValues) => {
-    try {
-      setIsLoading(true);
-      const { data, error } = await authClient.requestPasswordReset({
-        email: values?.email,
-        redirectTo: APP_ROUTES.AUTH.RESET_PASSWORD_VALIDATE,
-      });
-      if (data?.status) {
-        setStatus(data?.status);
-        handleApiSuccess({
-          status: 201,
-          message: data?.message!,
-        });
-      }
-      if (error) {
-        handleApiError({ status: error.status, message: error?.message! });
-      }
-    } catch (e) {
-      console.log("error", e);
-    } finally {
-      setIsLoading(false);
-    }
+    await forgotPasswordRequest({
+      payload: { email: values?.email },
+    });
   };
 
   return (
@@ -67,7 +57,37 @@ export const ForgetPassInitRequest = () => {
         }
       >
         {status ? (
-          <BaseText>Email sent</BaseText>
+          <Center>
+            <VStack
+              maxW={"5xl"}
+              mx={"auto"}
+              spaceY={8}
+              position={"relative"}
+              overflow={"hidden"}
+            >
+              <AnimatedCheckmark />
+              <MotionBox
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                spaceY={3}
+                textAlign={"center"}
+              >
+                <BaseText
+                  fontSize={{ base: "lg", sm: "xl" }}
+                  fontWeight={"bold"}
+                >
+                  🎉 Presque terminé !
+                </BaseText>
+
+                <BaseText fontSize={"lg"} maxW={"lg"} mx={"auto"}>
+                  Un lien sécurisé de réinitialisation a été envoyé à votre
+                  adresse email. Consultez votre boîte de réception pour
+                  finaliser l’opération.
+                </BaseText>
+              </MotionBox>
+            </VStack>
+          </Center>
         ) : (
           <Formik
             enableReinitialize
@@ -91,7 +111,7 @@ export const ForgetPassInitRequest = () => {
                 <BaseButton
                   width={"full"}
                   onClick={() => handleSubmit()}
-                  isLoading={isLoading}
+                  isLoading={isForgotPending}
                   mt={2}
                   isDisabled={!isValid}
                 >

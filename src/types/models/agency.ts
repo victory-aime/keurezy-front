@@ -47,6 +47,17 @@ interface IAgencyCommonParams {
   propertyId?: string;
 }
 
+interface IAgencySubscriptionInfo {
+  plan: string;
+  features: {
+    id: string;
+    name: string;
+    category: string;
+    limit: null;
+  }[];
+  expiresAt: string;
+}
+
 export type {
   ICreateAgency,
   IUpdateAgency,
@@ -54,4 +65,5 @@ export type {
   IAgency,
   IAgencyFilters,
   IAgencyCommonParams,
+  IAgencySubscriptionInfo,
 };

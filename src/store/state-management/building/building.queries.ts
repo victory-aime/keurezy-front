@@ -19,16 +19,12 @@ const getAllBuildingByAgencyQueries = (
 const createBuildingMutation = (
   args: QUERIES.MutationPayload<{
     data: MODELS.CreateBuildingDto;
-    ownerId: string;
   }>,
 ) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.BUILDING_KEYS.CREATE_BUILDING],
     mutationFn: ({ payload }) =>
-      buildingServiceInstance().create_building(
-        payload?.data!,
-        payload?.ownerId!,
-      ),
+      buildingServiceInstance().create_building(payload?.data!),
     options: args.mutationOptions,
   });
 };
@@ -36,16 +32,12 @@ const createBuildingMutation = (
 const updateBuildingMutation = (
   args: QUERIES.MutationPayload<{
     data: MODELS.UpdateBuildingDto;
-    ownerId: string;
   }>,
 ) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.BUILDING_KEYS.UPDATE_BUILDING],
     mutationFn: ({ payload }) =>
-      buildingServiceInstance().update_building(
-        payload?.data!,
-        payload?.ownerId!,
-      ),
+      buildingServiceInstance().update_building(payload?.data!),
     options: args.mutationOptions,
   });
 };

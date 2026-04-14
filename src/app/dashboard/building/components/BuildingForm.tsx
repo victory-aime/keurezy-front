@@ -3,17 +3,6 @@ import { Formik } from "formik";
 import { FormContainer } from "../../components/FormContainer";
 import { useEffect, useState } from "react";
 import { CONSTANTS, MODELS, VALIDATION } from "_types/*";
-import { Flex, VStack } from "@chakra-ui/react";
-import { FormCard } from "../../components/FormCard";
-import {
-  ActionsButton,
-  BaseText,
-  BaseUploadMultipleFiles,
-  FormSelect,
-  FormTextArea,
-  FormTextInput,
-  Icons,
-} from "_components/custom";
 import { useRouter } from "next/navigation";
 import { DASHBOARD_ROUTES } from "../../routes";
 import {
@@ -22,8 +11,6 @@ import {
   LandModule,
 } from "_store/state-management";
 import { findDynamicIdInList } from "rise-core-frontend";
-import { buildingStatusList, getLandsList } from "../constants/building";
-import { cityList } from "_constants/city";
 import { BuildingFormInner } from "./BuildingFromInner";
 
 export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
@@ -38,29 +25,28 @@ export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
       enabled: false,
     },
   });
-  const agencyId = currentUser?.owner?.agency?.id;
-  const ownerId = currentUser?.owner?.id;
+  const agencyId = currentUser?.agencyId;
 
   const { data: allBuildings, isLoading: isAllBuildingLoad } =
     BuildingModule.getAllBuildingByAgencyQueries({
       params: {
         agencyId,
-        ownerId,
+
         initialPage: CONSTANTS.PAGINATION.INIT,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
-      queryOptions: { enabled: !!buildingId && !!agencyId && !!ownerId },
+      queryOptions: { enabled: !!buildingId && !!agencyId },
     });
 
   const { data: allLands, isLoading: isAllLandLoad } =
     LandModule.getAllLandsByAgencyQueries({
       params: {
         agencyId,
-        ownerId,
+
         initialPage: CONSTANTS.PAGINATION.INIT,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
-      queryOptions: { enabled: !!agencyId && !!ownerId },
+      queryOptions: { enabled: !!agencyId },
     });
 
   const { mutateAsync: createBuilding, isPending: isCreateBuilding } =
@@ -111,14 +97,12 @@ export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
       await updateBuilding({
         payload: {
           data: formData as MODELS.UpdateBuildingDto,
-          ownerId: ownerId!,
         },
       });
     } else {
       await createBuilding({
         payload: {
           data: formData as MODELS.CreateBuildingDto,
-          ownerId: ownerId!,
         },
       });
     }

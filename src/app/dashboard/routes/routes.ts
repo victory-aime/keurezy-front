@@ -4,6 +4,8 @@ enum PATHS {
   PROPERTIES = "properties",
   BUILDING = "building",
   LAND = "land",
+  TEAM = "team",
+  INVITATIONS = "invitations",
 }
 
 export const DASHBOARD_ROUTES = {
@@ -20,6 +22,14 @@ export const DASHBOARD_ROUTES = {
   PROPERTIES: {
     LIST: `${APP_ROUTES.DASHBOARD}/properties`,
     ADD: `${APP_ROUTES.DASHBOARD}/properties/add`,
+  },
+  INVITATIONS: {
+    LIST: `${APP_ROUTES.DASHBOARD}/${PATHS.INVITATIONS}`,
+    ADD: `${APP_ROUTES.DASHBOARD}/${PATHS.INVITATIONS}/add`,
+  },
+  TEAM: {
+    LIST: `${APP_ROUTES.DASHBOARD}/${PATHS.TEAM}`,
+    ADD: `${APP_ROUTES.DASHBOARD}/${PATHS.TEAM}/add`,
   },
   PROFILE: `${APP_ROUTES.DASHBOARD}/profile`,
   SECURITY: `${APP_ROUTES.DASHBOARD}/security`,

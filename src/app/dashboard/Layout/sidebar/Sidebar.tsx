@@ -20,6 +20,8 @@ import { useMemo } from "react";
 import { DASHBOARD_ROUTES } from "../../routes";
 import { useColorMode } from "_components/ui/color-mode";
 import { useUserContext } from "_context/user-context";
+import { useAccessControl } from "_hooks/useAccessControl";
+import { usePermissions } from "_hooks/usePermissions";
 
 export const Sidebar = ({
   onShowSidebar,
@@ -31,31 +33,32 @@ export const Sidebar = ({
   const { dismissToast } = useSessionRefreshContext();
   const { colorMode } = useColorMode();
   const { user } = useUserContext();
-  const agencyId = user?.owner?.agency?.id;
-  const ownerId = user?.owner?.id;
+  const { hasPermission } = usePermissions();
+  const { canAccess, isLoading: accessControlLoading } = useAccessControl();
+  const agencyId = user?.agencyId;
 
   const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
-    params: { agencyId, ownerId },
-    queryOptions: { enabled: !!agencyId && !!ownerId },
+    params: { agencyId },
+    queryOptions: {
+      enabled: !!agencyId && hasPermission("view_properties"),
+    },
   });
 
   const { data: buildingList } = BuildingModule.getAllBuildingByAgencyQueries({
     params: {
       agencyId,
-      ownerId,
     },
     queryOptions: {
-      enabled: !!agencyId && !!ownerId,
+      enabled: !!agencyId,
     },
   });
 
   const { data: allLandsList } = LandModule.getAllLandsByAgencyQueries({
     params: {
       agencyId,
-      ownerId,
     },
     queryOptions: {
-      enabled: !!agencyId && !!ownerId,
+      enabled: !!agencyId,
     },
   });
 
@@ -72,20 +75,52 @@ export const Sidebar = ({
   ]);
 
   const sidebarLinks = useMemo(() => {
-    return ALL_CSA_ROUTES.map((group) => ({
-      ...group,
-      links: group.links.map((link) => {
-        const badgeValue = badgesByPath[link.path as string];
+    if (isLoading || accessControlLoading) return [];
+
+    return (
+      ALL_CSA_ROUTES.map((group) => {
+        const links = group.links
+          .map((link): (typeof link & { disabled?: boolean }) | null => {
+            const hasFeatureAccess = canAccess({
+              feature: link.feature,
+            });
+
+            const hasPermissionAccess = link.permission
+              ? hasPermission(link.permission)
+              : true;
+
+            // ❌ feature OK mais pas permission → HIDE
+            if (hasFeatureAccess && !hasPermissionAccess) {
+              return null;
+            }
+
+            const badgeValue =
+              badgesByPath[link.path as keyof typeof badgesByPath];
+
+            return {
+              ...link,
+              disabled: !hasFeatureAccess,
+              badge:
+                typeof badgeValue === "number" && badgeValue > 0
+                  ? badgeValue
+                  : undefined,
+            };
+          })
+          // ✅ filtre type-safe
+          .filter((link): link is NonNullable<typeof link> => link !== null);
+
         return {
-          ...link,
-          badge:
-            typeof badgeValue === "number" && badgeValue > 0
-              ? badgeValue
-              : undefined,
+          ...group,
+          links,
         };
-      }),
-    }));
-  }, [badgesByPath]);
+      })
+        /**✅ supprimer groupes vides uniquement
+         * si on dispose de la fonctionnalite dans le plan mais
+         *  que cet user connecté n'a pas la permission d'y accéder
+         */
+        .filter((group) => group.links.length > 0)
+    );
+  }, [badgesByPath, canAccess, hasPermission, isLoading]);
 
   return (
     <Box>
@@ -141,7 +176,7 @@ export const Sidebar = ({
           <RenderGroupedLinks
             isCollapsed={sideToggled}
             links={sidebarLinks}
-            isLoading={isLoading}
+            isLoading={isLoading || accessControlLoading}
           />
 
           <SideToolTip disabled={sideToggled} label={"Déconnexion"}>

@@ -24,6 +24,8 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         label: "Propriétés",
         path: DASHBOARD_ROUTES.PROPERTIES.LIST,
         icon: Icons.Home,
+        feature: "manage_properties",
+        permission: "view_properties",
       },
       // {
       //   label: "Locataires",
@@ -66,12 +68,18 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     title: "Gestion",
     icon: Icons.FolderOpen,
     links: [
-      // {
-      //   label: "Messages",
-      //   path: DASHBOARD_ROUTES.MESSAGES,
-      //   icon: Icons.Chat,
-      //   badge: 5,
-      // },
+      {
+        label: "Invitations",
+        path: DASHBOARD_ROUTES.INVITATIONS.LIST,
+        icon: Icons.SendMail,
+        badge: 5,
+      },
+      {
+        label: "Equipe",
+        path: DASHBOARD_ROUTES.TEAM.LIST,
+        icon: Icons.FaUsers,
+        badge: 5,
+      },
       {
         label: "Notifications",
         path: DASHBOARD_ROUTES.NOTIFICATION,

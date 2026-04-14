@@ -114,7 +114,7 @@
       "ACTIVE": "Actif",
       "INACTIVE": "Inactif",
       "PENDING": "En attente",
-      "CANCELED": "Annulée",
+      "CANCELLED": "Annulée",
       "EXPIRED": "Expiree",
       "AVAILABLE": "Disponible",
       "UNAVAILABLE": "Indisponible",

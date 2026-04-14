@@ -9,3 +9,5 @@ export * as ChatModule from "./chat";
 export * as NotificationsModule from "./notifications";
 export * as BuildingModule from "./building";
 export * as LandModule from "./land";
+export * as CommonModule from "./common";
+export * as InvitationModule from "./invitation";

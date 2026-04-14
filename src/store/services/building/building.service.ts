@@ -13,18 +13,16 @@ export class BuildingService extends BaseApi {
       { params: data },
     );
   }
-  create_building(data: MODELS.CreateBuildingDto | FormData, ownerId: string) {
+  create_building(data: MODELS.CreateBuildingDto | FormData) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().BUILDING.CREATE_BUILDING,
       data,
-      { params: { ownerId } },
     );
   }
-  update_building(data: MODELS.UpdateBuildingDto | FormData, ownerId: string) {
+  update_building(data: MODELS.UpdateBuildingDto | FormData) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().BUILDING.UPDATE_BUILDING,
       data,
-      { params: { ownerId } },
     );
   }
   delete_building(data: MODELS.IDeleteBuilding) {

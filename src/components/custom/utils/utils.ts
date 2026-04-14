@@ -11,11 +11,13 @@ const STATUS_META = {
   CLOSE: "danger",
   RENTED: "danger",
   REJECTED: "danger",
+  CANCELLED: "danger",
   PENDING: "warning",
   UNAVAILABLE: "warning",
   MAINTENANCE: "info",
   CURRENTLY_ON_SALE: "info",
   SOLD: "warning",
+  EXPIRED: "info",
 } as const satisfies Partial<Record<ENUM.COMMON.Status, variantColorType>>;
 
 const VARIANT_CONFIG: Partial<
@@ -36,6 +38,8 @@ const STATUS_ICONS: Partial<Record<ENUM.COMMON.Status, React.ElementType>> = {
   MAINTENANCE: Icons.Wrench,
   CURRENTLY_ON_SALE: Icons.Bell,
   SOLD: Icons.Payment,
+  CANCELLED: Icons.Close,
+  EXPIRED: Icons.Timer,
 };
 
 export { STATUS_ICONS, STATUS_META, VARIANT_CONFIG };

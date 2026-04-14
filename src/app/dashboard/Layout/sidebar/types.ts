@@ -1,3 +1,4 @@
+import { MODELS } from "_types/*";
 import { Session } from "better-auth";
 import React, { ReactNode } from "react";
 
@@ -22,6 +23,9 @@ interface INavItem {
   path: string;
   icon: React.ElementType;
   badge?: number;
+  feature?: string;
+  permission?: string;
+  disabled?: boolean;
 }
 
 export interface SidebarNavGroupProps {
@@ -89,7 +93,7 @@ export interface SubMenuProps {
   link: ILink;
 }
 export interface AuthContextType {
-  session?: Session;
+  session?: MODELS.IAuthSession;
   user?: {
     id: string;
     createdAt: Date;
