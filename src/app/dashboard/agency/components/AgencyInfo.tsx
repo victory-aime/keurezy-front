@@ -43,8 +43,7 @@ export const AgencyInfo = () => {
     refetch: refetchAgencyInfo,
   } = AgencyModule.getAgencyInfo({
     params: {
-      agencyId: user?.owner?.agency?.id,
-      ownerId: user?.owner?.id,
+      agencyId: user?.agencyId,
     },
     queryOptions: {
       enabled: true,
@@ -74,7 +73,6 @@ export const AgencyInfo = () => {
     });
 
   const handleUpdateAgency = async (values: FormikValues) => {
-    console.log("values", values);
     const formData = new FormData();
     formData.append("name", String(values?.name));
     formData.append("description", String(values?.description));

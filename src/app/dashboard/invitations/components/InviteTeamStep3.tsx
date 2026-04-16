@@ -1,14 +1,13 @@
 import { MotionBox } from "_constants/motion";
 import { FormCard } from "../../components/FormCard";
 import { useFormikContext } from "formik";
-import { CommonModule } from "_store/state-management";
 import { Avatar } from "_components/ui/avatar";
-import { Flex, HStack, Stack, VStack } from "@chakra-ui/react";
-import { BaseIcon, BaseTag, BaseText, Icons } from "_components/custom";
+import { Flex, Stack, VStack } from "@chakra-ui/react";
+import { BaseTag, BaseText } from "_components/custom";
 import { ISelectPermissions, IInviteTeamUserInfo } from "../constants/team";
 import { MODELS } from "_types/*";
-import { useMemo } from "react";
-import { useTranslation } from "react-i18next";
+import { useGroupedPermissions } from "_hooks/useGroupedPermissions";
+import { SelectedPermissionsRecap } from "../../components/SelectedPermissionsRecap";
 
 export const InviteTeamStep3 = ({
   permissions,
@@ -17,28 +16,15 @@ export const InviteTeamStep3 = ({
   permissions: MODELS.COMMON.IGetAllPermissionResponse[];
   isLoading: boolean;
 }) => {
-  const { t } = useTranslation();
   const { values } = useFormikContext<{
     account: IInviteTeamUserInfo;
     permissions: ISelectPermissions[];
   }>();
 
-  const groupedPermissions = useMemo(() => {
-    if (!permissions || !values.permissions) return [];
-
-    const selectedIds = new Set(
-      values.permissions.filter((p) => p.granted).map((p) => p.permissionId),
-    );
-
-    return permissions
-      .map((group) => ({
-        category: group.category,
-        permissions: group.permissions.filter((perm) =>
-          selectedIds.has(perm.id),
-        ),
-      }))
-      .filter((group) => group.permissions.length > 0);
-  }, [permissions, values.permissions]);
+  const groupedPermissions = useGroupedPermissions(
+    permissions,
+    values?.permissions,
+  );
 
   return (
     <MotionBox
@@ -57,49 +43,7 @@ export const InviteTeamStep3 = ({
               <BaseTag color="green" label={values?.account?.role} />
             </Stack>
           </Flex>
-          <Flex alignItems={"center"} gap={2} mb={2} mt={4}>
-            <BaseIcon>
-              <Icons.Shield />
-            </BaseIcon>
-            <BaseText>
-              Permissions accordées :{" "}
-              {groupedPermissions.reduce(
-                (acc, group) => acc + group.permissions.length,
-                0,
-              )}
-            </BaseText>
-          </Flex>
-          <VStack align="stretch" width="full">
-            {groupedPermissions.map((group) => (
-              <Flex
-                justifyContent={"space-between"}
-                key={group.category}
-                align="start"
-                width="full"
-                gap={2}
-                bgColor={"bg.muted"}
-                p={2}
-                rounded={"lg"}
-              >
-                {/* Category title */}
-                <BaseText fontWeight="bold">
-                  {t("PERMISSIONS.MODULES." + group.category)}
-                </BaseText>
-
-                {/* Permissions list */}
-                <HStack wrap={"wrap"}>
-                  {group.permissions.map((perm) => (
-                    <BaseTag
-                      key={perm.id}
-                      fontSize="sm"
-                      color="orange"
-                      label={perm.name}
-                    />
-                  ))}
-                </HStack>
-              </Flex>
-            ))}
-          </VStack>
+          <SelectedPermissionsRecap permissions={groupedPermissions} />
         </VStack>
       </FormCard>
     </MotionBox>

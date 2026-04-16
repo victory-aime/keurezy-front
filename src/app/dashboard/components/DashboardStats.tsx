@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, For, SimpleGrid, Span, Stack, VStack } from "@chakra-ui/react";
+import { Flex, For, SimpleGrid, Span, VStack } from "@chakra-ui/react";
 import {
   BaseContainer,
   BaseIcon,
@@ -13,51 +13,50 @@ import {
   NotificationsModule,
   PropertyModule,
   RentalAgreementModule,
-  UserModule,
 } from "_store/state-management";
 import { ENUM } from "_types/*";
-import { RenderNotifications } from "../notifications/components/RenderNotifications";
-import { hexToRGB } from "_theme/colors";
+import { Colors, hexToRGB } from "_theme/colors";
 import { OccupationRateByType } from "./OccupationRateByType";
 import { MonthlyRevenueAreaChart } from "./MonthlyRevenueAreaChart";
 import { useUserContext } from "_context/user-context";
+import { useMemo } from "react";
+import { DASHBOARD_ROUTES } from "../routes";
+import { useRouter } from "next/navigation";
 
 export const DashboardStats = () => {
+  const { push } = useRouter();
   const { user } = useUserContext();
 
-  const agencyId = user?.owner?.agency?.id;
-  const ownerId = user?.owner?.id;
-  const enabled = !!agencyId && !!ownerId;
+  const agencyId = user?.agencyId;
+
+  const queryPayload = useMemo(
+    () => ({
+      params: {
+        agencyId,
+      },
+      queryOptions: {
+        enabled: !!agencyId,
+      },
+    }),
+    [agencyId],
+  );
 
   const { data: allProperties, isLoading: propertiesLoad } =
-    PropertyModule.getAllPropertiesByAgency({
-      params: {
-        agencyId,
-        ownerId,
-      },
-      queryOptions: { enabled },
-    });
+    PropertyModule.getAllPropertiesByAgency(queryPayload);
+
   const { data: occupationRateData, isLoading: occupationRateLoad } =
-    PropertyModule.getOccupationRateByTypeQueries({
-      params: {
-        agencyId,
-        ownerId,
-      },
-      queryOptions: { enabled: false },
-    });
+    PropertyModule.getOccupationRateByTypeQueries(queryPayload);
+
   const { data: monthlyRevenueData, isLoading: monthlyRevenueLoad } =
     PropertyModule.getMonthlyRevenueQueries({
-      params: {
-        agencyId,
-        ownerId,
-      },
       queryOptions: { enabled: false },
     });
+
   const { data: allRentalAgreement, isLoading: rentalAgreementLoad } =
     RentalAgreementModule.getRentalAgreementListByAgencyQueries({
-      params: { agencyId, ownerId },
       queryOptions: { enabled: false },
     });
+
   const {
     data: allActivities,
     refetch: refetchNotificationList,
@@ -150,7 +149,7 @@ export const DashboardStats = () => {
       </Flex>
 
       <Flex width={"full"} gap={4} flexDir={{ base: "column", sm: "row" }}>
-        <BaseContainer title="Activite recente" data-tour="activity">
+        {/* <BaseContainer title="Activite recente" data-tour="activity">
           <Stack mt={{ base: "0", sm: "30px" }} width={"full"}>
             <RenderNotifications
               refetchNotificationList={refetchNotificationList}
@@ -158,38 +157,64 @@ export const DashboardStats = () => {
               isLoading={notificationLoad}
             />
           </Stack>
-        </BaseContainer>
+        </BaseContainer> */}
         <BaseContainer
           data-tour="quick-actions"
           height={"fit-content"}
           title="Actions rapides"
         >
           <SimpleGrid
-            columns={2}
+            columns={{ base: 1, sm: 2, md: 4 }}
             width={"full"}
             gap={3}
             mt={{ base: "0", sm: "30px" }}
           >
-            {Array.from({ length: 4 }).map((_, i) => (
+            {[
+              {
+                title: "Voir les terrains",
+                link: DASHBOARD_ROUTES.LAND.LIST,
+                icon: Icons.Map,
+                color: "primary",
+                borderColor: "primary.500",
+              },
+              {
+                title: "Ajouter un bâtiment",
+                link: DASHBOARD_ROUTES.BUILDING.ADD,
+                icon: Icons.RiBuildingLine,
+                color: "secondary",
+                borderColor: "secondary.500",
+              },
+              {
+                title: "Voir les propriétés",
+                link: DASHBOARD_ROUTES.PROPERTIES.LIST,
+                icon: Icons.Home,
+                color: "orange",
+                borderColor: "orange.500",
+              },
+              {
+                title: "Envoyer une invitation",
+                link: DASHBOARD_ROUTES.INVITATIONS.ADD,
+                icon: Icons.SendMail,
+                color: "success",
+                borderColor: "success.500",
+              },
+            ].map((item, i) => (
               <VStack
                 key={i}
-                bgColor={i === 0 ? hexToRGB("primary", 0.3) : "inherit"}
+                bgColor={hexToRGB(item.color as keyof Colors, 0.3)}
                 borderWidth={1}
-                borderColor={i === 0 ? "primary.500" : "inherit"}
+                borderColor={item.borderColor}
                 cursor={"pointer"}
-                _hover={{
-                  bgColor: i === 0 ? "none" : hexToRGB("primary", 0.3),
-                  borderColor: i === 0 ? "none" : hexToRGB("primary", 0.3),
-                }}
                 rounded={"lg"}
                 p={4}
                 gap={1}
+                onClick={() => push(item.link)}
               >
-                <BaseIcon>
-                  <Icons.RiBuildingLine />
+                <BaseIcon color={item.borderColor}>
+                  <item.icon />
                 </BaseIcon>
                 <BaseText textAlign={"center"} textSizeAdjust={"auto"}>
-                  Ajouter une propriete
+                  {item.title}
                 </BaseText>
               </VStack>
             ))}

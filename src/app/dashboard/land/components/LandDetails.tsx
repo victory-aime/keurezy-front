@@ -12,7 +12,7 @@ import {
 } from "_components/custom";
 import { FormCard } from "../../components/FormCard";
 import { formatDisplayDate } from "rise-core-frontend";
-import { MODELS } from "_types/*";
+import { CONSTANTS, MODELS } from "_types/*";
 
 interface LandDetail extends ModalOpenProps {
   data: MODELS.LandResponseDto | null;
@@ -29,7 +29,7 @@ export const LandDetails = ({
     <BaseDrawer
       title={"Detail du Terrain"}
       description={" Visualisation des informations du Terrain"}
-      size={"lg"}
+      size={"md"}
       icon={<Icons.RiBuildingLine />}
       onChange={onChange}
       isOpen={isOpen}
@@ -67,7 +67,11 @@ export const LandDetails = ({
               </BaseIcon>
               <Stack gap={0}>
                 <BaseText>{data?.title}</BaseText>
-                <BaseText textTransform={"capitalize"}>
+                <BaseText
+                  textTransform={"capitalize"}
+                  fontSize={"sm"}
+                  color={"gray.500"}
+                >
                   {data?.city},{data?.address},{data?.district}
                 </BaseText>
               </Stack>
@@ -86,7 +90,7 @@ export const LandDetails = ({
         <VStack align="stretch" gap={0} width={"full"}>
           <Flex py={2} justify="space-between">
             <BaseText color="gray.500">Prpriétaire</BaseText>
-            <BaseText>{data?.landOwner}</BaseText>
+            <BaseText>{data?.landOwner ?? "N/A"}</BaseText>
           </Flex>
           <Separator />
           <Flex py={2} justify="space-between">
@@ -103,6 +107,19 @@ export const LandDetails = ({
           <Flex py={2} justify="space-between">
             <BaseText color="gray.500">Prix de vente</BaseText>
             <BaseFormatNumber value={data?.purchasePrice ?? 0} />
+          </Flex>
+          <Separator />
+          <Flex py={2} justify="space-between">
+            <BaseText color="gray.500">Mode de paiement</BaseText>
+            <BaseTag
+              label={
+                CONSTANTS.landPaymentTypes.find(
+                  (type) => type.value === data?.paymentType,
+                )?.label
+              }
+              color={"blue"}
+              icon={<Icons.Payment />}
+            />
           </Flex>
           <Separator />
           <Flex py={2} justify="space-between">

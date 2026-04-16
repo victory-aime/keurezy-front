@@ -7,5 +7,11 @@ const landStatusList = createListCollection({
     value: type.value,
   })),
 });
+const landPaymentTypeList = createListCollection({
+  items: CONSTANTS.landPaymentTypes.map((type) => ({
+    label: type.label,
+    value: type.value,
+  })),
+});
 
-export { landStatusList };
+export { landStatusList, landPaymentTypeList };

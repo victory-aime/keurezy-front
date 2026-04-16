@@ -42,10 +42,10 @@ export const Messages = () => {
   const { data: getConversations, refetch: reloadConversation } =
     ChatModule.getConversationQueries({
       params: {
-        userId: user?.propertyOwner?.id,
+        //userId: user?.propertyOwner?.id,
       },
       queryOptions: {
-        enabled: !!user?.propertyOwner?.id,
+        enabled: false,
       },
     });
 

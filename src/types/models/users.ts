@@ -11,9 +11,9 @@ export interface IUser {
   status?: Status | undefined;
   role?: UserRole | undefined;
   accounts?: IAccountUsers[];
-  ownerId: string | null;
-  staffId: string | null;
-  agencyId: string | null;
+  ownerId?: string | null;
+  staffId?: string | null;
+  agencyId?: string | null;
 }
 
 export interface ICreateUser extends IUser {

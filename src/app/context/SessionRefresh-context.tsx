@@ -31,8 +31,6 @@ export function SessionRefreshProvider({
   const isRetryingRef = useRef(false);
   const toastId = "session-error-toast";
 
-  console.log("error session refresh", error);
-
   const isServerError = error;
 
   const startRetry = useCallback(async () => {

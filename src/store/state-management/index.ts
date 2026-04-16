@@ -11,3 +11,4 @@ export * as BuildingModule from "./building";
 export * as LandModule from "./land";
 export * as CommonModule from "./common";
 export * as InvitationModule from "./invitation";
+export * as TeamModule from "./team";

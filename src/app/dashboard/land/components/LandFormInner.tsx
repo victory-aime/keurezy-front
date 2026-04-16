@@ -15,7 +15,7 @@ import { useFormikValidationToast } from "_hooks/useFormikValidationToast";
 import { useRouter } from "next/navigation";
 import { FormCard } from "../../components/FormCard";
 import { DASHBOARD_ROUTES } from "../../routes";
-import { landStatusList } from "../constants/land-status";
+import { landPaymentTypeList, landStatusList } from "../constants/land-status";
 
 // ─── Inner form (accède au contexte Formik) ──────────────────────────────────
 export const LandFormInner = ({
@@ -55,7 +55,7 @@ export const LandFormInner = ({
               />
               <FormTextInput
                 name="landOwner"
-                label="Nom du propriétaire du bâtiment"
+                label="Nom du propriétaire du terrain"
                 placeholder="Ahmed Toure"
               />
             </HStack>
@@ -106,12 +106,24 @@ export const LandFormInner = ({
               />
             </HStack>
 
-            <FormSelect
-              name="status"
-              label="Status"
-              listItems={landStatusList}
-              setFieldValue={setFieldValue}
-            />
+            <HStack
+              width={"full"}
+              gap={4}
+              flexDir={{ base: "column", sm: "row" }}
+            >
+              <FormSelect
+                name="paymentType"
+                label="Mode de paiement"
+                listItems={landPaymentTypeList}
+                setFieldValue={setFieldValue}
+              />
+              <FormSelect
+                name="status"
+                label="Status"
+                listItems={landStatusList}
+                setFieldValue={setFieldValue}
+              />
+            </HStack>
 
             <BaseUploadMultipleFiles
               initialImageUrls={documentsURL}

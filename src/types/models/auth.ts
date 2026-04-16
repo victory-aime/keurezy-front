@@ -5,14 +5,14 @@ export interface IAuthSignUp {
 }
 
 export interface IAuthSession {
-  expiresAt: string;
-  token: string;
-  createdAt: string;
-  updatedAt: string;
-  ipAddress: string;
-  userAgent: string;
-  id: string;
-  userId: string;
+  expiresAt: string | undefined;
+  token: string | undefined;
+  createdAt: Date;
+  updatedAt: Date;
+  ipAddress: string | undefined;
+  userAgent: string | undefined;
+  id: string | undefined;
+  userId: string | undefined;
   permissions: {
     name: string;
     feature: string;

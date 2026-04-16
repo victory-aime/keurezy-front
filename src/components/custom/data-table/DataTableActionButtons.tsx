@@ -13,69 +13,76 @@ const ACTION_CONFIG = {
   delete: {
     tooltip: "COMMON.DELETE",
     icon: Icons.Trash,
-    bg: "red.500",
+    bg: "red",
     color: "white",
     aria: "Supprimer",
+  },
+  cancel: {
+    tooltip: "COMMON.CANCEL",
+    icon: Icons.Close,
+    bg: "red",
+    color: "white",
+    aria: "Annuler",
   },
   edit: {
     tooltip: "COMMON.EDIT",
     icon: Icons.Edit,
-    bg: "info.500",
+    bg: "blue",
     color: "white",
     aria: "Modifier",
   },
   view: {
     tooltip: "COMMON.DETAIL",
     icon: Icons.View,
-    bg: "secondary.500",
+    bg: "gray",
     aria: "Voir",
   },
   share: {
     tooltip: "COMMON.SHARE",
     icon: Icons.Share,
-    bg: "tertiary.500",
+    bg: "green",
     color: "white",
     aria: "Partager",
   },
   duplicate: {
     tooltip: "COMMON.DUPLICATE",
     icon: Icons.Copy,
-    bg: "secondary.500",
+    bg: "orange",
     color: "white",
     aria: "Dupliquer",
   },
   payment: {
     tooltip: "COMMON.PAYMENT",
     icon: Icons.Payment,
-    bg: "warning.300",
+    bg: "warning",
     color: "white",
     aria: "Payment",
   },
   download: {
     tooltip: "COMMON.DOWNLOAD",
     icon: Icons.Download,
-    bg: "success.900",
+    bg: "success",
     color: "white",
     aria: "Download",
   },
   restore: {
     tooltip: "COMMON.RESTORE",
     icon: Icons.Restore,
-    bg: "orange.800",
+    bg: "orange",
     color: "white",
     aria: "Restore",
   },
   chat: {
     tooltip: "Discuter",
     icon: Icons.Chat,
-    bg: "purple.800",
+    bg: "purple",
     color: "white",
     aria: "chat",
   },
   passkey: {
     tooltip: "COMMON.PASSKEY",
     icon: Icons.Key,
-    bg: "purple.800",
+    bg: "purple",
     color: "white",
     aria: "Passkey",
   },
@@ -138,6 +145,7 @@ export const DataTableActionButtons = <T,>({
         <IconButton
           onClick={handleClick}
           disabled={isDisabled || isLoading}
+          colorPalette={config.bg}
           variant={"surface"}
           size={"xs"}
         >
@@ -153,80 +161,89 @@ export const DataTableActionButtons = <T,>({
       </Menu.Trigger>
       <Portal>
         <Menu.Positioner>
-          <Menu.Content>
-            <VStack gap={2} alignItems={"flex-start"}>
-              {actions.map((action) => {
-                const label =
-                  typeof action.name === "function"
-                    ? action.name(item)
-                    : action.name;
+          <Menu.Content
+            minWidth={"150px"}
+            padding={1}
+            borderRadius={8}
+            boxShadow={"md"}
+          >
+            {actions.map((action) => {
+              const label =
+                typeof action.name === "function"
+                  ? action.name(item)
+                  : action.name;
 
-                const isShown =
-                  typeof action.isShown === "function"
-                    ? action.isShown(item)
-                    : action.isShown !== false;
+              const isShown =
+                typeof action.isShown === "function"
+                  ? action.isShown(item)
+                  : action.isShown !== false;
 
-                if (!isShown) return null;
+              if (!isShown) return null;
 
-                const isDisabled =
-                  typeof action.isDisabled === "function"
-                    ? action.isDisabled(item)
-                    : !!action.isDisabled;
+              const isDisabled =
+                typeof action.isDisabled === "function"
+                  ? action.isDisabled(item)
+                  : !!action.isDisabled;
 
-                const isLoading =
-                  typeof action.isLoading === "function"
-                    ? action.isLoading(item)
-                    : !!action.isLoading;
+              const isLoading =
+                typeof action.isLoading === "function"
+                  ? action.isLoading(item)
+                  : !!action.isLoading;
 
-                const config =
-                  ACTION_CONFIG[label as keyof typeof ACTION_CONFIG];
+              const config = ACTION_CONFIG[label as keyof typeof ACTION_CONFIG];
 
-                const handleClick = (e: React.MouseEvent) => {
-                  e.stopPropagation();
-                  action.handleClick(item);
-                };
+              const handleClick = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                action.handleClick(item);
+              };
 
-                if (!config) {
-                  return (
-                    <BaseButton
-                      key={label}
-                      size="sm"
-                      onClick={handleClick}
-                      disabled={isDisabled || isLoading}
-                      isLoading={isLoading}
-                    >
-                      {label}
-                    </BaseButton>
-                  );
-                }
-
-                const Icon = config.icon;
-
+              if (!config) {
                 return (
-                  <Menu.Item
+                  <BaseButton
                     key={label}
-                    value={label}
-                    asChild
-                    disabled={isDisabled || isLoading}
+                    size="sm"
                     onClick={handleClick}
+                    disabled={isDisabled || isLoading}
+                    isLoading={isLoading}
                   >
-                    <HStack
-                      color={isDisabled ? VariablesColors.grayScale : "inherit"}
-                      justifyContent={isLoading ? "center" : "flex-start"}
-                    >
-                      {isLoading ? (
-                        <Loader loader size="xs" />
-                      ) : (
-                        <>
-                          <Icon />
-                          {t(config.tooltip)}
-                        </>
-                      )}
-                    </HStack>
-                  </Menu.Item>
+                    {label}
+                  </BaseButton>
                 );
-              })}
-            </VStack>
+              }
+
+              const Icon = config.icon;
+
+              return (
+                <Menu.Item
+                  key={label}
+                  value={label}
+                  asChild
+                  disabled={isDisabled || isLoading}
+                  onClick={handleClick}
+                >
+                  <HStack
+                    color={isDisabled ? VariablesColors.grayScale : "inherit"}
+                    justifyContent={isLoading ? "center" : "flex-start"}
+                    width={"full"}
+                  >
+                    {isLoading ? (
+                      <Loader loader size="xs" />
+                    ) : (
+                      <IconButton
+                        aria-label={config.aria}
+                        colorPalette={config.bg}
+                        width={"full"}
+                        variant={"surface"}
+                        size={"xs"}
+                      >
+                        <Icon />
+                        {t(config.tooltip)}
+                      </IconButton>
+                    )}
+                  </HStack>
+                </Menu.Item>
+              );
+            })}
           </Menu.Content>
         </Menu.Positioner>
       </Portal>

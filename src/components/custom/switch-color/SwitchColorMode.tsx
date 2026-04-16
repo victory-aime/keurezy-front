@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch } from "@chakra-ui/react";
+import { Icon, Switch } from "@chakra-ui/react";
 import { LuMoon, LuSun } from "react-icons/lu";
 import { useColorMode } from "_components/ui/color-mode";
 
@@ -16,15 +16,17 @@ export const SwitchColorMode = ({
       colorPalette={colorMode === "dark" ? "purple" : "gray"}
       onCheckedChange={toggleColorMode}
       display={"flex"}
+      size={"lg"}
     >
       {!hideIcon ? (
         <>
-          <LuSun />
           <Switch.HiddenInput />
           <Switch.Control>
             <Switch.Thumb />
+            <Switch.Indicator fallback={<Icon as={LuMoon} color="gray.400" />}>
+              <Icon as={LuSun} color="yellow.400" />
+            </Switch.Indicator>
           </Switch.Control>
-          <LuMoon />
         </>
       ) : (
         <>{colorMode === "dark" ? <LuSun /> : <LuMoon />}</>

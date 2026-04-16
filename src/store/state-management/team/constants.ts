@@ -1,0 +1,4 @@
+export enum TEAM_KEYS {
+  ALL_TEAMS = "ALL_TEAMS",
+  CHANGE_STATUS = "CHANGE_STATUS",
+}

@@ -18,14 +18,10 @@ export class PropertyService extends BaseApi {
       { params },
     );
   }
-  create_property(
-    data: MODELS.IProperty | FormData,
-    params: { ownerId: string },
-  ) {
+  create_property(data: MODELS.IProperty | FormData) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().PROPERTY.CREATE_PROPERTY,
       data,
-      { params },
     );
   }
   update_property(

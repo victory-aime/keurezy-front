@@ -36,13 +36,17 @@ export const BaseStats: FC<BaseStatsProps> = ({
     </Flex>
   ) : (
     <Stat.Root
-      p={0}
+      {...boxStyle}
+      {...rest}
       gap={4}
       borderLeftColor={iconBgColor}
       size={"sm"}
       transition={"all 400ms cubic-bezier(0.25, 0.1, 0.25, 1)"}
-      {...boxStyle}
-      {...rest}
+      _hover={{
+        bgColor: iconBgColor,
+        color: "white",
+        fontWeight: "extrabold",
+      }}
     >
       <VStack alignItems={"flex-start"} gap={5}>
         <Flex alignItems={"center"} gap={5}>

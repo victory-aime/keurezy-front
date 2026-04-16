@@ -20,6 +20,7 @@ const APIS_ROUTES_MODULES_PATH = {
     PERMS: "/common/perms",
   },
   INVITATION: "/invitation",
+  TEAM: "/team",
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -358,6 +359,19 @@ export const APIS = (baseUrl?: string) => {
       }),
       CANCEL_INVITATION: api({
         path: `${APIS_ROUTES_MODULES_PATH.INVITATION}/cancel-invitation`,
+        pathBase: "SECURED_API",
+        method: "POST",
+      }),
+    },
+    TEAM: {
+      ALL_TEAMS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.TEAM}/agency-team-list`,
+        pathBase: "SECURED_API",
+        method: "GET",
+        showResponse: false,
+      }),
+      CHANGE_STATUS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.TEAM}/change-status`,
         pathBase: "SECURED_API",
         method: "POST",
       }),

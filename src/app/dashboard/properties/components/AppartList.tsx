@@ -8,11 +8,7 @@ import {
   DataTableContainer,
   BaseFormatNumber,
 } from "_components/custom";
-import {
-  BuildingModule,
-  PropertyModule,
-  UserModule,
-} from "_store/state-management";
+import { BuildingModule, PropertyModule } from "_store/state-management";
 import { CONSTANTS, ENUM, MODELS } from "_types/*";
 import { useRouter } from "next/navigation";
 import { DASHBOARD_ROUTES } from "../../routes";
@@ -167,6 +163,7 @@ export const PropertyList = () => {
       filterComponent={
         <PropertyFilter
           isOpen={false}
+          isLoading={isLoading}
           onChange={async () => {
             setToggleFilter(!toggleFilter);
             await handleResetFilter();

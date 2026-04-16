@@ -4,7 +4,7 @@ export const createLandSchema = Yup.object().shape({
   title: Yup.string()
     .required("Le titre du bien est obligatoire.")
     .min(4, "Le titre doit contenir au moins 4 caractères.")
-    .max(50, "Le titre ne doit pas dépasser 50 caractères."),
+    .max(100, "Le titre ne doit pas dépasser 100 caractères."),
 
   area: Yup.number()
     .typeError("Ce champ doit être un nombre.")
@@ -15,8 +15,6 @@ export const createLandSchema = Yup.object().shape({
     .typeError("Ce champ doit être un nombre.")
     .required("Le prix de vente est obligatoire.")
     .positive("Le prix doit être un nombre positif."),
-
-  landOwner: Yup.string(),
 
   status: Yup.array()
     .of(Yup.string().required())
@@ -33,8 +31,8 @@ export const createLandSchema = Yup.object().shape({
     .max(100, "L’adresse ne doit pas dépasser 100 caractères."),
 
   district: Yup.string().min(
-    5,
-    "Le quartier doit contenir au moins 5 caractères.",
+    1,
+    "Le quartier doit contenir au moins 1 caractères.",
   ),
 
   city: Yup.array()

@@ -12,16 +12,18 @@ import { useRouter } from "next/navigation";
 import { InvitationModule } from "_store/state-management";
 import { useUserContext } from "_context/user-context";
 import { CONSTANTS, ENUM } from "_types/*";
-import { formatDisplayDate } from "rise-core-frontend";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { generateAuditCell } from "_utils/generateAdit.utils";
 
 export const InvitationsList = () => {
+  const { user } = useUserContext();
+  const router = useRouter();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [selectedInvitation, setSelectedInvitation] = useState<string | null>(
     null,
   );
-  const { user } = useUserContext();
-  const router = useRouter();
 
   const {
     data: allInvitations,
@@ -29,9 +31,9 @@ export const InvitationsList = () => {
     refetch: refetchAllInvitations,
   } = InvitationModule.getAllInvitationByAgency({
     params: {
-      agencyId: user?.owner?.agency?.id,
+      agencyId: user?.agencyId,
     },
-    queryOptions: { enabled: !!user?.owner?.agency?.id },
+    queryOptions: { enabled: !!user?.agencyId },
   });
 
   const { mutateAsync: cancelInvitation, isPending: cancelLoading } =
@@ -59,13 +61,14 @@ export const InvitationsList = () => {
         CONSTANTS.AGENCY_ROLE_LIST.find((r) => r.value === role)?.label || role,
     },
     {
-      header: "Ajouter par",
-      accessor: "invitedBy",
-    },
-    {
-      header: "Créé le",
-      accessor: "createdAt",
-      cell: (date) => formatDisplayDate(date),
+      header: "Ajouter le",
+      accessor: "fullObject",
+      cell: (value) =>
+        generateAuditCell(
+          t,
+          { userId: value?.invitedBy, timestamp: value?.createdAt },
+          user?.id,
+        ),
     },
     {
       header: "Statut",
@@ -77,9 +80,13 @@ export const InvitationsList = () => {
       accessor: "actions",
       actions: [
         {
-          name: "delete",
+          name: "cancel",
           isDisabled(data) {
-            return data.status === ENUM.COMMON.Status.CANCELLED;
+            return (
+              data.status === ENUM.COMMON.Status.CANCELLED ||
+              data.status === ENUM.COMMON.Status.EXPIRED ||
+              data.status === ENUM.COMMON.Status.ACCEPTED
+            );
           },
           handleClick(data) {
             setOpen(true);
@@ -93,7 +100,7 @@ export const InvitationsList = () => {
   return (
     <BaseContainer
       title={"Gestion des Invitations"}
-      description={` ${allInvitations?.length || 0} Invitations `}
+      description={`${allInvitations?.length || 0} Invitations `}
       border={"none"}
       withActionButtons
       actionsButtonProps={{

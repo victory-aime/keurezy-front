@@ -17,7 +17,7 @@ export default async function DashboardLayout({
   });
 
   return (
-    <AuthContextProvider session={session?.data}>
+    <AuthContextProvider session={session?.data as any}>
       <SessionRefreshProvider error={session?.error?.toString()}>
         <UserProvider userId={session?.data?.user?.id}>
           <Layout>{children}</Layout>

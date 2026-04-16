@@ -6,6 +6,7 @@ export interface ILandDto {
   purchasePrice?: number;
   area?: number;
   city?: string;
+  paymentType?: string;
   address?: string;
   district?: string;
   landOwner?: string;

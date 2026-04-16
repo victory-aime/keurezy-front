@@ -36,13 +36,13 @@ export const TenantsList = () => {
     refetch: refetchAgreementList,
   } = RentalAgreementModule.getRentalAgreementListByAgencyQueries({
     params: {
-      agencyId: user?.propertyOwner?.propertyAgency?.id,
-      ownerId: user?.propertyOwner?.id,
+      // agencyId: user?.propertyOwner?.propertyAgency?.id,
+      // ownerId: user?.propertyOwner?.id,
       initialPage: currentPage,
       limitPerPage: CONSTANTS.PAGINATION.FIVE_ITEMS_PER_PAGE,
     },
     queryOptions: {
-      enabled: !!user?.propertyOwner?.propertyAgency?.id,
+      enabled: false,
     },
   });
 

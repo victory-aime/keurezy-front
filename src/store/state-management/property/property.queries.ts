@@ -67,8 +67,8 @@ const createPropertyMutation = (
 ) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.PROPERTIES_KEYS.CREATE_PROPERTY],
-    mutationFn: ({ payload, params }) =>
-      propertyServiceInstance().create_property(payload!, params),
+    mutationFn: ({ payload }) =>
+      propertyServiceInstance().create_property(payload!),
     options: args.mutationOptions,
   });
 };

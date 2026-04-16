@@ -9,6 +9,8 @@ import { hexToRGB } from "_theme/colors";
 import { useState } from "react";
 import { Icons } from "_components/custom";
 import { UpgradePlanModal } from "./UpgradePlanModal";
+import { MotionFlex } from "_constants/motion";
+import { AnimatePresence } from "framer-motion";
 
 export const SidebarGroup = ({
   links,
@@ -27,7 +29,7 @@ export const SidebarGroup = ({
   const { isActiveLink } = useIsActive();
 
   return (
-    <>
+    <main>
       <Accordion.Root collapsible defaultValue={[title]}>
         <Accordion.Item value={title} border="none">
           <Accordion.ItemTrigger
@@ -78,7 +80,19 @@ export const SidebarGroup = ({
                       }
                       disabled={isCollapsed && !item.disabled}
                     >
-                      <Flex
+                      <MotionFlex
+                        transition={{
+                          duration: 0.45,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                        whileHover={
+                          item.disabled
+                            ? {}
+                            : {
+                                scale: 0.95,
+                              }
+                        }
+                        whileTap={!item.disabled ? { scale: 0.97 } : {}}
                         align="center"
                         width="full"
                         gap={3}
@@ -106,32 +120,47 @@ export const SidebarGroup = ({
                                 color: "primary.600",
                               }
                         }
-                        transition="all 0.2s"
                       >
                         <Icon as={item.icon} size={"sm"} />
 
-                        {isCollapsed && (
-                          <>
-                            <BaseText flex="1" fontSize="sm">
-                              {t(item.label)}
-                            </BaseText>
+                        <AnimatePresence initial={false}>
+                          {isCollapsed && (
+                            <MotionFlex
+                              initial={{ opacity: 0, x: -5 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -5 }}
+                              transition={{
+                                duration: 0.25,
+                                ease: [0.22, 1, 0.36, 1],
+                              }}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
+                                flex: 1,
+                              }}
+                            >
+                              <BaseText flex="1" fontSize="sm">
+                                {t(item.label)}
+                              </BaseText>
 
-                            {item.badge && (
-                              <Badge
-                                borderRadius="full"
-                                fontSize="0.8em"
-                                colorPalette="purple"
-                              >
-                                {item.badge}
-                              </Badge>
-                            )}
+                              {item.badge && (
+                                <Badge
+                                  borderRadius="full"
+                                  fontSize="0.8em"
+                                  colorPalette="purple"
+                                >
+                                  {item.badge}
+                                </Badge>
+                              )}
 
-                            {item.disabled && (
-                              <Icon as={Icons.Lock} color="gray" />
-                            )}
-                          </>
-                        )}
-                      </Flex>
+                              {item.disabled && (
+                                <Icon as={Icons.Lock} color="gray" />
+                              )}
+                            </MotionFlex>
+                          )}
+                        </AnimatePresence>
+                      </MotionFlex>
                     </SideToolTip>
                   );
                 })}
@@ -144,6 +173,6 @@ export const SidebarGroup = ({
         onChange={setOpenUpgradeModal}
         isOpen={openUpgradeModal}
       />
-    </>
+    </main>
   );
 };

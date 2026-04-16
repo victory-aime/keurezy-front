@@ -11,3 +11,4 @@ export * from "./building";
 export * from "./land";
 export * from "./common";
 export * from "./invitation";
+export * from "./team";

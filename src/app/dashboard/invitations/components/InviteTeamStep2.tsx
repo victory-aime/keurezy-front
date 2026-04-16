@@ -2,8 +2,6 @@
 
 import { MotionBox } from "_constants/motion";
 import { FormCard } from "../../components/FormCard";
-import { CommonModule } from "_store/state-management";
-import { useUserContext } from "_context/user-context";
 import {
   ISelectedCheckboxElement,
   PermissionListGroup,
@@ -11,20 +9,18 @@ import {
 import { useFormikContext } from "formik";
 import { ISelectPermissions } from "../constants/team";
 import { useMemo } from "react";
+import { MODELS } from "_types/*";
 
-export const InviteTeamStep2 = () => {
-  const { user } = useUserContext();
+export const InviteTeamStep2 = ({
+  allPermissions,
+  isLoading,
+}: {
+  allPermissions: MODELS.COMMON.IGetAllPermissionResponse[];
+  isLoading: boolean;
+}) => {
   const { values, setFieldValue, errors, touched } = useFormikContext<{
     permissions: ISelectPermissions[];
   }>();
-
-  const { data: allPermissions, isLoading } =
-    CommonModule.getAllPermissionsByAgencyQueries({
-      params: { agencyId: user?.owner?.agency?.id },
-      queryOptions: {
-        enabled: !!user?.owner?.agency?.id,
-      },
-    });
 
   const handlePermissionChange = (
     selectedValues: ISelectedCheckboxElement[],

@@ -9,6 +9,8 @@ import { SideBarProps } from "./types";
 import {
   PropertyModule,
   BuildingModule,
+  TeamModule,
+  InvitationModule,
   LandModule,
 } from "_store/state-management";
 import { ALL_CSA_ROUTES } from "./routes/routes";
@@ -22,6 +24,9 @@ import { useColorMode } from "_components/ui/color-mode";
 import { useUserContext } from "_context/user-context";
 import { useAccessControl } from "_hooks/useAccessControl";
 import { usePermissions } from "_hooks/usePermissions";
+import { AppPermissions } from "_utils/app-permissions";
+import { MotionBox } from "_constants/motion";
+import { AnimatePresence } from "framer-motion";
 
 export const Sidebar = ({
   onShowSidebar,
@@ -37,41 +42,50 @@ export const Sidebar = ({
   const { canAccess, isLoading: accessControlLoading } = useAccessControl();
   const agencyId = user?.agencyId;
 
+  const queryPayload = useMemo(
+    () => ({
+      params: {
+        agencyId,
+      },
+      queryOptions: {
+        enabled: !!agencyId,
+      },
+    }),
+    [agencyId],
+  );
+
   const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
     params: { agencyId },
     queryOptions: {
-      enabled: !!agencyId && hasPermission("view_properties"),
+      enabled: !!agencyId && hasPermission(AppPermissions.PROPERTIES.VIEW),
     },
   });
 
-  const { data: buildingList } = BuildingModule.getAllBuildingByAgencyQueries({
-    params: {
-      agencyId,
-    },
-    queryOptions: {
-      enabled: !!agencyId,
-    },
-  });
+  const { data: buildingList } =
+    BuildingModule.getAllBuildingByAgencyQueries(queryPayload);
 
-  const { data: allLandsList } = LandModule.getAllLandsByAgencyQueries({
-    params: {
-      agencyId,
-    },
-    queryOptions: {
-      enabled: !!agencyId,
-    },
-  });
+  const { data: allLandsList } =
+    LandModule.getAllLandsByAgencyQueries(queryPayload);
+
+  const { data: teamList } = TeamModule.getAllTeamByAgency(queryPayload);
+
+  const { data: invitationList } =
+    InvitationModule.getAllInvitationByAgency(queryPayload);
 
   const badgesByPath = useMemo(() => {
     return {
       [DASHBOARD_ROUTES.LAND.LIST]: allLandsList?.totalItems,
       [DASHBOARD_ROUTES.BUILDING.LIST]: buildingList?.totalItems,
       [DASHBOARD_ROUTES.PROPERTIES.LIST]: propertyList?.totalItems,
+      [DASHBOARD_ROUTES.TEAM.LIST]: teamList?.length,
+      [DASHBOARD_ROUTES.INVITATIONS.LIST]: invitationList?.length,
     };
   }, [
     propertyList?.totalItems,
     buildingList?.totalItems,
     allLandsList?.totalItems,
+    teamList?.length,
+    invitationList?.length,
   ]);
 
   const sidebarLinks = useMemo(() => {
@@ -139,11 +153,11 @@ export const Sidebar = ({
           w={!sideToggled ? "80px" : "230px"}
           h="100vh"
           position="fixed"
-          transition="width 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)"
+          transition="width 0.5s cubic-bezier(0.22, 1, 0.36, 1)"
           overflow="hidden"
           boxShadow="lg"
           borderRight="1px solid"
-          borderColor={colorMode === "light" ? "gray.200" : "gray.900"}
+          borderColor={colorMode === "light" ? "border" : "inherit"}
           display="flex"
           flexDirection="column"
           zIndex="10"
@@ -164,10 +178,21 @@ export const Sidebar = ({
               width={45}
               height={45}
             />
+
             {sideToggled && (
-              <BaseText fontSize="sm" fontWeight="medium">
-                MyImmo
-              </BaseText>
+              <MotionBox
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{
+                  duration: 0.3,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <BaseText fontSize="sm" fontWeight="medium">
+                  MyImmo
+                </BaseText>
+              </MotionBox>
             )}
           </Flex>
 

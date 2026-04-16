@@ -221,7 +221,7 @@ export const DataTableContainer: FC<TableProps> = ({
                         }}
                       />
                     ) : col.accessor === "actions" && col.actions ? (
-                      <Flex justifyContent={"center"}>
+                      <Flex justifyContent={"center"} width={"fit-content"}>
                         <DataTableActionButtons
                           key={item.id}
                           actions={col?.actions}

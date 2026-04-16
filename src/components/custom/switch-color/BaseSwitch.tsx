@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Switch } from "@chakra-ui/react";
+import { Spinner, Switch } from "@chakra-ui/react";
 import { Loader } from "_components/custom";
 
 interface BaseSwitchProps {
@@ -26,7 +26,7 @@ export const BaseSwitch: FC<BaseSwitchProps> = ({
       disabled={isDisabled}
     >
       {isLoading ? (
-        <Loader loader={isLoading} />
+        <Spinner color="primary.500" animationDuration="0.4s" size={"sm"} />
       ) : (
         <>
           <Switch.HiddenInput />

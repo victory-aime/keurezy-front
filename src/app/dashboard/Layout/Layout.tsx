@@ -13,12 +13,21 @@ import { tourSteps } from "_constants/tourStep";
 import { StorageKey } from "_constants/StorageKeys";
 import { EmailNotVerifiedBanner } from "./email-banner/EmailNotVerified";
 import { authClient } from "../../lib/auth-client";
-import { BaseToast, ToastStatus } from "_components/custom";
+import {
+  BaseModal,
+  BaseText,
+  BaseToast,
+  Icons,
+  ToastStatus,
+} from "_components/custom";
 import { resolveState } from "../../auth/resolve-state";
 import { useSearchParams } from "next/navigation";
 import { EmailVerifiedSuccessBanner } from "./email-banner/EmailVerifiedSuccessBanner";
 import { handleApiError } from "_utils/handleApiError";
 import { AuthModule } from "_store/state-management";
+import { useUserContext } from "_context/user-context";
+import { useAuth } from "_hooks/useAuth";
+import { ENUM } from "_types/*";
 
 export const Layout: FunctionComponent<{
   children: React.ReactNode;
@@ -26,10 +35,18 @@ export const Layout: FunctionComponent<{
   const token = useSearchParams().get("token");
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const { logout } = useAuth();
   const { isLoading, user } = useAuthContext();
-
+  const { user: currentUser, isLoading: currentUserLoad } = useUserContext();
   const [showTour, setShowTour] = useState(false);
   const [showVerifiedBanner, setShowVerifiedBanner] = useState(false);
+  const isInactiveUser =
+    !currentUserLoad && currentUser?.status === ENUM.COMMON.Status.INACTIVE;
+  const isShowEmailNotVerifiedBanner =
+    !currentUserLoad && !currentUser?.emailVerified;
+  const emailVerifiedStorageKey = user?.id
+    ? `${StorageKey.DASHBOARD_OWNER_EMAIL_VERIFIED}_${user.id.slice(0, 8)}`
+    : null;
 
   const prevVerified = useRef<boolean | undefined>(user?.emailVerified);
 
@@ -38,7 +55,7 @@ export const Layout: FunctionComponent<{
 
   // 🔹 Verify email via token
   useEffect(() => {
-    if (!token) return;
+    if (!token || !emailVerifiedStorageKey) return;
 
     const verify = async () => {
       const { data, error } = await authClient.verifyEmail({
@@ -52,11 +69,12 @@ export const Layout: FunctionComponent<{
 
       if (data?.status) {
         setShowVerifiedBanner(true);
+        localStorage.setItem(emailVerifiedStorageKey, "true");
       }
     };
 
     verify();
-  }, [token]);
+  }, [token, emailVerifiedStorageKey]);
 
   // 🔹 Handle token state (expired / invalid)
   useEffect(() => {
@@ -83,14 +101,12 @@ export const Layout: FunctionComponent<{
 
   // 🔹 Detect email verification change
   useEffect(() => {
-    if (!user?.id) return;
-
-    const storageKey = `${StorageKey.DASHBOARD_OWNER_EMAIL_VERIFIED}_${user.id.slice(0, 8)}`;
-    const alreadyShown = localStorage.getItem(storageKey);
+    if (!user?.id || !emailVerifiedStorageKey) return;
+    const alreadyShown = localStorage.getItem(emailVerifiedStorageKey);
 
     if (prevVerified.current === false && user.emailVerified && !alreadyShown) {
       setShowVerifiedBanner(true);
-      localStorage.setItem(storageKey, "true");
+      localStorage.setItem(emailVerifiedStorageKey, "true");
     }
 
     prevVerified.current = user.emailVerified;
@@ -129,42 +145,65 @@ export const Layout: FunctionComponent<{
     });
   };
 
+  if (currentUserLoad) return null;
+
   return (
     <>
-      {showTour && (
-        <GuidedTour
-          onComplete={() => setShowTour(false)}
-          tourStep={tourSteps}
-        />
-      )}
-
-      <Sidebar
-        onShowSidebar={() => setSidebarOpen((prev) => !prev)}
-        isLoading={isLoading}
-        sideToggled={isSidebarOpen}
-      />
-
-      <SidebarInset
-        variant="inset"
-        collapsed={!isSidebarOpen}
-        data-tour="finish"
-      >
-        {!user?.emailVerified && (
-          <EmailNotVerifiedBanner
-            onResend={resendEmailLink}
-            isLoading={isPending}
+      {isInactiveUser ? (
+        <BaseModal
+          isOpen={isInactiveUser}
+          icon={<Icons.Warn />}
+          modalType={"alertdialog"}
+          title={"Compte desactiver"}
+          onClick={() => logout()}
+          isLoading={isLoading}
+          size={"sm"}
+          showCloseButton={false}
+          buttonCancelTitle=""
+          buttonSaveTitle={"COMMON.LOGOUT"}
+        >
+          <BaseText color="gray.600">
+            Votre compte est désactivé. Veuillez contacter votre administrateur
+            pour réactiver votre accès.
+          </BaseText>
+        </BaseModal>
+      ) : (
+        <main>
+          {showTour && (
+            <GuidedTour
+              onComplete={() => setShowTour(false)}
+              tourStep={tourSteps}
+            />
+          )}
+          <Sidebar
+            onShowSidebar={() => setSidebarOpen((prev) => !prev)}
+            isLoading={isLoading}
+            sideToggled={isSidebarOpen}
           />
-        )}
 
-        {showVerifiedBanner && <EmailVerifiedSuccessBanner />}
+          <SidebarInset
+            variant="inset"
+            collapsed={!isSidebarOpen}
+            data-tour="finish"
+          >
+            {isShowEmailNotVerifiedBanner && (
+              <EmailNotVerifiedBanner
+                onResend={resendEmailLink}
+                isLoading={isPending}
+              />
+            )}
 
-        <Header
-          sideToggled={isSidebarOpen}
-          onShowSidebar={() => setSidebarOpen((prev) => !prev)}
-        />
-        <Container isLoading={isLoading}>{children}</Container>
-        <Footer />
-      </SidebarInset>
+            {showVerifiedBanner && <EmailVerifiedSuccessBanner />}
+
+            <Header
+              sideToggled={isSidebarOpen}
+              onShowSidebar={() => setSidebarOpen((prev) => !prev)}
+            />
+            <Container isLoading={isLoading}>{children}</Container>
+            <Footer />
+          </SidebarInset>
+        </main>
+      )}
     </>
   );
 };

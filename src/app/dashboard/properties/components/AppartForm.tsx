@@ -40,19 +40,17 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
     },
   });
 
-  const agencyId = user?.owner?.agency?.id;
-  const ownerId = user?.owner?.id;
+  const agencyId = user?.agencyId;
 
   const { data: allProperties, isLoading: fetchLoading } =
     PropertyModule.getAllPropertiesByAgency({
       params: {
         agencyId,
-        ownerId,
         initialPage: CONSTANTS.PAGINATION.INIT,
         limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
       },
       queryOptions: {
-        enabled: !!agencyId && !!ownerId,
+        enabled: !!agencyId,
       },
     });
 
@@ -60,12 +58,11 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
     BuildingModule.getAllBuildingByAgencyQueries({
       params: {
         agencyId,
-        ownerId,
         initialPage: CONSTANTS.PAGINATION.INIT,
         limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
       },
       queryOptions: {
-        enabled: !!agencyId && !!ownerId,
+        enabled: !!agencyId,
       },
     });
 
@@ -74,6 +71,7 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
       mutationOptions: {
         onSuccess: async () => {
           PropertyModule.PropertyCache.invalidateAllPropertyCache();
+          BuildingModule.BuildingCache.invalidateAllBuildingCache();
           router.back();
         },
       },
@@ -84,6 +82,7 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
       mutationOptions: {
         onSuccess: async () => {
           PropertyModule.PropertyCache.invalidateAllPropertyCache();
+          BuildingModule.BuildingCache.invalidateAllBuildingCache();
           router.back();
         },
       },
@@ -125,12 +124,11 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
     if (appartId) {
       await updateProperty({
         payload: request,
-        params: { ownerId, appartId },
+        params: { appartId },
       });
     } else {
       await createProperty({
         payload: request,
-        params: { ownerId },
       });
     }
   };

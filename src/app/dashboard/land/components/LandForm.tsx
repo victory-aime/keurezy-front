@@ -2,7 +2,7 @@
 import { Formik } from "formik";
 import { FormContainer } from "../../components/FormContainer";
 import { useEffect, useState } from "react";
-import { CONSTANTS, MODELS, VALIDATION } from "_types/*";
+import { CONSTANTS, ENUM, MODELS, VALIDATION } from "_types/*";
 import { useRouter } from "next/navigation";
 import { DASHBOARD_ROUTES } from "../../routes";
 import { UserModule, LandModule } from "_store/state-management";
@@ -12,9 +12,9 @@ import { LandFormInner } from "./LandFormInner";
 export const LandForm = ({ landId }: { landId: string }) => {
   const router = useRouter();
   const [documentsURL, setDocumentsURL] = useState<string[]>([]);
-  const [initialValues, setInitialValues] = useState<MODELS.CreateLandDto>(
-    {} as MODELS.CreateLandDto,
-  );
+  const [initialValues, setInitialValues] = useState<MODELS.CreateLandDto>({
+    paymentType: [ENUM.LandPaymentType.CASH] as any,
+  });
 
   const { data: currentUser } = UserModule.getUserInfo({
     queryOptions: {
@@ -55,24 +55,26 @@ export const LandForm = ({ landId }: { landId: string }) => {
 
   const onSubmit = async (data: MODELS.CreateLandDto) => {
     const formData = new FormData();
-    formData.append("title", String(data.title));
-    formData.append("city", String(data.city?.[0]));
-    formData.append("address", String(data.address));
-    formData.append("district", String(data.district));
-    formData.append("purchasePrice", String(data.purchasePrice));
-    formData.append("area", String(data.area));
-    formData.append("landOwner", String(data.landOwner));
-    formData.append("status", String(data.status?.[0]));
-    formData.append("agencyId", String(agencyId));
+    const payload = {
+      id: landId,
+      title: data.title,
+      purchasePrice: data.purchasePrice,
+      area: data.area,
+      city: data.city?.[0],
+      paymentType: data.paymentType?.[0],
+      district: data.district,
+      address: data.address,
+      landOwner: data.landOwner ?? null,
+      status: data.status?.[0],
+      agencyId,
+    };
+
+    formData.append("data", JSON.stringify(payload));
 
     if (data?.documents) {
       data.documents.forEach((file) => {
         formData.append("documents", file);
       });
-    }
-
-    if (landId) {
-      formData.append("id", landId);
     }
 
     if (landId) {
@@ -92,13 +94,14 @@ export const LandForm = ({ landId }: { landId: string }) => {
 
   useEffect(() => {
     if (landId) {
-      const getBuilding = findDynamicIdInList(landId, allLands?.content);
+      const getLand = findDynamicIdInList(landId, allLands?.content);
       setInitialValues({
-        ...getBuilding,
-        status: [getBuilding?.status],
-        city: [getBuilding?.city],
+        ...getLand,
+        status: [getLand?.status],
+        city: [getLand?.city],
+        paymentType: [getLand?.paymentType],
       });
-      setDocumentsURL(getBuilding?.documents);
+      setDocumentsURL(getLand?.documents);
     }
   }, [landId]);
 

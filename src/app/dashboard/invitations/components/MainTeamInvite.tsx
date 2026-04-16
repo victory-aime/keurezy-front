@@ -34,9 +34,9 @@ export const MainTeamInvite = () => {
 
   const { data: allPermissions, isLoading } =
     CommonModule.getAllPermissionsByAgencyQueries({
-      params: { agencyId: user?.owner?.agency?.id },
+      params: { agencyId: user?.agencyId },
       queryOptions: {
-        enabled: !!user?.owner?.agency?.id,
+        enabled: !!user?.agencyId,
       },
     });
 
@@ -55,7 +55,12 @@ export const MainTeamInvite = () => {
   const stepsConfig: { component: () => JSX.Element; blocking: boolean }[] = [
     { component: InviteStep1, blocking: true },
     {
-      component: InviteTeamStep2,
+      component: () => (
+        <InviteTeamStep2
+          allPermissions={allPermissions ?? []}
+          isLoading={isLoading}
+        />
+      ),
       blocking: true,
     },
     {
@@ -87,7 +92,7 @@ export const MainTeamInvite = () => {
       await createInvitation({
         payload: {
           adminId: user?.id!,
-          agencyId: user?.owner?.agency?.id!,
+          agencyId: user?.agencyId!,
           payload: {
             name: formikRef.current.values.account.name,
             temporaryPassword: generateRandomPassword(12),

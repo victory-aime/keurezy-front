@@ -11,7 +11,8 @@ export type DataActionsButtonType =
   | "download"
   | "passkey"
   | "link"
-  | "chat";
+  | "chat"
+  | "cancel";
 
 interface ActionProps<T = any> {
   name: DataActionsButtonType | ((data: T) => string); // Nom ou fonction retournant un nom dynamique
