@@ -13,4 +13,13 @@ const getUserInfo = (args: QUERIES.QueryPayload<{ userId: MODELS.IUser }>) => {
   });
 };
 
-export { getUserInfo };
+const updateUserMutation = (args: QUERIES.MutationPayload<MODELS.IUser>) => {
+  return QUERIES.useCustomMutation({
+    mutationKey: [Constants.USERS_KEYS.UPDATE_USER_INFO],
+    mutationFn: ({ payload }) =>
+      usersServiceInstance().update_user_info(payload!),
+    options: args.mutationOptions,
+  });
+};
+
+export { getUserInfo, updateUserMutation };

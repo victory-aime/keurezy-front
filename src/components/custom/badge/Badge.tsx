@@ -2,9 +2,9 @@ import { Badge } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { Props } from "./interface/badge";
 import { BaseText, TextVariant } from "../base-text";
-import { variantColorType, getVariantStyles } from "../button";
+import { variantColorType, useVariantStyles } from "../button";
 import { useTranslation } from "react-i18next";
-import { hexToRGB } from "_theme/colors";
+import { useThemeColors } from "_theme/useThemeColors";
 
 const getBadgeContent = (
   status?: string,
@@ -58,6 +58,7 @@ export const BaseBadge: FC<Props> = ({
   textSize = TextVariant.XS,
   ...props
 }) => {
+  const { hexToRGB } = useThemeColors();
   const { t } = useTranslation();
 
   const { variant: resolvedVariant, label: resolvedLabel } = getBadgeContent(
@@ -66,15 +67,11 @@ export const BaseBadge: FC<Props> = ({
     t,
   );
 
-  const { bg, gradient, hover, textColor } = getVariantStyles(
-    color ?? resolvedVariant,
-    variant,
-    true,
-  );
+  const { bg, gradient, hover, textColor } = useVariantStyles(variant, true);
 
   const isSubtle = variant === "subtle";
   const backgroundColor = isSubtle
-    ? hexToRGB(color ?? "info", 0.2)
+    ? hexToRGB(500, 0.2)
     : (gradient ?? bg ?? "none");
 
   return (

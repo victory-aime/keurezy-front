@@ -1,19 +1,10 @@
-import {
-  Flex,
-  Group,
-  Separator,
-  Stack,
-  Text,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Flex, Group, Separator, Stack, Text } from "@chakra-ui/react";
 import { Menu, Portal } from "@chakra-ui/react";
 import {
-  BaseTag,
   BaseText,
   CustomSkeletonLoader,
   FormTextInput,
   Icons,
-  SwitchColorMode,
   TextVariant,
   TextWeight,
 } from "_components/custom";
@@ -27,10 +18,8 @@ import { VariablesColors } from "_theme/variables";
 import { Formik } from "formik";
 import { useTranslation } from "react-i18next";
 import { useUserContext } from "_context/user-context";
-import { CONSTANTS } from "_types/*";
 
 export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
-  const isNotMobile = useBreakpointValue({ base: false, sm: true });
   const { t } = useTranslation();
   const router = useRouter();
   const { logout } = useAuth();
@@ -132,7 +121,6 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
                   isLoading={unreadListLoad}
                   refetchUnreadList={refetchNotificationList}
                 /> */}
-                {isNotMobile && <SwitchColorMode />}
 
                 <Separator orientation="vertical" height={6} mx={1} />
 
@@ -145,12 +133,7 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
                     width={"full"}
                     cursor={"pointer"}
                   >
-                    <Flex
-                      gap={1}
-                      alignItems={"flex-start"}
-                      width={"full"}
-                      justifyContent={"flex-start"}
-                    >
+                    <Flex gap={2} alignItems={"center"} width={"full"}>
                       <Avatar
                         size={"md"}
                         name={user?.name}
@@ -158,26 +141,15 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
                           user?.image ?? "https://avatar.iran.liara.run/public"
                         }
                       />
-                      <Stack gap={0} alignItems={"flex-start"}>
-                        <Text
-                          truncate
-                          lineBreak={"auto"}
-                          lineClamp={1}
-                          maxW={"120px"}
-                          textTransform={"capitalize"}
-                        >
-                          {user?.name}
-                        </Text>
-                        <BaseTag
-                          size={"sm"}
-                          label={
-                            CONSTANTS.AGENCY_ROLE_LIST.find(
-                              (role) => role.value === (user?.role as string),
-                            )?.label || "Administrateur"
-                          }
-                          color="purple"
-                        />
-                      </Stack>
+                      <Text
+                        truncate
+                        lineBreak={"auto"}
+                        lineClamp={1}
+                        maxW={"120px"}
+                        textTransform={"capitalize"}
+                      >
+                        {user?.name}
+                      </Text>
                     </Flex>
                   </Menu.Trigger>
                   <Portal>

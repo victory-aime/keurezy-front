@@ -1,42 +1,55 @@
 import { BadgeProps, Button, ButtonProps, HStack } from "@chakra-ui/react";
 import React, { FC } from "react";
-import { ButtonBaseProps, VariantColorStyle } from "_components/custom";
+import {
+  ButtonBaseProps,
+  VariantColorStyle,
+  variantColorType,
+} from "_components/custom";
 import { LoadingDots } from "../animation/loadingDots";
 import { useTranslation } from "react-i18next";
-import { Colors, getColor, getGradient, getHoverGradient } from "_theme/colors";
+import { useThemeColors } from "_theme/useThemeColors";
 
-const getVariantStyles = (
-  colorType: keyof Colors,
+/**
+ * ✅ Hook dynamique basé sur le theme runtime
+ */
+const useVariantStyles = (
+  colorType: variantColorType,
   variant: ButtonProps["variant"] | BadgeProps["variant"] = "solid",
   withGradient: boolean = false,
 ): VariantColorStyle => {
-  const color = getColor(colorType, 500);
-  const textColor = "white";
-  const gradient = getGradient(colorType);
-  const hover = getHoverGradient(colorType);
+  const { getColor, getGradient, getHoverGradient } = useThemeColors(colorType);
+
+  const color = getColor(500);
+  const textColor =
+    variant === "outline" || variant === "plain" ? color : "white";
+  const gradient = getGradient(400, 500);
+  const hover = getHoverGradient(800, 900);
 
   switch (variant) {
     case "subtle":
       return {
-        bg: color,
+        bg: `${color}20`,
         textColor: color,
         gradient: "none",
         hover: `${color}30`,
       };
+
     case "plain":
       return {
-        bg: `${color}`,
+        bg: "transparent",
         textColor: color,
         gradient: "none",
-        hover: `${color}30`,
+        hover: `${color}20`,
       };
+
     case "outline":
       return {
-        bg: undefined,
+        bg: "transparent",
         textColor: color,
         gradient: "none",
-        hover: `${color}30`,
+        hover: `${color}20`,
       };
+
     default:
       return {
         bg: withGradient ? gradient : color,
@@ -51,7 +64,7 @@ const BaseButton: FC<ButtonBaseProps> = ({
   children,
   withGradient = false,
   rightIcon,
-  colorType = "primary",
+  colorType = "primary", // ⚠️ pour future extension multi-color
   isLoading = false,
   isDisabled = false,
   leftIcon,
@@ -59,121 +72,66 @@ const BaseButton: FC<ButtonBaseProps> = ({
   ...rest
 }) => {
   const { t } = useTranslation();
-  const { bg, gradient, hover, textColor } = getVariantStyles(
+
+  const { bg, gradient, hover, textColor } = useVariantStyles(
     colorType,
     variant,
     withGradient,
   );
   const isOutline = variant === "outline";
 
-  return (
-    <>
-      {rightIcon ? (
-        <HStack width={rest.width}>
-          <Button
-            position="relative"
-            borderColor={isOutline ? textColor : undefined}
-            variant={variant}
-            bg={
-              variant === "solid" ? (withGradient ? gradient : bg) : undefined
-            }
-            color={textColor}
-            border={isOutline ? "1px solid" : undefined}
-            _hover={{
-              background: isOutline ? hover : withGradient ? hover : `${bg}CC`,
-            }}
-            _active={{
-              background: isOutline ? hover : withGradient ? hover : `${bg}AA`,
-            }}
-            _disabled={{
-              background: "gray.300",
-              color: "white",
-              cursor: "not-allowed",
-              borderColor: "gray.300",
-            }}
-            borderRadius={"12px"}
-            padding="20px"
-            loading={isLoading}
-            disabled={isLoading || isDisabled}
-            loadingText={t("COMMON.LOADING_TEXT")}
-            spinner={<LoadingDots />}
-            spinnerPlacement="end"
-            {...rest}
-          >
-            {children}
-            {rightIcon}
-          </Button>
-        </HStack>
-      ) : leftIcon ? (
-        <HStack width={rest.width}>
-          <Button
-            position="relative"
-            borderColor={isOutline ? textColor : undefined}
-            variant={variant}
-            bg={
-              variant === "solid" ? (withGradient ? gradient : bg) : undefined
-            }
-            color={textColor}
-            border={isOutline ? "1px solid" : undefined}
-            _hover={{
-              background: isOutline ? hover : withGradient ? hover : `${bg}CC`,
-            }}
-            _active={{
-              background: isOutline ? hover : withGradient ? hover : `${bg}AA`,
-            }}
-            _disabled={{
-              background: "gray.300",
-              color: "white",
-              cursor: "not-allowed",
-              borderColor: "gray.300",
-            }}
-            borderRadius={"12px"}
-            padding="20px"
-            loading={isLoading}
-            disabled={isLoading || isDisabled}
-            loadingText={t("COMMON.LOADING_TEXT")}
-            spinner={<LoadingDots />}
-            spinnerPlacement="end"
-            {...rest}
-          >
-            {leftIcon}
-            {children}
-          </Button>
-        </HStack>
-      ) : (
-        <Button
-          position="relative"
-          borderColor={isOutline ? textColor : undefined}
-          variant={variant}
-          bg={variant === "solid" ? (withGradient ? gradient : bg) : undefined}
-          color={textColor}
-          border={isOutline ? "1px solid" : undefined}
-          _hover={{
-            background: isOutline ? hover : withGradient ? hover : `${bg}CC`,
-          }}
-          _active={{
-            background: isOutline ? hover : withGradient ? hover : `${bg}AA`,
-          }}
-          _disabled={{
-            background: "gray.300",
-            color: "white",
-            cursor: "not-allowed",
-            borderColor: "gray.300",
-          }}
-          borderRadius={"12px"}
-          padding="20px"
-          loading={isLoading}
-          disabled={isLoading || isDisabled}
-          loadingText={t("COMMON.LOADING_TEXT")}
-          spinner={<LoadingDots />}
-          spinnerPlacement="end"
-          {...rest}
-        >
+  const commonProps = {
+    position: "relative" as const,
+    borderColor: isOutline ? textColor : undefined,
+    variant,
+    bg: variant === "solid" ? (withGradient ? gradient : bg) : undefined,
+    color: textColor,
+    border: isOutline ? "1px solid" : undefined,
+    _hover: {
+      background: isOutline ? hover : withGradient ? hover : `${bg}CC`,
+    },
+    _active: {
+      background: isOutline ? hover : withGradient ? hover : `${bg}AA`,
+    },
+    _disabled: {
+      background: "gray.300",
+      color: "white",
+      cursor: "not-allowed",
+      borderColor: "gray.300",
+    },
+    borderRadius: "12px",
+    padding: "20px",
+    loading: isLoading,
+    disabled: isLoading || isDisabled,
+    loadingText: t("COMMON.LOADING_TEXT"),
+    spinner: <LoadingDots />,
+    spinnerPlacement: "end" as const,
+    ...rest,
+  };
+
+  if (rightIcon) {
+    return (
+      <HStack width={rest.width}>
+        <Button {...commonProps}>
+          {children}
+          {rightIcon}
+        </Button>
+      </HStack>
+    );
+  }
+
+  if (leftIcon) {
+    return (
+      <HStack width={rest.width}>
+        <Button {...commonProps}>
+          {leftIcon}
           {children}
         </Button>
-      )}
-    </>
-  );
+      </HStack>
+    );
+  }
+
+  return <Button {...commonProps}>{children}</Button>;
 };
 
-export { getVariantStyles, BaseButton };
+export { BaseButton, useVariantStyles };

@@ -222,4 +222,14 @@ const getHoverGradient = (
   return `linear-gradient(135deg, ${endColor}, ${darkerColor})`;
 };
 
-export { colors, hexToRGB, getColor, getGradient, getHoverGradient };
+// ✅ Fonction qui retourne les couleurs finales avec le primary overridé
+export function buildColors(
+  customPrimaryShades?: Record<number, { value: string }>,
+): Colors {
+  return {
+    ...colors,
+    primary: customPrimaryShades ?? colors.primary,
+  };
+}
+
+export { colors, hexToRGB };

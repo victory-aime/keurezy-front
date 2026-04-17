@@ -11,25 +11,34 @@ export interface ColorModeProviderProps extends ThemeProviderProps {}
 
 export function ColorModeProvider(props: ColorModeProviderProps) {
   return (
-    <ThemeProvider attribute="class" disableTransitionOnChange {...props} />
+    <ThemeProvider
+      attribute="class"
+      disableTransitionOnChange
+      defaultTheme="system"
+      enableColorScheme
+      enableSystem
+      {...props}
+    />
   );
 }
 
-export type ColorMode = "light" | "dark";
+export type ColorMode = "light" | "dark" | "system";
 
 export interface UseColorModeReturn {
   colorMode: ColorMode;
+  resolvedColorMode: string;
   setColorMode: (colorMode: ColorMode) => void;
   toggleColorMode: () => void;
 }
 
 export function useColorMode(): UseColorModeReturn {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme, theme, setTheme } = useTheme();
   const toggleColorMode = () => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
   return {
-    colorMode: resolvedTheme as ColorMode,
+    colorMode: theme as ColorMode,
+    resolvedColorMode: resolvedTheme as "light" | "dark",
     setColorMode: setTheme,
     toggleColorMode,
   };

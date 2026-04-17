@@ -66,6 +66,11 @@ export const APIS = (baseUrl?: string) => {
         showResponse: false,
         handleErrorManually: false,
       }),
+      UPDATE_USER: api({
+        path: `${APIS_ROUTES_MODULES_PATH.USER}/update-user`,
+        method: "PATCH",
+        pathBase: "SECURED_API",
+      }),
     },
     AGENCY: {
       CREATE_AGENCY: api({

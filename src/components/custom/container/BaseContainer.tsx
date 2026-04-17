@@ -8,11 +8,11 @@ import {
   CustomSkeletonLoader,
   IBoxProps,
 } from "_components/custom";
-import { hexToRGB } from "_theme/colors";
 import { useTranslation } from "react-i18next";
-import { VariablesColors } from "_theme/variables";
 import { LuInfo } from "react-icons/lu";
 import React from "react";
+import { useThemeColors } from "_theme/useThemeColors";
+import { useAppTheme } from "_context/theme-context";
 
 export const BaseContainer = React.memo(
   ({
@@ -34,6 +34,8 @@ export const BaseContainer = React.memo(
     icon,
     ...rest
   }: IBoxProps & FlexProps) => {
+    const { hexToRGB } = useThemeColors();
+    const { vars } = useAppTheme();
     const { t } = useTranslation();
 
     if (withActionButtons && !actionsButtonProps) {
@@ -76,10 +78,7 @@ export const BaseContainer = React.memo(
                   >
                     {icon ? (
                       <Flex gap={3} alignItems={"center"}>
-                        <BaseIcon
-                          boxSize={"10px"}
-                          color={hexToRGB(iconColor, 0.8)}
-                        >
+                        <BaseIcon boxSize={"10px"} color={hexToRGB(500, 0.8)}>
                           {icon}
                         </BaseIcon>
                         <BaseText variant={textVariant ?? TextVariant.L}>
@@ -97,7 +96,7 @@ export const BaseContainer = React.memo(
 
                     {tooltip && (
                       <BaseTooltip message={tooltip}>
-                        <LuInfo size={14} color={VariablesColors.primary} />
+                        <LuInfo size={14} color={vars.primary} />
                       </BaseTooltip>
                     )}
                   </Flex>
@@ -105,9 +104,7 @@ export const BaseContainer = React.memo(
                   <>
                     {icon ? (
                       <Flex gap={3} alignItems={"center"}>
-                        <BaseIcon color={hexToRGB(iconColor, 0.8)}>
-                          {icon}
-                        </BaseIcon>
+                        <BaseIcon color={hexToRGB(500, 0.8)}>{icon}</BaseIcon>
                         <BaseText variant={textVariant ?? TextVariant.H3}>
                           {t(title)}
                         </BaseText>

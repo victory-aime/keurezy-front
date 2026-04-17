@@ -15,16 +15,20 @@ import {
   RentalAgreementModule,
 } from "_store/state-management";
 import { ENUM } from "_types/*";
-import { Colors, hexToRGB } from "_theme/colors";
+import { Colors } from "_theme/colors";
 import { OccupationRateByType } from "./OccupationRateByType";
 import { MonthlyRevenueAreaChart } from "./MonthlyRevenueAreaChart";
 import { useUserContext } from "_context/user-context";
 import { useMemo } from "react";
 import { DASHBOARD_ROUTES } from "../routes";
 import { useRouter } from "next/navigation";
+import { useAppTheme } from "_context/theme-context";
+import { useThemeColors } from "_theme/useThemeColors";
 
 export const DashboardStats = () => {
   const { push } = useRouter();
+  const { vars } = useAppTheme();
+  const { hexToRGB } = useThemeColors();
   const { user } = useUserContext();
 
   const agencyId = user?.agencyId;
@@ -174,34 +178,34 @@ export const DashboardStats = () => {
                 title: "Voir les terrains",
                 link: DASHBOARD_ROUTES.LAND.LIST,
                 icon: Icons.Map,
-                color: "primary",
+                color: vars.primary100,
                 borderColor: "primary.500",
               },
               {
                 title: "Ajouter un bâtiment",
                 link: DASHBOARD_ROUTES.BUILDING.ADD,
                 icon: Icons.RiBuildingLine,
-                color: "secondary",
+                color: "secondary.100",
                 borderColor: "secondary.500",
               },
               {
                 title: "Voir les propriétés",
                 link: DASHBOARD_ROUTES.PROPERTIES.LIST,
                 icon: Icons.Home,
-                color: "orange",
+                color: "orange.100",
                 borderColor: "orange.500",
               },
               {
                 title: "Envoyer une invitation",
                 link: DASHBOARD_ROUTES.INVITATIONS.ADD,
                 icon: Icons.SendMail,
-                color: "success",
+                color: "success.100",
                 borderColor: "success.500",
               },
             ].map((item, i) => (
               <VStack
                 key={i}
-                bgColor={hexToRGB(item.color as keyof Colors, 0.3)}
+                bgColor={item.color}
                 borderWidth={1}
                 borderColor={item.borderColor}
                 cursor={"pointer"}
@@ -213,7 +217,11 @@ export const DashboardStats = () => {
                 <BaseIcon color={item.borderColor}>
                   <item.icon />
                 </BaseIcon>
-                <BaseText textAlign={"center"} textSizeAdjust={"auto"}>
+                <BaseText
+                  textAlign={"center"}
+                  textSizeAdjust={"auto"}
+                  color={"black"}
+                >
                   {item.title}
                 </BaseText>
               </VStack>

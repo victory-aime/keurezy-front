@@ -9,6 +9,8 @@ export interface IUser {
   emailVerified?: boolean;
   twoFactorEnabled?: boolean;
   status?: Status | undefined;
+  theme_color?: string;
+  theme_mode?: string;
   role?: UserRole | undefined;
   accounts?: IAccountUsers[];
   ownerId?: string | null;

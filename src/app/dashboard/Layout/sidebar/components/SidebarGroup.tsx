@@ -5,12 +5,13 @@ import { BaseText } from "_components/custom";
 import { SideToolTip } from "./SideToolTip";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
-import { hexToRGB } from "_theme/colors";
 import { useState } from "react";
 import { Icons } from "_components/custom";
 import { UpgradePlanModal } from "./UpgradePlanModal";
 import { MotionFlex } from "_constants/motion";
 import { AnimatePresence } from "framer-motion";
+import { useAppTheme } from "_context/theme-context";
+import { useThemeColors } from "_theme/useThemeColors";
 
 export const SidebarGroup = ({
   links,
@@ -22,6 +23,8 @@ export const SidebarGroup = ({
   isCollapsed: boolean;
   mobileCloseDrawer?: () => void;
 }) => {
+  const { vars } = useAppTheme();
+  const { hexToRGB } = useThemeColors();
   const [openUpgradeModal, setOpenUpgradeModal] = useState(false);
 
   const router = useRouter();
@@ -100,7 +103,7 @@ export const SidebarGroup = ({
                         py={2}
                         borderRadius="md"
                         justifyContent={isCollapsed ? "center" : "flex-start"}
-                        bg={isActive ? hexToRGB("primary", 0.2) : "transparent"}
+                        bg={isActive ? hexToRGB(500, 0.2) : "transparent"}
                         color={
                           item.disabled
                             ? "gray.400"
@@ -116,8 +119,8 @@ export const SidebarGroup = ({
                           item.disabled
                             ? {}
                             : {
-                                bg: hexToRGB("primary", 0.2),
-                                color: "primary.600",
+                                bg: hexToRGB(500, 0.2),
+                                color: vars.primary600,
                               }
                         }
                       >
@@ -148,7 +151,8 @@ export const SidebarGroup = ({
                                 <Badge
                                   borderRadius="full"
                                   fontSize="0.8em"
-                                  colorPalette="purple"
+                                  bgColor={hexToRGB(500, 0.8)}
+                                  color={"white"}
                                 >
                                   {item.badge}
                                 </Badge>

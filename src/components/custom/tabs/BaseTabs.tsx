@@ -2,10 +2,10 @@
 import { Tabs } from "@chakra-ui/react";
 import { TabsProps } from "./interface/tabs";
 import { useState } from "react";
-import { hexToRGB } from "_theme/colors";
 import { BaseContainer } from "../container";
 import { NoDataAnimation } from "../data-table/NoDataAnimation";
 import { useColorMode } from "_components/ui/color-mode";
+import { useThemeColors } from "_theme/useThemeColors";
 
 export const BaseTabs = ({
   items,
@@ -18,6 +18,7 @@ export const BaseTabs = ({
   ...rest
 }: TabsProps) => {
   const { colorMode } = useColorMode();
+  const { hexToRGB } = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   return (
@@ -49,7 +50,7 @@ export const BaseTabs = ({
                 currentIndex === index
                   ? colorMode === "light"
                     ? "white"
-                    : hexToRGB("primary", 0.1)
+                    : hexToRGB(500, 0.1)
                   : "none"
               }
               key={index}
@@ -61,7 +62,7 @@ export const BaseTabs = ({
               {item.label}
             </Tabs.Trigger>
           ))}
-          <Tabs.Indicator rounded="l2" bgColor={hexToRGB("primary", 0.1)} />
+          <Tabs.Indicator rounded="l2" bgColor={hexToRGB(500, 0.1)} />
         </Tabs.List>
         {items?.map((item, index) => (
           <Tabs.Content

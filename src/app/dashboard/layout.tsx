@@ -4,6 +4,7 @@ import { Layout } from "./Layout/Layout";
 import { SessionRefreshProvider } from "_context/SessionRefresh-context";
 import { UserProvider } from "_context/user-context";
 import { safeGetServerSession } from "_hooks/get-server-session";
+import { DynamicThemeProvider } from "_context/theme-context";
 
 export default async function DashboardLayout({
   children,
@@ -20,7 +21,9 @@ export default async function DashboardLayout({
     <AuthContextProvider session={session?.data as any}>
       <SessionRefreshProvider error={session?.error?.toString()}>
         <UserProvider userId={session?.data?.user?.id}>
-          <Layout>{children}</Layout>
+          <DynamicThemeProvider>
+            <Layout>{children}</Layout>
+          </DynamicThemeProvider>
         </UserProvider>
       </SessionRefreshProvider>
     </AuthContextProvider>

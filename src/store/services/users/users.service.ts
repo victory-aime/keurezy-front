@@ -12,6 +12,12 @@ export class UserService extends BaseApi {
       { userId },
     );
   }
+  update_user_info(data: MODELS.IUser) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().USER.UPDATE_USER,
+      data,
+    );
+  }
 
   register_user(data: MODELS.ICreateUser) {
     return this.apiService.invoke(

@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon, AccordionItemContentProps } from "@chakra-ui/react";
+import { Icon } from "@chakra-ui/react";
 import {
   AccordionItem,
   AccordionItemContent,
@@ -8,14 +8,10 @@ import {
   AccordionRoot,
 } from "_components/ui/accordion";
 import React, { FC, useState } from "react";
-import {
-  AccordionProps,
-  BaseText,
-  CustomSkeletonLoader,
-} from "_components/custom";
-import { hexToRGB } from "_theme/colors";
+import { BaseText, CustomSkeletonLoader } from "_components/custom";
 import { NoDataAnimation } from "_components/custom/data-table/NoDataAnimation";
 import { BaseAccordionProps } from "./interface/accordion";
+import { useThemeColors } from "_theme/useThemeColors";
 
 export const BaseAccordion: FC<BaseAccordionProps> = ({
   items,
@@ -25,6 +21,7 @@ export const BaseAccordion: FC<BaseAccordionProps> = ({
   itemContentProps,
   ...rest
 }) => {
+  const { hexToRGB } = useThemeColors();
   const [openValues, setOpenValues] = useState<string[]>(
     items[0] ? [items[0].label] : [],
   );
@@ -50,8 +47,8 @@ export const BaseAccordion: FC<BaseAccordionProps> = ({
             return (
               <AccordionItem key={index} value={item.label} mt="3">
                 <AccordionItemTrigger
-                  bgColor={isOpen ? hexToRGB("primary", 0.3) : "none"}
-                  borderColor={isOpen ? hexToRGB("primary", 0.3) : "none"}
+                  bgColor={isOpen ? hexToRGB(500, 0.3) : "none"}
+                  borderColor={isOpen ? hexToRGB(500, 0.3) : "none"}
                   borderWidth={1.5}
                   p="3"
                   borderRadius="7px"
@@ -80,7 +77,7 @@ export const BaseAccordion: FC<BaseAccordionProps> = ({
                   <AccordionItemContent
                     p="3"
                     mt="4"
-                    bgColor={activeBg ? hexToRGB("lighter", 0.1) : "none"}
+                    //bgColor={activeBg ? hexToRGB(500,0.1) : "none"}
                     borderRadius="7px"
                     {...itemContentProps}
                   >

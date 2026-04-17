@@ -13,7 +13,6 @@ export const SwitchColorMode = ({
   return (
     <Switch.Root
       checked={colorMode === "dark"}
-      colorPalette={colorMode === "dark" ? "purple" : "gray"}
       onCheckedChange={toggleColorMode}
       display={"flex"}
       size={"lg"}

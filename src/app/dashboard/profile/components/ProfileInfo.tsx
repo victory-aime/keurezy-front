@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, HStack, VStack } from "@chakra-ui/react";
+import { Flex, HStack, parseColor, VStack } from "@chakra-ui/react";
 import { BaseButton, FormTextInput } from "_components/custom";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
@@ -13,24 +13,87 @@ import { MODELS } from "_types/index";
 import { useAuthContext } from "_context/auth-context";
 import { ENUM } from "_types/";
 import { ProviderKeys } from "_constants/StorageKeys";
+import { FormGroupColorPicker } from "_components/custom/form/FormGroupColorPicker";
+import { rgbaToHex } from "_utils/rgbaToHex";
+import { ColorMode, useColorMode } from "_components/ui/color-mode";
+import { AppearanceThemeSelector } from "./AppearanceThemeSelector";
+import { UpdateEmailModal } from "./UpdateEmail";
+import { authClient } from "../../../lib/auth-client";
 
 export const ProfileInfo = () => {
   const { t } = useTranslation();
   const { session } = useAuthContext();
+  const { colorMode, setColorMode } = useColorMode();
+  const [themeColor, setThemeColor] = useState<string | null>(null);
+  const [emailHasChanged, setEmailHasChanged] = useState<boolean>(false);
+  const [pendingValues, setPendingValues] = useState<MODELS.IUser | null>(null);
 
   const [initialValues, setInitialValues] = useState<MODELS.IUser>(
     {} as MODELS.IUser,
   );
 
-  const { data: currentUser, isLoading: userDataLoading } =
-    UserModule.getUserInfo({
-      params: { userId: session?.userId },
-      queryOptions: { enabled: !!session?.userId },
+  const {
+    data: currentUser,
+    isLoading: userDataLoading,
+    refetch: reloadUserInfo,
+  } = UserModule.getUserInfo({
+    params: { userId: session?.userId },
+    queryOptions: { enabled: !!session?.userId },
+  });
+
+  const currentColor = themeColor ?? currentUser?.theme_color;
+
+  const { mutateAsync: updateUserInfo, isPending: isUpdated } =
+    UserModule.updateUserMutation({
+      mutationOptions: {
+        onSuccess: async () => {
+          await reloadUserInfo();
+        },
+      },
     });
 
   const extractorProviderId = currentUser?.accounts?.find(
     (item) => item?.providerId === ProviderKeys.GOOGLE,
   );
+
+  const handleUpdateUser = async (values: MODELS.IUser) => {
+    await updateUserInfo({
+      payload: {
+        ...values,
+        email: currentUser?.email,
+        id: currentUser?.id,
+        theme_color: themeColor!,
+        theme_mode: colorMode,
+      },
+    });
+  };
+
+  const handleSubmitWithCheck = (values: MODELS.IUser) => {
+    const emailChanged = values?.email !== currentUser?.email;
+
+    if (emailChanged) {
+      setPendingValues(values);
+      setEmailHasChanged(true);
+      return;
+    }
+    handleUpdateUser(values);
+  };
+
+  const handleConfirmEmailChange = async () => {
+    if (!pendingValues) return;
+
+    try {
+      // 🔥 appel Better Auth
+      await authClient.changeEmail({
+        newEmail: pendingValues.email!,
+      });
+      await handleUpdateUser(pendingValues);
+      setEmailHasChanged(false);
+      setPendingValues(null);
+    } catch (error) {
+      console.error("Erreur changeEmail", error);
+    }
+  };
 
   useEffect(() => {
     if (currentUser) {
@@ -40,29 +103,46 @@ export const ProfileInfo = () => {
         twoFactorEnabled: currentUser?.twoFactorEnabled,
         status: currentUser?.status ?? ENUM.COMMON.Status.ACTIVE,
       });
+      setThemeColor(currentUser?.theme_color!);
+      setColorMode((currentUser?.theme_mode as ColorMode) ?? colorMode);
     }
   }, [currentUser]);
 
   return (
-    <Formik
-      enableReinitialize
-      initialValues={initialValues}
-      onSubmit={() => {}}
-    >
-      {({ values, handleSubmit, dirty }) => {
-        return (
-          <>
-            <ProfileForm
-              title="SIDE_BAR.PROFILE"
-              description="PROFILE.PERSONAL_INFO"
-              isLoading={userDataLoading}
-            >
-              <VStack gap={4} alignItems="flex-start" mt={10}>
-                <HStack width="full" gap={4}>
+    <main>
+      <Formik
+        enableReinitialize
+        initialValues={initialValues}
+        onSubmit={handleSubmitWithCheck}
+      >
+        {({ values, handleSubmit, dirty }) => {
+          return (
+            <main>
+              <ProfileForm
+                title="SIDE_BAR.PROFILE"
+                description="PROFILE.PERSONAL_INFO"
+                isLoading={userDataLoading}
+              >
+                <VStack gap={4} alignItems="flex-start" mt={10}>
+                  <HStack width="full" gap={4}>
+                    <FormTextInput
+                      name="name"
+                      label="PROFILE.NAME"
+                      leftAccessory={<CiUser />}
+                      isLoading={userDataLoading}
+                      isDisabled={!!extractorProviderId}
+                      infoMessage={
+                        !!extractorProviderId
+                          ? "Données gérer par votre compte Google"
+                          : null
+                      }
+                    />
+                  </HStack>
                   <FormTextInput
-                    name="name"
-                    label="PROFILE.NAME"
-                    leftAccessory={<CiUser />}
+                    name="email"
+                    label="PROFILE.EMAIL"
+                    type="email"
+                    leftAccessory={<HiOutlineMail />}
                     isLoading={userDataLoading}
                     isDisabled={!!extractorProviderId}
                     infoMessage={
@@ -71,36 +151,55 @@ export const ProfileInfo = () => {
                         : null
                     }
                   />
-                </HStack>
-                <FormTextInput
-                  name="email"
-                  label="PROFILE.EMAIL"
-                  type="email"
-                  leftAccessory={<HiOutlineMail />}
-                  isLoading={userDataLoading}
-                  isDisabled={!!extractorProviderId}
-                  infoMessage={
-                    !!extractorProviderId
-                      ? "Données gérer par votre compte Google"
-                      : null
-                  }
-                />
-              </VStack>
-            </ProfileForm>
-
-            <Flex width="full" alignItems="flex-end" justifyContent="flex-end">
-              <BaseButton
-                colorType="success"
-                onClick={() => handleSubmit()}
-                width={"120px"}
-                disabled={initialValues === values && !dirty}
+                </VStack>
+              </ProfileForm>
+              <ProfileForm
+                title="Thème de couleur"
+                description="Choisissez votre coloris préféré pour l'application"
+                isLoading={userDataLoading}
               >
-                {t("COMMON.VALIDATE")}
-              </BaseButton>
-            </Flex>
-          </>
-        );
-      }}
-    </Formik>
+                <HStack gap={4} alignItems="flex-start" mt={10}>
+                  <FormGroupColorPicker
+                    value={parseColor(currentColor as string)}
+                    onValueChange={(value) =>
+                      setThemeColor(rgbaToHex(value.valueAsString))
+                    }
+                  />
+                </HStack>
+              </ProfileForm>
+              <ProfileForm
+                title="Apparence"
+                description=" Choisissez le mode clair ou sombre, ou changez de mode automatiquement en fonction des paramètres de votre système."
+                isLoading={userDataLoading}
+              >
+                <AppearanceThemeSelector
+                  themeColor={currentColor}
+                  initialMode={colorMode}
+                  onChange={(color) => setColorMode(color)}
+                />
+              </ProfileForm>
+              <Flex
+                width="full"
+                alignItems="flex-end"
+                justifyContent="flex-end"
+              >
+                <BaseButton
+                  onClick={() => handleSubmit()}
+                  width={"120px"}
+                  isLoading={isUpdated || userDataLoading}
+                >
+                  {t("COMMON.VALIDATE")}
+                </BaseButton>
+              </Flex>
+            </main>
+          );
+        }}
+      </Formik>
+      <UpdateEmailModal
+        isOpen={emailHasChanged}
+        onChange={() => setEmailHasChanged(!emailHasChanged)}
+        callback={handleConfirmEmailChange}
+      />
+    </main>
   );
 };
