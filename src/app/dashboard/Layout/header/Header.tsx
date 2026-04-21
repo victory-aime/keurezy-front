@@ -1,5 +1,5 @@
-import { Flex, Group, Separator, Stack, Text } from "@chakra-ui/react";
-import { Menu, Portal } from "@chakra-ui/react";
+import { Flex, Group, Separator, Stack, Text } from '@chakra-ui/react';
+import { Menu, Portal } from '@chakra-ui/react';
 import {
   BaseText,
   CustomSkeletonLoader,
@@ -7,17 +7,17 @@ import {
   Icons,
   TextVariant,
   TextWeight,
-} from "_components/custom";
-import { SideBarProps } from "../sidebar/types";
-import { NotificationsModule } from "_store/state-management";
-import { Avatar } from "_components/ui/avatar";
-import { useRouter } from "next/navigation";
-import { DASHBOARD_ROUTES } from "../../routes";
-import { useAuth } from "_hooks/useAuth";
-import { VariablesColors } from "_theme/variables";
-import { Formik } from "formik";
-import { useTranslation } from "react-i18next";
-import { useUserContext } from "_context/user-context";
+} from '_components/custom';
+import { SideBarProps } from '../sidebar/types';
+import { NotificationsModule } from '_store/state-management';
+import { Avatar } from '_components/ui/avatar';
+import { useRouter } from 'next/navigation';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { useAuth } from '_hooks/useAuth';
+import { VariablesColors } from '_theme/variables';
+import { Formik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import { useUserContext } from '_context/user-context';
 
 export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
   const { t } = useTranslation();
@@ -31,56 +31,48 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
       queryOptions: { enabled: false },
     });
 
-  const { refetch: refetchNotificationList } =
-    NotificationsModule.getAllNotificationsQueries({
-      params: { recipientId: user?.id },
-      queryOptions: { enabled: false },
-    });
+  const { refetch: refetchNotificationList } = NotificationsModule.getAllNotificationsQueries({
+    params: { recipientId: user?.id },
+    queryOptions: { enabled: false },
+  });
 
   const links = [
     {
-      label: "Profile",
+      label: 'Profile',
       path: DASHBOARD_ROUTES.PROFILE,
       icon: Icons.User,
     },
     {
-      label: "Paramètres",
+      label: 'Paramètres',
       path: DASHBOARD_ROUTES.PROFILE,
       icon: Icons.Setting,
     },
   ];
 
   return (
-    <Formik initialValues={{ search: "" }} onSubmit={() => {}}>
+    <Formik initialValues={{ search: '' }} onSubmit={() => {}}>
       {({}) => (
-        <Flex
-          as={"header"}
-          alignItems={"center"}
-          gap={3}
-          px={4}
-          pt={3}
-          data-tour="header"
-        >
+        <Flex as={'header'} alignItems={'center'} gap={3} px={4} pt={3} data-tour="header">
           {sideToggled && !isLoading ? (
             <Icons.SideOpen
               size={18}
               color={VariablesColors.grayScale}
               onClick={onShowSidebar}
-              cursor={"pointer"}
+              cursor={'pointer'}
             />
           ) : (
             <Icons.SideClose
               size={18}
               color={VariablesColors.grayScale}
               onClick={onShowSidebar}
-              cursor={"pointer"}
+              cursor={'pointer'}
             />
           )}
 
           <Separator orientation="vertical" height={6} />
 
           {/* Search */}
-          <Flex flex={1} maxW={"md"}>
+          <Flex flex={1} maxW={'md'}>
             <FormTextInput
               leftAccessory={<Icons.Search />}
               name="search"
@@ -89,28 +81,28 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
             />
           </Flex>
 
-          <Flex ml={"auto"} alignItems={"center"} gap={3} position={"relative"}>
+          <Flex ml={'auto'} alignItems={'center'} gap={3} position={'relative'}>
             {isLoading ? (
               <>
                 <CustomSkeletonLoader
                   type="BUTTON"
-                  direction={"row"}
-                  width={"20px"}
+                  direction={'row'}
+                  width={'20px'}
                   colorButton="neutral"
-                  raduis={"full"}
+                  raduis={'full'}
                 />
                 <CustomSkeletonLoader
                   type="BUTTON"
-                  direction={"row"}
-                  width={"20px"}
+                  direction={'row'}
+                  width={'20px'}
                   colorButton="neutral"
-                  raduis={"full"}
+                  raduis={'full'}
                 />
                 <Separator orientation="vertical" height={6} mx={1} />
                 <CustomSkeletonLoader
                   type="CIRCLE"
-                  direction={"row"}
-                  width={"150px"}
+                  direction={'row'}
+                  width={'150px'}
                   numberOfLines={1}
                 />
               </>
@@ -126,27 +118,20 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
 
                 {/* User dropdown */}
 
-                <Menu.Root size={"md"} positioning={{ placement: "bottom" }}>
-                  <Menu.Trigger
-                    rounded="full"
-                    focusRing="none"
-                    width={"full"}
-                    cursor={"pointer"}
-                  >
-                    <Flex gap={2} alignItems={"center"} width={"full"}>
+                <Menu.Root size={'md'} positioning={{ placement: 'bottom' }}>
+                  <Menu.Trigger rounded="full" focusRing="none" width={'full'} cursor={'pointer'}>
+                    <Flex gap={2} alignItems={'center'} width={'full'}>
                       <Avatar
-                        size={"md"}
+                        size={'md'}
                         name={user?.name}
-                        src={
-                          user?.image ?? "https://avatar.iran.liara.run/public"
-                        }
+                        src={user?.image ?? 'https://avatar.iran.liara.run/public'}
                       />
                       <Text
                         truncate
-                        lineBreak={"auto"}
+                        lineBreak={'auto'}
                         lineClamp={1}
-                        maxW={"120px"}
-                        textTransform={"capitalize"}
+                        maxW={'120px'}
+                        textTransform={'capitalize'}
                       >
                         {user?.name}
                       </Text>
@@ -154,27 +139,21 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
                   </Menu.Trigger>
                   <Portal>
                     <Menu.Positioner>
-                      <Menu.Content width={"full"}>
+                      <Menu.Content width={'full'}>
                         <Group
                           grow
-                          gap={"0"}
-                          flexDirection={"column"}
-                          alignItems={"flex-start"}
-                          borderBottom={"1px solid"}
+                          gap={'0'}
+                          flexDirection={'column'}
+                          alignItems={'flex-start'}
+                          borderBottom={'1px solid'}
                           borderColor="gray.200"
                           px={{ base: 4, md: 2 }}
                           py={2}
                         >
-                          <BaseText
-                            variant={TextVariant.XS}
-                            weight={TextWeight.Bold}
-                          >
+                          <BaseText variant={TextVariant.XS} weight={TextWeight.Bold}>
                             {user?.name}
                           </BaseText>
-                          <BaseText
-                            variant={TextVariant.XXS}
-                            color={"gray.400"}
-                          >
+                          <BaseText variant={TextVariant.XXS} color={'gray.400'}>
                             {user?.email}
                           </BaseText>
                         </Group>
@@ -183,7 +162,7 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
                             key={i}
                             value={link?.label}
                             onClick={() => router.push(link?.path)}
-                            cursor={"pointer"}
+                            cursor={'pointer'}
                           >
                             <link.icon />
                             {link.label}
@@ -193,12 +172,12 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
                         <Menu.Item
                           value="delete"
                           color="fg.error"
-                          _hover={{ bg: "bg.error", color: "fg.error" }}
-                          cursor={"pointer"}
+                          _hover={{ bg: 'bg.error', color: 'fg.error' }}
+                          cursor={'pointer'}
                           onClick={() => logout()}
                         >
                           <Icons.Logout />
-                          {t("COMMON.LOGOUT")}
+                          {t('COMMON.LOGOUT')}
                         </Menu.Item>
                       </Menu.Content>
                     </Menu.Positioner>

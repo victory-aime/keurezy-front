@@ -1,58 +1,54 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { BaseButton, BaseText, Icons, Loader } from "_components/custom";
-import { Box, Center, VStack } from "@chakra-ui/react";
-import { APP_ROUTES } from "_config/routes";
-import { MotionBox } from "_constants/motion";
-import { AnimatedCheckmark } from "../auth/onboarding/components/AnimatedCheck";
-import { confettiColors } from "../auth/onboarding/components/FinalStep";
-import { useWindowSize } from "react-use";
-import Confetti from "react-confetti";
-import { MODELS } from "_types/*";
-import { InvitationModule } from "_store/state-management";
-import { authClient } from "../lib/auth-client";
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { BaseButton, BaseText, Icons, Loader } from '_components/custom';
+import { Box, Center, VStack } from '@chakra-ui/react';
+import { APP_ROUTES } from '_config/routes';
+import { MotionBox } from '_constants/motion';
+import { AnimatedCheckmark } from '../auth/onboarding/components/AnimatedCheck';
+import { confettiColors } from '../auth/onboarding/components/FinalStep';
+import { useWindowSize } from 'react-use';
+import Confetti from 'react-confetti';
+import { MODELS } from '_types/*';
+import { InvitationModule } from '_store/state-management';
+import { authClient } from '../lib/auth-client';
 
 export const AcceptInvitation = ({ params }: { params: string }) => {
   const router = useRouter();
   const { width, height } = useWindowSize();
-  const [state, setState] =
-    useState<MODELS.InvitationVerificationState>("loading");
+  const [state, setState] = useState<MODELS.InvitationVerificationState>('loading');
 
-  const { mutateAsync: acceptInvitation } =
-    InvitationModule.acceptInvitationMutation({
-      mutationOptions: {
-        onSuccess: async (data) => {
-          await authClient.signIn
-            .email({
-              email: data?.email,
-              password: data?.password,
-            })
-            .then(() => {
-              setState("success");
-            });
-        },
-        onError: (data) => {
-          setState(data.code as MODELS.InvitationVerificationState);
-        },
+  const { mutateAsync: acceptInvitation } = InvitationModule.acceptInvitationMutation({
+    mutationOptions: {
+      onSuccess: async (data) => {
+        await authClient.signIn
+          .email({
+            email: data?.email,
+            password: data?.password,
+          })
+          .then(() => {
+            setState('success');
+          });
       },
-    });
+      onError: (data) => {
+        setState(data.code as MODELS.InvitationVerificationState);
+      },
+    },
+  });
 
   const handleVerifyInvitationToken = async (token: string) => {
     await acceptInvitation({ params: { token } });
   };
 
-  function resolveInvitationState(
-    key: string,
-  ): MODELS.InvitationVerificationState {
+  function resolveInvitationState(key: string): MODELS.InvitationVerificationState {
     switch (key) {
-      case "token":
-        return "loading";
-      case "token_expired":
-        return "ERR_BAD_REQUEST";
+      case 'token':
+        return 'loading';
+      case 'token_expired':
+        return 'ERR_BAD_REQUEST';
       default:
-        return "loading";
+        return 'loading';
     }
   }
 
@@ -66,26 +62,20 @@ export const AcceptInvitation = ({ params }: { params: string }) => {
 
   return (
     <main>
-      {state === "loading" && (
-        <Center h={"100vh"}>
+      {state === 'loading' && (
+        <Center h={'100vh'}>
           <Loader loader showText />
         </Center>
       )}
-      {state === "success" && (
-        <Center h={"100vh"}>
-          <VStack
-            maxW={"5xl"}
-            mx={"auto"}
-            spaceY={8}
-            position={"relative"}
-            overflow={"hidden"}
-          >
+      {state === 'success' && (
+        <Center h={'100vh'}>
+          <VStack maxW={'5xl'} mx={'auto'} spaceY={8} position={'relative'} overflow={'hidden'}>
             <Box
-              position={"fixed"}
+              position={'fixed'}
               inset={0}
-              pointerEvents={"none"}
+              pointerEvents={'none'}
               zIndex={50}
-              overflow={"hidden"}
+              overflow={'hidden'}
             >
               {Array.from({ length: 40 }).map((_, i) => (
                 <Confetti
@@ -108,18 +98,15 @@ export const AcceptInvitation = ({ params }: { params: string }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
               spaceY={3}
-              textAlign={"center"}
+              textAlign={'center'}
             >
-              <BaseText
-                fontSize={{ base: "4xl", sm: "5xl" }}
-                fontWeight={"bold"}
-              >
+              <BaseText fontSize={{ base: '4xl', sm: '5xl' }} fontWeight={'bold'}>
                 🎉 Invitation acceptée !
               </BaseText>
-              <BaseText fontSize={"lg"} maxW={"lg"} mx={"auto"}>
-                Vous avez accepté l'invitation. Vous pouvez désormais accéder à
-                votre espace de gestion locative. en cliquant sur le bouton
-                ci-dessous, vous serez redirigé vers votre tableau de bord.
+              <BaseText fontSize={'lg'} maxW={'lg'} mx={'auto'}>
+                Vous avez accepté l'invitation. Vous pouvez désormais accéder à votre espace de
+                gestion locative. en cliquant sur le bouton ci-dessous, vous serez redirigé vers
+                votre tableau de bord.
               </BaseText>
             </MotionBox>
             <BaseButton
@@ -131,16 +118,16 @@ export const AcceptInvitation = ({ params }: { params: string }) => {
           </VStack>
         </Center>
       )}
-      {state === "ERR_BAD_REQUEST" && (
-        <Center h={"100vh"}>
+      {state === 'ERR_BAD_REQUEST' && (
+        <Center h={'100vh'}>
           <VStack spaceY={6}>
             <AnimatedCheckmark type="error" />
-            <BaseText fontSize={"2xl"} fontWeight={"bold"}>
+            <BaseText fontSize={'2xl'} fontWeight={'bold'}>
               L'invitation est invalide ou a expiré
             </BaseText>
-            <BaseText fontSize={"md"}>
-              Veuillez contacter l'administrateur de votre agence pour recevoir
-              une nouvelle invitation.
+            <BaseText fontSize={'md'}>
+              Veuillez contacter l'administrateur de votre agence pour recevoir une nouvelle
+              invitation.
             </BaseText>
           </VStack>
         </Center>

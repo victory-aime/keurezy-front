@@ -1,4 +1,4 @@
-import { ENUM } from "..";
+import { ENUM } from '..';
 
 interface INotificationListResponse {
   id: string;

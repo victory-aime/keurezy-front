@@ -1,5 +1,5 @@
-import { VStack, Flex, HStack, Span } from "@chakra-ui/react";
-import { BaseText } from "_components/custom";
+import { VStack, Flex, HStack, Span } from '@chakra-ui/react';
+import { BaseText } from '_components/custom';
 
 export const ApplicationModalSection = ({
   icon,
@@ -31,7 +31,7 @@ export const ApplicationInfoItem = ({
   <HStack>
     {icon}
     <BaseText>
-      {label}: <Span>{value ?? "-"}</Span>
+      {label}: <Span>{value ?? '-'}</Span>
     </BaseText>
   </HStack>
 );

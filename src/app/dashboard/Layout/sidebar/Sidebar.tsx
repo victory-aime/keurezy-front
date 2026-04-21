@@ -1,32 +1,32 @@
-"use client";
+'use client';
 
-import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
-import { BaseButton, BaseText, Icons } from "_components/custom";
-import { MobileSidebar } from "./components/MobileSidebar";
-import { ASSETS } from "_assets/images";
-import Image from "next/image";
-import { SideBarProps } from "./types";
+import { Box, Flex, useBreakpointValue } from '@chakra-ui/react';
+import { BaseButton, BaseText, Icons } from '_components/custom';
+import { MobileSidebar } from './components/MobileSidebar';
+import { ASSETS } from '_assets/images';
+import Image from 'next/image';
+import { SideBarProps } from './types';
 import {
   PropertyModule,
   BuildingModule,
   TeamModule,
   InvitationModule,
   LandModule,
-} from "_store/state-management";
-import { ALL_CSA_ROUTES } from "./routes/routes";
-import { RenderGroupedLinks } from "./components/RenderGroupedLinks";
-import { useAuth } from "_hooks/useAuth";
-import { SideToolTip } from "./components/SideToolTip";
-import { useSessionRefreshContext } from "_context/SessionRefresh-context";
-import { useMemo } from "react";
-import { DASHBOARD_ROUTES } from "../../routes";
-import { useColorMode } from "_components/ui/color-mode";
-import { useUserContext } from "_context/user-context";
-import { useAccessControl } from "_hooks/useAccessControl";
-import { usePermissions } from "_hooks/usePermissions";
-import { AppPermissions } from "_utils/app-permissions";
-import { MotionBox } from "_constants/motion";
-import { AnimatePresence } from "framer-motion";
+} from '_store/state-management';
+import { ALL_CSA_ROUTES } from './routes/routes';
+import { RenderGroupedLinks } from './components/RenderGroupedLinks';
+import { useAuth } from '_hooks/useAuth';
+import { SideToolTip } from './components/SideToolTip';
+import { useSessionRefreshContext } from '_context/SessionRefresh-context';
+import { useMemo } from 'react';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { useColorMode } from '_components/ui/color-mode';
+import { useUserContext } from '_context/user-context';
+import { useAccessControl } from '_hooks/useAccessControl';
+import { usePermissions } from '_hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
+import { MotionBox } from '_constants/motion';
+import { AnimatePresence } from 'framer-motion';
 
 export const Sidebar = ({
   onShowSidebar,
@@ -61,16 +61,13 @@ export const Sidebar = ({
     },
   });
 
-  const { data: buildingList } =
-    BuildingModule.getAllBuildingByAgencyQueries(queryPayload);
+  const { data: buildingList } = BuildingModule.getAllBuildingByAgencyQueries(queryPayload);
 
-  const { data: allLandsList } =
-    LandModule.getAllLandsByAgencyQueries(queryPayload);
+  const { data: allLandsList } = LandModule.getAllLandsByAgencyQueries(queryPayload);
 
   const { data: teamList } = TeamModule.getAllTeamByAgency(queryPayload);
 
-  const { data: invitationList } =
-    InvitationModule.getAllInvitationByAgency(queryPayload);
+  const { data: invitationList } = InvitationModule.getAllInvitationByAgency(queryPayload);
 
   const badgesByPath = useMemo(() => {
     return {
@@ -99,25 +96,19 @@ export const Sidebar = ({
               feature: link.feature,
             });
 
-            const hasPermissionAccess = link.permission
-              ? hasPermission(link.permission)
-              : true;
+            const hasPermissionAccess = link.permission ? hasPermission(link.permission) : true;
 
             // ❌ feature OK mais pas permission → HIDE
             if (hasFeatureAccess && !hasPermissionAccess) {
               return null;
             }
 
-            const badgeValue =
-              badgesByPath[link.path as keyof typeof badgesByPath];
+            const badgeValue = badgesByPath[link.path as keyof typeof badgesByPath];
 
             return {
               ...link,
               disabled: !hasFeatureAccess,
-              badge:
-                typeof badgeValue === "number" && badgeValue > 0
-                  ? badgeValue
-                  : undefined,
+              badge: typeof badgeValue === 'number' && badgeValue > 0 ? badgeValue : undefined,
             };
           })
           // ✅ filtre type-safe
@@ -150,14 +141,14 @@ export const Sidebar = ({
         />
       ) : (
         <Box
-          w={!sideToggled ? "80px" : "230px"}
+          w={!sideToggled ? '80px' : '230px'}
           h="100vh"
           position="fixed"
           transition="width 0.5s cubic-bezier(0.22, 1, 0.36, 1)"
           overflow="hidden"
           boxShadow="lg"
           borderRight="1px solid"
-          borderColor={colorMode === "light" ? "border" : "inherit"}
+          borderColor={colorMode === 'light' ? 'border' : 'inherit'}
           display="flex"
           flexDirection="column"
           zIndex="10"
@@ -165,15 +156,15 @@ export const Sidebar = ({
         >
           <Flex
             align="center"
-            justifyContent={!sideToggled ? "center" : "flex-start"}
+            justifyContent={!sideToggled ? 'center' : 'flex-start'}
             gap={3}
             px={3}
             py={2}
             borderBottom="1px solid"
-            borderColor={colorMode === "light" ? "gray.200" : "gray.900"}
+            borderColor={colorMode === 'light' ? 'gray.200' : 'gray.900'}
           >
             <Image
-              src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+              src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
               alt="logo"
               width={45}
               height={45}
@@ -204,22 +195,22 @@ export const Sidebar = ({
             isLoading={isLoading || accessControlLoading}
           />
 
-          <SideToolTip disabled={sideToggled} label={"Déconnexion"}>
+          <SideToolTip disabled={sideToggled} label={'Déconnexion'}>
             <Box
               p={3}
               borderTop="1px solid"
-              borderColor={colorMode === "light" ? "gray.200" : "gray.900"}
+              borderColor={colorMode === 'light' ? 'gray.200' : 'gray.900'}
             >
               <BaseButton
-                width={"full"}
-                colorType={"danger"}
+                width={'full'}
+                colorType={'danger'}
                 leftIcon={<Icons.Logout />}
                 onClick={() => {
                   dismissToast?.();
                   logout();
                 }}
               >
-                {sideToggled ? "Déconnexion" : null}
+                {sideToggled ? 'Déconnexion' : null}
               </BaseButton>
             </Box>
           </SideToolTip>

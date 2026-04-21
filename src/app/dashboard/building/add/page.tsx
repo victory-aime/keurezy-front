@@ -1,4 +1,4 @@
-import { BuildingForm } from "../components/BuildingForm";
+import { BuildingForm } from '../components/BuildingForm';
 
 export default async function AddOrEditBuildinPage({
   searchParams,

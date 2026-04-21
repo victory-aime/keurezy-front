@@ -1,14 +1,14 @@
-import { BoxProps, Box } from "@chakra-ui/react";
-import React, { FC } from "react";
+import { BoxProps, Box } from '@chakra-ui/react';
+import React, { FC } from 'react';
 
 interface SidebarInsetProps extends BoxProps {
-  variant?: "default" | "inset";
+  variant?: 'default' | 'inset';
   collapsed?: boolean;
 }
 
 export const SidebarInset: FC<SidebarInsetProps> = React.forwardRef(
-  ({ variant = "default", collapsed = false, ...props }, ref) => {
-    const isInset = variant === "inset";
+  ({ variant = 'default', collapsed = false, ...props }, ref) => {
+    const isInset = variant === 'inset';
 
     return (
       <Box
@@ -21,8 +21,8 @@ export const SidebarInset: FC<SidebarInsetProps> = React.forwardRef(
         minH="100svh"
         ml={{
           base: 0,
-          md: collapsed ? "80px" : "220px",
-          lg: collapsed ? "80px" : "230px",
+          md: collapsed ? '80px' : '220px',
+          lg: collapsed ? '80px' : '230px',
         }}
         transition="margin 0.2s ease"
         {...(isInset && {})}
@@ -32,4 +32,4 @@ export const SidebarInset: FC<SidebarInsetProps> = React.forwardRef(
   },
 );
 
-SidebarInset.displayName = "SidebarInset";
+SidebarInset.displayName = 'SidebarInset';

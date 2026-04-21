@@ -1,14 +1,8 @@
-import {
-  BaseText,
-  BaseModal,
-  ModalOpenProps,
-  Icons,
-  FormTextInput,
-} from "_components/custom";
-import { Formik } from "formik";
-import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
-import * as Yup from "yup";
+import { BaseText, BaseModal, ModalOpenProps, Icons, FormTextInput } from '_components/custom';
+import { Formik } from 'formik';
+import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
 
 export const PassKeyModal: FC<ModalOpenProps> = ({
   isOpen,
@@ -21,17 +15,17 @@ export const PassKeyModal: FC<ModalOpenProps> = ({
   return (
     <Formik
       enableReinitialize
-      initialValues={{ passkeyName: "" }}
+      initialValues={{ passkeyName: '' }}
       onSubmit={callback}
       validationSchema={Yup.object({
         passkeyName: Yup.string()
-          .required("Veuillez renseigner le nom de votre clé")
-          .min(3, "Le nom de la clé doit contenir au moins 3 caractères"),
+          .required('Veuillez renseigner le nom de votre clé')
+          .min(3, 'Le nom de la clé doit contenir au moins 3 caractères'),
       })}
     >
       {({ handleSubmit, isValid, resetForm }) => (
         <BaseModal
-          title={"PROFILE.SECURITY.ADD_PASS_KEY"}
+          title={'PROFILE.SECURITY.ADD_PASS_KEY'}
           isOpen={isOpen}
           isLoading={isLoading}
           onClick={() => handleSubmit()}
@@ -43,7 +37,7 @@ export const PassKeyModal: FC<ModalOpenProps> = ({
           ignoreFooter={false}
           icon={<Icons.Key />}
         >
-          <BaseText mb={3}>{t("PROFILE.SECURITY.ADD_PASS_KEY_INFO")}</BaseText>
+          <BaseText mb={3}>{t('PROFILE.SECURITY.ADD_PASS_KEY_INFO')}</BaseText>
           <FormTextInput
             name="passkeyName"
             label="PROFILE.SECURITY.PASS_KEY_NAME"

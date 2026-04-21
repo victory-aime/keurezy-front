@@ -1,5 +1,5 @@
-import { Accordion, Flex, VStack } from "@chakra-ui/react";
-import { Skeleton, SkeletonCircle } from "_components/ui/skeleton";
+import { Accordion, Flex, VStack } from '@chakra-ui/react';
+import { Skeleton, SkeletonCircle } from '_components/ui/skeleton';
 
 export const SidebarSkeleton = ({
   isCollapsed,
@@ -29,15 +29,11 @@ export const SidebarGroupSkeleton = ({
   links?: number;
 }) => {
   return (
-    <Accordion.Root collapsible defaultValue={["skeleton"]}>
+    <Accordion.Root collapsible defaultValue={['skeleton']}>
       <Accordion.Item value="skeleton" border="none">
-        <Accordion.ItemTrigger
-          py={1}
-          alignItems={"center"}
-          justifyContent={"space-between"}
-        >
+        <Accordion.ItemTrigger py={1} alignItems={'center'} justifyContent={'space-between'}>
           {isCollapsed ? (
-            <Flex gap={2} alignItems={"center"}>
+            <Flex gap={2} alignItems={'center'}>
               <SkeletonCircle size="5" />
               <Skeleton height="10px" width="80px" />
             </Flex>
@@ -50,7 +46,7 @@ export const SidebarGroupSkeleton = ({
 
         <Accordion.ItemContent>
           <Accordion.ItemBody px={0}>
-            <VStack align="stretch" gap={1} width={"full"}>
+            <VStack align="stretch" gap={1} width={'full'}>
               {Array.from({ length: links }).map((_, i) => {
                 const hasBadge = Math.random() > 0.6;
 
@@ -58,12 +54,12 @@ export const SidebarGroupSkeleton = ({
                   <Flex
                     key={i}
                     align="center"
-                    width={"full"}
+                    width={'full'}
                     gap={3}
                     px={3}
                     py={2}
                     borderRadius="md"
-                    justifyContent={isCollapsed ? "center" : "flex-start"}
+                    justifyContent={isCollapsed ? 'center' : 'flex-start'}
                   >
                     {/* ICON */}
                     <SkeletonCircle size="4" />
@@ -73,13 +69,7 @@ export const SidebarGroupSkeleton = ({
                       <>
                         <Skeleton height="10px" flex="1" />
 
-                        {hasBadge && (
-                          <Skeleton
-                            height="16px"
-                            width="28px"
-                            borderRadius="full"
-                          />
-                        )}
+                        {hasBadge && <Skeleton height="16px" width="28px" borderRadius="full" />}
                       </>
                     )}
                   </Flex>

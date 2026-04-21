@@ -1,5 +1,5 @@
-"use client";
-import { Formik, FormikValues } from "formik";
+'use client';
+import { Formik, FormikValues } from 'formik';
 import {
   ActionsButton,
   BaseRadio,
@@ -7,26 +7,18 @@ import {
   FormSelect,
   FormTextInput,
   Icons,
-} from "_components/custom";
-import { Flex, HStack, VStack } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { MODELS, CONSTANTS, VALIDATION } from "_types/";
-import { FormCard } from "../../components/FormCard";
-import { FormContainer } from "../../components/FormContainer";
-import { useRouter } from "next/navigation";
-import {
-  BuildingModule,
-  PropertyModule,
-  UserModule,
-} from "_store/state-management";
-import { findDynamicIdInList } from "rise-core-frontend";
-import { cityList } from "_constants/city";
-import { DASHBOARD_ROUTES } from "../../routes";
-import {
-  getBuildingsList,
-  propertyStatusList,
-  propertyTypes,
-} from "../constants/properties";
+} from '_components/custom';
+import { Flex, HStack, VStack } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { MODELS, CONSTANTS, VALIDATION } from '_types/';
+import { FormCard } from '../../components/FormCard';
+import { FormContainer } from '../../components/FormContainer';
+import { useRouter } from 'next/navigation';
+import { BuildingModule, PropertyModule, UserModule } from '_store/state-management';
+import { findDynamicIdInList } from 'rise-core-frontend';
+import { cityList } from '_constants/city';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { getBuildingsList, propertyStatusList, propertyTypes } from '../constants/properties';
 
 export const PropertyForm = ({ appartId }: { appartId: string }) => {
   const router = useRouter();
@@ -42,17 +34,16 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
 
   const agencyId = user?.agencyId;
 
-  const { data: allProperties, isLoading: fetchLoading } =
-    PropertyModule.getAllPropertiesByAgency({
-      params: {
-        agencyId,
-        initialPage: CONSTANTS.PAGINATION.INIT,
-        limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
-      },
-      queryOptions: {
-        enabled: !!agencyId,
-      },
-    });
+  const { data: allProperties, isLoading: fetchLoading } = PropertyModule.getAllPropertiesByAgency({
+    params: {
+      agencyId,
+      initialPage: CONSTANTS.PAGINATION.INIT,
+      limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
+    },
+    queryOptions: {
+      enabled: !!agencyId,
+    },
+  });
 
   const { data: allBuildings, isLoading: isAllBuildingsLoad } =
     BuildingModule.getAllBuildingByAgencyQueries({
@@ -148,23 +139,15 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
     >
       {({ handleSubmit, setFieldValue, values }) => (
         <FormContainer
-          pageTitle={appartId ? "Modifier le bien " : "Ajouter un bien"}
-          pageDescription={"Renseignez les informations de votre propriété"}
+          pageTitle={appartId ? 'Modifier le bien ' : 'Ajouter un bien'}
+          pageDescription={'Renseignez les informations de votre propriété'}
           isLoading={fetchLoading}
         >
-          <VStack gap={3} alignItems={"flex-end"} width={"full"}>
-            <Flex
-              width={"full"}
-              gap={4}
-              flexDir={{ base: "column", sm: "row" }}
-            >
+          <VStack gap={3} alignItems={'flex-end'} width={'full'}>
+            <Flex width={'full'} gap={4} flexDir={{ base: 'column', sm: 'row' }}>
               <FormCard title="Informations principales">
-                <VStack width={"full"} mt={4} gap={4}>
-                  <HStack
-                    width="full"
-                    flexDir={{ base: "column", sm: "row" }}
-                    gap={4}
-                  >
+                <VStack width={'full'} mt={4} gap={4}>
+                  <HStack width="full" flexDir={{ base: 'column', sm: 'row' }} gap={4}>
                     <FormTextInput
                       required
                       label="Nom de la propriéte"
@@ -182,11 +165,7 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
                     />
                   </HStack>
 
-                  <HStack
-                    width="full"
-                    flexDir={{ base: "column", sm: "row" }}
-                    gap={4}
-                  >
+                  <HStack width="full" flexDir={{ base: 'column', sm: 'row' }} gap={4}>
                     <FormSelect
                       required
                       name="status"
@@ -209,11 +188,7 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
                       type="amount"
                     />
                   </HStack>
-                  <HStack
-                    width="full"
-                    flexDir={{ base: "column", sm: "row" }}
-                    gap={4}
-                  >
+                  <HStack width="full" flexDir={{ base: 'column', sm: 'row' }} gap={4}>
                     <FormTextInput
                       required
                       label="Surface (m²)"
@@ -243,32 +218,30 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
             </Flex>
           </VStack>
           {/* 🔥 QUESTION */}
-          <BaseText mb={3}>
-            Cette propriété est-elle dans un bâtiment ?
-          </BaseText>
+          <BaseText mb={3}>Cette propriété est-elle dans un bâtiment ?</BaseText>
           <BaseRadio
             colorPalette="purple"
-            value={values.hasBatiment ? "yes" : "no"}
+            value={values.hasBatiment ? 'yes' : 'no'}
             items={[
-              { label: "Oui", value: "yes" },
-              { label: "Non", value: "no" },
+              { label: 'Oui', value: 'yes' },
+              { label: 'Non', value: 'no' },
             ]}
             onValueChange={(details) => {
-              if (details?.value === "yes") {
-                setFieldValue("hasBatiment", true);
+              if (details?.value === 'yes') {
+                setFieldValue('hasBatiment', true);
               } else {
-                setFieldValue("hasBatiment", false);
-                setFieldValue("batimentId", []);
-                setFieldValue("propertyNumber", null);
+                setFieldValue('hasBatiment', false);
+                setFieldValue('batimentId', []);
+                setFieldValue('propertyNumber', null);
               }
             }}
           />
           {/* ==================== LOCALISATION ==================== */}
           <FormCard title="Localisation">
-            <VStack gap={8} mt={4} width={"full"}>
+            <VStack gap={8} mt={4} width={'full'}>
               {/* 🏢 CAS BATIMENT */}
               {values.hasBatiment && (
-                <HStack width={"full"}>
+                <HStack width={'full'}>
                   <FormSelect
                     required
                     name="batimentId"
@@ -292,12 +265,8 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
 
               {/* 🏠 CAS SANS BATIMENT */}
               {!values.hasBatiment && (
-                <VStack gap={4} mt={4} width={"full"}>
-                  <HStack
-                    width="full"
-                    flexDir={{ base: "column", sm: "row" }}
-                    gap={4}
-                  >
+                <VStack gap={4} mt={4} width={'full'}>
+                  <HStack width="full" flexDir={{ base: 'column', sm: 'row' }} gap={4}>
                     <FormSelect
                       required
                       name="city"
@@ -314,11 +283,7 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
                     />
                   </HStack>
 
-                  <HStack
-                    width="full"
-                    flexDir={{ base: "column", sm: "row" }}
-                    gap={4}
-                  >
+                  <HStack width="full" flexDir={{ base: 'column', sm: 'row' }} gap={4}>
                     <FormTextInput
                       required
                       name="address"
@@ -337,11 +302,11 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
             </VStack>
           </FormCard>
           <ActionsButton
-            justifyContent={"flex-end"}
+            justifyContent={'flex-end'}
             onClick={() => handleSubmit()}
             onCancel={() => router.push(DASHBOARD_ROUTES.PROPERTIES.LIST)}
             isLoading={createPending || updatePending}
-            validateTitle={appartId ? "Modiler le bien" : "Ajouter le bien"}
+            validateTitle={appartId ? 'Modiler le bien' : 'Ajouter le bien'}
             isEmailVerified={user?.emailVerified}
             icon={<Icons.RiBuildingLine />}
           />

@@ -1,15 +1,11 @@
-"use client";
+'use client';
 
-import { Box, Steps } from "@chakra-ui/react";
-import React, { FC, useEffect, useState } from "react";
-import { BaseStepperProps } from "./interface/stepper";
-import { LuCheck } from "react-icons/lu";
+import { Box, Steps } from '@chakra-ui/react';
+import React, { FC, useEffect, useState } from 'react';
+import { BaseStepperProps } from './interface/stepper';
+import { LuCheck } from 'react-icons/lu';
 
-export const BaseStepper: FC<BaseStepperProps> = ({
-  steps,
-  goNextSteps,
-  linear = true,
-}) => {
+export const BaseStepper: FC<BaseStepperProps> = ({ steps, goNextSteps, linear = true }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handleStepChange = (step: number) => {
@@ -25,13 +21,13 @@ export const BaseStepper: FC<BaseStepperProps> = ({
 
   return (
     <Steps.Root
-      w={"100%"}
+      w={'100%'}
       linear={linear}
       count={steps?.length}
       defaultStep={currentIndex}
       defaultValue={steps[currentIndex]?.stepNumber}
-      variant={"solid"}
-      colorPalette={"purple"}
+      variant={'solid'}
+      colorPalette={'purple'}
       onStepChange={({ step }) => {
         handleStepChange(step);
       }}
@@ -54,12 +50,12 @@ export const BaseStepper: FC<BaseStepperProps> = ({
           key={index}
           index={index}
           _open={{
-            animationName: "fade-in, scale-in",
-            animationDuration: "300ms",
+            animationName: 'fade-in, scale-in',
+            animationDuration: '300ms',
           }}
           _closed={{
-            animationName: "fade-out, scale-out",
-            animationDuration: "120ms",
+            animationName: 'fade-out, scale-out',
+            animationDuration: '120ms',
           }}
         >
           {step.content({

@@ -1,23 +1,23 @@
-import { ColorPalette, Tag, TagCloseTrigger } from "@chakra-ui/react";
-import React, { FC, ReactNode } from "react";
-import { BaseTagProps } from "./interface/tag";
-import { useTranslation } from "react-i18next";
-import { ENUM } from "_types/*";
-import { STATUS_ICONS, STATUS_META, VARIANT_CONFIG } from "../utils";
+import { ColorPalette, Tag, TagCloseTrigger } from '@chakra-ui/react';
+import React, { FC, ReactNode } from 'react';
+import { BaseTagProps } from './interface/tag';
+import { useTranslation } from 'react-i18next';
+import { ENUM } from '_types/*';
+import { STATUS_ICONS, STATUS_META, VARIANT_CONFIG } from '../utils';
 
 const getTagContent = (
   status?: ENUM.COMMON.Status,
-  fallbackColor: ColorPalette = "red",
+  fallbackColor: ColorPalette = 'red',
   t?: (key: string) => string,
 ): { colorPalette: ColorPalette; label: string; icon?: ReactNode } => {
   if (!t) {
-    return { colorPalette: "blue", label: "Inconnu" };
+    return { colorPalette: 'blue', label: 'Inconnu' };
   }
 
   if (!status || !STATUS_META[status as keyof typeof STATUS_META]) {
     return {
       colorPalette: fallbackColor,
-      label: t("COMMON.STATUS.UNKNOWN"),
+      label: t('COMMON.STATUS.UNKNOWN'),
     };
   }
 
@@ -36,10 +36,10 @@ const getTagContent = (
 
 export const BaseTag: FC<BaseTagProps> = ({
   children,
-  variant = "subtle",
+  variant = 'subtle',
   label: customLabel,
-  color = "red",
-  iconPosition = "start",
+  color = 'red',
+  iconPosition = 'start',
   icon: customIcon,
   onCloseIconTrigger,
   status,
@@ -59,12 +59,12 @@ export const BaseTag: FC<BaseTagProps> = ({
     <Tag.Root
       variant={variant}
       colorPalette={colorPalette}
-      _disabled={{ background: "gray.300", cursor: "not-allowed" }}
+      _disabled={{ background: 'gray.300', cursor: 'not-allowed' }}
       px={2}
       py={1}
       {...props}
     >
-      {iconPosition === "start" && (
+      {iconPosition === 'start' && (
         <>
           {renderedIcon ? (
             <Tag.StartElement>{renderedIcon}</Tag.StartElement>
@@ -75,10 +75,8 @@ export const BaseTag: FC<BaseTagProps> = ({
           ) : null}
         </>
       )}
-      <Tag.Label textTransform="capitalize">
-        {customLabel ?? resolvedLabel}
-      </Tag.Label>
-      {iconPosition === "end" && (
+      <Tag.Label textTransform="capitalize">{customLabel ?? resolvedLabel}</Tag.Label>
+      {iconPosition === 'end' && (
         <>
           {renderedIcon ? (
             <Tag.StartElement>{renderedIcon}</Tag.StartElement>

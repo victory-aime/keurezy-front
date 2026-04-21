@@ -1,2 +1,2 @@
-export * from "./constants";
-export * from "./rental-agreement.queries";
+export * from './constants';
+export * from './rental-agreement.queries';

@@ -1,9 +1,9 @@
-import React, { FC } from "react";
-import { useField, useFormikContext } from "formik";
-import { Field, Flex, Span, Text, Textarea } from "@chakra-ui/react";
-import { FormTextAreaProps } from "./interface/input";
-import { HiOutlineInformationCircle } from "react-icons/hi";
-import { useTranslation } from "react-i18next";
+import React, { FC } from 'react';
+import { useField, useFormikContext } from 'formik';
+import { Field, Flex, Span, Text, Textarea } from '@chakra-ui/react';
+import { FormTextAreaProps } from './interface/input';
+import { HiOutlineInformationCircle } from 'react-icons/hi';
+import { useTranslation } from 'react-i18next';
 
 const FormTextArea: FC<FormTextAreaProps> = ({
   required = false,
@@ -11,7 +11,7 @@ const FormTextArea: FC<FormTextAreaProps> = ({
   value,
   onChangeFunction,
   name,
-  placeholder = "",
+  placeholder = '',
   width,
   infoMessage,
   isReadOnly = false,
@@ -30,9 +30,7 @@ const FormTextArea: FC<FormTextAreaProps> = ({
 
   const [field, { touched, error }, helpers] = useField(fieldHookConfig);
   const { submitCount } = useFormikContext();
-  const isError = isReadOnly
-    ? !!error
-    : !!(error && (touched || submitCount > 0));
+  const isError = isReadOnly ? !!error : !!(error && (touched || submitCount > 0));
 
   const { setValue } = helpers;
 
@@ -40,15 +38,15 @@ const FormTextArea: FC<FormTextAreaProps> = ({
     <Field.Root id={name} invalid={isError}>
       {label && (
         <Field.Label
-          display={"flex"}
-          gap={"6px"}
-          justifyContent={"space-between"}
-          width={"full"}
-          fontSize={"14px"}
+          display={'flex'}
+          gap={'6px'}
+          justifyContent={'space-between'}
+          width={'full'}
+          fontSize={'14px'}
         >
-          <Flex gap={"6px"}>
+          <Flex gap={'6px'}>
             {t(label)}
-            {required && <Text color={"red"}> * </Text>}
+            {required && <Text color={'red'}> * </Text>}
           </Flex>
           {maxCharacters && (
             <Span color="fg.muted" textStyle="xs">
@@ -60,19 +58,19 @@ const FormTextArea: FC<FormTextAreaProps> = ({
       <Textarea
         {...field}
         //bg={"bg.muted"}
-        size={"xl"}
+        size={'xl'}
         autoresize={autoresize}
-        border={"1px solid"}
-        borderColor={isError ? "red.500" : "inherit"}
-        _focus={{ borderColor: isError ? "red.500" : "primary.500" }}
-        _placeholder={{ color: isError ? "red.500" : "gray.400" }}
+        border={'1px solid'}
+        borderColor={isError ? 'red.500' : 'inherit'}
+        _focus={{ borderColor: isError ? 'red.500' : 'primary.500' }}
+        _placeholder={{ color: isError ? 'red.500' : 'gray.400' }}
         placeholder={t(placeholder)}
-        fontSize={{ base: "16px", sm: "14px" }}
+        fontSize={{ base: '16px', sm: '14px' }}
         width={width}
         height={minHeight}
         p={3}
-        mt={"5px"}
-        borderRadius={"12px"}
+        mt={'5px'}
+        borderRadius={'12px'}
         value={value ?? field.value}
         onChange={(event) => {
           field.onChange(event);
@@ -88,18 +86,15 @@ const FormTextArea: FC<FormTextAreaProps> = ({
       />
       {infoMessage || helperMessage ? (
         <Flex p={1} gap={2}>
-          <HiOutlineInformationCircle
-            size={18}
-            color={isError ? "red" : "none"}
-          />
+          <HiOutlineInformationCircle size={18} color={isError ? 'red' : 'none'} />
           <Field.HelperText>
-            {infoMessage ? infoMessage : helperMessage ? null : ""}
+            {infoMessage ? infoMessage : helperMessage ? null : ''}
           </Field.HelperText>
         </Flex>
       ) : null}
       {isError && (
-        <Flex gap={1} mt={1} alignItems={"center"}>
-          <Field.ErrorIcon width={2.5} height={2.5} color={"red.500"} />
+        <Flex gap={1} mt={1} alignItems={'center'}>
+          <Field.ErrorIcon width={2.5} height={2.5} color={'red.500'} />
           <Field.ErrorText>{error}</Field.ErrorText>
         </Flex>
       )}

@@ -1,9 +1,9 @@
-import { Field, Flex, Text, Slider, Box } from "@chakra-ui/react";
-import { useField } from "formik";
-import { FC } from "react";
-import { DefaultProps } from "./interface/input";
-import { BaseFormatNumber } from "../format-number";
-import { Icons } from "../icons";
+import { Field, Flex, Text, Slider, Box } from '@chakra-ui/react';
+import { useField } from 'formik';
+import { FC } from 'react';
+import { DefaultProps } from './interface/input';
+import { BaseFormatNumber } from '../format-number';
+import { Icons } from '../icons';
 
 export const FormSlider: FC<DefaultProps> = ({
   name,
@@ -28,16 +28,12 @@ export const FormSlider: FC<DefaultProps> = ({
   return (
     <Field.Root {...rest} id={name} invalid={isError}>
       {label && (
-        <Field.Label
-          display={"flex"}
-          gap={"6px"}
-          fontSize={{ base: "16px", lg: "18px" }}
-        >
+        <Field.Label display={'flex'} gap={'6px'} fontSize={{ base: '16px', lg: '18px' }}>
           {label}
           {required ? (
-            <Text color={"red"}> * </Text>
+            <Text color={'red'}> * </Text>
           ) : isNumber ? (
-            <Flex ml={3} gap={2} alignItems={"center"}>
+            <Flex ml={3} gap={2} alignItems={'center'}>
               <BaseFormatNumber value={field?.value[0]} />
               -
               <BaseFormatNumber value={field?.value[1]} />
@@ -48,7 +44,7 @@ export const FormSlider: FC<DefaultProps> = ({
 
       <Slider.Root
         {...field}
-        width={"full"}
+        width={'full'}
         min={min}
         max={max}
         value={field.value}

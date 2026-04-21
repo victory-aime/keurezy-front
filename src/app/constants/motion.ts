@@ -1,6 +1,6 @@
-import { Box, Card, Flex, List, VStack } from "@chakra-ui/react";
-import { BaseTag } from "_components/custom";
-import { motion } from "framer-motion";
+import { Box, Card, Flex, List, VStack } from '@chakra-ui/react';
+import { BaseTag } from '_components/custom';
+import { motion } from 'framer-motion';
 
 export const MotionBox = motion.create(Box);
 export const MotionFlex = motion.create(Flex);

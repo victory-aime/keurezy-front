@@ -1,14 +1,14 @@
-"use client";
-import { AuthBoxContainer } from "./AuthBoxContainer";
-import { Formik, FormikValues } from "formik";
-import { VStack } from "@chakra-ui/react";
-import { BaseButton, FormTextInput } from "_components/custom";
-import { VALIDATION } from "_types/";
-import { useTranslation } from "react-i18next";
-import { useRouter } from "next/navigation";
-import { PasswordIndicator } from "_component/PasswordIndicator";
-import { APP_ROUTES } from "_config/routes";
-import { AuthModule } from "_store/state-management";
+'use client';
+import { AuthBoxContainer } from './AuthBoxContainer';
+import { Formik, FormikValues } from 'formik';
+import { VStack } from '@chakra-ui/react';
+import { BaseButton, FormTextInput } from '_components/custom';
+import { VALIDATION } from '_types/';
+import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/navigation';
+import { PasswordIndicator } from '_component/PasswordIndicator';
+import { APP_ROUTES } from '_config/routes';
+import { AuthModule } from '_store/state-management';
 
 export const ForgetPassword = ({ token }: { token: string }) => {
   const { t } = useTranslation();
@@ -37,36 +37,36 @@ export const ForgetPassword = ({ token }: { token: string }) => {
   };
 
   return (
-    <AuthBoxContainer title={t("FORM.RESET_PASSWORD")}>
+    <AuthBoxContainer title={t('FORM.RESET_PASSWORD')}>
       <Formik
-        initialValues={{ confirmPassword: "", newPassword: "" }}
+        initialValues={{ confirmPassword: '', newPassword: '' }}
         onSubmit={resetPassword}
         validationSchema={VALIDATION.AUTH.resetPasswordValidationSchema}
       >
         {({ handleSubmit, isValid, values }) => (
           <VStack gap={4}>
             <FormTextInput
-              name={"newPassword"}
-              label={"PROFILE.NEW_PASSWORD"}
-              type={"password"}
-              placeholder={"PROFILE.NEW_PASSWORD"}
+              name={'newPassword'}
+              label={'PROFILE.NEW_PASSWORD'}
+              type={'password'}
+              placeholder={'PROFILE.NEW_PASSWORD'}
             />
             <FormTextInput
-              name={"confirmPassword"}
-              type={"password"}
-              label={"PROFILE.CONFIRM_NEW_PASSWORD"}
-              placeholder={"PROFILE.CONFIRM_NEW_PASSWORD"}
+              name={'confirmPassword'}
+              type={'password'}
+              label={'PROFILE.CONFIRM_NEW_PASSWORD'}
+              placeholder={'PROFILE.CONFIRM_NEW_PASSWORD'}
             />
             <PasswordIndicator password={values.newPassword} />
 
             <BaseButton
-              width={"full"}
+              width={'full'}
               onClick={() => handleSubmit()}
               mt={2}
               isLoading={isLoading}
               isDisabled={!isValid || !isValidPassword(values?.newPassword)}
             >
-              {t("COMMON.VALIDATE")}
+              {t('COMMON.VALIDATE')}
             </BaseButton>
           </VStack>
         )}

@@ -1,32 +1,30 @@
-import { ENUM } from "_types/*";
-import { variantColorType } from "../button";
-import { ColorPalette } from "@chakra-ui/react";
-import { Icons } from "../icons";
+import { ENUM } from '_types/*';
+import { variantColorType } from '../button';
+import { ColorPalette } from '@chakra-ui/react';
+import { Icons } from '../icons';
 
 const STATUS_META = {
-  ACTIVE: "success",
-  AVAILABLE: "success",
-  ACCEPTED: "success",
-  INACTIVE: "danger",
-  CLOSE: "danger",
-  RENTED: "danger",
-  REJECTED: "danger",
-  CANCELLED: "danger",
-  PENDING: "warning",
-  UNAVAILABLE: "warning",
-  MAINTENANCE: "info",
-  CURRENTLY_ON_SALE: "info",
-  SOLD: "warning",
-  EXPIRED: "info",
+  ACTIVE: 'success',
+  AVAILABLE: 'success',
+  ACCEPTED: 'success',
+  INACTIVE: 'danger',
+  CLOSE: 'danger',
+  RENTED: 'danger',
+  REJECTED: 'danger',
+  CANCELLED: 'danger',
+  PENDING: 'warning',
+  UNAVAILABLE: 'warning',
+  MAINTENANCE: 'info',
+  CURRENTLY_ON_SALE: 'info',
+  SOLD: 'warning',
+  EXPIRED: 'info',
 } as const satisfies Partial<Record<ENUM.COMMON.Status, variantColorType>>;
 
-const VARIANT_CONFIG: Partial<
-  Record<variantColorType, { colorPalette: ColorPalette }>
-> = {
-  success: { colorPalette: "green" },
-  danger: { colorPalette: "red" },
-  warning: { colorPalette: "orange" },
-  info: { colorPalette: "blue" },
+const VARIANT_CONFIG: Partial<Record<variantColorType, { colorPalette: ColorPalette }>> = {
+  success: { colorPalette: 'green' },
+  danger: { colorPalette: 'red' },
+  warning: { colorPalette: 'orange' },
+  info: { colorPalette: 'blue' },
 };
 
 const STATUS_ICONS: Partial<Record<ENUM.COMMON.Status, React.ElementType>> = {

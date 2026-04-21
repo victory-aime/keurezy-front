@@ -1,5 +1,5 @@
-"use client";
-import { Flex } from "@chakra-ui/react";
+'use client';
+import { Flex } from '@chakra-ui/react';
 import {
   BaseContainer,
   BaseTag,
@@ -7,25 +7,22 @@ import {
   ColumnsDataTable,
   DataTableContainer,
   Icons,
-} from "_components/custom";
-import { Avatar } from "_components/ui/avatar";
-import {
-  RentalAgreementModule,
-  ApplicationModule,
-  UserModule,
-} from "_store/state-management";
-import { CONSTANTS, ENUM, MODELS } from "_types/*";
-import { useMemo, useState } from "react";
-import { formatDisplayDate } from "rise-core-frontend";
-import { ApplicationStatsCard } from "./ApplicationStatsCard";
-import { ApplicationModal } from "./ApplicationModal";
+} from '_components/custom';
+import { Avatar } from '_components/ui/avatar';
+import { RentalAgreementModule, ApplicationModule, UserModule } from '_store/state-management';
+import { CONSTANTS, ENUM, MODELS } from '_types/*';
+import { useMemo, useState } from 'react';
+import { formatDisplayDate } from 'rise-core-frontend';
+import { ApplicationStatsCard } from './ApplicationStatsCard';
+import { ApplicationModal } from './ApplicationModal';
 
 export const ApplicationList = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [enabled, setEnabled] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedValues, setSelectedValues] =
-    useState<MODELS.IApplicationAgency>({} as MODELS.IApplicationAgency);
+  const [selectedValues, setSelectedValues] = useState<MODELS.IApplicationAgency>(
+    {} as MODELS.IApplicationAgency,
+  );
 
   const { data: user } = UserModule.getUserInfo({
     queryOptions: { enabled: false },
@@ -73,13 +70,11 @@ export const ApplicationList = () => {
     });
 
   const pendingRequestCountForSelected = useMemo(() => {
-    if (!agencyApplicationList?.content || !selectedValues?.property?.id)
-      return 0;
+    if (!agencyApplicationList?.content || !selectedValues?.property?.id) return 0;
 
     return agencyApplicationList?.content.filter(
       (r) =>
-        r.property?.id === selectedValues.property.id &&
-        r.status === ENUM.COMMON.Status.PENDING,
+        r.property?.id === selectedValues.property.id && r.status === ENUM.COMMON.Status.PENDING,
     ).length;
   }, [agencyApplicationList, selectedValues]);
 
@@ -105,28 +100,28 @@ export const ApplicationList = () => {
 
   const rentalColumns: ColumnsDataTable[] = [
     {
-      header: "ID",
-      accessor: "id",
+      header: 'ID',
+      accessor: 'id',
       cell: (value) => <BaseText truncate>{value?.slice(0, 8)}</BaseText>,
     },
     {
-      header: "Candidat",
-      accessor: "tenant",
+      header: 'Candidat',
+      accessor: 'tenant',
       cell: (value: { name: string }) => {
         return (
-          <Flex alignItems={"center"} gap={2} textTransform={"capitalize"}>
-            <Avatar name={value.name} bgColor={"primary.100"} />
+          <Flex alignItems={'center'} gap={2} textTransform={'capitalize'}>
+            <Avatar name={value.name} bgColor={'primary.100'} />
             {value?.name}
           </Flex>
         );
       },
     },
     {
-      header: "Bien concerné",
-      accessor: "property",
+      header: 'Bien concerné',
+      accessor: 'property',
       cell: (value: { title: string }) => {
         return (
-          <Flex alignItems={"center"} gap={2}>
+          <Flex alignItems={'center'} gap={2}>
             <Icons.RiBuildingLine />
             {value?.title}
           </Flex>
@@ -134,23 +129,23 @@ export const ApplicationList = () => {
       },
     },
     {
-      header: "Date de candidature",
-      accessor: "createdAt",
+      header: 'Date de candidature',
+      accessor: 'createdAt',
       cell: (date: string) => {
         return <BaseText>{formatDisplayDate(date)}</BaseText>;
       },
     },
     {
-      header: "Status",
-      accessor: "status",
+      header: 'Status',
+      accessor: 'status',
       cell: (status) => <BaseTag status={status} />,
     },
     {
-      header: "Actions",
-      accessor: "actions",
+      header: 'Actions',
+      accessor: 'actions',
       actions: [
         {
-          name: "view",
+          name: 'view',
           handleClick(data) {
             setSelectedValues(data);
             setOpen(true);
@@ -166,10 +161,10 @@ export const ApplicationList = () => {
 
   return (
     <BaseContainer
-      title={"Candidatures"}
-      border={"none"}
+      title={'Candidatures'}
+      border={'none'}
       loader={agencyApplicationLoad}
-      description={"Gérez les demandes de location sur vos biens"}
+      description={'Gérez les demandes de location sur vos biens'}
       withActionButtons
       actionsButtonProps={{
         isEmailVerified: user?.emailVerified,

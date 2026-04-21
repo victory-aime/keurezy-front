@@ -16,9 +16,9 @@
  *  - `itHasActiveChildLink(links?: subItems): boolean` : indique si un des sous-liens est actif.
  *  - `pathname: string` : le chemin d'URL actuel.
  */
-import { usePathname } from "next/navigation";
-import { subItems } from "../types";
-import { APP_ROUTES } from "_config/routes";
+import { usePathname } from 'next/navigation';
+import { subItems } from '../types';
+import { APP_ROUTES } from '_config/routes';
 
 export const useIsActive = () => {
   const pathname = usePathname();

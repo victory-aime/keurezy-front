@@ -1,4 +1,4 @@
-import { QUERIES } from "rise-core-frontend";
+import { QUERIES } from 'rise-core-frontend';
 
 export const queryClient = QUERIES.createQueryClient({
   defaultOptions: {

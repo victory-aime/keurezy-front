@@ -1,8 +1,8 @@
-"use client";
-import { BaseTabs, Icons } from "_components/custom";
-import { NotificationsModule, UserModule } from "_store/state-management";
-import { useMemo } from "react";
-import { RenderNotifications } from "./RenderNotifications";
+'use client';
+import { BaseTabs, Icons } from '_components/custom';
+import { NotificationsModule, UserModule } from '_store/state-management';
+import { useMemo } from 'react';
+import { RenderNotifications } from './RenderNotifications';
 
 export const NotificationsList = () => {
   const { data: user } = UserModule.getUserInfo({
@@ -18,14 +18,13 @@ export const NotificationsList = () => {
     queryOptions: { enabled: false },
   });
 
-  const { mutateAsync: readAll, isPending } =
-    NotificationsModule.readAllNotificationsMutation({
-      mutationOptions: {
-        onSuccess: async () => {
-          await refetchNotificationList();
-        },
+  const { mutateAsync: readAll, isPending } = NotificationsModule.readAllNotificationsMutation({
+    mutationOptions: {
+      onSuccess: async () => {
+        await refetchNotificationList();
       },
-    });
+    },
+  });
 
   const onReadAll = async () => {
     await readAll({ params: user?.id });
@@ -47,7 +46,7 @@ export const NotificationsList = () => {
       withActionButtons
       actionsButtonProps={{
         withGradient: false,
-        validateTitle: "Marque tout comme lues",
+        validateTitle: 'Marque tout comme lues',
         isEmailVerified: user?.emailVerified,
         validatePermission: unreadRequests.length > 0,
         icon: <Icons.DoubleCheck />,
@@ -55,7 +54,7 @@ export const NotificationsList = () => {
           await onReadAll();
         },
       }}
-      width={"full"}
+      width={'full'}
       items={[
         {
           tabIndex: 0,

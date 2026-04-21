@@ -1,4 +1,4 @@
-import { PropertyForm } from "../components/AppartForm";
+import { PropertyForm } from '../components/AppartForm';
 
 export default async function CreateProperty({
   searchParams,

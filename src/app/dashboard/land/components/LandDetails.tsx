@@ -1,4 +1,4 @@
-import { Flex, Box, Stack, Separator, VStack, HStack } from "@chakra-ui/react";
+import { Flex, Box, Stack, Separator, VStack, HStack } from '@chakra-ui/react';
 import {
   BaseButton,
   BaseDrawer,
@@ -9,27 +9,21 @@ import {
   CustomSkeletonLoader,
   Icons,
   ModalOpenProps,
-} from "_components/custom";
-import { FormCard } from "../../components/FormCard";
-import { formatDisplayDate } from "rise-core-frontend";
-import { CONSTANTS, MODELS } from "_types/*";
+} from '_components/custom';
+import { FormCard } from '../../components/FormCard';
+import { formatDisplayDate } from 'rise-core-frontend';
+import { CONSTANTS, MODELS } from '_types/*';
 
 interface LandDetail extends ModalOpenProps {
   data: MODELS.LandResponseDto | null;
 }
 
-export const LandDetails = ({
-  isOpen,
-  onChange,
-  data,
-  isLoading,
-  callback,
-}: LandDetail) => {
+export const LandDetails = ({ isOpen, onChange, data, isLoading, callback }: LandDetail) => {
   return (
     <BaseDrawer
-      title={"Detail du Terrain"}
-      description={" Visualisation des informations du Terrain"}
-      size={"md"}
+      title={'Detail du Terrain'}
+      description={' Visualisation des informations du Terrain'}
+      size={'md'}
       icon={<Icons.RiBuildingLine />}
       onChange={onChange}
       isOpen={isOpen}
@@ -37,60 +31,44 @@ export const LandDetails = ({
     >
       <Box
         borderLeftWidth={2}
-        boxShadow={"sm"}
-        borderRadius={"lg"}
-        borderColor={"primary.500"}
+        boxShadow={'sm'}
+        borderRadius={'lg'}
+        borderColor={'primary.500'}
         p={4}
         mb={4}
       >
         {isLoading ? (
-          <Flex gap={2} justifyContent={"space-between"}>
+          <Flex gap={2} justifyContent={'space-between'}>
             <HStack gap={2}>
-              <CustomSkeletonLoader
-                type="BUTTON"
-                colorButton="primary"
-                width={"40px"}
-              />
+              <CustomSkeletonLoader type="BUTTON" colorButton="primary" width={'40px'} />
               <CustomSkeletonLoader type="TEXT" numberOfLines={2} />
             </HStack>
-            <CustomSkeletonLoader
-              type="BUTTON"
-              colorButton="primary"
-              width={"110px"}
-            />
+            <CustomSkeletonLoader type="BUTTON" colorButton="primary" width={'110px'} />
           </Flex>
         ) : (
-          <Flex alignItems={"center"} justifyContent={"space-between"} gap={5}>
+          <Flex alignItems={'center'} justifyContent={'space-between'} gap={5}>
             <HStack>
               <BaseIcon>
                 <Icons.RiBuildingLine />
               </BaseIcon>
               <Stack gap={0}>
                 <BaseText>{data?.title}</BaseText>
-                <BaseText
-                  textTransform={"capitalize"}
-                  fontSize={"sm"}
-                  color={"gray.500"}
-                >
+                <BaseText textTransform={'capitalize'} fontSize={'sm'} color={'gray.500'}>
                   {data?.city},{data?.address},{data?.district}
                 </BaseText>
               </Stack>
             </HStack>
-            <BaseButton
-              colorType="danger"
-              variant={"outline"}
-              onClick={() => callback?.()}
-            >
+            <BaseButton colorType="danger" variant={'outline'} onClick={() => callback?.()}>
               Supprimer
             </BaseButton>
           </Flex>
         )}
       </Box>
-      <FormCard title="" isLoading={isLoading}>
-        <VStack align="stretch" gap={0} width={"full"}>
+      <FormCard title="" loader={isLoading}>
+        <VStack align="stretch" gap={0} width={'full'}>
           <Flex py={2} justify="space-between">
             <BaseText color="gray.500">Prpriétaire</BaseText>
-            <BaseText>{data?.landOwner ?? "N/A"}</BaseText>
+            <BaseText>{data?.landOwner ?? 'N/A'}</BaseText>
           </Flex>
           <Separator />
           <Flex py={2} justify="space-between">
@@ -113,11 +91,9 @@ export const LandDetails = ({
             <BaseText color="gray.500">Mode de paiement</BaseText>
             <BaseTag
               label={
-                CONSTANTS.landPaymentTypes.find(
-                  (type) => type.value === data?.paymentType,
-                )?.label
+                CONSTANTS.landPaymentTypes.find((type) => type.value === data?.paymentType)?.label
               }
-              color={"blue"}
+              color={'blue'}
               icon={<Icons.Payment />}
             />
           </Flex>

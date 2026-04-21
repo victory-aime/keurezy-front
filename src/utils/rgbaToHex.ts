@@ -4,7 +4,5 @@ export function rgbaToHex(rgba: string) {
 
   const [r, g, b] = result.map(Number);
 
-  return (
-    "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("")
-  ).toUpperCase();
+  return ('#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('')).toUpperCase();
 }

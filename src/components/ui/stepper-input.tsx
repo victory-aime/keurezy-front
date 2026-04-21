@@ -1,6 +1,6 @@
-import { HStack, IconButton, NumberInput } from "@chakra-ui/react";
-import * as React from "react";
-import { LuMinus, LuPlus } from "react-icons/lu";
+import { HStack, IconButton, NumberInput } from '@chakra-ui/react';
+import * as React from 'react';
+import { LuMinus, LuPlus } from 'react-icons/lu';
 
 export interface StepperInputProps extends NumberInput.RootProps {
   label?: React.ReactNode;
@@ -22,33 +22,26 @@ export const StepperInput = React.forwardRef<HTMLDivElement, StepperInputProps>(
   },
 );
 
-const DecrementTrigger = React.forwardRef<
-  HTMLButtonElement,
-  NumberInput.DecrementTriggerProps
->(function DecrementTrigger(props, ref) {
-  return (
-    <NumberInput.DecrementTrigger {...props} asChild ref={ref}>
-      <IconButton variant="outline" size="sm" bg={"red.500"} color={"white"}>
-        <LuMinus />
-      </IconButton>
-    </NumberInput.DecrementTrigger>
-  );
-});
+const DecrementTrigger = React.forwardRef<HTMLButtonElement, NumberInput.DecrementTriggerProps>(
+  function DecrementTrigger(props, ref) {
+    return (
+      <NumberInput.DecrementTrigger {...props} asChild ref={ref}>
+        <IconButton variant="outline" size="sm" bg={'red.500'} color={'white'}>
+          <LuMinus />
+        </IconButton>
+      </NumberInput.DecrementTrigger>
+    );
+  },
+);
 
-const IncrementTrigger = React.forwardRef<
-  HTMLButtonElement,
-  NumberInput.IncrementTriggerProps
->(function IncrementTrigger(props, ref) {
-  return (
-    <NumberInput.IncrementTrigger {...props} asChild ref={ref}>
-      <IconButton
-        variant="outline"
-        size="sm"
-        bg={"primary.500"}
-        color={"white"}
-      >
-        <LuPlus />
-      </IconButton>
-    </NumberInput.IncrementTrigger>
-  );
-});
+const IncrementTrigger = React.forwardRef<HTMLButtonElement, NumberInput.IncrementTriggerProps>(
+  function IncrementTrigger(props, ref) {
+    return (
+      <NumberInput.IncrementTrigger {...props} asChild ref={ref}>
+        <IconButton variant="outline" size="sm" bg={'primary.500'} color={'white'}>
+          <LuPlus />
+        </IconButton>
+      </NumberInput.IncrementTrigger>
+    );
+  },
+);

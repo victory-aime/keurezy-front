@@ -1,19 +1,10 @@
-import {
-  Box,
-  Circle,
-  Flex,
-  Float,
-  Menu,
-  Portal,
-  Separator,
-  VStack,
-} from "@chakra-ui/react";
-import { BaseStatus, BaseText, TextVariant } from "_components/custom";
-import { ENUM } from "_types/index";
-import { FC } from "react";
-import { CiBellOn, CiBellOff } from "react-icons/ci";
-import { formatCreatedAt } from "rise-core-frontend";
-import { VariablesColors } from "_theme/variables";
+import { Box, Circle, Flex, Float, Menu, Portal, Separator, VStack } from '@chakra-ui/react';
+import { BaseStatus, BaseText, TextVariant } from '_components/custom';
+import { ENUM } from '_types/index';
+import { FC } from 'react';
+import { CiBellOn, CiBellOff } from 'react-icons/ci';
+import { formatCreatedAt } from 'rise-core-frontend';
+import { VariablesColors } from '_theme/variables';
 
 interface INotification {
   notification: {
@@ -32,20 +23,16 @@ interface INotification {
 export const Notification: FC<INotification> = ({ notification }) => {
   return (
     <Menu.Root
-      positioning={{ strategy: "fixed", hideWhenDetached: true }}
-      size={"md"}
-      variant={"subtle"}
+      positioning={{ strategy: 'fixed', hideWhenDetached: true }}
+      size={'md'}
+      variant={'subtle'}
     >
       <Menu.Trigger asChild>
-        <Flex
-          position="relative"
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <CiBellOn size={"24px"} />
+        <Flex position="relative" alignItems={'center'} justifyContent={'center'}>
+          <CiBellOn size={'24px'} />
           <Float>
             <Circle size="5" bg="red" color="white">
-              <BaseText variant={TextVariant.XS} color={"white"}>
+              <BaseText variant={TextVariant.XS} color={'white'}>
                 {notification.length}
               </BaseText>
             </Circle>
@@ -56,7 +43,7 @@ export const Notification: FC<INotification> = ({ notification }) => {
         <Menu.Positioner>
           <Menu.Content p={3} minWidth="500px">
             <Box mb={2}>
-              <Flex justifyContent={"space-between"}>
+              <Flex justifyContent={'space-between'}>
                 <BaseText>Notifications</BaseText>
                 <BaseText>Voir tout</BaseText>
               </Flex>
@@ -64,19 +51,15 @@ export const Notification: FC<INotification> = ({ notification }) => {
             <Separator mb={4} />
             {notification.map((data, index) => (
               <Menu.Item key={index} p={0} value={data?.message}>
-                <Box key={index} mb={2} width={"full"} p={2}>
-                  <Flex justifyContent={"space-between"}>
+                <Box key={index} mb={2} width={'full'} p={2}>
+                  <Flex justifyContent={'space-between'}>
                     <BaseText>{data?.title}</BaseText>
                     <BaseStatus status={data?.type} />
                   </Flex>
-                  <BaseText maxW={"400px"} truncate lineClamp={2}>
+                  <BaseText maxW={'400px'} truncate lineClamp={2}>
                     {data?.message}
                   </BaseText>
-                  <BaseText
-                    variant={TextVariant.XS}
-                    color={"gary.600"}
-                    mt={"2px"}
-                  >
+                  <BaseText variant={TextVariant.XS} color={'gary.600'} mt={'2px'}>
                     {formatCreatedAt(data?.createdAt)}
                   </BaseText>
                 </Box>

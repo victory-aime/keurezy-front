@@ -1,5 +1,5 @@
-import { BaseApi } from "rise-core-frontend";
-import { MODELS } from "_types/index";
+import { BaseApi } from 'rise-core-frontend';
+import { MODELS } from '_types/index';
 
 /**
  * NotificationsService provides methods for handling Notifications-related operations

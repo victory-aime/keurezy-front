@@ -1,10 +1,10 @@
-import { AuthContextProvider } from "_context/auth-context";
-import { headers } from "next/headers";
-import { Layout } from "./Layout/Layout";
-import { SessionRefreshProvider } from "_context/SessionRefresh-context";
-import { UserProvider } from "_context/user-context";
-import { safeGetServerSession } from "_hooks/get-server-session";
-import { DynamicThemeProvider } from "_context/theme-context";
+import { AuthContextProvider } from '_context/auth-context';
+import { headers } from 'next/headers';
+import { Layout } from './Layout/Layout';
+import { SessionRefreshProvider } from '_context/SessionRefresh-context';
+import { UserProvider } from '_context/user-context';
+import { safeGetServerSession } from '_hooks/get-server-session';
+import { DynamicThemeProvider } from '_context/theme-context';
 
 export default async function DashboardLayout({
   children,

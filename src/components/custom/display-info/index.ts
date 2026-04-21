@@ -1,1 +1,1 @@
-export * from "./BaseDisplayInfoByColumns";
+export * from './BaseDisplayInfoByColumns';

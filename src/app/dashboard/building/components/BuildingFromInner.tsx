@@ -1,7 +1,7 @@
 // Extrait — LandForm.tsx (partie modifiée uniquement)
 // Remplace le onClick de ActionsButton par validateAndSubmit
 
-import { VStack, Flex, HStack } from "@chakra-ui/react";
+import { VStack, Flex, HStack } from '@chakra-ui/react';
 import {
   FormTextInput,
   FormSelect,
@@ -10,14 +10,14 @@ import {
   BaseText,
   ActionsButton,
   FormTextArea,
-} from "_components/custom";
-import { cityList } from "_constants/city";
-import { useFormikValidationToast } from "_hooks/useFormikValidationToast";
-import { useRouter } from "next/navigation";
-import { FormCard } from "../../components/FormCard";
-import { DASHBOARD_ROUTES } from "../../routes";
-import { buildingStatusList, getLandsList } from "../constants/building";
-import { MODELS } from "_types/*";
+} from '_components/custom';
+import { cityList } from '_constants/city';
+import { useFormikValidationToast } from '_hooks/useFormikValidationToast';
+import { useRouter } from 'next/navigation';
+import { FormCard } from '../../components/FormCard';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { buildingStatusList, getLandsList } from '../constants/building';
+import { MODELS } from '_types/*';
 
 // ─── Inner form (accède au contexte Formik) ──────────────────────────────────
 export const BuildingFormInner = ({
@@ -37,14 +37,14 @@ export const BuildingFormInner = ({
 }) => {
   const router = useRouter();
   const { validateAndSubmit } = useFormikValidationToast();
-  const { handleSubmit, setFieldValue } = require("formik").useFormikContext();
+  const { handleSubmit, setFieldValue } = require('formik').useFormikContext();
 
   return (
     <>
-      <VStack gap={3} alignItems={"flex-end"} width={"full"}>
-        <Flex width={"full"} gap={4} flexDir={{ base: "column", sm: "row" }}>
+      <VStack gap={3} alignItems={'flex-end'} width={'full'}>
+        <Flex width={'full'} gap={4} flexDir={{ base: 'column', sm: 'row' }}>
           <FormCard title="Informations principales">
-            <VStack width={"full"} mt={4} gap={4}>
+            <VStack width={'full'} mt={4} gap={4}>
               <FormTextInput
                 required
                 name="name"
@@ -74,18 +74,9 @@ export const BuildingFormInner = ({
           </FormCard>
 
           <FormCard title="Informations secondaires">
-            <VStack width={"full"} mt={4} gap={4}>
-              <FormTextInput
-                name="district"
-                label="Quartier"
-                placeholder="Grand Dakar"
-              />
-              <FormTextInput
-                type="number"
-                name="floors"
-                label="Nombre d'étages"
-                min={1}
-              />
+            <VStack width={'full'} mt={4} gap={4}>
+              <FormTextInput name="district" label="Quartier" placeholder="Grand Dakar" />
+              <FormTextInput type="number" name="floors" label="Nombre d'étages" min={1} />
               <FormSelect
                 name="landId"
                 label="Terrain"
@@ -104,13 +95,11 @@ export const BuildingFormInner = ({
               />
               <BaseUploadMultipleFiles
                 initialImageUrls={documentsURL}
-                getFilesUploaded={(files) => setFieldValue("documents", files)}
+                getFilesUploaded={(files) => setFieldValue('documents', files)}
                 label={
-                  <Flex fontSize={"sm"} alignItems={"center"} gap={2}>
+                  <Flex fontSize={'sm'} alignItems={'center'} gap={2}>
                     <Icons.Paper />
-                    <BaseText fontSize={"sm"}>
-                      Documents(images, pdf, etc...)
-                    </BaseText>
+                    <BaseText fontSize={'sm'}>Documents(images, pdf, etc...)</BaseText>
                   </Flex>
                 }
               />
@@ -126,7 +115,7 @@ export const BuildingFormInner = ({
         />
 
         <ActionsButton
-          validateTitle={buildingId ? "Modifier" : "Ajouter"}
+          validateTitle={buildingId ? 'Modifier' : 'Ajouter'}
           isLoading={isCreateBuilding || isUpdateBuilding}
           onCancel={() => router.push(DASHBOARD_ROUTES.BUILDING.LIST)}
           onClick={() => validateAndSubmit(handleSubmit)}

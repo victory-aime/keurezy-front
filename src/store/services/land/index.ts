@@ -1,1 +1,1 @@
-export * from "./land.service";
+export * from './land.service';

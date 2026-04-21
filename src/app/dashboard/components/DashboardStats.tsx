@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Flex, For, SimpleGrid, Span, VStack } from "@chakra-ui/react";
+import { Flex, For, SimpleGrid, Span, VStack } from '@chakra-ui/react';
 import {
   BaseContainer,
   BaseIcon,
@@ -8,22 +8,22 @@ import {
   BaseStatsProps,
   BaseText,
   Icons,
-} from "_components/custom";
+} from '_components/custom';
 import {
   NotificationsModule,
   PropertyModule,
   RentalAgreementModule,
-} from "_store/state-management";
-import { ENUM } from "_types/*";
-import { Colors } from "_theme/colors";
-import { OccupationRateByType } from "./OccupationRateByType";
-import { MonthlyRevenueAreaChart } from "./MonthlyRevenueAreaChart";
-import { useUserContext } from "_context/user-context";
-import { useMemo } from "react";
-import { DASHBOARD_ROUTES } from "../routes";
-import { useRouter } from "next/navigation";
-import { useAppTheme } from "_context/theme-context";
-import { useThemeColors } from "_theme/useThemeColors";
+} from '_store/state-management';
+import { ENUM } from '_types/*';
+import { Colors } from '_theme/colors';
+import { OccupationRateByType } from './OccupationRateByType';
+import { MonthlyRevenueAreaChart } from './MonthlyRevenueAreaChart';
+import { useUserContext } from '_context/user-context';
+import { useMemo } from 'react';
+import { DASHBOARD_ROUTES } from '../routes';
+import { useRouter } from 'next/navigation';
+import { useAppTheme } from '_context/theme-context';
+import { useThemeColors } from '_theme/useThemeColors';
 
 export const DashboardStats = () => {
   const { push } = useRouter();
@@ -82,77 +82,58 @@ export const DashboardStats = () => {
 
   const stats: BaseStatsProps[] = [
     {
-      title: "Total Propriétes",
+      title: 'Total Propriétes',
       value: allProperties?.content?.length ?? 0,
       icon: <Icons.RiBuildingLine />,
     },
     {
-      title: "Locataires Actifs",
+      title: 'Locataires Actifs',
       value:
         allRentalAgreement?.content?.filter(
           (rental) => rental?.status === ENUM.COMMON.Status.ACTIVE,
         ).length ?? 0,
       icon: <Icons.FaUsers />,
-      iconBgColor: "secondary.500",
+      iconBgColor: 'secondary.500',
     },
     {
-      title: "Revenues Mensuels",
+      title: 'Revenues Mensuels',
       value: revenues?.revenue ?? 0,
       isNumber: true,
       currency: ENUM.COMMON.Currency.XOF,
       icon: <Icons.Payment />,
-      iconBgColor: "tertiary.500",
+      iconBgColor: 'tertiary.500',
     },
   ];
   return (
     <BaseContainer
       title="Tableau de bord"
       description={
-        <BaseText fontSize={"lg"}>
+        <BaseText fontSize={'lg'}>
           Bievenue,
-          <Span
-            textTransform={"capitalize"}
-            color={"primary.500"}
-            fontWeight={"bold"}
-          >
+          <Span textTransform={'capitalize'} color={'primary.500'} fontWeight={'bold'}>
             {user?.name}
           </Span>
           . Voici un aperçu de votre portefeuille.
         </BaseText>
       }
-      border={"none"}
+      border={'none'}
     >
-      <SimpleGrid data-tour="kpis" columns={3} mt={10} width={"full"} gap={3}>
+      <SimpleGrid data-tour="kpis" columns={3} mt={10} width={'full'} gap={3}>
         <For each={stats}>
           {(stat, i) => (
             <Flex key={i}>
-              <BaseStats
-                key={i}
-                {...stat}
-                isLoading={propertiesLoad || rentalAgreementLoad}
-              />
+              <BaseStats key={i} {...stat} isLoading={propertiesLoad || rentalAgreementLoad} />
             </Flex>
           )}
         </For>
       </SimpleGrid>
 
-      <Flex
-        width={"full"}
-        gap={3}
-        flexDir={{ base: "column", sm: "row" }}
-        data-tour="charts"
-      >
-        <MonthlyRevenueAreaChart
-          data={monthlyRevenueData ?? []}
-          isLoading={monthlyRevenueLoad}
-        />
-        <OccupationRateByType
-          data={occupationRateData ?? []}
-          isLoading={occupationRateLoad}
-        />
+      <Flex width={'full'} gap={3} flexDir={{ base: 'column', sm: 'row' }} data-tour="charts">
+        <MonthlyRevenueAreaChart data={monthlyRevenueData ?? []} isLoading={monthlyRevenueLoad} />
+        <OccupationRateByType data={occupationRateData ?? []} isLoading={occupationRateLoad} />
       </Flex>
 
-      <Flex width={"full"} gap={4} flexDir={{ base: "column", sm: "row" }}>
+      <Flex width={'full'} gap={4} flexDir={{ base: 'column', sm: 'row' }}>
         {/* <BaseContainer title="Activite recente" data-tour="activity">
           <Stack mt={{ base: "0", sm: "30px" }} width={"full"}>
             <RenderNotifications
@@ -162,45 +143,41 @@ export const DashboardStats = () => {
             />
           </Stack>
         </BaseContainer> */}
-        <BaseContainer
-          data-tour="quick-actions"
-          height={"fit-content"}
-          title="Actions rapides"
-        >
+        <BaseContainer data-tour="quick-actions" height={'fit-content'} title="Actions rapides">
           <SimpleGrid
             columns={{ base: 1, sm: 2, md: 4 }}
-            width={"full"}
+            width={'full'}
             gap={3}
-            mt={{ base: "0", sm: "30px" }}
+            mt={{ base: '0', sm: '30px' }}
           >
             {[
               {
-                title: "Voir les terrains",
+                title: 'Voir les terrains',
                 link: DASHBOARD_ROUTES.LAND.LIST,
                 icon: Icons.Map,
                 color: vars.primary100,
-                borderColor: "primary.500",
+                borderColor: 'primary.500',
               },
               {
-                title: "Ajouter un bâtiment",
+                title: 'Ajouter un bâtiment',
                 link: DASHBOARD_ROUTES.BUILDING.ADD,
                 icon: Icons.RiBuildingLine,
-                color: "secondary.100",
-                borderColor: "secondary.500",
+                color: 'secondary.100',
+                borderColor: 'secondary.500',
               },
               {
-                title: "Voir les propriétés",
+                title: 'Voir les propriétés',
                 link: DASHBOARD_ROUTES.PROPERTIES.LIST,
                 icon: Icons.Home,
-                color: "orange.100",
-                borderColor: "orange.500",
+                color: 'orange.100',
+                borderColor: 'orange.500',
               },
               {
-                title: "Envoyer une invitation",
+                title: 'Envoyer une invitation',
                 link: DASHBOARD_ROUTES.INVITATIONS.ADD,
                 icon: Icons.SendMail,
-                color: "success.100",
-                borderColor: "success.500",
+                color: 'success.100',
+                borderColor: 'success.500',
               },
             ].map((item, i) => (
               <VStack
@@ -208,8 +185,8 @@ export const DashboardStats = () => {
                 bgColor={item.color}
                 borderWidth={1}
                 borderColor={item.borderColor}
-                cursor={"pointer"}
-                rounded={"lg"}
+                cursor={'pointer'}
+                rounded={'lg'}
                 p={4}
                 gap={1}
                 onClick={() => push(item.link)}
@@ -217,11 +194,7 @@ export const DashboardStats = () => {
                 <BaseIcon color={item.borderColor}>
                   <item.icon />
                 </BaseIcon>
-                <BaseText
-                  textAlign={"center"}
-                  textSizeAdjust={"auto"}
-                  color={"black"}
-                >
+                <BaseText textAlign={'center'} textSizeAdjust={'auto'} color={'black'}>
                   {item.title}
                 </BaseText>
               </VStack>

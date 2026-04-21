@@ -3,16 +3,16 @@ import {
   DatePickerRootProps,
   HTMLChakraProps,
   ListCollection,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import React, {
   ElementType,
   HTMLInputTypeAttribute,
   JSXElementConstructor,
   ReactElement,
   ReactNode,
-} from "react";
+} from 'react';
 
-interface TextInputProps extends HTMLChakraProps<"input"> {
+interface TextInputProps extends HTMLChakraProps<'input'> {
   name: string;
   label?: string;
   required?: boolean;
@@ -48,17 +48,13 @@ interface FullSelectProps {
   name: string;
   label?: string;
   listItems: ListCollection<unknown> | any;
-  setFieldValue: (
-    field: string,
-    value: any,
-    shouldValidate?: boolean,
-  ) => Promise<any>;
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => Promise<any>;
   placeholder?: string;
   isDisabled?: boolean;
   isMultiSelect?: boolean;
   onChangeFunc?: (data: any) => void;
   infoMessage?: string;
-  variant?: "outline" | "subtle";
+  variant?: 'outline' | 'subtle';
   validate?: any;
   required?: boolean;
   width?: string;
@@ -78,12 +74,12 @@ interface DefaultProps extends TextInputProps {
   slideIcon?: ElementType | undefined;
 }
 
-interface CheckBoxProps extends HTMLChakraProps<"label"> {
+interface CheckBoxProps extends HTMLChakraProps<'label'> {
   name: string;
   label?: string | React.ReactNode;
   validate?: any;
   itemsPerRow?: number;
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   isReadOnly?: boolean;
   items?: {
     name?: string;
@@ -91,7 +87,7 @@ interface CheckBoxProps extends HTMLChakraProps<"label"> {
   }[];
 }
 
-interface SwitchProps extends HTMLChakraProps<"switch"> {
+interface SwitchProps extends HTMLChakraProps<'switch'> {
   name: string;
   label?: string;
   validate?: any;
@@ -112,7 +108,7 @@ interface FormDatePickerFieldProps extends DatePickerRootProps {
   isDisabledWeekDates?: boolean;
   name: string;
   label?: string;
-  mode?: "single" | "range" | "multiple";
+  mode?: 'single' | 'range' | 'multiple';
   startMonth?: Date;
   endMonth?: Date;
 }
@@ -121,14 +117,14 @@ type DatePickerInputContainerProps = DatePickerInputProps & {
 };
 
 interface TimeInputProps extends TextInputProps {
-  variant?: "outline" | "subtle" | "plain";
+  variant?: 'outline' | 'subtle' | 'plain';
 }
 interface OtpInputProps extends TextInputProps {
   count?: number;
   attached?: boolean;
 }
 
-type countriesList = ["cg" | "fr" | "cd" | "sn"];
+type countriesList = ['cg' | 'fr' | 'cd' | 'sn'];
 
 interface PhoneInputProps extends TextInputProps {
   hideDropdown?: boolean;

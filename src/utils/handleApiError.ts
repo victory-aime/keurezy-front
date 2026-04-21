@@ -1,28 +1,25 @@
-import { BaseToast, ToastStatus } from "_components/custom/toast";
+import { BaseToast, ToastStatus } from '_components/custom/toast';
 
-export const handleApiError = (response: {
-  status: number;
-  message: string;
-}) => {
+export const handleApiError = (response: { status: number; message: string }) => {
   const statusCode = response?.status || 500;
   const defaultMessage =
-    "Une erreur de connexion est survenue. Veuillez vérifier votre réseau et réessayer.";
+    'Une erreur de connexion est survenue. Veuillez vérifier votre réseau et réessayer.';
 
-  let description = "";
+  let description = '';
   let toastStatus: ToastStatus = ToastStatus.ERROR;
-  const title = "Notification";
+  const title = 'Notification';
 
   switch (statusCode) {
     case 400:
       description =
         response?.message ||
-        "La requête envoyée est invalide. Veuillez vérifier les informations saisies.";
+        'La requête envoyée est invalide. Veuillez vérifier les informations saisies.';
       toastStatus = ToastStatus.WARNING;
       break;
     case 401:
       description =
         response?.message ||
-        "Votre session a expiré ou vos identifiants sont incorrects. Veuillez vous reconnecter.";
+        'Votre session a expiré ou vos identifiants sont incorrects. Veuillez vous reconnecter.';
       toastStatus = ToastStatus.ERROR;
       break;
     case 403:
@@ -34,7 +31,7 @@ export const handleApiError = (response: {
     case 404:
       description =
         response?.message ||
-        "La ressource demandée est introuvable. Elle a peut-être été déplacée ou supprimée.";
+        'La ressource demandée est introuvable. Elle a peut-être été déplacée ou supprimée.';
       toastStatus = ToastStatus.INFO;
       break;
     case 500:

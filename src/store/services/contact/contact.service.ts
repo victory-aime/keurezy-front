@@ -1,5 +1,5 @@
-import { BaseApi } from "rise-core-frontend";
-import { MODELS } from "_types/index";
+import { BaseApi } from 'rise-core-frontend';
+import { MODELS } from '_types/index';
 
 /**
  * ContactService provides methods for handling Contact-related operations
@@ -22,8 +22,7 @@ export class ContactService extends BaseApi {
 
   agencyChangeContactStatus(params: MODELS.IAgencyCommonParams) {
     return this.apiService.invoke(
-      this.applicationContext.getApiConfig().CONTACT
-        .AGENCY_CONTACT_UPDATE_STATUS,
+      this.applicationContext.getApiConfig().CONTACT.AGENCY_CONTACT_UPDATE_STATUS,
       {},
       { params },
     );

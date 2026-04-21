@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useAuthContext } from "_context/auth-context";
-import { useMemo } from "react";
-import { UserRole } from "../../types/enum";
+import { useAuthContext } from '_context/auth-context';
+import { useMemo } from 'react';
+import { UserRole } from '../../types/enum';
 
 interface IPermissionHooks {
   hasCategoryAccess: (category: string) => boolean;

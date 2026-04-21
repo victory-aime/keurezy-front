@@ -1,5 +1,5 @@
-"use client";
-import { VStack } from "@chakra-ui/react";
+'use client';
+import { VStack } from '@chakra-ui/react';
 import {
   BaseContainer,
   BaseTag,
@@ -8,20 +8,20 @@ import {
   ColumnsDataTable,
   DataTableContainer,
   ToastStatus,
-} from "_components/custom";
-import { useMemo, useState } from "react";
-import { BuildingFilter } from "./BuildingFilter";
-import { LandModule, BuildingModule } from "_store/state-management";
-import { useRouter } from "next/navigation";
-import { DASHBOARD_ROUTES } from "../../routes";
-import { CONSTANTS, MODELS } from "_types/*";
-import { BuildingDelete } from "./BuildingDelete";
-import { BuildingDetails } from "./BuildingDetail";
-import { FormikValues } from "formik";
-import { IuseExportData, PDFService } from "rise-core-frontend";
-import { useTranslation } from "react-i18next";
-import { BuildingStatsCard } from "./BuildingStats";
-import { useUserContext } from "_context/user-context";
+} from '_components/custom';
+import { useMemo, useState } from 'react';
+import { BuildingFilter } from './BuildingFilter';
+import { LandModule, BuildingModule } from '_store/state-management';
+import { useRouter } from 'next/navigation';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { CONSTANTS, MODELS } from '_types/*';
+import { BuildingDelete } from './BuildingDelete';
+import { BuildingDetails } from './BuildingDetail';
+import { FormikValues } from 'formik';
+import { IuseExportData, PDFService } from 'rise-core-frontend';
+import { useTranslation } from 'react-i18next';
+import { BuildingStatsCard } from './BuildingStats';
+import { useUserContext } from '_context/user-context';
 
 export const BuildingList = () => {
   const router = useRouter();
@@ -33,11 +33,8 @@ export const BuildingList = () => {
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
-  const [selectedValues, setSelectedValues] = useState<MODELS.IBuilding | null>(
-    null,
-  );
-  const [filterValues, setFilterValues] =
-    useState<MODELS.IBuildingFilter | null>(null);
+  const [selectedValues, setSelectedValues] = useState<MODELS.IBuilding | null>(null);
+  const [filterValues, setFilterValues] = useState<MODELS.IBuildingFilter | null>(null);
 
   const agencyId = currentUser?.agencyId;
 
@@ -84,26 +81,24 @@ export const BuildingList = () => {
     });
 
   const buildingColumns: ColumnsDataTable[] = [
-    { header: "Bâtiment", accessor: "name" },
+    { header: 'Bâtiment', accessor: 'name' },
     {
-      header: "Structure",
-      accessor: "fullObject",
+      header: 'Structure',
+      accessor: 'fullObject',
       cell: (value) => (
-        <VStack alignItems={"flex-start"} gap={0}>
+        <VStack alignItems={'flex-start'} gap={0}>
           <BaseText>{value?.floors} étages</BaseText>
-          <BaseText fontSize={"xs"}>
-            {value?.nombre_appartements ?? 0} apparts
-          </BaseText>
+          <BaseText fontSize={'xs'}>{value?.nombre_appartements ?? 0} apparts</BaseText>
         </VStack>
       ),
     },
     {
-      header: "adresse",
-      accessor: "fullObject",
+      header: 'adresse',
+      accessor: 'fullObject',
       cell: (value) => (
-        <VStack alignItems={"flex-start"} gap={0}>
+        <VStack alignItems={'flex-start'} gap={0}>
           <BaseText>{value?.address}</BaseText>
-          <BaseText fontSize={"xs"}>
+          <BaseText fontSize={'xs'}>
             {value?.city} ,{value?.district}
           </BaseText>
         </VStack>
@@ -115,31 +110,29 @@ export const BuildingList = () => {
     //   cell: (value) => <BaseFormatNumber value={value} />,
     // },
     {
-      header: "Status",
-      accessor: "status",
+      header: 'Status',
+      accessor: 'status',
       cell: (value) => <BaseTag status={value} />,
     },
     {
-      header: "Actions",
-      accessor: "actions",
+      header: 'Actions',
+      accessor: 'actions',
       actions: [
         {
-          name: "view",
+          name: 'view',
           handleClick(data) {
             setOpenDetails(true);
             setSelectedValues(data);
           },
         },
         {
-          name: "edit",
+          name: 'edit',
           handleClick(data) {
-            router.push(
-              `${DASHBOARD_ROUTES.BUILDING.ADD}?buildingId=${data?.id}`,
-            );
+            router.push(`${DASHBOARD_ROUTES.BUILDING.ADD}?buildingId=${data?.id}`);
           },
         },
         {
-          name: "delete",
+          name: 'delete',
           handleClick(data) {
             setOpenDelete(true);
             setSelectedValues(data);
@@ -175,9 +168,8 @@ export const BuildingList = () => {
   const handleExportPdf = async () => {
     if (allBuildings?.content?.length === 0) {
       return BaseToast({
-        title: "Export impossible",
-        description:
-          "Vous ne pouvez pas exporter la liste car vous ne disposer d'aucun bâtiment",
+        title: 'Export impossible',
+        description: "Vous ne pouvez pas exporter la liste car vous ne disposer d'aucun bâtiment",
         type: ToastStatus.INFO,
       });
     }
@@ -188,7 +180,7 @@ export const BuildingList = () => {
     }));
     await exportTableToPdf(
       allBuildings?.content as unknown as IuseExportData[],
-      "Liste des Bâtiments",
+      'Liste des Bâtiments',
       translatedColumns,
     );
   };
@@ -197,7 +189,7 @@ export const BuildingList = () => {
     <BaseContainer
       title="Gestion des Bâtiments"
       description="Gérez vos bâtiments avec efficacité"
-      border={"none"}
+      border={'none'}
       withActionButtons
       isFilterActive={toggleFilter}
       onToggleFilter={() => setToggleFilter(!toggleFilter)}
@@ -213,7 +205,7 @@ export const BuildingList = () => {
         />
       }
       actionsButtonProps={{
-        validateTitle: "Ajouter",
+        validateTitle: 'Ajouter',
         downloadTitle: `Exporter PDF (${allBuildings?.content?.length ?? 0})`,
         onClick() {
           router.push(DASHBOARD_ROUTES.BUILDING.ADD);
@@ -229,10 +221,7 @@ export const BuildingList = () => {
         },
       }}
     >
-      <BuildingStatsCard
-        buildings={allBuildings?.content ?? []}
-        isLoading={isBuildingLoad}
-      />
+      <BuildingStatsCard buildings={allBuildings?.content ?? []} isLoading={isBuildingLoad} />
 
       <DataTableContainer
         isLoading={isBuildingLoad}

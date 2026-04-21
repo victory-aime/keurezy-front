@@ -1,1 +1,1 @@
-export * from "./rental-agreement.service";
+export * from './rental-agreement.service';

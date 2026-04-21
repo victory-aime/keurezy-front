@@ -1,5 +1,5 @@
-import { StepsRootProps } from "@chakra-ui/react";
-import React, { ReactNode } from "react";
+import { StepsRootProps } from '@chakra-ui/react';
+import React, { ReactNode } from 'react';
 
 interface BaseStepperProps extends StepsRootProps {
   steps: {

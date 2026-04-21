@@ -1,22 +1,17 @@
-import { HStack, VStack } from "@chakra-ui/react";
+import { HStack, VStack } from '@chakra-ui/react';
 import {
   ActionsButton,
   FormSelect,
   FormTextInput,
   Icons,
   ModalOpenProps,
-} from "_components/custom";
-import { Formik } from "formik";
-import { MODELS } from "_types/*";
-import { useEffect, useState } from "react";
-import { cityList } from "_constants/city";
+} from '_components/custom';
+import { Formik } from 'formik';
+import { MODELS } from '_types/*';
+import { useEffect, useState } from 'react';
+import { cityList } from '_constants/city';
 
-export const LandFilter = ({
-  onChange,
-  isLoading,
-  callback = () => {},
-  data,
-}: ModalOpenProps) => {
+export const LandFilter = ({ onChange, isLoading, callback = () => {}, data }: ModalOpenProps) => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -33,18 +28,9 @@ export const LandFilter = ({
       onReset={onChange}
     >
       {({ setFieldValue, handleSubmit, resetForm }) => (
-        <VStack
-          width={"full"}
-          gap={4}
-          alignItems={"flex-end"}
-          justifyContent={"flex-end"}
-        >
-          <HStack width={"full"}>
-            <FormTextInput
-              name="title"
-              label="Nom"
-              placeholder="rechercher par nom"
-            />
+        <VStack width={'full'} gap={4} alignItems={'flex-end'} justifyContent={'flex-end'}>
+          <HStack width={'full'}>
+            <FormTextInput name="title" label="Nom" placeholder="rechercher par nom" />
             <FormSelect
               name="city"
               label="Ville"
@@ -52,26 +38,17 @@ export const LandFilter = ({
               listItems={cityList}
               setFieldValue={setFieldValue}
             />
-            <FormTextInput
-              name="district"
-              label="Quartier"
-              placeholder="rechercher par quartier"
-            />
-            <FormSelect
-              name="status"
-              label="Statut"
-              listItems={[]}
-              setFieldValue={setFieldValue}
-            />
+            <FormTextInput name="district" label="Quartier" placeholder="rechercher par quartier" />
+            <FormSelect name="status" label="Statut" listItems={[]} setFieldValue={setFieldValue} />
           </HStack>
           <ActionsButton
             onClick={() => handleSubmit()}
             onCancel={() => resetForm()}
             cancelShow={show}
-            cancelVariant={"outline"}
-            cancelTitle={"COMMON.CLEAR_FILTER"}
-            alignItems={"flex-end"}
-            justifyContent={"flex-end"}
+            cancelVariant={'outline'}
+            cancelTitle={'COMMON.CLEAR_FILTER'}
+            alignItems={'flex-end'}
+            justifyContent={'flex-end'}
             validateTitle="Appliquer les filtres"
             isLoading={isLoading}
             icon={<Icons.Search />}

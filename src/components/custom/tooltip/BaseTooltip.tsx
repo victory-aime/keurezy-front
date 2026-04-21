@@ -1,15 +1,15 @@
-import { Tooltip } from "_components/ui/tooltip";
-import { FC, useId } from "react";
-import { useTranslation } from "react-i18next";
-import { ToggleTip } from "_components/ui/toggle-tip";
-import { LuInfo } from "react-icons/lu";
-import { BaseTooltipProps } from "./interface/tooltip";
-import { VariablesColors } from "_theme/variables";
+import { Tooltip } from '_components/ui/tooltip';
+import { FC, useId } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ToggleTip } from '_components/ui/toggle-tip';
+import { LuInfo } from 'react-icons/lu';
+import { BaseTooltipProps } from './interface/tooltip';
+import { VariablesColors } from '_theme/variables';
 
 export const BaseTooltip: FC<BaseTooltipProps> = ({
   children,
-  message = "tooltip message",
-  placement = "top",
+  message = 'tooltip message',
+  placement = 'top',
   arrow,
   show,
 }) => {
@@ -17,9 +17,7 @@ export const BaseTooltip: FC<BaseTooltipProps> = ({
   const { t } = useTranslation();
 
   if (show && !children) {
-    console.warn(
-      'BaseTooltip: "children" prop is required when "show" is true.',
-    );
+    console.warn('BaseTooltip: "children" prop is required when "show" is true.');
     return null;
   }
 

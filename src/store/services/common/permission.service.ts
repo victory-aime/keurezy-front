@@ -1,4 +1,4 @@
-import { BaseApi } from "rise-core-frontend";
+import { BaseApi } from 'rise-core-frontend';
 
 export class PermissionService extends BaseApi {
   getAllPerms(agencyId: string) {

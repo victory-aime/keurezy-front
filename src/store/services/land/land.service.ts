@@ -1,5 +1,5 @@
-import { BaseApi } from "rise-core-frontend";
-import { MODELS } from "_types/index";
+import { BaseApi } from 'rise-core-frontend';
+import { MODELS } from '_types/index';
 
 /**
  * LandService provides methods for handling land-related operations
@@ -14,16 +14,10 @@ export class LandService extends BaseApi {
     );
   }
   create_land(data: MODELS.CreateLandDto | FormData) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().LAND.CREATE_LAND,
-      data,
-    );
+    return this.apiService.invoke(this.applicationContext.getApiConfig().LAND.CREATE_LAND, data);
   }
   update_land(data: MODELS.UpdateLandDto | FormData) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().LAND.UPDATE_LAND,
-      data,
-    );
+    return this.apiService.invoke(this.applicationContext.getApiConfig().LAND.UPDATE_LAND, data);
   }
   delete_land(data: any) {
     return this.apiService.invoke(

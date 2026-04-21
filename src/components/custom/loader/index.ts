@@ -1,3 +1,3 @@
-import { Loader, GlobalLoader } from "./Loader";
+import { Loader, GlobalLoader } from './Loader';
 
 export { Loader, GlobalLoader };

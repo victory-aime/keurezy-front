@@ -1,4 +1,4 @@
-import { EmailVerified } from "../components/EmailVerified";
+import { EmailVerified } from '../components/EmailVerified';
 
 export default async function EmailVerificationPage({
   searchParams,

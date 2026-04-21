@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { Center, Text, VStack } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
-import { ReactNode } from "react";
-import Image from "next/image";
-import { ASSETS } from "_assets/images";
-import { motion } from "framer-motion";
-import { MotionBox, MotionVStack } from "_constants/motion";
-import { useColorMode } from "_components/ui/color-mode";
-import { FloatSwitchColorMode } from "_components/custom";
+import { Center, Text, VStack } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import { ReactNode } from 'react';
+import Image from 'next/image';
+import { ASSETS } from '_assets/images';
+import { motion } from 'framer-motion';
+import { MotionBox, MotionVStack } from '_constants/motion';
+import { useColorMode } from '_components/ui/color-mode';
+import { FloatSwitchColorMode } from '_components/custom';
 
 export const AuthBoxContainer = ({
   children,
@@ -34,11 +34,11 @@ export const AuthBoxContainer = ({
       <MotionBox
         w="full"
         mt="5"
-        p={{ base: "4" }}
-        maxW={{ base: "100%", sm: "700px" }}
+        p={{ base: '4' }}
+        maxW={{ base: '100%', sm: '700px' }}
         initial={{ opacity: 0, y: 40, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
       >
         <MotionVStack
           alignItems="center"
@@ -53,7 +53,7 @@ export const AuthBoxContainer = ({
             transition={{ delay: 0.3, duration: 0.4 }}
           >
             <Image
-              src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+              src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
               width={45}
               height={45}
               alt="logo"

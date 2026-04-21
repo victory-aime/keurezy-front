@@ -1,18 +1,19 @@
-import { JSX, ReactNode } from "react";
+import { JSX, ReactNode } from 'react';
 
 export type DataActionsButtonType =
-  | "edit"
-  | "delete"
-  | "view"
-  | "share"
-  | "duplicate"
-  | "restore"
-  | "payment"
-  | "download"
-  | "passkey"
-  | "link"
-  | "chat"
-  | "cancel";
+  | 'edit'
+  | 'delete'
+  | 'view'
+  | 'share'
+  | 'duplicate'
+  | 'restore'
+  | 'payment'
+  | 'download'
+  | 'passkey'
+  | 'link'
+  | 'chat'
+  | 'cancel'
+  | 'publish';
 
 interface ActionProps<T = any> {
   name: DataActionsButtonType | ((data: T) => string); // Nom ou fonction retournant un nom dynamique
@@ -31,7 +32,7 @@ interface ActionButtonsProps<T> {
 
 interface ColumnsDataTable {
   header: string;
-  accessor: string | "fullObject";
+  accessor: string | 'fullObject';
   cell?: (x?: any) => JSX.Element | string | Date | undefined;
   actions?: ActionProps[];
   disabled?: (data?: any) => boolean;
@@ -47,7 +48,7 @@ interface PaginationProps {
   onLazyLoad?: (index: number) => void;
 }
 
-type NoDataFoundType = "trash" | "folder";
+type NoDataFoundType = 'trash' | 'folder';
 
 interface TableProps {
   data: any[];
@@ -110,7 +111,7 @@ interface DisplayContainerProps<T> extends BaseDataViewProps, TableProps {
   renderGridItem?: (item: any, index: number) => React.ReactNode;
 }
 
-type DataViewMode = "table" | "grid";
+type DataViewMode = 'table' | 'grid';
 
 interface DataViewSwitchProps {
   mode: DataViewMode;

@@ -1,6 +1,6 @@
 // theme/useThemeColors.ts
 
-import { useToken } from "@chakra-ui/react";
+import { useToken } from '@chakra-ui/react';
 
 const isValidHex = (hex: string) => /^#[0-9A-F]{6}$/i.test(hex);
 
@@ -14,8 +14,8 @@ const hexToRGBA = (hex: string, alpha = 1) => {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-export function useThemeColors(colorType: string = "primary") {
-  const shades = useToken("colors", [
+export function useThemeColors(colorType: string = 'primary') {
+  const shades = useToken('colors', [
     `${colorType}.50`,
     `${colorType}.100`,
     `${colorType}.200`,
@@ -45,8 +45,7 @@ export function useThemeColors(colorType: string = "primary") {
 
   const getColor = (shade = 500) => map[shade] ?? c500;
 
-  const hexToRGB = (shade = 500, alpha = 1) =>
-    hexToRGBA(getColor(shade), alpha);
+  const hexToRGB = (shade = 500, alpha = 1) => hexToRGBA(getColor(shade), alpha);
 
   const getGradient = (start = 400, mid = 500, end?: number) => {
     const startColor = getColor(start);

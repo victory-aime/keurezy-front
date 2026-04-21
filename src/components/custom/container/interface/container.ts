@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
-import { ActionButtonTypes } from "../../button";
-import { BoxProps } from "@chakra-ui/react";
-import { TextVariant } from "_components/custom";
-import { Colors } from "_theme/colors";
+import { ReactNode } from 'react';
+import { ActionButtonTypes } from '../../button';
+import { BoxProps } from '@chakra-ui/react';
+import { TextVariant } from '_components/custom';
+import { Colors } from '_theme/colors';
 
 export interface IBoxProps extends BoxProps {
   title?: string;

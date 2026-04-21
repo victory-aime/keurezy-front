@@ -1,5 +1,5 @@
-import { COMMON } from "../enum";
-import { IPagination } from "./pagination";
+import { COMMON } from '../enum';
+import { IPagination } from './pagination';
 
 export interface ILandDto {
   title?: string;

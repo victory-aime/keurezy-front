@@ -1,18 +1,10 @@
-import {
-  Circle,
-  Flex,
-  Float,
-  Menu,
-  Portal,
-  Separator,
-  VStack,
-} from "@chakra-ui/react";
-import { BaseText, Icons } from "_components/custom";
-import { VariablesColors } from "_theme/variables";
-import { MODELS } from "_types/*";
-import { NotificationsDisplay } from "./NotificationsDisplay";
-import { useRouter } from "next/navigation";
-import { DASHBOARD_ROUTES } from "../../routes";
+import { Circle, Flex, Float, Menu, Portal, Separator, VStack } from '@chakra-ui/react';
+import { BaseText, Icons } from '_components/custom';
+import { VariablesColors } from '_theme/variables';
+import { MODELS } from '_types/*';
+import { NotificationsDisplay } from './NotificationsDisplay';
+import { useRouter } from 'next/navigation';
+import { DASHBOARD_ROUTES } from '../../routes';
 
 export const NotificationHeaderMenu = ({
   notifications,
@@ -27,19 +19,15 @@ export const NotificationHeaderMenu = ({
 
   return (
     <Menu.Root
-      positioning={{ strategy: "fixed", hideWhenDetached: true }}
-      variant={"subtle"}
+      positioning={{ strategy: 'fixed', hideWhenDetached: true }}
+      variant={'subtle'}
       closeOnSelect
     >
-      <Menu.Trigger asChild cursor={"pointer"}>
-        <Flex
-          position="relative"
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Icons.Bell size={"24px"} />
+      <Menu.Trigger asChild cursor={'pointer'}>
+        <Flex position="relative" alignItems={'center'} justifyContent={'center'}>
+          <Icons.Bell size={'24px'} />
           <Float>
-            <Circle fontSize={"xs"} size="4" bg="red" color="white">
+            <Circle fontSize={'xs'} size="4" bg="red" color="white">
               {notifications?.length}
             </Circle>
           </Float>
@@ -47,14 +35,14 @@ export const NotificationHeaderMenu = ({
       </Menu.Trigger>
       <Portal>
         <Menu.Positioner>
-          <Menu.Content p={3} minWidth={{ base: "xs", sm: "lg" }} h={"200px"}>
+          <Menu.Content p={3} minWidth={{ base: 'xs', sm: 'lg' }} h={'200px'}>
             <Flex
-              justifyContent={"flex-end"}
+              justifyContent={'flex-end'}
               mb={2}
-              cursor={"pointer"}
+              cursor={'pointer'}
               onClick={() => router.push(DASHBOARD_ROUTES.NOTIFICATION)}
             >
-              <BaseText fontWeight={"semibold"} color={"primary.500"}>
+              <BaseText fontWeight={'semibold'} color={'primary.500'}>
                 Voir tout
               </BaseText>
             </Flex>

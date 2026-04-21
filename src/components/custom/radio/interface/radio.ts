@@ -1,5 +1,5 @@
-import { RadioGroupRootProps } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { RadioGroupRootProps } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 
 interface IRadioProps extends RadioGroupRootProps {
   items: {
@@ -8,26 +8,26 @@ interface IRadioProps extends RadioGroupRootProps {
   }[];
   colorPalette?:
     | string
-    | "transparent"
-    | "current"
-    | "black"
-    | "white"
-    | "whiteAlpha"
-    | "blackAlpha"
-    | "gray"
-    | "red"
-    | "orange"
-    | "yellow"
-    | "green"
-    | "teal"
-    | "blue"
-    | "cyan"
-    | "purple"
-    | "pink"
-    | "bg"
-    | "fg"
-    | "border";
-  orientation?: "vertical" | "horizontal";
+    | 'transparent'
+    | 'current'
+    | 'black'
+    | 'white'
+    | 'whiteAlpha'
+    | 'blackAlpha'
+    | 'gray'
+    | 'red'
+    | 'orange'
+    | 'yellow'
+    | 'green'
+    | 'teal'
+    | 'blue'
+    | 'cyan'
+    | 'purple'
+    | 'pink'
+    | 'bg'
+    | 'fg'
+    | 'border';
+  orientation?: 'vertical' | 'horizontal';
 }
 
 export type { IRadioProps };

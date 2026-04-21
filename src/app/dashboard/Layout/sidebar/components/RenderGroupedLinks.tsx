@@ -1,7 +1,7 @@
-import { VStack } from "@chakra-ui/react";
-import { SidebarNavGroupProps } from "../types";
-import { SidebarGroup } from "./SidebarGroup";
-import { SidebarSkeleton } from "./SidebarGroupSkeleton";
+import { VStack } from '@chakra-ui/react';
+import { SidebarNavGroupProps } from '../types';
+import { SidebarGroup } from './SidebarGroup';
+import { SidebarSkeleton } from './SidebarGroupSkeleton';
 
 export const RenderGroupedLinks = ({
   links,
@@ -15,15 +15,7 @@ export const RenderGroupedLinks = ({
   mobileCloseDrawer?: () => void;
 }) => {
   return (
-    <VStack
-      align="stretch"
-      flex="1"
-      overflowY="auto"
-      p={4}
-      mt={2}
-      gap={4}
-      width={"full"}
-    >
+    <VStack align="stretch" flex="1" overflowY="auto" p={4} mt={2} gap={4} width={'full'}>
       {isLoading ? (
         <SidebarSkeleton isCollapsed={isCollapsed} />
       ) : (

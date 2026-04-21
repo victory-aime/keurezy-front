@@ -1,4 +1,4 @@
-import { authClient } from "../app/lib/auth-client";
+import { authClient } from '../app/lib/auth-client';
 
 const MAX_RETRIES = 5;
 const RETRY_DELAY = 4000;
@@ -26,5 +26,5 @@ export async function retrySessionRequest(
       if (attempt < maxRetries) await new Promise((r) => setTimeout(r, delay));
     }
   }
-  throw new Error("Session not restored");
+  throw new Error('Session not restored');
 }

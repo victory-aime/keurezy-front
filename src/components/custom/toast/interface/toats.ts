@@ -1,10 +1,10 @@
 export const DEFAULT_TIME = 5000;
 
 export enum ToastStatus {
-  SUCCESS = "success",
-  ERROR = "error",
-  WARNING = "warning",
-  INFO = "info",
+  SUCCESS = 'success',
+  ERROR = 'error',
+  WARNING = 'warning',
+  INFO = 'info',
 }
 
 interface ToastProps {

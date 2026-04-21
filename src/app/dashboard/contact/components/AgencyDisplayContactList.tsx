@@ -1,19 +1,13 @@
-import { Box, Flex, VStack, Span, Text, HStack } from "@chakra-ui/react";
-import {
-  BaseIcon,
-  Icons,
-  BaseText,
-  CustomSkeletonLoader,
-  BaseModal,
-} from "_components/custom";
-import { useColorMode } from "_components/ui/color-mode";
-import { Tag } from "_components/ui/tag";
-import { ContactModule, UserModule } from "_store/state-management";
-import { hexToRGB } from "_theme/colors";
-import { VariablesColors } from "_theme/variables";
-import { MODELS, ENUM } from "_types/*";
-import { useState } from "react";
-import { formatCreatedAt } from "rise-core-frontend";
+import { Box, Flex, VStack, Span, Text, HStack } from '@chakra-ui/react';
+import { BaseIcon, Icons, BaseText, CustomSkeletonLoader, BaseModal } from '_components/custom';
+import { useColorMode } from '_components/ui/color-mode';
+import { Tag } from '_components/ui/tag';
+import { ContactModule, UserModule } from '_store/state-management';
+import { hexToRGB } from '_theme/colors';
+import { VariablesColors } from '_theme/variables';
+import { MODELS, ENUM } from '_types/*';
+import { useState } from 'react';
+import { formatCreatedAt } from 'rise-core-frontend';
 
 export const AgencyDisplayContactList = ({
   request,
@@ -34,14 +28,13 @@ export const AgencyDisplayContactList = ({
   });
   const [readInfo, setReadInfo] = useState(false);
   const isClient = !!request?.userId;
-  const { mutateAsync: changeStatus } =
-    ContactModule.changeAgencyContactStatusMutation({
-      mutationOptions: {
-        onSuccess: () => {
-          refetchAgencyContactList?.();
-        },
+  const { mutateAsync: changeStatus } = ContactModule.changeAgencyContactStatusMutation({
+    mutationOptions: {
+      onSuccess: () => {
+        refetchAgencyContactList?.();
       },
-    });
+    },
+  });
 
   const onChangeStatus = async (id: string, agencyId: string) => {
     await changeStatus({
@@ -52,53 +45,45 @@ export const AgencyDisplayContactList = ({
   return (
     <Box
       key={index}
-      width={"full"}
-      border={"1px solid"}
+      width={'full'}
+      border={'1px solid'}
       p={4}
-      borderRadius={
-        index === 0 ? "12px 12px 0 0" : isLast ? "0 0 12px 12px" : "0"
-      }
+      borderRadius={index === 0 ? '12px 12px 0 0' : isLast ? '0 0 12px 12px' : '0'}
       borderColor={
         request.status === ENUM.COMMON.Status.PENDING
-          ? colorMode === "light"
-            ? "blue.400"
-            : "blue.900"
-          : "border"
+          ? colorMode === 'light'
+            ? 'blue.400'
+            : 'blue.900'
+          : 'border'
       }
       bg={
         request.status === ENUM.COMMON.Status.PENDING
-          ? colorMode === "light"
-            ? "blue.50"
-            : "blue.900"
-          : "transparent"
+          ? colorMode === 'light'
+            ? 'blue.50'
+            : 'blue.900'
+          : 'transparent'
       }
     >
       {isLoading ? (
         <VStack gap={4}>
           {Array.from({ length: 5 }).map((_, i) => (
-            <Flex gap={4} width={"full"} key={i}>
-              <CustomSkeletonLoader
-                type={"BUTTON"}
-                colorButton="neutral"
-                width={10}
-              />
-              <CustomSkeletonLoader type={"TEXT"} width={"full"} />
+            <Flex gap={4} width={'full'} key={i}>
+              <CustomSkeletonLoader type={'BUTTON'} colorButton="neutral" width={10} />
+              <CustomSkeletonLoader type={'TEXT'} width={'full'} />
             </Flex>
           ))}
         </VStack>
       ) : (
         <Flex
           gap={3}
-          alignItems={"flex-start"}
-          cursor={"pointer"}
+          alignItems={'flex-start'}
+          cursor={'pointer'}
           onClick={() => setReadInfo(true)}
-          flexDir={{ base: "column", sm: "row" }}
+          flexDir={{ base: 'column', sm: 'row' }}
         >
           <BaseIcon
             color={hexToRGB(
-              request.status === ENUM.COMMON.Status.PENDING
-                ? "blue"
-                : "tertiary",
+              request.status === ENUM.COMMON.Status.PENDING ? 'blue' : 'tertiary',
               0.2,
             )}
           >
@@ -108,22 +93,20 @@ export const AgencyDisplayContactList = ({
               <Icons.Check color={VariablesColors.tertiary} />
             )}
           </BaseIcon>
-          <VStack alignItems={"flex-start"} gap={0}>
+          <VStack alignItems={'flex-start'} gap={0}>
             <HStack>
-              <BaseText fontWeight={"semibold"}>Demande reçue</BaseText>
+              <BaseText fontWeight={'semibold'}>Demande reçue</BaseText>
 
-              <Tag size="sm" colorPalette={isClient ? "green" : "orange"}>
-                {isClient ? "client" : "visiteur"}
+              <Tag size="sm" colorPalette={isClient ? 'green' : 'orange'}>
+                {isClient ? 'client' : 'visiteur'}
               </Tag>
             </HStack>
 
-            <Text fontSize={{ base: "sm", sm: "md" }} color={"gray.400"}>
-              {request?.fullName} veux avoir plus d'nformations sur le logement{" "}
+            <Text fontSize={{ base: 'sm', sm: 'md' }} color={'gray.400'}>
+              {request?.fullName} veux avoir plus d'nformations sur le logement{' '}
               {request?.property?.title}
             </Text>
-            <Span color={"gray.400"}>
-              {formatCreatedAt(request?.createdAt!)}
-            </Span>
+            <Span color={'gray.400'}>{formatCreatedAt(request?.createdAt!)}</Span>
           </VStack>
         </Flex>
       )}
@@ -145,19 +128,15 @@ export const AgencyDisplayContactList = ({
               <BaseText fontWeight="bold" fontSize="lg">
                 {request.fullName}
               </BaseText>
-              <Tag
-                size="sm"
-                colorPalette={isClient ? "green" : "orange"}
-                variant="subtle"
-              >
-                {isClient ? "Client" : "Visiteur"}
+              <Tag size="sm" colorPalette={isClient ? 'green' : 'orange'} variant="subtle">
+                {isClient ? 'Client' : 'Visiteur'}
               </Tag>
             </HStack>
             <Text fontSize="sm" color="gray.500">
-              A demandé des informations concernant{" "}
+              A demandé des informations concernant{' '}
               <Text as="span" fontWeight="medium" color="gray.700">
                 {request.property?.title}
-              </Text>{" "}
+              </Text>{' '}
               {formatCreatedAt(request.createdAt!)}
             </Text>
           </VStack>
@@ -166,12 +145,7 @@ export const AgencyDisplayContactList = ({
               {request.message}
             </Text>
           </Box>
-          <VStack
-            alignItems={"flex-start"}
-            justify="space-between"
-            fontSize="sm"
-            color="gray.600"
-          >
+          <VStack alignItems={'flex-start'} justify="space-between" fontSize="sm" color="gray.600">
             <Text>email : {request.email}</Text>
             {request.phone && <Text>Telephone : {request.phone}</Text>}
           </VStack>

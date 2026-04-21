@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import { usePermissions } from "./usePermissions";
-import { AgencyModule } from "_store/state-management";
-import { useUserContext } from "_context/user-context";
+import { useMemo } from 'react';
+import { usePermissions } from './usePermissions';
+import { AgencyModule } from '_store/state-management';
+import { useUserContext } from '_context/user-context';
 
 interface AccessParams {
   feature?: string;

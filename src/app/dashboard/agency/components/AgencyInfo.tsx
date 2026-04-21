@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { VStack, HStack, Flex } from "@chakra-ui/react";
+import { VStack, HStack, Flex } from '@chakra-ui/react';
 import {
   FormTextInput,
   BaseButton,
@@ -11,18 +11,18 @@ import {
   Icons,
   BaseModal,
   BaseText,
-} from "_components/custom";
-import { Formik, FormikValues } from "formik";
-import { t } from "i18next";
-import { ProfileForm } from "../../profile/components/ProfileForm";
-import { AgencyModule, UserModule } from "_store/state-management";
-import { ENUM, MODELS, VALIDATION } from "_types/";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { APP_ROUTES } from "_config/routes";
-import { authClient } from "../../../lib/auth-client";
-import { useGlobalLoader } from "_context/loaderContext";
-import { DocumentPreviewModal } from "./DocumentPreviewModal";
+} from '_components/custom';
+import { Formik, FormikValues } from 'formik';
+import { t } from 'i18next';
+import { ProfileForm } from '../../profile/components/ProfileForm';
+import { AgencyModule, UserModule } from '_store/state-management';
+import { ENUM, MODELS, VALIDATION } from '_types/';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { APP_ROUTES } from '_config/routes';
+import { authClient } from '../../../lib/auth-client';
+import { useGlobalLoader } from '_context/loaderContext';
+import { DocumentPreviewModal } from './DocumentPreviewModal';
 
 export const AgencyInfo = () => {
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
@@ -30,8 +30,9 @@ export const AgencyInfo = () => {
   const [closeAgencyOpen, setCloseAgencyOpen] = useState(false);
   const router = useRouter();
   const { showLoader, hideLoader } = useGlobalLoader();
-  const [initialAgencyValues, setInitialAgencyValues] =
-    useState<MODELS.IAgency>({} as MODELS.IAgency);
+  const [initialAgencyValues, setInitialAgencyValues] = useState<MODELS.IAgency>(
+    {} as MODELS.IAgency,
+  );
 
   const { data: user } = UserModule.getUserInfo({
     queryOptions: { enabled: false },
@@ -59,37 +60,33 @@ export const AgencyInfo = () => {
     },
   });
 
-  const { mutateAsync: closeAgency, isPending: closePending } =
-    AgencyModule.closeAgencyMutation({
-      mutationOptions: {
-        onSuccess: async () => {
-          const { data } = await authClient.getSession();
-          if (data?.session) {
-            hideLoader();
-            router.push(APP_ROUTES.ROOT);
-          }
-        },
+  const { mutateAsync: closeAgency, isPending: closePending } = AgencyModule.closeAgencyMutation({
+    mutationOptions: {
+      onSuccess: async () => {
+        const { data } = await authClient.getSession();
+        if (data?.session) {
+          hideLoader();
+          router.push(APP_ROUTES.ROOT);
+        }
       },
-    });
+    },
+  });
 
   const handleUpdateAgency = async (values: FormikValues) => {
     const formData = new FormData();
-    formData.append("name", String(values?.name));
-    formData.append("description", String(values?.description));
-    formData.append("address", String(values?.address));
-    formData.append("phone", String(values?.phone));
-    formData.append("acceptTerms", values?.acceptTerms);
-    formData.append("agencyId", String(agency?.id));
+    formData.append('name', String(values?.name));
+    formData.append('description', String(values?.description));
+    formData.append('address', String(values?.address));
+    formData.append('phone', String(values?.phone));
+    formData.append('acceptTerms', values?.acceptTerms);
+    formData.append('agencyId', String(agency?.id));
     if (values?.agencyLogo) {
-      formData.append("agencyLogo", values.agencyLogo);
+      formData.append('agencyLogo', values.agencyLogo);
     }
     await updateAgency({ payload: formData as MODELS.IUpdateAgency });
   };
 
-  const handleCloseAgency = async (values: {
-    agencyId: string;
-    ownerId: string;
-  }) => {
+  const handleCloseAgency = async (values: { agencyId: string; ownerId: string }) => {
     showLoader();
     await closeAgency({ params: values });
   };
@@ -101,9 +98,9 @@ export const AgencyInfo = () => {
 
   const getFileNameFromUrl = (url: string) => {
     try {
-      return url.split("/").pop()?.split("?")[0];
+      return url.split('/').pop()?.split('?')[0];
     } catch {
-      return "document";
+      return 'document';
     }
   };
 
@@ -121,9 +118,7 @@ export const AgencyInfo = () => {
         showLoader();
         handleUpdateAgency(values);
       }}
-      validationSchema={
-        VALIDATION.AGENCY_VALIDATION.updateAgencyValidationSchema
-      }
+      validationSchema={VALIDATION.AGENCY_VALIDATION.updateAgencyValidationSchema}
     >
       {({ values, handleSubmit, setFieldValue, errors }) => {
         return (
@@ -133,31 +128,20 @@ export const AgencyInfo = () => {
               title="Informations de l'agence"
               description="Modifiez et mettez à jour les informations publiques de votre agence."
               loader={loadInfo}
-              border={"none"}
+              border={'none'}
             >
-              <Flex
-                width={"full"}
-                gap={5}
-                mt={5}
-                flexDirection={{ base: "column", md: "row" }}
-              >
-                <Flex width={{ base: "full", md: "1/4" }}>
+              <Flex width={'full'} gap={5} mt={5} flexDirection={{ base: 'column', md: 'row' }}>
+                <Flex width={{ base: 'full', md: '1/4' }}>
                   <UploadAvatar
-                    getFileUploaded={(files) =>
-                      setFieldValue("agencyLogo", files)
-                    }
+                    getFileUploaded={(files) => setFieldValue('agencyLogo', files)}
                     handleDeleteAvatar={() => {}}
                     avatarImage={undefined}
                     messageInfo={errors?.agencyLogo}
                   />
                 </Flex>
 
-                <VStack width={"full"} gap={4} alignItems="flex-start">
-                  <FormTextInput
-                    name="name"
-                    label="PROFILE.NAME"
-                    isLoading={loadInfo}
-                  />
+                <VStack width={'full'} gap={4} alignItems="flex-start">
+                  <FormTextInput name="name" label="PROFILE.NAME" isLoading={loadInfo} />
 
                   <FormTextArea
                     name="description"
@@ -166,21 +150,14 @@ export const AgencyInfo = () => {
                     maxCharacters={500}
                   />
 
-                  <HStack
-                    width="full"
-                    gap={4}
-                    flexDirection={{ base: "column", md: "row" }}
-                  >
+                  <HStack width="full" gap={4} flexDirection={{ base: 'column', md: 'row' }}>
                     <FormTextInput
                       name="address"
                       label="Adresse de l'agence"
                       leftAccessory={<Icons.MapPin />}
                     />
 
-                    <FormPhonePicker
-                      name="phone"
-                      label="Téléphone professionnel"
-                    />
+                    <FormPhonePicker name="phone" label="Téléphone professionnel" />
                   </HStack>
                 </VStack>
               </Flex>
@@ -192,33 +169,31 @@ export const AgencyInfo = () => {
                 status={values?.status}
               >
                 {values?.status === ENUM.COMMON.Status.PENDING
-                  ? "Votre agence est actuellement en cours de validation. Elle sera visible dès qu’elle aura été approuvée."
-                  : "Votre agence est active et visible par les utilisateurs de la plateforme."}
+                  ? 'Votre agence est actuellement en cours de validation. Elle sera visible dès qu’elle aura été approuvée.'
+                  : 'Votre agence est active et visible par les utilisateurs de la plateforme.'}
               </ProfileForm>
               <ProfileForm
                 title="Documents de l'agence"
                 description="Consultez les documents officiels de votre agence (contrats, certificats, pièces administratives, etc.). Ces informations sont affichées à titre informatif."
               >
-                <VStack gap={3} alignItems={"flex-start"} width={"full"}>
+                <VStack gap={3} alignItems={'flex-start'} width={'full'}>
                   {values.documents?.map((doc, idx) => (
                     <Flex
                       key={idx}
-                      width={"full"}
+                      width={'full'}
                       p={2}
                       border="1px solid"
                       borderColor="border"
                       borderRadius="md"
                       align="center"
                       justify="space-between"
-                      _hover={{ bgColor: "bg.muted" }}
+                      _hover={{ bgColor: 'bg.muted' }}
                       onClick={() => handleOpenDoc(doc)}
-                      cursor={"pointer"}
+                      cursor={'pointer'}
                     >
                       <HStack>
                         <Icons.Paper />
-                        <BaseText fontSize="sm">
-                          {getFileNameFromUrl(doc)}
-                        </BaseText>
+                        <BaseText fontSize="sm">{getFileNameFromUrl(doc)}</BaseText>
                       </HStack>
                       <Icons.View size={16} />
                     </Flex>
@@ -237,13 +212,13 @@ export const AgencyInfo = () => {
                   colorType="danger"
                   onClick={() => setCloseAgencyOpen(true)}
                 >
-                  {t("Fermer définitivement l’agence")}
+                  {t('Fermer définitivement l’agence')}
                 </BaseButton>
               </ProfileForm>
             </BaseContainer>
             <Flex width="full" alignItems="flex-end" justifyContent="flex-end">
               <BaseButton colorType="success" onClick={() => handleSubmit()}>
-                {t("Sauvegarder les changements")}
+                {t('Sauvegarder les changements')}
               </BaseButton>
             </Flex>
             <BaseModal
@@ -251,7 +226,7 @@ export const AgencyInfo = () => {
               isOpen={closeAgencyOpen}
               onChange={() => setCloseAgencyOpen(false)}
               title="Confirmer la fermeture définitive de l’agence"
-              modalType={"alertdialog"}
+              modalType={'alertdialog'}
               onClick={() => {
                 handleCloseAgency({
                   agencyId: agency?.id!,
@@ -259,17 +234,13 @@ export const AgencyInfo = () => {
                 });
                 setCloseAgencyOpen(!closeAgencyOpen);
               }}
-              buttonSaveTitle={"Confirmer la fermeture"}
+              buttonSaveTitle={'Confirmer la fermeture'}
             >
-              La fermeture de votre agence est irréversible. Vous perdrez
-              définitivement l’accès à votre espace propriétaire ainsi qu’aux
-              services associés. Êtes-vous certain de vouloir poursuivre ?
+              La fermeture de votre agence est irréversible. Vous perdrez définitivement l’accès à
+              votre espace propriétaire ainsi qu’aux services associés. Êtes-vous certain de vouloir
+              poursuivre ?
             </BaseModal>
-            <DocumentPreviewModal
-              onChange={setIsOpen}
-              isOpen={isOpen}
-              data={selectedDoc}
-            />
+            <DocumentPreviewModal onChange={setIsOpen} isOpen={isOpen} data={selectedDoc} />
           </>
         );
       }}

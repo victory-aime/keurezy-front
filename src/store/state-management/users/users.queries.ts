@@ -1,7 +1,7 @@
-import * as Constants from "./constants";
-import { usersServiceInstance } from "./users.service-instance";
-import { MODELS } from "_types/index";
-import { QUERIES } from "rise-core-frontend";
+import * as Constants from './constants';
+import { usersServiceInstance } from './users.service-instance';
+import { MODELS } from '_types/index';
+import { QUERIES } from 'rise-core-frontend';
 
 const getUserInfo = (args: QUERIES.QueryPayload<{ userId: MODELS.IUser }>) => {
   const { params, queryOptions } = args;
@@ -16,8 +16,7 @@ const getUserInfo = (args: QUERIES.QueryPayload<{ userId: MODELS.IUser }>) => {
 const updateUserMutation = (args: QUERIES.MutationPayload<MODELS.IUser>) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.USERS_KEYS.UPDATE_USER_INFO],
-    mutationFn: ({ payload }) =>
-      usersServiceInstance().update_user_info(payload!),
+    mutationFn: ({ payload }) => usersServiceInstance().update_user_info(payload!),
     options: args.mutationOptions,
   });
 };

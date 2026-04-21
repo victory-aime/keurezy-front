@@ -1,4 +1,4 @@
-import { RentalAgreementForm } from "../components/RentalAgreementForm";
+import { RentalAgreementForm } from '../components/RentalAgreementForm';
 
 export default async function AddOrEditTenant({
   searchParams,

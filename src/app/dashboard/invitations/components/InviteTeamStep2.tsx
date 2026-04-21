@@ -1,15 +1,12 @@
-"use client";
+'use client';
 
-import { MotionBox } from "_constants/motion";
-import { FormCard } from "../../components/FormCard";
-import {
-  ISelectedCheckboxElement,
-  PermissionListGroup,
-} from "_components/custom";
-import { useFormikContext } from "formik";
-import { ISelectPermissions } from "../constants/team";
-import { useMemo } from "react";
-import { MODELS } from "_types/*";
+import { MotionBox } from '_constants/motion';
+import { FormCard } from '../../components/FormCard';
+import { ISelectedCheckboxElement, PermissionListGroup } from '_components/custom';
+import { useFormikContext } from 'formik';
+import { ISelectPermissions } from '../constants/team';
+import { useMemo } from 'react';
+import { MODELS } from '_types/*';
 
 export const InviteTeamStep2 = ({
   allPermissions,
@@ -22,16 +19,14 @@ export const InviteTeamStep2 = ({
     permissions: ISelectPermissions[];
   }>();
 
-  const handlePermissionChange = (
-    selectedValues: ISelectedCheckboxElement[],
-  ) => {
+  const handlePermissionChange = (selectedValues: ISelectedCheckboxElement[]) => {
     const flattened: ISelectPermissions[] = selectedValues.flatMap((group) =>
       group.permissions.map((perm) => ({
         permissionId: perm.id,
         granted: perm.granted,
       })),
     );
-    setFieldValue("permissions", flattened);
+    setFieldValue('permissions', flattened);
   };
 
   const defaultPermissions = useMemo((): ISelectedCheckboxElement[] => {
@@ -57,12 +52,12 @@ export const InviteTeamStep2 = ({
       initial="enter"
       animate="center"
       exit="exit"
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <FormCard
-        title={"Liste des permissions disponible"}
-        description={"Veuillez selectionner une permission"}
-        isLoading={isLoading}
+        title={'Liste des permissions disponible'}
+        description={'Veuillez selectionner une permission'}
+        loader={isLoading}
       >
         <PermissionListGroup
           groupList={allPermissions ?? []}

@@ -1,7 +1,7 @@
-import { IconButton, IconButtonProps } from "@chakra-ui/react";
-import React from "react";
-import { SwitchColorMode } from "./SwitchColorMode";
-import { useColorMode } from "_components/ui/color-mode";
+import { IconButton, IconButtonProps } from '@chakra-ui/react';
+import React from 'react';
+import { SwitchColorMode } from './SwitchColorMode';
+import { useColorMode } from '_components/ui/color-mode';
 
 export const FloatSwitchColorMode = ({ ...props }: IconButtonProps) => {
   const { toggleColorMode } = useColorMode();
@@ -14,12 +14,12 @@ export const FloatSwitchColorMode = ({ ...props }: IconButtonProps) => {
       onClick={toggleColorMode}
       aria-label="change color-mode"
       borderRadius="50px"
-      animation={"bounce"}
-      cursor={"pointer"}
+      animation={'bounce'}
+      cursor={'pointer'}
       _hover={{
-        transform: "scale(1.1)",
-        transition: "transform 0.2s ease-in-out",
-        filter: "brightness(1.2)",
+        transform: 'scale(1.1)',
+        transition: 'transform 0.2s ease-in-out',
+        filter: 'brightness(1.2)',
       }}
       {...props}
     >

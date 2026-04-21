@@ -9,9 +9,9 @@ const toSafeString = (value: unknown): string | null => {
   if (
     value === undefined ||
     value === null ||
-    value === "undefined" ||
-    value === "null" ||
-    value === ""
+    value === 'undefined' ||
+    value === 'null' ||
+    value === ''
   ) {
     return null;
   }
@@ -26,11 +26,7 @@ const toSafeString = (value: unknown): string | null => {
  * appendSafe(formData, "district", data.district);
  * // → formData.set("district", "null") si undefined
  */
-export const appendSafe = (
-  formData: FormData,
-  key: string,
-  value: unknown,
-): void => {
+export const appendSafe = (formData: FormData, key: string, value: unknown): void => {
   formData.append(key, toSafeString(value) as any);
 };
 
@@ -73,11 +69,7 @@ export const buildSafeFormData = (
 
   Object.entries(fields).forEach(([key, value]) => {
     // Cas fichiers : { files: File[] }
-    if (
-      value !== null &&
-      typeof value === "object" &&
-      "files" in (value as object)
-    ) {
+    if (value !== null && typeof value === 'object' && 'files' in (value as object)) {
       appendFiles(formData, key, (value as { files: File[] }).files);
       return;
     }

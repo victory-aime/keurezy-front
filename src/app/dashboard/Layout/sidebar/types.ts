@@ -1,6 +1,6 @@
-import { MODELS } from "_types/*";
-import { Session } from "better-auth";
-import React, { ReactNode } from "react";
+import { MODELS } from '_types/*';
+import { Session } from 'better-auth';
+import React, { ReactNode } from 'react';
 
 export interface IMobileSidebar {
   isOpen: boolean;
@@ -26,6 +26,7 @@ interface INavItem {
   feature?: string;
   permission?: string;
   disabled?: boolean;
+  highlight?: boolean;
 }
 
 export interface SidebarNavGroupProps {
@@ -111,6 +112,6 @@ export interface AuthContextType {
 export interface SideToolTipProps {
   children: ReactNode;
   label: string;
-  placement?: "left" | "right" | "top" | "bottom";
+  placement?: 'left' | 'right' | 'top' | 'bottom';
   disabled?: boolean;
 }

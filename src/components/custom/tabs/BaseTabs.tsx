@@ -1,18 +1,18 @@
-"use client";
-import { Tabs } from "@chakra-ui/react";
-import { TabsProps } from "./interface/tabs";
-import { useState } from "react";
-import { BaseContainer } from "../container";
-import { NoDataAnimation } from "../data-table/NoDataAnimation";
-import { useColorMode } from "_components/ui/color-mode";
-import { useThemeColors } from "_theme/useThemeColors";
+'use client';
+import { Tabs } from '@chakra-ui/react';
+import { TabsProps } from './interface/tabs';
+import { useState } from 'react';
+import { BaseContainer } from '../container';
+import { NoDataAnimation } from '../data-table/NoDataAnimation';
+import { useColorMode } from '_components/ui/color-mode';
+import { useThemeColors } from '_theme/useThemeColors';
 
 export const BaseTabs = ({
   items,
   redirectLink,
   isMobile,
-  title = "",
-  description = "",
+  title = '',
+  description = '',
   withActionButtons = false,
   actionsButtonProps,
   ...rest
@@ -25,19 +25,17 @@ export const BaseTabs = ({
     <BaseContainer
       title={title}
       description={description}
-      border={"none"}
+      border={'none'}
       textAlign={rest.textAlign}
       withActionButtons={withActionButtons}
       actionsButtonProps={actionsButtonProps}
     >
       <Tabs.Root
         defaultValue={items[currentIndex]?.label}
-        variant={"enclosed"}
+        variant={'enclosed'}
         value={items[currentIndex]?.label}
         onValueChange={({ value }: { value: string }) => {
-          const index = items?.findIndex(
-            (item: { label: string }) => item?.label === value,
-          );
+          const index = items?.findIndex((item: { label: string }) => item?.label === value);
           setCurrentIndex(index);
         }}
         {...rest}
@@ -45,18 +43,18 @@ export const BaseTabs = ({
         <Tabs.List mt={{ base: 0, sm: 5 }}>
           {items.map((item, index) => (
             <Tabs.Trigger
-              color={currentIndex === index ? "primary.500" : "gray.400"}
+              color={currentIndex === index ? 'primary.500' : 'gray.400'}
               bgColor={
                 currentIndex === index
-                  ? colorMode === "light"
-                    ? "white"
+                  ? colorMode === 'light'
+                    ? 'white'
                     : hexToRGB(500, 0.1)
-                  : "none"
+                  : 'none'
               }
               key={index}
               value={item.label}
               p={5}
-              width={"fit-content"}
+              width={'fit-content'}
             >
               {item?.icon}
               {item.label}
@@ -70,12 +68,12 @@ export const BaseTabs = ({
             value={item.label}
             mt={{ base: rest.mt ?? 2, sm: rest.mt ?? 4 }}
             _open={{
-              animationName: "fade-in, scale-in",
-              animationDuration: "300ms",
+              animationName: 'fade-in, scale-in',
+              animationDuration: '300ms',
             }}
             _closed={{
-              animationName: "fade-out, scale-out",
-              animationDuration: "120ms",
+              animationName: 'fade-out, scale-out',
+              animationDuration: '120ms',
             }}
           >
             {item?.content ?? <NoDataAnimation />}

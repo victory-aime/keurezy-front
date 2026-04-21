@@ -1,20 +1,12 @@
-import {
-  Grid,
-  VStack,
-  Flex,
-  Heading,
-  Span,
-  HStack,
-  Text,
-} from "@chakra-ui/react";
-import { Icons } from "_components/custom";
-import { hexToRGB } from "_theme/colors";
-import { VariablesColors } from "_theme/variables";
-import { DashboardMockup } from "./DashboardMockup";
-import { OnboardCardWrapper } from "./OnboardCardWrapper";
-import { GridContainer } from "./GridContainer";
-import { MotionBox } from "_constants/motion";
-import { useColorMode } from "_components/ui/color-mode";
+import { Grid, VStack, Flex, Heading, Span, HStack, Text } from '@chakra-ui/react';
+import { Icons } from '_components/custom';
+import { hexToRGB } from '_theme/colors';
+import { VariablesColors } from '_theme/variables';
+import { DashboardMockup } from './DashboardMockup';
+import { OnboardCardWrapper } from './OnboardCardWrapper';
+import { GridContainer } from './GridContainer';
+import { MotionBox } from '_constants/motion';
+import { useColorMode } from '_components/ui/color-mode';
 
 /* ═══════════════ STEP 1: Introduction ═══════════════ */
 
@@ -29,8 +21,8 @@ export const StepIntro = () => {
           transition={{ delay: 0.1 }}
         >
           <Flex
-            bgColor={hexToRGB("primary", 0.1)}
-            color={"primary.500"}
+            bgColor={hexToRGB('primary', 0.1)}
+            color={'primary.500'}
             borderRadius="full"
             px={3}
             py={1}
@@ -48,18 +40,18 @@ export const StepIntro = () => {
           transition={{ delay: 0.2 }}
         >
           <Heading
-            fontSize={{ base: "2xl", sm: "3xl", lg: "4xl" }}
+            fontSize={{ base: '2xl', sm: '3xl', lg: '4xl' }}
             fontWeight="bold"
             lineHeight="1"
           >
-            MyImmo est la plateforme de gestion intelligente des locations pour{" "}
+            MyImmo est la plateforme de gestion intelligente des locations pour{' '}
             <Span
-              bgClip={"text"}
-              gradientFrom={"primary.400"}
-              gradientVia={"primary.500"}
-              gradientTo={"tertiary.500"}
-              bgGradient={"to-r"}
-              color={"transparent"}
+              bgClip={'text'}
+              gradientFrom={'primary.400'}
+              gradientVia={'primary.500'}
+              gradientTo={'tertiary.500'}
+              bgGradient={'to-r'}
+              color={'transparent'}
             >
               les locataires et les propriétaires immobiliers
             </Span>
@@ -72,9 +64,8 @@ export const StepIntro = () => {
           transition={{ delay: 0.3 }}
         >
           <Text color="gray.500" fontSize="lg" lineHeight="relaxed">
-            Une expérience fluide pour louer, gérer et développer vos
-            investissements immobiliers. Une plateforme puissante conçue pour
-            simplifier vos opérations locatives.
+            Une expérience fluide pour louer, gérer et développer vos investissements immobiliers.
+            Une plateforme puissante conçue pour simplifier vos opérations locatives.
           </Text>
         </MotionBox>
 
@@ -82,17 +73,17 @@ export const StepIntro = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          width={"full"}
+          width={'full'}
         >
           <Grid templateColumns="repeat(3, 1fr)" gap={3}>
             {[
               {
                 icon: Icons.RiBuildingLine,
-                label: "Biens gérés",
-                value: "10K+",
+                label: 'Biens gérés',
+                value: '10K+',
               },
-              { icon: Icons.FaUsers, label: "Utilisateurs", value: "2.5K+" },
-              { icon: Icons.Star, label: "Satisfaction", value: "4.9/5" },
+              { icon: Icons.FaUsers, label: 'Utilisateurs', value: '2.5K+' },
+              { icon: Icons.Star, label: 'Satisfaction', value: '4.9/5' },
             ].map((stat, i) => (
               <MotionBox
                 key={stat.label}
@@ -121,11 +112,11 @@ export const StepIntro = () => {
         initial={{ opacity: 0, x: 40 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3, duration: 0.6 }}
-        position={"relative"}
+        position={'relative'}
       >
         <MotionBox
           animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
         >
           <DashboardMockup animated />
         </MotionBox>
@@ -136,18 +127,15 @@ export const StepIntro = () => {
           transition={{
             duration: 3,
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: 'easeInOut',
             delay: 0.5,
           }}
-          position={"absolute"}
-          top={"-12px"}
-          right={"-8px"}
+          position={'absolute'}
+          top={'-12px'}
+          right={'-8px'}
           zIndex={10}
         >
-          <OnboardCardWrapper
-            p={2}
-            bgColor={colorMode === "light" ? "white" : "black"}
-          >
+          <OnboardCardWrapper p={2} bgColor={colorMode === 'light' ? 'white' : 'black'}>
             <HStack gap={2}>
               <Icons.Bell size={18} color={VariablesColors.primary} />
               <Text fontSize="xs" fontWeight="medium">
@@ -162,18 +150,15 @@ export const StepIntro = () => {
           transition={{
             duration: 3.5,
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: 'easeInOut',
             delay: 1,
           }}
-          position={"absolute"}
-          bottom={"-8px"}
-          left={"-8px"}
+          position={'absolute'}
+          bottom={'-8px'}
+          left={'-8px'}
           zIndex={10}
         >
-          <OnboardCardWrapper
-            p={2}
-            bgColor={colorMode === "light" ? "white" : "black"}
-          >
+          <OnboardCardWrapper p={2} bgColor={colorMode === 'light' ? 'white' : 'black'}>
             <HStack gap={2}>
               <Icons.Check color={VariablesColors.tertiary} />
               <Text fontSize="xs" fontWeight="medium">

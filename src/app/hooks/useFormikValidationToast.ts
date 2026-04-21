@@ -1,7 +1,7 @@
-import { useFormikContext } from "formik";
-import { useCallback } from "react";
-import { flattenErrors } from "../helpers/flatten-errors";
-import { BaseToast, ToastStatus } from "_components/custom";
+import { useFormikContext } from 'formik';
+import { useCallback } from 'react';
+import { flattenErrors } from '../helpers/flatten-errors';
+import { BaseToast, ToastStatus } from '_components/custom';
 
 /**
  * Hook réutilisable qui valide le formulaire Formik
@@ -16,7 +16,7 @@ import { BaseToast, ToastStatus } from "_components/custom";
  */
 export const useFormikValidationToast = () => {
   const { validateForm, setTouched, errors, values } = useFormikContext();
-  const TOAST_ID = "formik-validation-toast";
+  const TOAST_ID = 'formik-validation-toast';
 
   const validateAndSubmit = useCallback(
     async (handleSubmit: () => void) => {
@@ -37,15 +37,13 @@ export const useFormikValidationToast = () => {
       }
 
       // 4. Construit la liste des messages d'erreur
-      const errorMessages = flattenErrors(
-        validationErrors as Record<string, unknown>,
-      );
+      const errorMessages = flattenErrors(validationErrors as Record<string, unknown>);
 
       // 5. Affiche le toast d'erreur
       BaseToast({
         id: TOAST_ID,
-        title: `${errorMessages.length} champ${errorMessages.length > 1 ? "s" : ""} requis`,
-        description: errorMessages.join("\n"),
+        title: `${errorMessages.length} champ${errorMessages.length > 1 ? 's' : ''} requis`,
+        description: errorMessages.join('\n'),
         type: ToastStatus.WARNING,
       });
     },

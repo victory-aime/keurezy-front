@@ -1,23 +1,21 @@
-"use client";
+'use client';
 
 import {
   BaseContainer,
   BaseSwitch,
   ColumnsDataTable,
   DataTableContainer,
-} from "_components/custom";
-import { useUserContext } from "_context/user-context";
-import { TeamModule } from "_store/state-management";
-import { CONSTANTS, MODELS } from "_types/*";
-import { formatDisplayDate } from "rise-core-frontend";
-import { TeamDetails } from "./TeamDetails";
-import { useState } from "react";
+} from '_components/custom';
+import { useUserContext } from '_context/user-context';
+import { TeamModule } from '_store/state-management';
+import { CONSTANTS, MODELS } from '_types/*';
+import { formatDisplayDate } from 'rise-core-frontend';
+import { TeamDetails } from './TeamDetails';
+import { useState } from 'react';
 
 export const TeamList = () => {
   const { user } = useUserContext();
-  const [selectedValues, setSelectedValues] = useState<MODELS.ITeam | null>(
-    null,
-  );
+  const [selectedValues, setSelectedValues] = useState<MODELS.ITeam | null>(null);
   const [openDetails, setOpenDetails] = useState(false);
 
   const {
@@ -49,22 +47,21 @@ export const TeamList = () => {
 
   const teamsColumns: ColumnsDataTable[] = [
     {
-      header: "Nom",
-      accessor: "name",
+      header: 'Nom',
+      accessor: 'name',
     },
     {
-      header: "email",
-      accessor: "email",
+      header: 'email',
+      accessor: 'email',
     },
     {
-      header: "role",
-      accessor: "role",
-      cell: (role) =>
-        CONSTANTS.AGENCY_ROLE_LIST.find((r) => r.value === role)?.label || role,
+      header: 'role',
+      accessor: 'role',
+      cell: (role) => CONSTANTS.AGENCY_ROLE_LIST.find((r) => r.value === role)?.label || role,
     },
     {
-      header: "Status",
-      accessor: "fullObject",
+      header: 'Status',
+      accessor: 'fullObject',
       cell: (values) => (
         <BaseSwitch
           isChecked={values.status}
@@ -76,16 +73,16 @@ export const TeamList = () => {
       ),
     },
     {
-      header: "Ajouter le",
-      accessor: "createdAt",
+      header: 'Ajouter le',
+      accessor: 'createdAt',
       cell: (createdAt) => formatDisplayDate(createdAt),
     },
     {
-      header: "Actions",
-      accessor: "actions",
+      header: 'Actions',
+      accessor: 'actions',
       actions: [
         {
-          name: "view",
+          name: 'view',
           handleClick(data) {
             setOpenDetails(true);
             setSelectedValues(data);
@@ -98,10 +95,8 @@ export const TeamList = () => {
   return (
     <BaseContainer
       title={"Gestion de l'équipe"}
-      description={
-        " Gérez les membres de votre équipe et leurs rôles au sein de l'agence."
-      }
-      border={"none"}
+      description={" Gérez les membres de votre équipe et leurs rôles au sein de l'agence."}
+      border={'none'}
       withActionButtons
       actionsButtonProps={{
         onReload: async () => await reloadTeamList(),
@@ -118,11 +113,7 @@ export const TeamList = () => {
         onChange={setOpenDetails}
         isOpen={openDetails}
         callback={() => {
-          handleStatus(
-            selectedValues?.status!,
-            selectedValues?.id!,
-            selectedValues?.userId!,
-          );
+          handleStatus(selectedValues?.status!, selectedValues?.id!, selectedValues?.userId!);
           setOpenDetails(false);
         }}
       />

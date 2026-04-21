@@ -1,4 +1,4 @@
-import { ENUM } from "..";
+import { ENUM } from '..';
 
 export interface IRentalAgreement {
   id: string;

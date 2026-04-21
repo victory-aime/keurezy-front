@@ -9,30 +9,24 @@ import {
   SimpleGrid,
   VStack,
   Span,
-} from "@chakra-ui/react";
-import { BaseButton, BaseText, Icons } from "_components/custom";
-import { hexToRGB } from "_theme/colors";
-import { VariablesColors } from "_theme/variables";
-import Link from "next/link";
-import { APP_ROUTES } from "_config/routes";
-import { MotionBox } from "_constants/motion";
-import { useColorMode } from "_components/ui/color-mode";
+} from '@chakra-ui/react';
+import { BaseButton, BaseText, Icons } from '_components/custom';
+import { hexToRGB } from '_theme/colors';
+import { VariablesColors } from '_theme/variables';
+import Link from 'next/link';
+import { APP_ROUTES } from '_config/routes';
+import { MotionBox } from '_constants/motion';
+import { useColorMode } from '_components/ui/color-mode';
 
 export const HeroSection = () => {
   const { colorMode } = useColorMode();
   return (
-    <Box
-      py={24}
-      position="relative"
-      display="flex"
-      alignItems="center"
-      overflow="hidden"
-    >
+    <Box py={24} position="relative" display="flex" alignItems="center" overflow="hidden">
       <Container mx="auto" px={{ base: 6, sm: 8 }} position="relative">
         <Grid
           gap={{ base: 10, sm: 16 }}
           alignItems="center"
-          templateColumns={{ base: "1fr", sm: "1fr 1fr" }}
+          templateColumns={{ base: '1fr', sm: '1fr 1fr' }}
         >
           {/* LEFT CONTENT */}
           <MotionBox
@@ -47,7 +41,7 @@ export const HeroSection = () => {
               px={4}
               py={1.5}
               rounded="full"
-              bg={hexToRGB("primary", 0.1)}
+              bg={hexToRGB('primary', 0.1)}
               color="primary"
               fontSize="sm"
               fontWeight="medium"
@@ -60,16 +54,16 @@ export const HeroSection = () => {
                 borderRadius="full"
                 bg={VariablesColors.tertiary}
                 animation="pulse 2s infinite"
-                color={"primary.500"}
+                color={'primary.500'}
               />
-              <BaseText color={"primary.500"} fontSize={"sm"}>
+              <BaseText color={'primary.500'} fontSize={'sm'}>
                 Plateforme tout-en-un pour la gestion locative
               </BaseText>
             </Flex>
 
             {/* Title */}
             <Box
-              fontSize={{ base: "2xl", sm: "3xl", lg: "4xl" }}
+              fontSize={{ base: '2xl', sm: '3xl', lg: '4xl' }}
               fontWeight="extrabold"
               lineHeight="1.1"
               mb={3}
@@ -78,15 +72,15 @@ export const HeroSection = () => {
               <br />
               <Text>
                 <Span
-                  bgClip={"text"}
-                  gradientFrom={"primary.400"}
-                  gradientVia={"primary.500"}
-                  gradientTo={"tertiary.500"}
-                  bgGradient={"to-r"}
-                  color={"transparent"}
+                  bgClip={'text'}
+                  gradientFrom={'primary.400'}
+                  gradientVia={'primary.500'}
+                  gradientTo={'tertiary.500'}
+                  bgGradient={'to-r'}
+                  color={'transparent'}
                 >
                   Intelligente
-                </Span>{" "}
+                </Span>{' '}
                 pour tous
               </Text>
             </Box>
@@ -97,16 +91,15 @@ export const HeroSection = () => {
               color="gray.500"
               maxW="lg"
               lineHeight="tall"
-              flexWrap={"wrap"}
+              flexWrap={'wrap'}
               mb={8}
             >
-              Une expérience fluide pour louer, gérer et développer vos
-              investissements immobiliers. Locataires et propriétaires, tout est
-              réuni sur une seule plateforme
+              Une expérience fluide pour louer, gérer et développer vos investissements immobiliers.
+              Locataires et propriétaires, tout est réuni sur une seule plateforme
             </Text>
 
             {/* Buttons */}
-            <Flex flexDirection={{ base: "column", sm: "row" }} gap={4} mb={10}>
+            <Flex flexDirection={{ base: 'column', sm: 'row' }} gap={4} mb={10}>
               {/* <Link href={APP_ROUTES.AUTH.SIGN_UP}>
                 <BaseButton
                   variant="outline"
@@ -118,23 +111,14 @@ export const HeroSection = () => {
               </Link> */}
 
               <Link href={APP_ROUTES.AUTH.ONBOARD}>
-                <BaseButton
-                  leftIcon={<Icons.RiBuildingLine />}
-                  width={{ base: "full" }}
-                >
+                <BaseButton leftIcon={<Icons.RiBuildingLine />} width={{ base: 'full' }}>
                   Je suis Proprietaire
                 </BaseButton>
               </Link>
             </Flex>
 
             {/* Stats */}
-            <Flex
-              width={"full"}
-              align="center"
-              justifyContent={"center"}
-              gap={8}
-              wrap={"wrap"}
-            >
+            <Flex width={'full'} align="center" justifyContent={'center'} gap={8} wrap={'wrap'}>
               <StatBlock value="2,500+" label="Propriétés gérées" />
               <Separator orientation="vertical" h="10" />
               <StatBlock value="98%" label="Satisfaction client" />
@@ -152,47 +136,17 @@ export const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
             mt={16}
-            width={"full"}
+            width={'full'}
             maxW="5xl"
             mx="auto"
             position="relative"
           >
-            <Box
-              borderRadius="xl"
-              borderWidth="1px"
-              shadow="xl"
-              overflow="hidden"
-            >
+            <Box borderRadius="xl" borderWidth="1px" shadow="xl" overflow="hidden">
               {/* Top bar */}
-              <Flex
-                align="center"
-                gap={2}
-                px={4}
-                py={3}
-                borderBottomWidth="1px"
-                bg="inherit"
-              >
-                <Box
-                  w={3}
-                  h={3}
-                  borderRadius="full"
-                  bg="red.400"
-                  opacity={0.6}
-                />
-                <Box
-                  w={3}
-                  h={3}
-                  borderRadius="full"
-                  bg="yellow.400"
-                  opacity={0.6}
-                />
-                <Box
-                  w={3}
-                  h={3}
-                  borderRadius="full"
-                  bg="green.400"
-                  opacity={0.6}
-                />
+              <Flex align="center" gap={2} px={4} py={3} borderBottomWidth="1px" bg="inherit">
+                <Box w={3} h={3} borderRadius="full" bg="red.400" opacity={0.6} />
+                <Box w={3} h={3} borderRadius="full" bg="yellow.400" opacity={0.6} />
+                <Box w={3} h={3} borderRadius="full" bg="green.400" opacity={0.6} />
                 <Text ml={2} fontSize="xs" color="gray.500">
                   my-immo.dashboard.app
                 </Text>
@@ -202,20 +156,16 @@ export const HeroSection = () => {
                 {/* KPI GRID */}
                 <SimpleGrid columns={{ base: 2, sm: 2, lg: 4 }} gap={4}>
                   {[
-                    { label: "Revenus", value: "€12,450", color: "blue" },
-                    { label: "Occupation", value: "94%", color: "primary" },
-                    { label: "Locataires", value: "28", color: "success" },
-                    { label: "Biens", value: "12", color: "warning" },
+                    { label: 'Revenus', value: '€12,450', color: 'blue' },
+                    { label: 'Occupation', value: '94%', color: 'primary' },
+                    { label: 'Locataires', value: '28', color: 'success' },
+                    { label: 'Biens', value: '12', color: 'warning' },
                   ].map((kpi) => (
                     <Box
                       key={kpi.label}
                       borderRadius="lg"
                       p={4}
-                      bg={
-                        colorMode === "light"
-                          ? `${kpi.color}.100`
-                          : `${kpi.color}.900`
-                      }
+                      bg={colorMode === 'light' ? `${kpi.color}.100` : `${kpi.color}.900`}
                     >
                       <Text
                         fontSize="xs"
@@ -225,12 +175,7 @@ export const HeroSection = () => {
                       >
                         {kpi.label}
                       </Text>
-                      <Text
-                        fontSize="xl"
-                        fontWeight="bold"
-                        mt={1}
-                        color={`${kpi.color}.700`}
-                      >
+                      <Text fontSize="xl" fontWeight="bold" mt={1} color={`${kpi.color}.700`}>
                         {kpi.value}
                       </Text>
                     </Box>
@@ -249,19 +194,17 @@ export const HeroSection = () => {
                     p={4}
                     gap={1}
                   >
-                    {[40, 65, 55, 80, 70, 90, 85, 75, 95, 88, 92, 78].map(
-                      (h, i) => (
-                        <MotionBox
-                          key={i}
-                          flex="1"
-                          borderRadius="sm"
-                          bg="primary.300"
-                          initial={{ height: 0 }}
-                          animate={{ height: `${h}%` }}
-                          transition={{ delay: 0.8 + i * 0.05, duration: 0.4 }}
-                        />
-                      ),
-                    )}
+                    {[40, 65, 55, 80, 70, 90, 85, 75, 95, 88, 92, 78].map((h, i) => (
+                      <MotionBox
+                        key={i}
+                        flex="1"
+                        borderRadius="sm"
+                        bg="primary.300"
+                        initial={{ height: 0 }}
+                        animate={{ height: `${h}%` }}
+                        transition={{ delay: 0.8 + i * 0.05, duration: 0.4 }}
+                      />
+                    ))}
                   </Flex>
 
                   {/* Activity panel */}
@@ -271,28 +214,21 @@ export const HeroSection = () => {
                     p={4}
                     direction="column"
                     justify="space-between"
-                    width={"full"}
+                    width={'full'}
                   >
                     <Text fontSize="xs" color="gray.500" fontWeight="medium">
                       Activité récente
                     </Text>
 
-                    <VStack align="start" gap={2} width={"full"}>
-                      {["Loyer reçu", "Nouveau bail", "Maintenance"].map(
-                        (item) => (
-                          <HStack key={item} gap={2}>
-                            <Box
-                              w={1.5}
-                              h={1.5}
-                              borderRadius="full"
-                              bg="purple.400"
-                            />
-                            <Text fontSize="xs" color="gray.500">
-                              {item}
-                            </Text>
-                          </HStack>
-                        ),
-                      )}
+                    <VStack align="start" gap={2} width={'full'}>
+                      {['Loyer reçu', 'Nouveau bail', 'Maintenance'].map((item) => (
+                        <HStack key={item} gap={2}>
+                          <Box w={1.5} h={1.5} borderRadius="full" bg="purple.400" />
+                          <Text fontSize="xs" color="gray.500">
+                            {item}
+                          </Text>
+                        </HStack>
+                      ))}
                     </VStack>
                   </Flex>
                 </SimpleGrid>

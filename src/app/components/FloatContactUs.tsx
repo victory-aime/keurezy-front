@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { IconButton } from "@chakra-ui/react";
-import React from "react";
-import ThinkBoxModal from "_component/ThinkBoxModal";
-import { UserModule } from "_store/state-management";
-import { ModalOpenProps } from "_components/custom";
-import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { IconButton } from '@chakra-ui/react';
+import React from 'react';
+import ThinkBoxModal from '_component/ThinkBoxModal';
+import { UserModule } from '_store/state-management';
+import { ModalOpenProps } from '_components/custom';
+import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 
 export const FloatContactUs = ({ isOpen, onChange }: ModalOpenProps) => {
   const { data: currentUser } = UserModule.getUserInfo({
@@ -23,14 +23,14 @@ export const FloatContactUs = ({ isOpen, onChange }: ModalOpenProps) => {
         aria-label="change color-mode"
         borderRadius="50px"
         animation={`fadeIn`}
-        bgColor={"info.500"}
+        bgColor={'info.500'}
         _hover={{
-          transform: "scale(1.1)",
-          transition: "transform 0.2s ease-in-out",
-          filter: "brightness(1.2)",
+          transform: 'scale(1.1)',
+          transition: 'transform 0.2s ease-in-out',
+          filter: 'brightness(1.2)',
         }}
       >
-        <IoChatbubbleEllipsesOutline color={"white"} />
+        <IoChatbubbleEllipsesOutline color={'white'} />
       </IconButton>
       <ThinkBoxModal onChange={onChange} isOpen={isOpen} data={currentUser} />
     </>

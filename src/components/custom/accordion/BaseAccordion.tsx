@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Icon } from "@chakra-ui/react";
+import { Icon } from '@chakra-ui/react';
 import {
   AccordionItem,
   AccordionItemContent,
   AccordionItemTrigger,
   AccordionRoot,
-} from "_components/ui/accordion";
-import React, { FC, useState } from "react";
-import { BaseText, CustomSkeletonLoader } from "_components/custom";
-import { NoDataAnimation } from "_components/custom/data-table/NoDataAnimation";
-import { BaseAccordionProps } from "./interface/accordion";
-import { useThemeColors } from "_theme/useThemeColors";
+} from '_components/ui/accordion';
+import React, { FC, useState } from 'react';
+import { BaseText, CustomSkeletonLoader } from '_components/custom';
+import { NoDataAnimation } from '_components/custom/data-table/NoDataAnimation';
+import { BaseAccordionProps } from './interface/accordion';
+import { useThemeColors } from '_theme/useThemeColors';
 
 export const BaseAccordion: FC<BaseAccordionProps> = ({
   items,
@@ -22,18 +22,16 @@ export const BaseAccordion: FC<BaseAccordionProps> = ({
   ...rest
 }) => {
   const { hexToRGB } = useThemeColors();
-  const [openValues, setOpenValues] = useState<string[]>(
-    items[0] ? [items[0].label] : [],
-  );
+  const [openValues, setOpenValues] = useState<string[]>(items[0] ? [items[0].label] : []);
 
   return (
     <>
       {!items ? (
-        <NoDataAnimation animationType={"folder"} />
+        <NoDataAnimation animationType={'folder'} />
       ) : (
         <AccordionRoot
-          width={"full"}
-          variant={"plain"}
+          width={'full'}
+          variant={'plain'}
           collapsible
           multiple={multipleOpen}
           value={openValues}
@@ -47,19 +45,15 @@ export const BaseAccordion: FC<BaseAccordionProps> = ({
             return (
               <AccordionItem key={index} value={item.label} mt="3">
                 <AccordionItemTrigger
-                  bgColor={isOpen ? hexToRGB(500, 0.3) : "none"}
-                  borderColor={isOpen ? hexToRGB(500, 0.3) : "none"}
+                  bgColor={isOpen ? hexToRGB(500, 0.3) : 'none'}
+                  borderColor={isOpen ? hexToRGB(500, 0.3) : 'none'}
                   borderWidth={1.5}
                   p="3"
                   borderRadius="7px"
                   cursor="pointer"
                 >
                   {isLoading ? (
-                    <CustomSkeletonLoader
-                      type="TEXT"
-                      numberOfLines={1}
-                      width="full"
-                    />
+                    <CustomSkeletonLoader type="TEXT" numberOfLines={1} width="full" />
                   ) : (
                     <>
                       {item.icon && (

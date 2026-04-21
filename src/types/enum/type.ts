@@ -1,4 +1,4 @@
 export enum LandPaymentType {
-  CASH = "CASH",
-  PARTIAL = "PARTIAL",
+  CASH = 'CASH',
+  PARTIAL = 'PARTIAL',
 }

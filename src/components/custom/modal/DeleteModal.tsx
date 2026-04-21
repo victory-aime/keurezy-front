@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { Center } from "@chakra-ui/react";
-import { BaseModal, DeleteModalActions, Icons } from "_components/custom";
-import React, { FC, useEffect, useState } from "react";
-import { DeleteLottie } from "_lottie/animations/LottieAnimation";
+import { Center } from '@chakra-ui/react';
+import { BaseModal, DeleteModalActions, Icons } from '_components/custom';
+import React, { FC, useEffect, useState } from 'react';
+import { DeleteLottie } from '_lottie/animations/LottieAnimation';
 
 export const DeleteModalAnimation: FC<DeleteModalActions> = ({
   isOpen,
   onChange,
   isLoading,
-  title = "title",
+  title = 'title',
   children,
   callback,
   ignoreFooter = true,
-  buttonSaveTitle = "COMMON.VALIDATE",
-  size = "sm",
+  buttonSaveTitle = 'COMMON.VALIDATE',
+  size = 'sm',
 }) => {
   const [showAnimation, setShowAnimation] = useState(false);
 
@@ -37,7 +37,7 @@ export const DeleteModalAnimation: FC<DeleteModalActions> = ({
       title={title}
       isOpen={isOpen}
       onChange={onChange}
-      modalType={"alertdialog"}
+      modalType={'alertdialog'}
       ignoreFooter={ignoreFooter}
       isLoading={isLoading}
       onClick={callback}

@@ -1,5 +1,5 @@
-import { HStack, Box, Text } from "@chakra-ui/react";
-import { MotionBox } from "_constants/motion";
+import { HStack, Box, Text } from '@chakra-ui/react';
+import { MotionBox } from '_constants/motion';
 
 export const DirectLive = () => {
   return (
@@ -7,8 +7,8 @@ export const DirectLive = () => {
       <MotionBox
         animate={{ scale: [1, 1.2, 1] }}
         transition={{ repeat: Infinity, duration: 2 }}
-        display={"flex"}
-        alignItems={"center"}
+        display={'flex'}
+        alignItems={'center'}
         gap={2}
       >
         <Box h="8px" w="8px" borderRadius="full" bg="tertiary.400" />

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   BaseContainer,
@@ -6,24 +6,22 @@ import {
   ColumnsDataTable,
   DataTableContainer,
   DeleteModalAnimation,
-} from "_components/custom";
-import { DASHBOARD_ROUTES } from "../../routes";
-import { useRouter } from "next/navigation";
-import { InvitationModule } from "_store/state-management";
-import { useUserContext } from "_context/user-context";
-import { CONSTANTS, ENUM } from "_types/*";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { generateAuditCell } from "_utils/generateAdit.utils";
+} from '_components/custom';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { useRouter } from 'next/navigation';
+import { InvitationModule } from '_store/state-management';
+import { useUserContext } from '_context/user-context';
+import { CONSTANTS, ENUM } from '_types/*';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { generateAuditCell } from '_utils/generateAdit.utils';
 
 export const InvitationsList = () => {
   const { user } = useUserContext();
   const router = useRouter();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [selectedInvitation, setSelectedInvitation] = useState<string | null>(
-    null,
-  );
+  const [selectedInvitation, setSelectedInvitation] = useState<string | null>(null);
 
   const {
     data: allInvitations,
@@ -47,40 +45,35 @@ export const InvitationsList = () => {
 
   const invitationColumns: ColumnsDataTable[] = [
     {
-      header: "Nom",
-      accessor: "name",
+      header: 'Nom',
+      accessor: 'name',
     },
     {
-      header: "Email",
-      accessor: "email",
+      header: 'Email',
+      accessor: 'email',
     },
     {
-      header: "Rôle",
-      accessor: "agencyRole",
-      cell: (role) =>
-        CONSTANTS.AGENCY_ROLE_LIST.find((r) => r.value === role)?.label || role,
+      header: 'Rôle',
+      accessor: 'agencyRole',
+      cell: (role) => CONSTANTS.AGENCY_ROLE_LIST.find((r) => r.value === role)?.label || role,
     },
     {
-      header: "Ajouter le",
-      accessor: "fullObject",
+      header: 'Ajouter le',
+      accessor: 'fullObject',
       cell: (value) =>
-        generateAuditCell(
-          t,
-          { userId: value?.invitedBy, timestamp: value?.createdAt },
-          user?.id,
-        ),
+        generateAuditCell(t, { userId: value?.invitedBy, timestamp: value?.createdAt }, user?.id),
     },
     {
-      header: "Statut",
-      accessor: "status",
+      header: 'Statut',
+      accessor: 'status',
       cell: (status) => <BaseTag status={status} />,
     },
     {
-      header: " Actions",
-      accessor: "actions",
+      header: ' Actions',
+      accessor: 'actions',
       actions: [
         {
-          name: "cancel",
+          name: 'cancel',
           isDisabled(data) {
             return (
               data.status === ENUM.COMMON.Status.CANCELLED ||
@@ -99,12 +92,12 @@ export const InvitationsList = () => {
 
   return (
     <BaseContainer
-      title={"Gestion des Invitations"}
+      title={'Gestion des Invitations'}
       description={`${allInvitations?.length || 0} Invitations `}
-      border={"none"}
+      border={'none'}
       withActionButtons
       actionsButtonProps={{
-        validateTitle: "Invite un membre",
+        validateTitle: 'Invite un membre',
         onClick() {
           router.push(DASHBOARD_ROUTES.INVITATIONS.ADD);
         },
@@ -114,10 +107,14 @@ export const InvitationsList = () => {
       }}
     >
       <DataTableContainer
-        data={allInvitations}
+        data={allInvitations ?? []}
         columns={invitationColumns}
         isLoading={isInvitationLoad}
-        hidePagination={allInvitations?.length < 10}
+        paginationData={{
+          lazy: false,
+          totalDataPerPage: 10,
+        }}
+        hidePagination={allInvitations && allInvitations?.length < 10}
       />
       <DeleteModalAnimation
         title={"Annuler l'invitation"}
@@ -129,8 +126,7 @@ export const InvitationsList = () => {
         }}
         ignoreFooter={false}
       >
-        Etes vous sur de vouloir annuler cette invitation ? Cette action est
-        irreversible.
+        Etes vous sur de vouloir annuler cette invitation ? Cette action est irreversible.
       </DeleteModalAnimation>
     </BaseContainer>
   );

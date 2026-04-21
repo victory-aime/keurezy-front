@@ -1,5 +1,5 @@
-import { BaseTabs } from "./BaseTabs";
+import { BaseTabs } from './BaseTabs';
 
-import { TabsProps } from "./interface/tabs";
+import { TabsProps } from './interface/tabs';
 
 export { BaseTabs, type TabsProps };

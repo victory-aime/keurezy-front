@@ -1,5 +1,5 @@
-import { createListCollection } from "@chakra-ui/react";
-import { CONSTANTS, MODELS } from "_types/*";
+import { createListCollection } from '@chakra-ui/react';
+import { CONSTANTS, MODELS } from '_types/*';
 
 const propertyTypes = createListCollection({
   items: CONSTANTS.propertyTypes.map((type) => ({

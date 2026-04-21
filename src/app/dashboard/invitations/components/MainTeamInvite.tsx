@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { JSX, useRef, useState } from "react";
-import { AnimatePresence } from "framer-motion";
-import { BaseButton, BaseContainer, Icons } from "_components/custom";
-import { Box, Flex, HStack, Span, Text } from "@chakra-ui/react";
-import { Formik } from "formik";
-import { MotionBox, MotionFlex } from "_constants/motion";
-import { InviteStep1 } from "./InviteTeamStep1";
+import { JSX, useRef, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { BaseButton, BaseContainer, Icons } from '_components/custom';
+import { Box, Flex, HStack, Span, Text } from '@chakra-ui/react';
+import { Formik } from 'formik';
+import { MotionBox, MotionFlex } from '_constants/motion';
+import { InviteStep1 } from './InviteTeamStep1';
 import {
   INVITE_TEAM_SLIDE_VARIANTS,
   INVITE_TEAM_STEPS,
@@ -14,16 +14,16 @@ import {
   onboardInviteTeamStepValidationSchemas,
   TOTAL_INVITE_TEAM_STEPS,
   ISelectPermissions,
-} from "../constants/team";
-import { DASHBOARD_ROUTES } from "../../routes";
-import { useRouter } from "next/navigation";
-import { InviteTeamStep2 } from "./InviteTeamStep2";
-import { useUserContext } from "_context/user-context";
-import { InviteTeamStep3 } from "./InviteTeamStep3";
-import { CommonModule, InvitationModule } from "_store/state-management";
-import { TOTAL_ONBOARD_STEPS } from "../../../auth/onboarding/constants/onboard";
-import { InviteTeamFinalStep } from "./InviteTeamFinalStep";
-import { generateRandomPassword } from "rise-core-frontend";
+} from '../constants/team';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { useRouter } from 'next/navigation';
+import { InviteTeamStep2 } from './InviteTeamStep2';
+import { useUserContext } from '_context/user-context';
+import { InviteTeamStep3 } from './InviteTeamStep3';
+import { CommonModule, InvitationModule } from '_store/state-management';
+import { TOTAL_ONBOARD_STEPS } from '../../../auth/onboarding/constants/onboard';
+import { InviteTeamFinalStep } from './InviteTeamFinalStep';
+import { generateRandomPassword } from 'rise-core-frontend';
 
 export const MainTeamInvite = () => {
   const navigate = useRouter();
@@ -32,44 +32,33 @@ export const MainTeamInvite = () => {
   const [direction, setDirection] = useState(1);
   const formikRef = useRef<any>(null);
 
-  const { data: allPermissions, isLoading } =
-    CommonModule.getAllPermissionsByAgencyQueries({
-      params: { agencyId: user?.agencyId },
-      queryOptions: {
-        enabled: !!user?.agencyId,
-      },
-    });
-
-  const {
-    mutateAsync: createInvitation,
-    isPending: isCreateInvitationPending,
-  } = InvitationModule.createInvitationMutation({
-    mutationOptions: {
-      onSuccess: () => {
-        setStep(TOTAL_INVITE_TEAM_STEPS - 1);
-        InvitationModule.InvitationCache.invalidateAllInvitationsCache();
-      },
+  const { data: allPermissions, isLoading } = CommonModule.getAllPermissionsByAgencyQueries({
+    params: { agencyId: user?.agencyId },
+    queryOptions: {
+      enabled: !!user?.agencyId,
     },
   });
+
+  const { mutateAsync: createInvitation, isPending: isCreateInvitationPending } =
+    InvitationModule.createInvitationMutation({
+      mutationOptions: {
+        onSuccess: () => {
+          setStep(TOTAL_INVITE_TEAM_STEPS - 1);
+          InvitationModule.InvitationCache.invalidateAllInvitationsCache();
+        },
+      },
+    });
 
   const stepsConfig: { component: () => JSX.Element; blocking: boolean }[] = [
     { component: InviteStep1, blocking: true },
     {
       component: () => (
-        <InviteTeamStep2
-          allPermissions={allPermissions ?? []}
-          isLoading={isLoading}
-        />
+        <InviteTeamStep2 allPermissions={allPermissions ?? []} isLoading={isLoading} />
       ),
       blocking: true,
     },
     {
-      component: () => (
-        <InviteTeamStep3
-          permissions={allPermissions ?? []}
-          isLoading={isLoading}
-        />
-      ),
+      component: () => <InviteTeamStep3 permissions={allPermissions ?? []} isLoading={isLoading} />,
       blocking: false,
     },
     {
@@ -79,7 +68,7 @@ export const MainTeamInvite = () => {
   ];
 
   const markAllTouched = (errors: any) => {
-    if (typeof errors !== "object" || errors === null) return true;
+    if (typeof errors !== 'object' || errors === null) return true;
 
     return Object.keys(errors).reduce((acc: any, key) => {
       acc[key] = markAllTouched(errors[key]);
@@ -98,17 +87,15 @@ export const MainTeamInvite = () => {
             temporaryPassword: generateRandomPassword(12),
             email: formikRef.current.values.account.email,
             role: formikRef.current.values.account.role[0],
-            permissions: formikRef.current.values.permissions.map(
-              (p: ISelectPermissions) => ({
-                permissionId: p.permissionId,
-                granted: p.granted,
-              }),
-            ),
+            permissions: formikRef.current.values.permissions.map((p: ISelectPermissions) => ({
+              permissionId: p.permissionId,
+              granted: p.granted,
+            })),
           },
         },
       });
     } catch (error) {
-      console.error("Onboarding failed:", error);
+      console.error('Onboarding failed:', error);
     }
   };
 
@@ -127,10 +114,7 @@ export const MainTeamInvite = () => {
 
     // 🔥 Step 3 (envoi de l'invitation)
     if (step === 2) {
-      console.log(
-        "Submitting invitation with values:",
-        formikRef.current.values,
-      );
+      console.log('Submitting invitation with values:', formikRef.current.values);
       await completeOnboarding();
       return;
     }
@@ -159,11 +143,11 @@ export const MainTeamInvite = () => {
     >
       {({}) => (
         <BaseContainer
-          border={"none"}
-          title={" Inviter un membre"}
-          description={" Ajoutez un collaborateur et définissez ses accès"}
+          border={'none'}
+          title={' Inviter un membre'}
+          description={' Ajoutez un collaborateur et définissez ses accès'}
         >
-          <Flex alignItems={"center"} gap={5} mt={5}>
+          <Flex alignItems={'center'} gap={5} mt={5}>
             {INVITE_TEAM_STEPS.map((s, i) => (
               <>
                 <HStack gap={2}>
@@ -175,47 +159,29 @@ export const MainTeamInvite = () => {
                     borderRadius="full"
                     fontSize="xs"
                     fontWeight="semibold"
-                    bg={
-                      i === step
-                        ? "primary.500"
-                        : i < step
-                          ? "tertiary.100"
-                          : "gray.100"
-                    }
-                    color={
-                      i === step
-                        ? "white"
-                        : i < step
-                          ? "tertiary.600"
-                          : "gray.500"
-                    }
-                    boxShadow={i === step ? "md" : "none"}
+                    bg={i === step ? 'primary.500' : i < step ? 'tertiary.100' : 'gray.100'}
+                    color={i === step ? 'white' : i < step ? 'tertiary.600' : 'gray.500'}
+                    boxShadow={i === step ? 'md' : 'none'}
                     animate={{ scale: i === step ? 1.1 : 1 }}
-                    transition={{ type: "spring", stiffness: 300 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
                   >
                     {i < step ? <Icons.Check /> : <s.icon />}
                   </MotionFlex>
                   <Text
                     fontWeight="medium"
-                    display={{ base: "none", md: "block" }}
-                    color={
-                      i === step
-                        ? "primary.500"
-                        : i < step
-                          ? "tertiary.500"
-                          : "gray.500"
-                    }
+                    display={{ base: 'none', md: 'block' }}
+                    color={i === step ? 'primary.500' : i < step ? 'tertiary.500' : 'gray.500'}
                   >
                     {s.title}
                   </Text>
                 </HStack>
                 {i < TOTAL_INVITE_TEAM_STEPS - 1 && (
                   <Box
-                    w={{ base: "16px", lg: "40px" }}
+                    w={{ base: '16px', lg: '40px' }}
                     h="2px"
                     mx={1}
                     borderRadius="full"
-                    bg={i < step ? "tertiary.200" : "gray.200"}
+                    bg={i < step ? 'tertiary.200' : 'gray.200'}
                     transition="all 0.3s"
                   />
                 )}
@@ -233,8 +199,8 @@ export const MainTeamInvite = () => {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.35, ease: "easeInOut" }}
-                mt={"30px"}
+                transition={{ duration: 0.35, ease: 'easeInOut' }}
+                mt={'30px'}
               >
                 <CurrentStep />
               </MotionBox>
@@ -253,10 +219,7 @@ export const MainTeamInvite = () => {
             >
               <BaseButton
                 variant="outline"
-                isDisabled={
-                  step === TOTAL_INVITE_TEAM_STEPS - 1 ||
-                  isCreateInvitationPending
-                }
+                isDisabled={step === TOTAL_INVITE_TEAM_STEPS - 1 || isCreateInvitationPending}
                 onClick={() => {
                   if (step === 0) {
                     navigate.push(DASHBOARD_ROUTES.INVITATIONS.LIST);
@@ -266,13 +229,11 @@ export const MainTeamInvite = () => {
                 }}
                 leftIcon={<Icons.IoIosArrowRoundBack size={16} />}
               >
-                <Span display={{ base: "none", sm: "inline" }}>
+                <Span display={{ base: 'none', sm: 'inline' }}>
                   {step === 0 ? (
-                    "Annuler"
+                    'Annuler'
                   ) : (
-                    <Span display={{ base: "none", sm: "inline" }}>
-                      Précédent
-                    </Span>
+                    <Span display={{ base: 'none', sm: 'inline' }}>Précédent</Span>
                   )}
                 </Span>
               </BaseButton>
@@ -281,20 +242,14 @@ export const MainTeamInvite = () => {
                 onClick={goNext}
                 isLoading={isCreateInvitationPending}
                 isDisabled={isCreateInvitationPending}
-                rightIcon={
-                  step === 2 ? (
-                    <Icons.Send size={16} />
-                  ) : (
-                    <Icons.ArrowRight size={16} />
-                  )
-                }
+                rightIcon={step === 2 ? <Icons.Send size={16} /> : <Icons.ArrowRight size={16} />}
               >
-                <Span display={{ base: "none", sm: "inline" }}>
+                <Span display={{ base: 'none', sm: 'inline' }}>
                   {step === 2
                     ? "Envoyer l'invitation"
                     : step === 3 && step < TOTAL_ONBOARD_STEPS
-                      ? "Voir les invitations"
-                      : "Suivant"}
+                      ? 'Voir les invitations'
+                      : 'Suivant'}
                 </Span>
               </BaseButton>
             </Flex>

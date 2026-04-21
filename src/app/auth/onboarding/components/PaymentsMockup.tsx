@@ -1,30 +1,30 @@
-import { Box, Flex, Grid, Separator, Text, VStack } from "@chakra-ui/react";
-import { MotionBox } from "_constants/motion";
-import { TopBarMockup } from "./TopBarMockup";
-import { ENUM } from "_types/*";
-import { useStyles } from "../constants/style";
+import { Box, Flex, Grid, Separator, Text, VStack } from '@chakra-ui/react';
+import { MotionBox } from '_constants/motion';
+import { TopBarMockup } from './TopBarMockup';
+import { ENUM } from '_types/*';
+import { useStyles } from '../constants/style';
 
 export const PaymentsMockup = () => {
   const { bg, border, muted, textMuted } = useStyles();
 
   const transactions = [
     {
-      tenant: "M. Laurent",
-      property: "Apt. Haussmann",
-      amount: "+2 450€",
-      date: "01/02",
+      tenant: 'M. Laurent',
+      property: 'Apt. Haussmann',
+      amount: '+2 450€',
+      date: '01/02',
     },
     {
-      tenant: "Mme. Petit",
-      property: "Studio Marais",
-      amount: "+1 200€",
-      date: "01/02",
+      tenant: 'Mme. Petit',
+      property: 'Studio Marais',
+      amount: '+1 200€',
+      date: '01/02',
     },
     {
-      tenant: "M. Garcia",
-      property: "Loft Bastille",
-      amount: "En attente",
-      date: "—",
+      tenant: 'M. Garcia',
+      property: 'Loft Bastille',
+      amount: 'En attente',
+      date: '—',
     },
   ];
 
@@ -41,17 +41,13 @@ export const PaymentsMockup = () => {
       shadow="xl"
       overflow="hidden"
     >
-      <TopBarMockup
-        border={border}
-        muted={muted}
-        link={"app.myimmo.com/payments"}
-      />
+      <TopBarMockup border={border} muted={muted} link={'app.myimmo.com/payments'} />
       <Box p={4}>
         <Grid templateColumns="repeat(3,1fr)" gap={3} mb={4}>
           {[
-            { label: "Ce mois", value: "32.4K€", color: "primary.500" },
-            { label: "Encaissé", value: "98%", color: "tertiary.500" },
-            { label: "En retard", value: "1", color: "red.500" },
+            { label: 'Ce mois', value: '32.4K€', color: 'primary.500' },
+            { label: 'Encaissé', value: '98%', color: 'tertiary.500' },
+            { label: 'En retard', value: '1', color: 'red.500' },
           ].map((item, i) => (
             <MotionBox
               key={item.label}
@@ -74,9 +70,7 @@ export const PaymentsMockup = () => {
         </Grid>
 
         <Box bg={muted} p={3} rounded="xl">
-          <Text fontSize="x-small">
-            Revenus mensuels ({ENUM.COMMON.Currency.XOF})
-          </Text>
+          <Text fontSize="x-small">Revenus mensuels ({ENUM.COMMON.Currency.XOF})</Text>
           <Flex align="flex-end" h="80px" gap={1}>
             {bars.map((h, i) => (
               <MotionBox
@@ -94,18 +88,12 @@ export const PaymentsMockup = () => {
           </Flex>
         </Box>
 
-        <Box bg={muted} mt={5} rounded={"xl"}>
-          <Text py={3} px={2} fontSize={"xs"}>
+        <Box bg={muted} mt={5} rounded={'xl'}>
+          <Text py={3} px={2} fontSize={'xs'}>
             Dernières transactions
           </Text>
 
-          <VStack
-            gap={1}
-            align="stretch"
-            borderTop="1px solid"
-            borderColor={"border"}
-            p={3}
-          >
+          <VStack gap={1} align="stretch" borderTop="1px solid" borderColor={'border'} p={3}>
             {transactions.map((tx, i) => (
               <Box key={tx.tenant}>
                 <MotionBox
@@ -124,12 +112,8 @@ export const PaymentsMockup = () => {
 
                     <Box textAlign="right">
                       <Text
-                        fontSize={"xs"}
-                        color={
-                          tx.amount === "En attente"
-                            ? "secondary.500"
-                            : "tertiary.500"
-                        }
+                        fontSize={'xs'}
+                        color={tx.amount === 'En attente' ? 'secondary.500' : 'tertiary.500'}
                         fontWeight="bold"
                       >
                         {tx.amount}
@@ -141,9 +125,7 @@ export const PaymentsMockup = () => {
                   </Flex>
                 </MotionBox>
 
-                {i < transactions.length - 1 && (
-                  <Separator my={2} borderColor="border" />
-                )}
+                {i < transactions.length - 1 && <Separator my={2} borderColor="border" />}
               </Box>
             ))}
           </VStack>

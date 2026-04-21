@@ -1,9 +1,5 @@
-import BaseModal from "./BaseModal";
-import { DeleteModalAnimation } from "./DeleteModal";
+import BaseModal from './BaseModal';
+import { DeleteModalAnimation } from './DeleteModal';
 
-export type {
-  ModalProps,
-  ModalOpenProps,
-  DeleteModalActions,
-} from "./interface/modal";
+export type { ModalProps, ModalOpenProps, DeleteModalActions } from './interface/modal';
 export { BaseModal, DeleteModalAnimation };

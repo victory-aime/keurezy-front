@@ -1,8 +1,8 @@
-import { MODELS } from "_types/*";
-import { AgencyDisplayContactList } from "./AgencyDisplayContactList";
-import { BaseText, Icons } from "_components/custom";
-import { VariablesColors } from "_theme/variables";
-import { VStack } from "@chakra-ui/react";
+import { MODELS } from '_types/*';
+import { AgencyDisplayContactList } from './AgencyDisplayContactList';
+import { BaseText, Icons } from '_components/custom';
+import { VariablesColors } from '_theme/variables';
+import { VStack } from '@chakra-ui/react';
 
 export const RenderAgencyContactRequestsList = ({
   list,
@@ -15,11 +15,7 @@ export const RenderAgencyContactRequestsList = ({
 }) => {
   if (isLoading) {
     return (
-      <AgencyDisplayContactList
-        request={{} as MODELS.IAgencyRequestList}
-        index={0}
-        isLoading
-      />
+      <AgencyDisplayContactList request={{} as MODELS.IAgencyRequestList} index={0} isLoading />
     );
   }
 

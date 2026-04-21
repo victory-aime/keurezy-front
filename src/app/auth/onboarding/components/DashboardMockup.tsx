@@ -1,17 +1,9 @@
-import {
-  Flex,
-  HStack,
-  Circle,
-  Box,
-  VStack,
-  Grid,
-  Text,
-} from "@chakra-ui/react";
-import { Icons, BaseTag } from "_components/custom";
-import { useColorModeValue } from "_components/ui/color-mode";
-import { ENUM } from "_types/*";
-import { MotionBox } from "_constants/motion";
-import { FiBarChart2 } from "react-icons/fi";
+import { Flex, HStack, Circle, Box, VStack, Grid, Text } from '@chakra-ui/react';
+import { Icons, BaseTag } from '_components/custom';
+import { useColorModeValue } from '_components/ui/color-mode';
+import { ENUM } from '_types/*';
+import { MotionBox } from '_constants/motion';
+import { FiBarChart2 } from 'react-icons/fi';
 
 interface DashboardMockupProps {
   userName?: string;
@@ -27,46 +19,46 @@ interface DashboardMockupProps {
 }
 
 export const DashboardMockup = ({
-  userName = "Jean Dupont",
-  role = "Propriétaire",
-  company = "MyImmo",
+  userName = 'Jean Dupont',
+  role = 'Propriétaire',
+  company = 'MyImmo',
   properties = 12,
   rent = 2450,
-  location = "Paris",
+  location = 'Paris',
   currency = ENUM.COMMON.Currency.XOF,
   notifications = true,
   activeTab = 0,
   animated = true,
 }: DashboardMockupProps) => {
-  const bg = useColorModeValue("white", "gray.900");
-  const muted = useColorModeValue("gray.100", "gray.800");
-  const border = useColorModeValue("gray.200", "gray.700");
-  const textMuted = useColorModeValue("gray.500", "gray.400");
+  const bg = useColorModeValue('white', 'gray.900');
+  const muted = useColorModeValue('gray.100', 'gray.800');
+  const border = useColorModeValue('gray.200', 'gray.700');
+  const textMuted = useColorModeValue('gray.500', 'gray.400');
 
   const kpis = [
     {
-      label: "Revenus",
+      label: 'Revenus',
       value: `${(rent * properties).toLocaleString()}${currency}`,
       icon: Icons.CreditCard,
-      trend: "+12%",
+      trend: '+12%',
     },
     {
-      label: "Biens",
+      label: 'Biens',
       value: properties,
       icon: Icons.RiBuildingLine,
-      trend: "+2",
+      trend: '+2',
     },
     {
-      label: "Occupation",
-      value: "94%",
+      label: 'Occupation',
+      value: '94%',
       icon: Icons.Chart,
-      trend: "+3%",
+      trend: '+3%',
     },
     {
-      label: "Locataires",
+      label: 'Locataires',
       value: Math.max(1, properties - 2),
       icon: Icons.FaUsers,
-      trend: "+4",
+      trend: '+4',
     },
   ];
 
@@ -91,7 +83,7 @@ export const DashboardMockup = ({
       bg={bg}
       rounded="2xl"
       shadow="xl"
-      overflow={"hidden"}
+      overflow={'hidden'}
     >
       {/* Top Bar */}
       <Flex
@@ -108,8 +100,8 @@ export const DashboardMockup = ({
           <Circle size="10px" bg="yellow.400" />
           <Circle size="10px" bg="green.400" />
         </HStack>
-        <Flex flex={1} alignItems={"center"} justifyContent={"center"} mx={4}>
-          <Text px={3} py={1} fontSize={"xs"} color={"gray.400"}>
+        <Flex flex={1} alignItems={'center'} justifyContent={'center'} mx={4}>
+          <Text px={3} py={1} fontSize={'xs'} color={'gray.400'}>
             app.myimmo.com/dashboard
           </Text>
         </Flex>
@@ -117,13 +109,7 @@ export const DashboardMockup = ({
         {notifications && (
           <Box position="relative">
             <Icons.Bell size={16} color="gray" />
-            <Circle
-              size="8px"
-              bg="red.500"
-              position="absolute"
-              top="0"
-              right="0"
-            />
+            <Circle size="8px" bg="red.500" position="absolute" top="0" right="0" />
           </Box>
         )}
       </Flex>
@@ -135,14 +121,14 @@ export const DashboardMockup = ({
           p={3}
           borderRight="1px solid"
           borderColor={border}
-          display={{ base: "none", md: "flex" }}
+          display={{ base: 'none', md: 'flex' }}
         >
           {sidebarIcons.map((Icon, idx) => (
             <Circle
               key={idx}
               size="36px"
-              bg={idx === activeTab ? "primary.100" : muted}
-              color={idx === activeTab ? "primary.500" : textMuted}
+              bg={idx === activeTab ? 'primary.100' : muted}
+              color={idx === activeTab ? 'primary.500' : textMuted}
             >
               <Icon size={16} />
             </Circle>
@@ -150,13 +136,13 @@ export const DashboardMockup = ({
         </VStack>
 
         {/* Main */}
-        <Box width={"full"} display={"flex"} flex={1} flexDir={"column"} p={4}>
+        <Box width={'full'} display={'flex'} flex={1} flexDir={'column'} p={4}>
           {/* Header */}
           <Flex justify="space-between" mb={6}>
             <Box>
               <Text fontWeight="semibold">Bonjour, {userName} 👋</Text>
               <HStack mt={1} gap={2}>
-                <BaseTag color="purple" label={role} borderRadius={"full"} />
+                <BaseTag color="purple" label={role} borderRadius={'full'} />
                 <Text fontSize="xs" color={textMuted}>
                   {company}
                 </Text>
@@ -172,10 +158,7 @@ export const DashboardMockup = ({
           </Flex>
 
           {/* KPIs */}
-          <Grid
-            templateColumns={{ base: "repeat(2,1fr)", md: "repeat(4,1fr)" }}
-            gap={4}
-          >
+          <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(4,1fr)' }} gap={4}>
             {kpis.map((kpi, idx) => (
               <MotionBox
                 key={kpi.label}

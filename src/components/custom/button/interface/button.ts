@@ -1,17 +1,17 @@
-import { ButtonProps, FlexProps } from "@chakra-ui/react";
-import React, { ReactNode } from "react";
+import { ButtonProps, FlexProps } from '@chakra-ui/react';
+import React, { ReactNode } from 'react';
 
 export type variantColorType =
-  | "primary"
-  | "secondary"
-  | "tertiary"
-  | "danger"
-  | "success"
-  | "warning"
-  | "info"
-  | "purple"
-  | "overlay"
-  | "neutral";
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'danger'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'purple'
+  | 'overlay'
+  | 'neutral';
 
 export interface VariantColorStyle {
   bg?: string;
@@ -39,7 +39,7 @@ export interface ActionButtonTypes extends FlexProps {
   isEmailVerified?: boolean;
   cancelColor?: variantColorType;
   validateColor?: variantColorType;
-  cancelVariant?: ButtonProps["variant"];
+  cancelVariant?: ButtonProps['variant'];
   icon?: ReactNode;
   downloadPermission?: boolean;
   validatePermission?: boolean;

@@ -1,4 +1,4 @@
-import { authClient } from "../lib/auth-client";
+import { authClient } from '../lib/auth-client';
 
 export const safeGetServerSession = async (options: any) => {
   try {
@@ -6,7 +6,7 @@ export const safeGetServerSession = async (options: any) => {
   } catch (error) {
     return {
       data: null,
-      error: "SERVER_UNREACHABLE",
+      error: 'SERVER_UNREACHABLE',
     };
   }
 };

@@ -1,7 +1,7 @@
-import { Flex, SimpleGrid } from "@chakra-ui/react";
-import { BaseStats, Icons } from "_components/custom";
-import { MODELS, ENUM } from "_types/*";
-import { useMemo } from "react";
+import { Flex, SimpleGrid } from '@chakra-ui/react';
+import { BaseStats, Icons } from '_components/custom';
+import { MODELS, ENUM } from '_types/*';
+import { useMemo } from 'react';
 
 export const ApplicationStatsCard = ({
   agencyApplicationList,
@@ -32,38 +32,33 @@ export const ApplicationStatsCard = ({
 
   const stats = [
     {
-      label: "Total",
+      label: 'Total',
       value: allAgencyApplication,
       icon: <Icons.Clipboard />,
-      iconBgColor: "primary.500",
+      iconBgColor: 'primary.500',
     },
     {
-      label: "En attente",
+      label: 'En attente',
       value: pendingAgencyApplication,
       icon: <Icons.Timer />,
-      iconBgColor: "warning.500",
+      iconBgColor: 'warning.500',
     },
     {
-      label: "Acceptées",
+      label: 'Acceptées',
       value: acceptedAgencyApplication,
       icon: <Icons.Check />,
-      iconBgColor: "tertiary.500",
+      iconBgColor: 'tertiary.500',
     },
     {
-      label: "Rejetées",
+      label: 'Rejetées',
       value: rejectedAgencyApplication,
       icon: <Icons.Close />,
-      iconBgColor: "red.500",
+      iconBgColor: 'red.500',
     },
   ];
   return (
-    <Flex width={"full"} gap={4}>
-      <SimpleGrid
-        width={"full"}
-        mt={"40px"}
-        columns={{ base: 1, sm: 4 }}
-        gap={4}
-      >
+    <Flex width={'full'} gap={4}>
+      <SimpleGrid width={'full'} mt={'40px'} columns={{ base: 1, sm: 4 }} gap={4}>
         {stats.map((s, i) => (
           <BaseStats
             key={i}

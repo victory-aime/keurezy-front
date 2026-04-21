@@ -1,80 +1,63 @@
-import {
-  Box,
-  Flex,
-  SimpleGrid,
-  Span,
-  VStack,
-  Text,
-  Container,
-} from "@chakra-ui/react";
-import {
-  BaseButton,
-  BaseIcon,
-  BaseText,
-  Icons,
-  TextVariant,
-} from "_components/custom";
-import { APP_ROUTES } from "_config/routes";
-import { Colors, hexToRGB } from "_theme/colors";
-import { VariablesColors } from "_theme/variables";
-import { ENUM } from "_types/*";
-import { useInView } from "framer-motion";
-import Link from "next/link";
-import { useRef, useEffect, useState } from "react";
-import { MotionBox, MotionVStack } from "_constants/motion";
-import { useColorMode } from "_components/ui/color-mode";
+import { Box, Flex, SimpleGrid, Span, VStack, Text, Container } from '@chakra-ui/react';
+import { BaseButton, BaseIcon, BaseText, Icons, TextVariant } from '_components/custom';
+import { APP_ROUTES } from '_config/routes';
+import { Colors, hexToRGB } from '_theme/colors';
+import { VariablesColors } from '_theme/variables';
+import { ENUM } from '_types/*';
+import { useInView } from 'framer-motion';
+import Link from 'next/link';
+import { useRef, useEffect, useState } from 'react';
+import { MotionBox, MotionVStack } from '_constants/motion';
+import { useColorMode } from '_components/ui/color-mode';
 
 const ownerFeatures = [
   {
     icon: Icons.Chart,
-    title: "Suivi des revenus en temps réel",
-    description:
-      "Visualisez vos performances financières avec des tableaux de bord détaillés.",
+    title: 'Suivi des revenus en temps réel',
+    description: 'Visualisez vos performances financières avec des tableaux de bord détaillés.',
     iconColor: VariablesColors.primary,
-    color: "primary",
+    color: 'primary',
   },
   {
     icon: Icons.RiBuildingLine,
-    title: "Gestion du portefeuille",
-    description:
-      "Centralisez la gestion de tous vos biens depuis une interface unique.",
+    title: 'Gestion du portefeuille',
+    description: 'Centralisez la gestion de tous vos biens depuis une interface unique.',
     iconColor: VariablesColors.secondary,
-    color: "secondary",
+    color: 'secondary',
   },
   {
     icon: Icons.FaUsers,
-    title: "Gestion des locataires",
-    description: "Gérez les profils, contrats et communications facilement.",
+    title: 'Gestion des locataires',
+    description: 'Gérez les profils, contrats et communications facilement.',
     iconColor: VariablesColors.tertiary,
-    color: "tertiary",
+    color: 'tertiary',
   },
   {
     icon: Icons.TrendingUp,
     title: "Analytique d'occupation",
     description: "Analysez les taux d'occupation et optimisez votre rendement.",
     iconColor: VariablesColors.primary,
-    color: "primary",
+    color: 'primary',
   },
   {
     icon: Icons.CreditCard,
-    title: "Collecte automatique des loyers",
-    description:
-      "Automatisez les prélèvements et suivez les paiements en temps réel.",
+    title: 'Collecte automatique des loyers',
+    description: 'Automatisez les prélèvements et suivez les paiements en temps réel.',
     iconColor: VariablesColors.warning,
-    color: "warning",
+    color: 'warning',
   },
   {
     icon: Icons.Shield,
-    title: "Accès sécurisé par rôle",
-    description: "Contrôlez les permissions de chaque membre de votre équipe.",
+    title: 'Accès sécurisé par rôle',
+    description: 'Contrôlez les permissions de chaque membre de votre équipe.',
     iconColor: VariablesColors.tertiary,
-    color: "tertiary",
+    color: 'tertiary',
   },
 ];
 
 const CountUp = ({
   end,
-  suffix = "",
+  suffix = '',
   duration = 2,
 }: {
   end: number;
@@ -113,14 +96,14 @@ export const OwnerSection = () => {
   const { colorMode } = useColorMode();
   return (
     <Box py="24">
-      <Container mx={"auto"} px={{ base: 4, sm: 6, lg: 8 }}>
+      <Container mx={'auto'} px={{ base: 4, sm: 6, lg: 8 }}>
         <MotionVStack
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          textAlign={"center"}
-          mx={"auto"}
-          mb={"16"}
+          textAlign={'center'}
+          mx={'auto'}
+          mb={'16'}
         >
           <Flex
             align="center"
@@ -128,7 +111,7 @@ export const OwnerSection = () => {
             px={4}
             py={1.5}
             rounded="full"
-            bg={hexToRGB("primary", 0.1)}
+            bg={hexToRGB('primary', 0.1)}
             color="primary"
             fontSize="sm"
             fontWeight="medium"
@@ -141,26 +124,17 @@ export const OwnerSection = () => {
               borderRadius="full"
               bg={VariablesColors.primary}
               animation="pulse 2s infinite"
-              color={"primary.500"}
+              color={'primary.500'}
             />
-            <BaseText
-              color={"primary.500"}
-              textTransform={"uppercase"}
-              fontWeight={"semibold"}
-            >
+            <BaseText color={'primary.500'} textTransform={'uppercase'} fontWeight={'semibold'}>
               Espace Propriétaire
             </BaseText>
           </Flex>
-          <BaseText
-            fontWeight={"semibold"}
-            variant={TextVariant.H1}
-            lineHeight={1.2}
-          >
+          <BaseText fontWeight={'semibold'} variant={TextVariant.H1} lineHeight={1.2}>
             Des outils puissants pour les propriétaires
           </BaseText>
-          <BaseText variant={TextVariant.L} mb={2} mt={1} color={"gray.400"}>
-            Automatisez, analysez et optimisez la gestion de votre patrimoine
-            immobilier.
+          <BaseText variant={TextVariant.L} mb={2} mt={1} color={'gray.400'}>
+            Automatisez, analysez et optimisez la gestion de votre patrimoine immobilier.
           </BaseText>
         </MotionVStack>
 
@@ -170,30 +144,30 @@ export const OwnerSection = () => {
             {
               value: 12450,
               suffix: ENUM.COMMON.Currency.XOF,
-              prefix: "",
-              label: "Revenu mensuel moyen",
-              color: "primary",
+              prefix: '',
+              label: 'Revenu mensuel moyen',
+              color: 'primary',
             },
             {
               value: 94,
-              suffix: "%",
-              prefix: "",
+              suffix: '%',
+              prefix: '',
               label: "Taux d'occupation",
-              color: "tertiary",
+              color: 'tertiary',
             },
             {
               value: 2500,
-              suffix: "+",
-              prefix: "",
-              label: "Biens gérés",
-              color: "secondary",
+              suffix: '+',
+              prefix: '',
+              label: 'Biens gérés',
+              color: 'secondary',
             },
             {
               value: 23,
-              suffix: "%",
-              prefix: "+",
-              label: "Rendement amélioré",
-              color: "primary",
+              suffix: '%',
+              prefix: '+',
+              label: 'Rendement amélioré',
+              color: 'primary',
             },
           ].map((kpi, i) => (
             <MotionBox
@@ -203,22 +177,17 @@ export const OwnerSection = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               p={6}
-              rounded={"xl"}
-              border={"1px solid"}
-              textAlign={"center"}
-              bgColor={
-                colorMode === "light" ? `${kpi.color}.50` : `${kpi.color}.900`
-              }
-              borderColor={"border"}
+              rounded={'xl'}
+              border={'1px solid'}
+              textAlign={'center'}
+              bgColor={colorMode === 'light' ? `${kpi.color}.50` : `${kpi.color}.900`}
+              borderColor={'border'}
             >
-              <BaseText
-                fontSize={{ base: "xl", sm: "4xl" }}
-                fontWeight={"bold"}
-              >
+              <BaseText fontSize={{ base: 'xl', sm: '4xl' }} fontWeight={'bold'}>
                 {kpi.prefix}
                 <CountUp end={kpi.value} suffix={kpi.suffix} />
               </BaseText>
-              <Span fontSize={"sm"} color={"gray.400"}>
+              <Span fontSize={'sm'} color={'gray.400'}>
                 {kpi.label}
               </Span>
             </MotionBox>
@@ -227,12 +196,7 @@ export const OwnerSection = () => {
 
         {/* Dashboard mockup + features */}
 
-        <SimpleGrid
-          columns={{ base: 1, lg: 2 }}
-          gap={12}
-          alignItems="center"
-          mb={12}
-        >
+        <SimpleGrid columns={{ base: 1, lg: 2 }} gap={12} alignItems="center" mb={12}>
           {/* LEFT — Dashboard mockup */}
           <MotionBox
             borderRadius="xl"
@@ -246,55 +210,36 @@ export const OwnerSection = () => {
             {/* Top bar */}
             <Flex align="center" gap={2} px={4} py={3} borderBottomWidth="1px">
               <Box w={3} h={3} borderRadius="full" bg="red.400" opacity={0.6} />
-              <Box
-                w={3}
-                h={3}
-                borderRadius="full"
-                bg="yellow.400"
-                opacity={0.6}
-              />
-              <Box
-                w={3}
-                h={3}
-                borderRadius="full"
-                bg="green.400"
-                opacity={0.6}
-              />
+              <Box w={3} h={3} borderRadius="full" bg="yellow.400" opacity={0.6} />
+              <Box w={3} h={3} borderRadius="full" bg="green.400" opacity={0.6} />
             </Flex>
 
             <Box p={5}>
               <VStack gap={4} align="stretch">
                 {/* Chart */}
                 <Box>
-                  <Text
-                    fontSize="xs"
-                    color="gray.500"
-                    fontWeight="medium"
-                    mb={2}
-                  >
+                  <Text fontSize="xs" color="gray.500" fontWeight="medium" mb={2}>
                     Revenus mensuels ({ENUM.COMMON.Currency.XOF})
                   </Text>
 
                   <Flex align="flex-end" gap={1.5} h="112px">
-                    {[55, 70, 60, 85, 75, 90, 82, 95, 88, 92, 98, 94].map(
-                      (h, i) => (
-                        <MotionBox
-                          key={i}
-                          flex="1"
-                          borderRadius="sm"
-                          bgGradient="to-r"
-                          gradientFrom="primary.300"
-                          gradientTo="primary.200"
-                          initial={{ height: 0 }}
-                          whileInView={{ height: `${h}%` }}
-                          viewport={{ once: true }}
-                          transition={{
-                            delay: 0.3 + i * 0.05,
-                            duration: 0.5,
-                          }}
-                        />
-                      ),
-                    )}
+                    {[55, 70, 60, 85, 75, 90, 82, 95, 88, 92, 98, 94].map((h, i) => (
+                      <MotionBox
+                        key={i}
+                        flex="1"
+                        borderRadius="sm"
+                        bgGradient="to-r"
+                        gradientFrom="primary.300"
+                        gradientTo="primary.200"
+                        initial={{ height: 0 }}
+                        whileInView={{ height: `${h}%` }}
+                        viewport={{ once: true }}
+                        transition={{
+                          delay: 0.3 + i * 0.05,
+                          duration: 0.5,
+                        }}
+                      />
+                    ))}
                   </Flex>
                 </Box>
 
@@ -302,25 +247,25 @@ export const OwnerSection = () => {
                 <SimpleGrid columns={3} gap={3}>
                   {[
                     {
-                      label: "Occupation",
-                      val: "94%",
-                      color: "tertiary.500",
+                      label: 'Occupation',
+                      val: '94%',
+                      color: 'tertiary.500',
                     },
                     {
-                      label: "Impayés",
-                      val: "1.2%",
-                      color: "red.500",
+                      label: 'Impayés',
+                      val: '1.2%',
+                      color: 'red.500',
                     },
                     {
-                      label: "Croissance",
-                      val: "+12%",
-                      color: "primary.500",
+                      label: 'Croissance',
+                      val: '+12%',
+                      color: 'primary.500',
                     },
                   ].map((s) => (
                     <Box
                       key={s.label}
                       borderRadius="lg"
-                      bg={colorMode === "light" ? "gray.50" : "gray.900"}
+                      bg={colorMode === 'light' ? 'gray.50' : 'gray.900'}
                       p={3}
                       textAlign="center"
                     >
@@ -347,8 +292,8 @@ export const OwnerSection = () => {
                 borderWidth="1px"
                 shadow="md"
                 _hover={{
-                  transform: "translateY(-4px)",
-                  shadow: "lg",
+                  transform: 'translateY(-4px)',
+                  shadow: 'lg',
                 }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -359,7 +304,7 @@ export const OwnerSection = () => {
                   mb={3}
                   color={hexToRGB(feature.color as keyof Colors, 0.3)}
                   transition="transform 0.3s"
-                  _groupHover={{ transform: "scale(1.1)" }}
+                  _groupHover={{ transform: 'scale(1.1)' }}
                 >
                   <feature.icon size={20} color={feature.iconColor} />
                 </BaseIcon>

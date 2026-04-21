@@ -1,2 +1,2 @@
-export * from "./constants";
-export * from "./team.queries";
+export * from './constants';
+export * from './team.queries';

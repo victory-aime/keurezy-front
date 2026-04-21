@@ -1,11 +1,9 @@
-import * as Constants from "./constants";
-import { teamServiceInstance } from "./team.service-instance";
-import { MODELS } from "_types/index";
-import { QUERIES } from "rise-core-frontend";
+import * as Constants from './constants';
+import { teamServiceInstance } from './team.service-instance';
+import { MODELS } from '_types/index';
+import { QUERIES } from 'rise-core-frontend';
 
-const getAllTeamByAgency = (
-  args: QUERIES.QueryPayload<{ agencyId: string }>,
-) => {
+const getAllTeamByAgency = (args: QUERIES.QueryPayload<{ agencyId: string }>) => {
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<MODELS.ITeam[]>({
@@ -25,11 +23,7 @@ const changeStatusTeamMutation = (
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.TEAM_KEYS.CHANGE_STATUS],
     mutationFn: ({ params, payload }) =>
-      teamServiceInstance().changeStatus(
-        params?.id,
-        params?.userId,
-        payload!.status,
-      ),
+      teamServiceInstance().changeStatus(params?.id, params?.userId, payload!.status),
     options: args.mutationOptions,
   });
 };

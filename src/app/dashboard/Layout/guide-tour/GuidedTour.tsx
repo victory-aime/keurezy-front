@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
-import { BaseButton, BaseIcon, Icons } from "_components/custom";
-import { Box, Flex } from "@chakra-ui/react";
-import { hexToRGB } from "_theme/colors";
-import { IGuidedTourProps, ITourStep } from "../interface/types";
-import { StorageKey } from "_constants/StorageKeys";
-import { MotionBox } from "_constants/motion";
+import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { BaseButton, BaseIcon, Icons } from '_components/custom';
+import { Box, Flex } from '@chakra-ui/react';
+import { hexToRGB } from '_theme/colors';
+import { IGuidedTourProps, ITourStep } from '../interface/types';
+import { StorageKey } from '_constants/StorageKeys';
+import { MotionBox } from '_constants/motion';
 
 const CARD_WIDTH = 350;
 const CARD_HEIGHT = 240;
@@ -20,86 +20,75 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
   const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 });
   const [visible, setVisible] = useState(true);
 
-  const computeTooltipPosition = useCallback(
-    (rect: DOMRect, preferred: ITourStep["position"]) => {
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
+  const computeTooltipPosition = useCallback((rect: DOMRect, preferred: ITourStep['position']) => {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
 
-      // ⭐ center
-      if (preferred === "center") {
-        return {
-          top: (viewportHeight - CARD_HEIGHT) / 2,
-          left: (viewportWidth - CARD_WIDTH) / 2,
-        };
-      }
-
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      let finalPosition = preferred;
-
-      if (
-        preferred === "bottom" &&
-        rect.bottom + GAP + CARD_HEIGHT > viewportHeight
-      )
-        finalPosition = "top";
-
-      if (preferred === "top" && rect.top - GAP - CARD_HEIGHT < 0)
-        finalPosition = "bottom";
-
-      if (
-        preferred === "right" &&
-        rect.right + GAP + CARD_WIDTH > viewportWidth
-      )
-        finalPosition = "left";
-
-      if (preferred === "left" && rect.left - GAP - CARD_WIDTH < 0)
-        finalPosition = "right";
-
-      let top = 0;
-      let left = 0;
-
-      switch (finalPosition) {
-        case "bottom":
-          top = rect.bottom + GAP;
-          left = centerX - CARD_WIDTH / 2;
-          break;
-
-        case "top":
-          top = rect.top - GAP - CARD_HEIGHT;
-          left = centerX - CARD_WIDTH / 2;
-          break;
-
-        case "right":
-          top = centerY - CARD_HEIGHT / 2;
-          left = rect.right + GAP;
-          break;
-
-        case "left":
-          top = centerY - CARD_HEIGHT / 2;
-          left = rect.left - GAP - CARD_WIDTH;
-          break;
-      }
-
+    // ⭐ center
+    if (preferred === 'center') {
       return {
-        top: Math.max(
-          VIEWPORT_PADDING,
-          Math.min(top, viewportHeight - CARD_HEIGHT - VIEWPORT_PADDING),
-        ),
-        left: Math.max(
-          VIEWPORT_PADDING,
-          Math.min(left, viewportWidth - CARD_WIDTH - VIEWPORT_PADDING),
-        ),
+        top: (viewportHeight - CARD_HEIGHT) / 2,
+        left: (viewportWidth - CARD_WIDTH) / 2,
       };
-    },
-    [],
-  );
+    }
+
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    let finalPosition = preferred;
+
+    if (preferred === 'bottom' && rect.bottom + GAP + CARD_HEIGHT > viewportHeight)
+      finalPosition = 'top';
+
+    if (preferred === 'top' && rect.top - GAP - CARD_HEIGHT < 0) finalPosition = 'bottom';
+
+    if (preferred === 'right' && rect.right + GAP + CARD_WIDTH > viewportWidth)
+      finalPosition = 'left';
+
+    if (preferred === 'left' && rect.left - GAP - CARD_WIDTH < 0) finalPosition = 'right';
+
+    let top = 0;
+    let left = 0;
+
+    switch (finalPosition) {
+      case 'bottom':
+        top = rect.bottom + GAP;
+        left = centerX - CARD_WIDTH / 2;
+        break;
+
+      case 'top':
+        top = rect.top - GAP - CARD_HEIGHT;
+        left = centerX - CARD_WIDTH / 2;
+        break;
+
+      case 'right':
+        top = centerY - CARD_HEIGHT / 2;
+        left = rect.right + GAP;
+        break;
+
+      case 'left':
+        top = centerY - CARD_HEIGHT / 2;
+        left = rect.left - GAP - CARD_WIDTH;
+        break;
+    }
+
+    return {
+      top: Math.max(
+        VIEWPORT_PADDING,
+        Math.min(top, viewportHeight - CARD_HEIGHT - VIEWPORT_PADDING),
+      ),
+      left: Math.max(
+        VIEWPORT_PADDING,
+        Math.min(left, viewportWidth - CARD_WIDTH - VIEWPORT_PADDING),
+      ),
+    };
+  }, []);
   const updatePosition = useCallback(() => {
     const step = tourStep?.[currentStep];
 
-    if (step?.position === "center") {
+    if (step?.position === 'center') {
       setTargetRect(null);
-      setTooltipPos(computeTooltipPosition(new DOMRect(), "center"));
+      setTooltipPos(computeTooltipPosition(new DOMRect(), 'center'));
       return;
     }
 
@@ -109,7 +98,7 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
     const rect = el.getBoundingClientRect();
     setTargetRect(rect);
 
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
     const position = computeTooltipPosition(rect, step?.position);
     setTooltipPos(position);
@@ -118,13 +107,13 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
   useEffect(() => {
     const timer = setTimeout(updatePosition, 200);
 
-    window.addEventListener("resize", updatePosition);
-    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
 
     return () => {
       clearTimeout(timer);
-      window.removeEventListener("resize", updatePosition);
-      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
     };
   }, [updatePosition]);
 
@@ -137,7 +126,7 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
 
   const finish = () => {
     setVisible(false);
-    localStorage.setItem(StorageKey.COMPLETED_GUIDED_TOUR, "true");
+    localStorage.setItem(StorageKey.COMPLETED_GUIDED_TOUR, 'true');
     localStorage.removeItem(StorageKey.ENABLED_GUIDED_TOUR);
     onComplete();
   };
@@ -164,7 +153,7 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
               {targetRect && (
                 <motion.rect
                   layout
-                  transition={{ type: "spring", stiffness: 200, damping: 25 }}
+                  transition={{ type: 'spring', stiffness: 200, damping: 25 }}
                   x={targetRect.left - padding}
                   y={targetRect.top - padding}
                   width={targetRect.width + padding * 2}
@@ -176,12 +165,7 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
             </mask>
           </defs>
 
-          <rect
-            width="100%"
-            height="100%"
-            fill="rgba(0,0,0,0.65)"
-            mask="url(#tour-mask)"
-          />
+          <rect width="100%" height="100%" fill="rgba(0,0,0,0.65)" mask="url(#tour-mask)" />
         </svg>
       </MotionBox>
 
@@ -198,11 +182,11 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
             width: targetRect.width + padding * 2,
             height: targetRect.height + padding * 2,
           }}
-          transition={{ type: "spring", stiffness: 200, damping: 25 }}
+          transition={{ type: 'spring', stiffness: 200, damping: 25 }}
           border="2px solid"
           borderColor="primary.500"
           borderRadius="xl"
-          boxShadow={`0 0 0 4px ${hexToRGB("primary", 0.15)}`}
+          boxShadow={`0 0 0 4px ${hexToRGB('primary', 0.15)}`}
         />
       )}
 
@@ -218,17 +202,17 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
         }}
         initial={{ opacity: 0, scale: 0.95 }}
         transition={{
-          type: "spring",
+          type: 'spring',
           stiffness: 120,
           damping: 18,
         }}
-        style={{ willChange: "top, left, transform" }}
+        style={{ willChange: 'top, left, transform' }}
       >
         <Box
           w={`${CARD_WIDTH}px`}
           maxW="calc(100vw - 2rem)"
           bg="white"
-          _dark={{ bg: "gray.800" }}
+          _dark={{ bg: 'gray.800' }}
           borderRadius="2xl"
           boxShadow="2xl"
           p={6}
@@ -271,11 +255,8 @@ export const GuidedTour = ({ onComplete, tourStep }: IGuidedTourProps) => {
               Précédent
             </BaseButton>
 
-            <BaseButton
-              onClick={next}
-              rightIcon={<Icons.ArrowRight size={16} />}
-            >
-              {currentStep === tourStep?.length - 1 ? "Commencer" : "Suivant"}
+            <BaseButton onClick={next} rightIcon={<Icons.ArrowRight size={16} />}>
+              {currentStep === tourStep?.length - 1 ? 'Commencer' : 'Suivant'}
             </BaseButton>
           </Flex>
         </Box>

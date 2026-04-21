@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { ForgetPassInitRequest } from "../../components/ForgetPassInitRequest";
+import { ForgetPassInitRequest } from '../../components/ForgetPassInitRequest';
 
 function ForgetPassInitPage() {
   return <ForgetPassInitRequest />;

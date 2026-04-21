@@ -1,12 +1,7 @@
-import {
-  BaseModal,
-  FormTextInput,
-  ModalOpenProps,
-  BaseText,
-} from "_components/custom";
-import React from "react";
-import { Formik } from "formik";
-import { CiLock, CiUnlock } from "react-icons/ci";
+import { BaseModal, FormTextInput, ModalOpenProps, BaseText } from '_components/custom';
+import React from 'react';
+import { Formik } from 'formik';
+import { CiLock, CiUnlock } from 'react-icons/ci';
 
 export const Recap2FAModal = ({
   isOpen,
@@ -18,7 +13,7 @@ export const Recap2FAModal = ({
   return (
     <Formik
       enableReinitialize
-      initialValues={{ password: "" }}
+      initialValues={{ password: '' }}
       onSubmit={(values, actions) => {
         callback(values);
         actions.resetForm();
@@ -26,26 +21,26 @@ export const Recap2FAModal = ({
     >
       {({ handleSubmit }) => (
         <BaseModal
-          title={data ? "Activer" : "Desactiver"}
-          modalType={data ? "dialog" : "alertdialog"}
+          title={data ? 'Activer' : 'Desactiver'}
+          modalType={data ? 'dialog' : 'alertdialog'}
           isOpen={isOpen}
           onChange={onChange}
           onClick={() => handleSubmit()}
-          buttonSaveTitle={data ? "COMMON.VALIDATE" : "COMMON.DEACTIVATE"}
-          colorSaveButton={"tertiary"}
+          buttonSaveTitle={data ? 'COMMON.VALIDATE' : 'COMMON.DEACTIVATE'}
+          colorSaveButton={'tertiary'}
           isLoading={isLoading}
           icon={data ? <CiLock size={18} /> : <CiUnlock size={18} />}
-          iconBackgroundColor={"tertiary.500"}
+          iconBackgroundColor={'tertiary.500'}
         >
           <BaseText mb={3}>
             {data
-              ? "Vous allez activer le 2FA veuillez saisir votre mot de passe pour continuer"
-              : "Vous allez desactiver le 2FA veuillez saisir votre mot de passe"}
+              ? 'Vous allez activer le 2FA veuillez saisir votre mot de passe pour continuer'
+              : 'Vous allez desactiver le 2FA veuillez saisir votre mot de passe'}
           </BaseText>
           <FormTextInput
-            name={"password"}
-            type={"password"}
-            placeholder={"FORM.PASSWORD_PLACEHOLDER"}
+            name={'password'}
+            type={'password'}
+            placeholder={'FORM.PASSWORD_PLACEHOLDER'}
           />
         </BaseModal>
       )}

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Tooltip, Portal } from "@chakra-ui/react";
-import { SideToolTipProps } from "../types";
+import { Tooltip, Portal } from '@chakra-ui/react';
+import { SideToolTipProps } from '../types';
 
 export const SideToolTip = ({
   children,
   label,
-  placement = "right",
+  placement = 'right',
   disabled = false,
 }: SideToolTipProps) => {
   return (

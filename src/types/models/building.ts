@@ -1,6 +1,6 @@
-import { COMMON } from "../enum";
-import { IPagination } from "./pagination";
-import { IPropertyResponse } from "./property";
+import { COMMON } from '../enum';
+import { IPagination } from './pagination';
+import { IPropertyResponse } from './property';
 
 export interface CreateBuildingDto {
   name?: string;

@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import React, { useCallback, useMemo } from "react";
-import { Box, Flex } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
-import { BaseButton } from "../base/baseButton";
-import { ActionButtonTypes, BaseTooltip, Icons } from "_components/custom";
-import { useTranslation } from "react-i18next";
+import React, { useCallback, useMemo } from 'react';
+import { Box, Flex } from '@chakra-ui/react';
+import { useRouter } from 'next/navigation';
+import { BaseButton } from '../base/baseButton';
+import { ActionButtonTypes, BaseTooltip, Icons } from '_components/custom';
+import { useTranslation } from 'react-i18next';
 
 export const ActionsButton = React.memo(
   ({
-    cancelTitle = "COMMON.CANCEL",
-    validateTitle = "COMMON.VALIDATE",
-    downloadTitle = "COMMON.DOWNLOAD",
-    refreshTitle = "COMMON.REFRESH",
+    cancelTitle = 'COMMON.CANCEL',
+    validateTitle = 'COMMON.VALIDATE',
+    downloadTitle = 'COMMON.DOWNLOAD',
+    refreshTitle = 'COMMON.REFRESH',
 
     requestId,
     isLoading = false,
     isDisabled = false,
 
-    cancelColor = "danger",
+    cancelColor = 'danger',
     cancelVariant,
 
-    validateColor = "primary",
+    validateColor = 'primary',
 
     icon,
     cancelIcon,
@@ -39,7 +39,7 @@ export const ActionsButton = React.memo(
 
     withGradient = true,
 
-    emailVerificationMessage = "Veuillez vérifier votre email pour utiliser cette fonctionnalité.",
+    emailVerificationMessage = 'Veuillez vérifier votre email pour utiliser cette fonctionnalité.',
     isEmailVerified,
 
     ...rest
@@ -73,12 +73,7 @@ export const ActionsButton = React.memo(
         if (!disabledBecauseEmail) return children;
 
         return (
-          <BaseTooltip
-            show
-            message={emailVerificationMessage}
-            placement="top"
-            arrow
-          >
+          <BaseTooltip show message={emailVerificationMessage} placement="top" arrow>
             <span>{children}</span>
           </BaseTooltip>
         );
@@ -97,8 +92,8 @@ export const ActionsButton = React.memo(
               downloadPermission &&
               wrapTooltip(
                 <BaseButton
-                  px={{ base: "10px", md: "15px" }}
-                  minW={{ base: "40px", md: "auto" }}
+                  px={{ base: '10px', md: '15px' }}
+                  minW={{ base: '40px', md: 'auto' }}
                   withGradient={withGradient}
                   colorType="info"
                   variant="outline"
@@ -107,9 +102,7 @@ export const ActionsButton = React.memo(
                   disabled={isLoading || isDisabled || disabledBecauseEmail}
                   leftIcon={<Icons.DownloadPaper />}
                 >
-                  <Box display={{ base: "none", md: "inline" }}>
-                    {t(downloadTitle)}
-                  </Box>
+                  <Box display={{ base: 'none', md: 'inline' }}>{t(downloadTitle)}</Box>
                 </BaseButton>,
               )}
 
@@ -118,8 +111,8 @@ export const ActionsButton = React.memo(
               cancelShow &&
               wrapTooltip(
                 <BaseButton
-                  px={{ base: "10px", md: "15px" }}
-                  minW={{ base: "40px", md: "auto" }}
+                  px={{ base: '10px', md: '15px' }}
+                  minW={{ base: '40px', md: 'auto' }}
                   withGradient={withGradient}
                   disabled={isLoading || disabledBecauseEmail}
                   colorType={cancelColor}
@@ -127,9 +120,7 @@ export const ActionsButton = React.memo(
                   leftIcon={cancelBtnIcon}
                   onClick={handleCancel}
                 >
-                  <Box display={{ base: "none", md: "inline" }}>
-                    {t(cancelTitle)}
-                  </Box>
+                  <Box display={{ base: 'none', md: 'inline' }}>{t(cancelTitle)}</Box>
                 </BaseButton>,
               )}
 
@@ -138,17 +129,15 @@ export const ActionsButton = React.memo(
               reloadPermission &&
               wrapTooltip(
                 <BaseButton
-                  px={{ base: "10px", md: "15px" }}
-                  minW={{ base: "40px", md: "auto" }}
+                  px={{ base: '10px', md: '15px' }}
+                  minW={{ base: '40px', md: 'auto' }}
                   colorType="tertiary"
                   withGradient={withGradient}
                   leftIcon={<Icons.Filter />}
                   onClick={onToggleFilter}
                   disabled={disabledBecauseEmail}
                 >
-                  <Box display={{ base: "none", md: "inline" }}>
-                    {t("COMMON.FILTER")}
-                  </Box>
+                  <Box display={{ base: 'none', md: 'inline' }}>{t('COMMON.FILTER')}</Box>
                 </BaseButton>,
               )}
 
@@ -157,8 +146,8 @@ export const ActionsButton = React.memo(
               validatePermission &&
               wrapTooltip(
                 <BaseButton
-                  px={{ base: "10px", md: "15px" }}
-                  minW={{ base: "40px", md: "auto" }}
+                  px={{ base: '10px', md: '15px' }}
+                  minW={{ base: '40px', md: 'auto' }}
                   colorType={validateColor}
                   withGradient={withGradient}
                   isLoading={isLoading}
@@ -166,9 +155,7 @@ export const ActionsButton = React.memo(
                   leftIcon={validateIcon}
                   onClick={onClick}
                 >
-                  <Box display={{ base: "none", md: "inline" }}>
-                    {t(validateTitle)}
-                  </Box>
+                  <Box display={{ base: 'none', md: 'inline' }}>{t(validateTitle)}</Box>
                 </BaseButton>,
               )}
 
@@ -177,8 +164,8 @@ export const ActionsButton = React.memo(
               reloadPermission &&
               wrapTooltip(
                 <BaseButton
-                  px={{ base: "10px", md: "15px" }}
-                  minW={{ base: "40px", md: "auto" }}
+                  px={{ base: '10px', md: '15px' }}
+                  minW={{ base: '40px', md: 'auto' }}
                   colorType="secondary"
                   withGradient={withGradient}
                   isLoading={isLoading}
@@ -186,9 +173,7 @@ export const ActionsButton = React.memo(
                   leftIcon={<Icons.Refresh size={14} />}
                   onClick={onReload}
                 >
-                  <Box display={{ base: "none", md: "inline" }}>
-                    {t(refreshTitle)}
-                  </Box>
+                  <Box display={{ base: 'none', md: 'inline' }}>{t(refreshTitle)}</Box>
                 </BaseButton>,
               )}
           </>
@@ -198,4 +183,4 @@ export const ActionsButton = React.memo(
   },
 );
 
-ActionsButton.displayName = "ActionsButton";
+ActionsButton.displayName = 'ActionsButton';

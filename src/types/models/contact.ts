@@ -1,4 +1,4 @@
-import { COMMON } from "../enum";
+import { COMMON } from '../enum';
 
 export interface IContact {
   fullName?: string;

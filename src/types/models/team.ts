@@ -1,4 +1,4 @@
-import { UserRole } from "../enum";
+import { UserRole } from '../enum';
 
 export interface ITeam {
   id?: string;

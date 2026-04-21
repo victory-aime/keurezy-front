@@ -1,5 +1,5 @@
-import { MotionBox } from "_constants/motion";
-import React from "react";
+import { MotionBox } from '_constants/motion';
+import React from 'react';
 
 export const EmailContainer = ({ children }: { children: React.ReactNode }) => {
   return (

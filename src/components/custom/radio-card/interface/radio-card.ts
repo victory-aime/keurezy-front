@@ -1,5 +1,5 @@
-import { RadioCardRootProps } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { RadioCardRootProps } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 
 interface IRadioCardProps extends RadioCardRootProps {
   items: {
@@ -11,28 +11,28 @@ interface IRadioCardProps extends RadioCardRootProps {
   }[];
   colorPalette?:
     | string
-    | "transparent"
-    | "current"
-    | "black"
-    | "white"
-    | "whiteAlpha"
-    | "blackAlpha"
-    | "gray"
-    | "red"
-    | "orange"
-    | "yellow"
-    | "green"
-    | "teal"
-    | "blue"
-    | "cyan"
-    | "purple"
-    | "pink"
-    | "bg"
-    | "fg"
-    | "border";
+    | 'transparent'
+    | 'current'
+    | 'black'
+    | 'white'
+    | 'whiteAlpha'
+    | 'blackAlpha'
+    | 'gray'
+    | 'red'
+    | 'orange'
+    | 'yellow'
+    | 'green'
+    | 'teal'
+    | 'blue'
+    | 'cyan'
+    | 'purple'
+    | 'pink'
+    | 'bg'
+    | 'fg'
+    | 'border';
   labelTitle?: string;
   stepButton?: ReactNode;
-  orientation?: "vertical" | "horizontal";
+  orientation?: 'vertical' | 'horizontal';
 }
 
 export type { IRadioCardProps };

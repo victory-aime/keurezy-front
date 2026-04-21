@@ -1,9 +1,9 @@
-"use client";
-import { APP_ROUTES } from "_config/routes";
-import { CiFacebook, CiInstagram, CiMail, CiPhone } from "react-icons/ci";
-import { FaTiktok } from "react-icons/fa";
-import { UserRole } from "../../../types/enum";
-import { Icons } from "_components/custom";
+'use client';
+import { APP_ROUTES } from '_config/routes';
+import { CiFacebook, CiInstagram, CiMail, CiPhone } from 'react-icons/ci';
+import { FaTiktok } from 'react-icons/fa';
+import { UserRole } from '../../../types/enum';
+import { Icons } from '_components/custom';
 
 export const USERS_ROUTES = {
   PROFILE: `/profile`,
@@ -14,7 +14,7 @@ export const USERS_ROUTES = {
 export const HEADER_LINKS = [
   {
     icon: Icons.Home,
-    name: "Accueil",
+    name: 'Accueil',
     url: APP_ROUTES.ROOT,
   },
 ];
@@ -24,42 +24,42 @@ export const FOOTER_ROUTES: Array<{
   links: Array<{ name: string; url: string; icon?: React.ComponentType<any> }>;
 }> = [
   {
-    name: "liens rap",
+    name: 'liens rap',
     links: [
       {
-        name: "accueil",
+        name: 'accueil',
         url: APP_ROUTES.ROOT,
       },
       {
-        name: "Propriétes",
+        name: 'Propriétes',
         url: APP_ROUTES.APPARTEMENTS,
       },
     ],
   },
   {
-    name: "support",
+    name: 'support',
     links: [
       {
-        name: "accueil",
+        name: 'accueil',
         url: USERS_ROUTES.PROFILE,
       },
       {
-        name: "accueil",
-        url: "/acceuil",
+        name: 'accueil',
+        url: '/acceuil',
       },
     ],
   },
   {
-    name: "contact",
+    name: 'contact',
     links: [
       {
-        name: "accueil",
-        url: "/acceuil",
+        name: 'accueil',
+        url: '/acceuil',
         icon: CiMail,
       },
       {
-        name: "accueil",
-        url: "/acceuil",
+        name: 'accueil',
+        url: '/acceuil',
         icon: CiPhone,
       },
     ],
@@ -72,14 +72,14 @@ export const SOCIAL_LINKS: Array<{
 }> = [
   {
     icon: CiFacebook,
-    url: "",
+    url: '',
   },
   {
     icon: CiInstagram,
-    url: "",
+    url: '',
   },
   {
     icon: FaTiktok,
-    url: "",
+    url: '',
   },
 ];

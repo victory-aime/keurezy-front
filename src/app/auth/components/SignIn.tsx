@@ -1,22 +1,18 @@
-"use client";
+'use client';
 
-import { BaseButton, BaseText, FormTextInput, Icons } from "_components/custom";
-import { APP_ROUTES } from "_config/routes";
-import { useRouter } from "next/navigation";
-import { VStack, Box } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
-import { useAuth } from "_hooks/useAuth";
-import { Formik, FormikValues } from "formik";
-import { VALIDATION } from "_types/index";
-import { useState } from "react";
-import { AuthBoxContainer } from "./AuthBoxContainer";
-import { Navbar } from "_component/NavBar";
+import { BaseButton, BaseText, FormTextInput, Icons } from '_components/custom';
+import { APP_ROUTES } from '_config/routes';
+import { useRouter } from 'next/navigation';
+import { VStack, Box } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '_hooks/useAuth';
+import { Formik, FormikValues } from 'formik';
+import { VALIDATION } from '_types/index';
+import { useState } from 'react';
+import { AuthBoxContainer } from './AuthBoxContainer';
+import { Navbar } from '_component/NavBar';
 
-export const SignIn = ({
-  callbackUrl = APP_ROUTES.REDIRECT,
-}: {
-  callbackUrl?: string;
-}) => {
+export const SignIn = ({ callbackUrl = APP_ROUTES.REDIRECT }: { callbackUrl?: string }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +25,7 @@ export const SignIn = ({
       password: values.password,
       callbackUrl,
     })
-      .catch((error) => console.log("error", error))
+      .catch((error) => console.log('error', error))
       .finally(() => setIsLoading(false));
   };
 
@@ -37,10 +33,10 @@ export const SignIn = ({
     <>
       <Navbar />
       <AuthBoxContainer
-        title={"Bienvenue !"}
+        title={'Bienvenue !'}
         description={
           <BaseText>
-            Vous n'avez pas de compte ?{" "}
+            Vous n'avez pas de compte ?{' '}
             <Box
               as="span"
               cursor="pointer"
@@ -53,7 +49,7 @@ export const SignIn = ({
         }
       >
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ email: '', password: '' }}
           enableReinitialize
           onSubmit={handleSubmit}
           validationSchema={VALIDATION.AUTH.loginValidationSchema}
@@ -62,33 +58,33 @@ export const SignIn = ({
             <VStack width="full" gap={4}>
               <FormTextInput
                 name="email"
-                placeholder={"FORM.EMAIL_PLACEHOLDER"}
+                placeholder={'FORM.EMAIL_PLACEHOLDER'}
                 value={values.email}
                 leftAccessory={<Icons.Mail />}
               />
               <FormTextInput
                 name="password"
                 type="password"
-                placeholder={"FORM.PASSWORD_PLACEHOLDER"}
+                placeholder={'FORM.PASSWORD_PLACEHOLDER'}
                 value={values.password}
               />
               <BaseButton
                 withGradient
                 isLoading={isLoading}
-                width={"full"}
-                colorType={"primary"}
+                width={'full'}
+                colorType={'primary'}
                 onClick={() => {
                   handleSubmit();
                 }}
               >
-                {t("COMMON.LOGIN")}
+                {t('COMMON.LOGIN')}
               </BaseButton>
               <BaseText
                 cursor="pointer"
-                color={"primary.500"}
+                color={'primary.500'}
                 onClick={() => router.push(APP_ROUTES.AUTH.RESET_PASSWORD)}
               >
-                {t("FORM.FORGOT_PASSWORD")}
+                {t('FORM.FORGOT_PASSWORD')}
               </BaseText>
             </VStack>
           )}

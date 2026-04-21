@@ -1,5 +1,5 @@
-import { QUERIES } from "rise-core-frontend";
-import * as Constants from "./constants";
+import { QUERIES } from 'rise-core-frontend';
+import * as Constants from './constants';
 
 export const PermissionsCache = {
   invalidateAllPermissionsCache: () =>

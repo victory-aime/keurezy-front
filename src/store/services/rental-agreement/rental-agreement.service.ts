@@ -1,5 +1,5 @@
-import { BaseApi } from "rise-core-frontend";
-import { MODELS } from "_types/index";
+import { BaseApi } from 'rise-core-frontend';
+import { MODELS } from '_types/index';
 
 /**
  * RentalAgreementService provides methods for handling rentalAgreement-related operations

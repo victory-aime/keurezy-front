@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { createContext, useContext, ReactNode } from "react";
-import { SessionErrorModal } from "../auth/components/ErrorModal";
-import { isExpired } from "../helpers/expire-token";
-import { AuthContextType } from "../dashboard/Layout/sidebar/types";
+import { createContext, useContext, ReactNode } from 'react';
+import { SessionErrorModal } from '../auth/components/ErrorModal';
+import { isExpired } from '../helpers/expire-token';
+import { AuthContextType } from '../dashboard/Layout/sidebar/types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -34,7 +34,7 @@ export function AuthContextProvider({
 export function useAuthContext() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 }

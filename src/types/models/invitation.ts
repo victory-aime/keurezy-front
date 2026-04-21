@@ -1,9 +1,6 @@
-import { AgencyRole } from "../enum";
+import { AgencyRole } from '../enum';
 
-export type InvitationVerificationState =
-  | "loading"
-  | "success"
-  | "ERR_BAD_REQUEST";
+export type InvitationVerificationState = 'loading' | 'success' | 'ERR_BAD_REQUEST';
 
 export interface ICreateInvitation {
   adminId: string;

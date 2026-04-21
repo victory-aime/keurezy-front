@@ -1,15 +1,15 @@
-import { createListCollection } from "@chakra-ui/react";
+import { createListCollection } from '@chakra-ui/react';
 
 export function getTimeZones(): { label: string; value: string }[] {
-  const timeZones = Intl.supportedValuesOf?.("timeZone") ?? [];
+  const timeZones = Intl.supportedValuesOf?.('timeZone') ?? [];
 
   return timeZones.map((tz) => {
     const now = new Date();
     const formatter = new Intl.DateTimeFormat(undefined, {
       timeZone: tz,
-      timeZoneName: "short",
-      hour: "2-digit",
-      minute: "2-digit",
+      timeZoneName: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
     });
 
     const formatted = formatter.format(now);
@@ -21,15 +21,15 @@ export function getTimeZones(): { label: string; value: string }[] {
 }
 
 export const selectTimeZones = () => {
-  const timeZones = Intl.supportedValuesOf?.("timeZone") ?? [];
+  const timeZones = Intl.supportedValuesOf?.('timeZone') ?? [];
 
   const items = timeZones.map((tz) => {
     const now = new Date();
     const formatter = new Intl.DateTimeFormat(undefined, {
       timeZone: tz,
-      timeZoneName: "short",
-      hour: "2-digit",
-      minute: "2-digit",
+      timeZoneName: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
     });
 
     const formatted = formatter.format(now);

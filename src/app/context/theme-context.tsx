@@ -1,14 +1,11 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { ChakraProvider } from "@chakra-ui/react";
-import { buildTheme } from "_theme/theme";
-import { generateShades } from "_theme/generate-shades";
-import { useUserContext } from "./user-context";
-import {
-  ColorModeProvider,
-  ColorModeProviderProps,
-} from "_components/ui/color-mode";
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
+import { buildTheme } from '_theme/theme';
+import { generateShades } from '_theme/generate-shades';
+import { useUserContext } from './user-context';
+import { ColorModeProvider, ColorModeProviderProps } from '_components/ui/color-mode';
 
 type DynamicVariables = {
   primary: string;
@@ -25,7 +22,7 @@ type ThemeContextValue = {
   setTheme: (hex: string) => Promise<void>;
 };
 
-export const DEFAULT_PRIMARY = "#673ab6";
+export const DEFAULT_PRIMARY = '#673ab6';
 
 const ThemeCtx = createContext<ThemeContextValue | null>(null);
 
@@ -103,7 +100,6 @@ export function DynamicThemeProvider(props: ColorModeProviderProps) {
 
 export const useAppTheme = () => {
   const ctx = useContext(ThemeCtx);
-  if (!ctx)
-    throw new Error("useAppTheme must be used inside DynamicThemeProvider");
+  if (!ctx) throw new Error('useAppTheme must be used inside DynamicThemeProvider');
   return ctx;
 };

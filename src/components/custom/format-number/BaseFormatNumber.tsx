@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { FormatNumber } from "@chakra-ui/react";
-import { FC, useState } from "react";
-import { BaseFormatNumberProps } from "./interface/format-number";
-import { ENUM } from "_types/index";
+import { FormatNumber } from '@chakra-ui/react';
+import { FC, useState } from 'react';
+import { BaseFormatNumberProps } from './interface/format-number';
+import { ENUM } from '_types/index';
 
 export const BaseFormatNumber: FC<BaseFormatNumberProps> = ({
   value,
-  notation = "standard",
-  style = "decimal",
+  notation = 'standard',
+  style = 'decimal',
   currencyCode = ENUM.COMMON.Currency.XAF,
   maximumDigits,
   minimumDigits,
@@ -33,8 +33,8 @@ export const BaseFormatNumber: FC<BaseFormatNumberProps> = ({
             value={value}
             notation={notation}
             style={style}
-            maximumFractionDigits={style === "percent" ? maximumDigits : 0}
-            minimumFractionDigits={style === "percent" ? minimumDigits : 0}
+            maximumFractionDigits={style === 'percent' ? maximumDigits : 0}
+            minimumFractionDigits={style === 'percent' ? minimumDigits : 0}
           />
         </>
       ) : (
@@ -43,9 +43,9 @@ export const BaseFormatNumber: FC<BaseFormatNumberProps> = ({
             value={value}
             notation={notation}
             style={style}
-            maximumFractionDigits={style === "percent" ? maximumDigits : 0}
-            minimumFractionDigits={style === "percent" ? minimumDigits : 0}
-          />{" "}
+            maximumFractionDigits={style === 'percent' ? maximumDigits : 0}
+            minimumFractionDigits={style === 'percent' ? minimumDigits : 0}
+          />{' '}
           {currencyCode}
         </>
       )}

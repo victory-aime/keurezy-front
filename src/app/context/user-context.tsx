@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { UserModule } from "_store/state-management";
-import { MODELS } from "_types/*";
-import { createContext, useContext, ReactNode } from "react";
+import { UserModule } from '_store/state-management';
+import { MODELS } from '_types/*';
+import { createContext, useContext, ReactNode } from 'react';
 
 interface IUserContext {
   user: MODELS.IUser | undefined;
@@ -12,13 +12,7 @@ interface IUserContext {
 
 const UserContext = createContext<IUserContext | null>(null);
 
-export const UserProvider = ({
-  children,
-  userId,
-}: {
-  children: ReactNode;
-  userId?: string;
-}) => {
+export const UserProvider = ({ children, userId }: { children: ReactNode; userId?: string }) => {
   const {
     data: user,
     isLoading,
@@ -31,9 +25,7 @@ export const UserProvider = ({
   });
 
   return (
-    <UserContext.Provider value={{ user, isLoading, refetch }}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={{ user, isLoading, refetch }}>{children}</UserContext.Provider>
   );
 };
 
@@ -41,7 +33,7 @@ export const useUserContext = () => {
   const context = useContext(UserContext);
 
   if (!context) {
-    throw new Error("useUser must be used within UserProvider");
+    throw new Error('useUser must be used within UserProvider');
   }
 
   return context;

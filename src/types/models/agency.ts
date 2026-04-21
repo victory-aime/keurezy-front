@@ -1,5 +1,5 @@
-import { COMMON, PropertyType } from "../enum";
-import { IPagination } from "./pagination";
+import { COMMON, PropertyType } from '../enum';
+import { IPagination } from './pagination';
 interface ICreateAgency {
   name?: string;
   address?: string;

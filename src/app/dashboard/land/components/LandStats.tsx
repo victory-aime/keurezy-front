@@ -1,6 +1,6 @@
-import { Flex, SimpleGrid } from "@chakra-ui/react";
-import { BaseStats, Icons } from "_components/custom";
-import { MODELS, ENUM } from "_types/*";
+import { Flex, SimpleGrid } from '@chakra-ui/react';
+import { BaseStats, Icons } from '_components/custom';
+import { MODELS, ENUM } from '_types/*';
 
 export const LandStatsCard = ({
   lands,
@@ -21,41 +21,33 @@ export const LandStatsCard = ({
 
   const stats = [
     {
-      label: "Total",
+      label: 'Total',
       value: lands?.length,
-      color: "primary.500",
+      color: 'primary.500',
       icon: <Icons.Map />,
     },
     {
-      label: "Disponibles",
-      value: lands?.filter((p) => p.status === ENUM.COMMON.Status.AVAILABLE)
-        .length,
-      color: "tertiary.500",
+      label: 'Disponibles',
+      value: lands?.filter((p) => p.status === ENUM.COMMON.Status.AVAILABLE).length,
+      color: 'tertiary.500',
       icon: <Icons.Check />,
     },
     {
-      label: "Vente en cours",
-      value: lands?.filter(
-        (p) => p.status === ENUM.COMMON.Status.CURRENTLY_ON_SALE,
-      ).length,
-      color: "blue.500",
+      label: 'Vente en cours',
+      value: lands?.filter((p) => p.status === ENUM.COMMON.Status.CURRENTLY_ON_SALE).length,
+      color: 'blue.500',
       icon: <Icons.Bell />,
     },
     {
-      label: "Vendu",
+      label: 'Vendu',
       value: values?.count,
-      color: "orange.500",
+      color: 'orange.500',
       icon: <Icons.Payment />,
     },
   ];
   return (
-    <Flex width={"full"} gap={4}>
-      <SimpleGrid
-        width={"full"}
-        mt={"40px"}
-        columns={{ base: 1, sm: 4 }}
-        gap={4}
-      >
+    <Flex width={'full'} gap={4}>
+      <SimpleGrid width={'full'} mt={'40px'} columns={{ base: 1, sm: 4 }} gap={4}>
         {stats.map((s, i) => (
           <BaseStats
             key={i}

@@ -1,13 +1,13 @@
-"use client";
-import { Formik } from "formik";
-import { FormContainer } from "../../components/FormContainer";
-import { useEffect, useState } from "react";
-import { CONSTANTS, ENUM, MODELS, VALIDATION } from "_types/*";
-import { useRouter } from "next/navigation";
-import { DASHBOARD_ROUTES } from "../../routes";
-import { UserModule, LandModule } from "_store/state-management";
-import { findDynamicIdInList } from "rise-core-frontend";
-import { LandFormInner } from "./LandFormInner";
+'use client';
+import { Formik } from 'formik';
+import { FormContainer } from '../../components/FormContainer';
+import { useEffect, useState } from 'react';
+import { CONSTANTS, ENUM, MODELS, VALIDATION } from '_types/*';
+import { useRouter } from 'next/navigation';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { UserModule, LandModule } from '_store/state-management';
+import { findDynamicIdInList } from 'rise-core-frontend';
+import { LandFormInner } from './LandFormInner';
 
 export const LandForm = ({ landId }: { landId: string }) => {
   const router = useRouter();
@@ -23,25 +23,23 @@ export const LandForm = ({ landId }: { landId: string }) => {
   });
   const agencyId = currentUser?.agencyId;
 
-  const { data: allLands, isLoading: isAllLandsLoad } =
-    LandModule.getAllLandsByAgencyQueries({
-      params: {
-        agencyId,
-        initialPage: CONSTANTS.PAGINATION.INIT,
-        limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
-      },
-      queryOptions: { enabled: !!agencyId },
-    });
+  const { data: allLands, isLoading: isAllLandsLoad } = LandModule.getAllLandsByAgencyQueries({
+    params: {
+      agencyId,
+      initialPage: CONSTANTS.PAGINATION.INIT,
+      limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
+    },
+    queryOptions: { enabled: !!agencyId },
+  });
 
-  const { mutateAsync: createLand, isPending: isCreateLand } =
-    LandModule.createLandMutation({
-      mutationOptions: {
-        onSuccess: async () => {
-          LandModule.LandCache.invalidateAllLandsCache();
-          router.push(DASHBOARD_ROUTES.LAND.LIST);
-        },
+  const { mutateAsync: createLand, isPending: isCreateLand } = LandModule.createLandMutation({
+    mutationOptions: {
+      onSuccess: async () => {
+        LandModule.LandCache.invalidateAllLandsCache();
+        router.push(DASHBOARD_ROUTES.LAND.LIST);
       },
-    });
+    },
+  });
 
   const { mutateAsync: updateBuilding, isPending: isUpdateBuilding } =
     LandModule.updateLandMutation({
@@ -69,11 +67,11 @@ export const LandForm = ({ landId }: { landId: string }) => {
       agencyId,
     };
 
-    formData.append("data", JSON.stringify(payload));
+    formData.append('data', JSON.stringify(payload));
 
     if (data?.documents) {
       data.documents.forEach((file) => {
-        formData.append("documents", file);
+        formData.append('documents', file);
       });
     }
 
@@ -107,11 +105,9 @@ export const LandForm = ({ landId }: { landId: string }) => {
 
   return (
     <FormContainer
-      pageTitle={landId ? "Modifier ce terrain" : "Nouveau Terrain"}
+      pageTitle={landId ? 'Modifier ce terrain' : 'Nouveau Terrain'}
       pageDescription={
-        landId
-          ? "Modifier ce terrain"
-          : "Ajoutez un nouveau terrain à votre portefeuille"
+        landId ? 'Modifier ce terrain' : 'Ajoutez un nouveau terrain à votre portefeuille'
       }
       isLoading={isAllLandsLoad}
     >

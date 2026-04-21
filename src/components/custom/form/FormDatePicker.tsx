@@ -1,60 +1,49 @@
-"use client";
+'use client';
 
-import React, { useCallback, memo } from "react";
-import {
-  Field,
-  Portal,
-  Flex,
-  DatePicker,
-  parseDate,
-  DateValue,
-  HStack,
-} from "@chakra-ui/react";
-import { useField, useFormikContext } from "formik";
-import { useTranslation } from "react-i18next";
-import { FormDatePickerFieldProps } from "./interface/input";
-import { BaseText } from "../base-text";
-import { BaseButton, CustomSkeletonLoader, Icons } from "_components/custom";
+import React, { useCallback, memo } from 'react';
+import { Field, Portal, Flex, DatePicker, parseDate, DateValue, HStack } from '@chakra-ui/react';
+import { useField, useFormikContext } from 'formik';
+import { useTranslation } from 'react-i18next';
+import { FormDatePickerFieldProps } from './interface/input';
+import { BaseText } from '../base-text';
+import { BaseButton, CustomSkeletonLoader, Icons } from '_components/custom';
 import {
   DatePickerInputByMode,
   disabledPastDates,
   disabledWeekends,
-} from "./utils/DatePickerUtils";
+} from './utils/DatePickerUtils';
 
 export const FormDatePicker = memo(
   ({
     name,
     label,
-    placeholder = "",
+    placeholder = '',
     isReadOnly,
     isDisabled,
     required,
     startMonth = new Date(2026, 0),
     endMonth = new Date(2030, 12),
     isLoading = false,
-    mode = "single",
+    mode = 'single',
     isDisabledPassDates,
     isDisabledWeekDates,
     ...rest
   }: FormDatePickerFieldProps) => {
     const { t } = useTranslation();
 
-    const [field, { touched, error }, { setValue, setTouched }] =
-      useField(name);
+    const [field, { touched, error }, { setValue, setTouched }] = useField(name);
     const { submitCount } = useFormikContext();
 
-    const isError = isReadOnly
-      ? !!error
-      : !!(error && (touched || submitCount > 0));
+    const isError = isReadOnly ? !!error : !!(error && (touched || submitCount > 0));
 
     const handleChange = useCallback(
       (date: DatePicker.ValueChangeDetails) => {
-        if (mode === "single") {
+        if (mode === 'single') {
           setValue(date?.valueAsString?.[0]);
           return;
         }
 
-        if (mode === "range" || mode === "multiple") {
+        if (mode === 'range' || mode === 'multiple') {
           setValue(date?.valueAsString);
         }
       },
@@ -62,19 +51,19 @@ export const FormDatePicker = memo(
     );
 
     const formatDate = useCallback((date: DateValue) => {
-      const day = date.day.toString().padStart(2, "0");
-      const month = date.month.toString().padStart(2, "0");
-      const year = (date.year % 100).toString().padStart(2, "0");
+      const day = date.day.toString().padStart(2, '0');
+      const month = date.month.toString().padStart(2, '0');
+      const year = (date.year % 100).toString().padStart(2, '0');
 
       return `${day}/${month}/${year}`;
     }, []);
 
     const formatWithDay = useCallback((date: DateValue) => {
-      const jsDate = date.toDate("UTC");
-      return jsDate.toLocaleDateString("fr-FR", {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
+      const jsDate = date.toDate('UTC');
+      return jsDate.toLocaleDateString('fr-FR', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
       });
     }, []);
 
@@ -94,7 +83,7 @@ export const FormDatePicker = memo(
             }
             outsideDaySelectable
             onOpenChange={(e) => setTouched(!e.open)}
-            positioning={{ strategy: "fixed", placement: "bottom" }}
+            positioning={{ strategy: 'fixed', placement: 'bottom' }}
             invalid={isError}
             disabled={isDisabled}
             readOnly={isReadOnly}
@@ -136,43 +125,30 @@ export const FormDatePicker = memo(
               <DatePicker.Positioner>
                 <DatePicker.Content>
                   <DatePicker.View view="day">
-                    <HStack
-                      width={"full"}
-                      justifyContent={"space-between"}
-                      alignItems={"center"}
-                    >
-                      <DatePicker.PrevTrigger
-                        _hover={{ color: "purple.500" }}
-                      />
+                    <HStack width={'full'} justifyContent={'space-between'} alignItems={'center'}>
+                      <DatePicker.PrevTrigger _hover={{ color: 'purple.500' }} />
                       <DatePicker.ViewTrigger asChild>
                         <DatePicker.RangeText
-                          color={"primary.500"}
-                          fontWeight={"bold"}
-                          textTransform={"capitalize"}
-                          cursor={"pointer"}
+                          color={'primary.500'}
+                          fontWeight={'bold'}
+                          textTransform={'capitalize'}
+                          cursor={'pointer'}
                           onClick={() => {}}
                         />
                       </DatePicker.ViewTrigger>
 
-                      <DatePicker.NextTrigger
-                        _hover={{ color: "purple.500" }}
-                      />
+                      <DatePicker.NextTrigger _hover={{ color: 'purple.500' }} />
                     </HStack>
 
                     <Flex gap="4">
                       <DatePicker.DayTable />
-                      {rest.numOfMonths === 2 && (
-                        <DatePicker.DayTable offset={1} />
-                      )}
+                      {rest.numOfMonths === 2 && <DatePicker.DayTable offset={1} />}
                     </Flex>
 
                     <DatePicker.Context>
                       {(api) =>
-                        api.selectionMode === "single" && (
-                          <BaseButton
-                            variant="outline"
-                            onClick={api.selectToday}
-                          >
+                        api.selectionMode === 'single' && (
+                          <BaseButton variant="outline" onClick={api.selectToday}>
                             Today
                           </BaseButton>
                         )
@@ -199,10 +175,10 @@ export const FormDatePicker = memo(
           <Flex gap={1} mt={1} alignItems="center">
             <Field.ErrorIcon width={2.5} height={2.5} color="red.500" />
             <Field.ErrorText>
-              {typeof error === "string"
+              {typeof error === 'string'
                 ? error
-                : typeof error === "object"
-                  ? Object.values(error).join(" | ")
+                : typeof error === 'object'
+                  ? Object.values(error).join(' | ')
                   : null}
             </Field.ErrorText>
           </Flex>

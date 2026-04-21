@@ -1,13 +1,8 @@
-import { BaseModal, ModalOpenProps } from "_components/custom";
-import { VStack, Text, Box } from "@chakra-ui/react";
-import { Icons } from "_components/custom";
+import { BaseModal, ModalOpenProps } from '_components/custom';
+import { VStack, Text, Box } from '@chakra-ui/react';
+import { Icons } from '_components/custom';
 
-export const UpgradePlanModal = ({
-  isOpen,
-  onChange,
-  callback,
-  isLoading,
-}: ModalOpenProps) => {
+export const UpgradePlanModal = ({ isOpen, onChange, callback, isLoading }: ModalOpenProps) => {
   return (
     <BaseModal
       title="Unlock this feature"
@@ -26,8 +21,8 @@ export const UpgradePlanModal = ({
           </Text>
 
           <Text fontSize="sm" color="gray.500">
-            Upgrade your subscription to unlock advanced features, improve
-            productivity, and give your team full access to the platform.
+            Upgrade your subscription to unlock advanced features, improve productivity, and give
+            your team full access to the platform.
           </Text>
         </Box>
 

@@ -1,10 +1,10 @@
-import type { NextConfig } from "next";
-import withSerwistInit from "@serwist/next";
-import path from "path";
+import type { NextConfig } from 'next';
+import withSerwistInit from '@serwist/next';
+import path from 'path';
 
 const withSerwist = withSerwistInit({
-  swSrc: path.join(process.cwd(), "app/sw.ts"),
-  swDest: path.join(process.cwd(), "public/sw.js"),
+  swSrc: path.join(process.cwd(), 'app/sw.ts'),
+  swDest: path.join(process.cwd(), 'public/sw.js'),
   cacheOnNavigation: true,
 });
 
@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/v1/:path*",
+        source: '/api/v1/:path*',
         destination: `${process.env.API_BACKEND_URL}/api/v1/:path*`,
       },
     ];
@@ -24,19 +24,19 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-        pathname: "/**",
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/**',
       },
       {
-        protocol: "https",
-        hostname: "platform-lookaside.fbsbx.com",
-        pathname: "/**",
+        protocol: 'https',
+        hostname: 'platform-lookaside.fbsbx.com',
+        pathname: '/**',
       },
       {
-        protocol: "https",
-        hostname: "avatar.iran.liara.run",
-        pathname: "/**",
+        protocol: 'https',
+        hostname: 'avatar.iran.liara.run',
+        pathname: '/**',
       },
     ],
   },

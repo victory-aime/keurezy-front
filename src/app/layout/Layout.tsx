@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { ReactNode } from "react";
-import { Navbar } from "_component/NavBar";
-import { Footer } from "../components/Footer";
-import { Box, IconButton, VStack } from "@chakra-ui/react";
-import { FloatSwitchColorMode, Icons } from "_components/custom";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { MotionBox } from "_constants/motion";
+import { ReactNode } from 'react';
+import { Navbar } from '_component/NavBar';
+import { Footer } from '../components/Footer';
+import { Box, IconButton, VStack } from '@chakra-ui/react';
+import { FloatSwitchColorMode, Icons } from '_components/custom';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { MotionBox } from '_constants/motion';
 
 export const UserLayout = ({ children }: { children: ReactNode }) => {
   // Scroll progress (0 → 1)
@@ -26,23 +26,19 @@ export const UserLayout = ({ children }: { children: ReactNode }) => {
   const radius = 22;
   const circumference = 2 * Math.PI * radius;
 
-  const strokeDashoffset = useTransform(
-    smoothProgress,
-    [0, 1],
-    [circumference, 0],
-  );
+  const strokeDashoffset = useTransform(smoothProgress, [0, 1], [circumference, 0]);
 
   const scrollTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <>
       <Navbar />
       <VStack
-        alignItems={"center"}
-        justifyContent={"flex-start"}
-        width={"full"}
+        alignItems={'center'}
+        justifyContent={'flex-start'}
+        width={'full'}
         gap={{ base: 6, sm: 12 }}
         py={{ base: 12, sm: 14 }}
       >
@@ -50,13 +46,7 @@ export const UserLayout = ({ children }: { children: ReactNode }) => {
       </VStack>
       <FloatSwitchColorMode bottom="100px" right="25px" />
       <Footer />
-      <MotionBox
-        position="fixed"
-        bottom="40px"
-        right="25px"
-        zIndex={1000}
-        style={{ opacity }}
-      >
+      <MotionBox position="fixed" bottom="40px" right="25px" zIndex={1000} style={{ opacity }}>
         <Box position="relative" w="60px" h="60px">
           <svg width="60" height="60">
             <circle
@@ -94,7 +84,7 @@ export const UserLayout = ({ children }: { children: ReactNode }) => {
             bg="primary.500"
             color="white"
             _hover={{
-              transform: "translate(-50%, -50%) rotate(-90deg) scale(1.08)",
+              transform: 'translate(-50%, -50%) rotate(-90deg) scale(1.08)',
             }}
           >
             <Icons.ArrowRight />

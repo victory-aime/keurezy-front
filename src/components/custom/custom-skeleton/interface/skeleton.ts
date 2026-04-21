@@ -1,19 +1,19 @@
-import { variantColorType } from "_components/custom/button";
+import { variantColorType } from '_components/custom/button';
 
 type LoaderType =
-  | "BAR_CHART"
-  | "DATA_TABLE"
-  | "DONUT_CHART"
-  | "LINE_CHART"
-  | "PRODUCT_LIST_CARD"
-  | "DEFAULT"
-  | "TEXT"
-  | "IMAGE"
-  | "TEXT_IMAGE"
-  | "BUTTON"
-  | "DATA_GRID"
-  | "FORM"
-  | "CIRCLE";
+  | 'BAR_CHART'
+  | 'DATA_TABLE'
+  | 'DONUT_CHART'
+  | 'LINE_CHART'
+  | 'PRODUCT_LIST_CARD'
+  | 'DEFAULT'
+  | 'TEXT'
+  | 'IMAGE'
+  | 'TEXT_IMAGE'
+  | 'BUTTON'
+  | 'DATA_GRID'
+  | 'FORM'
+  | 'CIRCLE';
 
 interface CustomSkeletonLoaderProps {
   type?: LoaderType;
@@ -23,7 +23,7 @@ interface CustomSkeletonLoaderProps {
   height?: string | number;
   statisticBars?: number;
   count?: number;
-  variant?: "pulse" | "shine";
+  variant?: 'pulse' | 'shine';
   direction?: any;
   numberOfLines?: number;
   colorButton?: variantColorType;

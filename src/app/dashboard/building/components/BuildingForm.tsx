@@ -1,17 +1,13 @@
-"use client";
-import { Formik } from "formik";
-import { FormContainer } from "../../components/FormContainer";
-import { useEffect, useState } from "react";
-import { CONSTANTS, MODELS, VALIDATION } from "_types/*";
-import { useRouter } from "next/navigation";
-import { DASHBOARD_ROUTES } from "../../routes";
-import {
-  UserModule,
-  BuildingModule,
-  LandModule,
-} from "_store/state-management";
-import { findDynamicIdInList } from "rise-core-frontend";
-import { BuildingFormInner } from "./BuildingFromInner";
+'use client';
+import { Formik } from 'formik';
+import { FormContainer } from '../../components/FormContainer';
+import { useEffect, useState } from 'react';
+import { CONSTANTS, MODELS, VALIDATION } from '_types/*';
+import { useRouter } from 'next/navigation';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { UserModule, BuildingModule, LandModule } from '_store/state-management';
+import { findDynamicIdInList } from 'rise-core-frontend';
+import { BuildingFormInner } from './BuildingFromInner';
 
 export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
   const router = useRouter();
@@ -38,16 +34,15 @@ export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
       queryOptions: { enabled: !!buildingId && !!agencyId },
     });
 
-  const { data: allLands, isLoading: isAllLandLoad } =
-    LandModule.getAllLandsByAgencyQueries({
-      params: {
-        agencyId,
+  const { data: allLands, isLoading: isAllLandLoad } = LandModule.getAllLandsByAgencyQueries({
+    params: {
+      agencyId,
 
-        initialPage: CONSTANTS.PAGINATION.INIT,
-        limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
-      },
-      queryOptions: { enabled: !!agencyId },
-    });
+      initialPage: CONSTANTS.PAGINATION.INIT,
+      limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
+    },
+    queryOptions: { enabled: !!agencyId },
+  });
 
   const { mutateAsync: createBuilding, isPending: isCreateBuilding } =
     BuildingModule.createBuildingMutation({
@@ -85,11 +80,11 @@ export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
       landId: data.landId?.[0] ?? null,
     };
 
-    formData.append("data", JSON.stringify(payload));
+    formData.append('data', JSON.stringify(payload));
 
     if (data?.documents) {
       data.documents.forEach((file) => {
-        formData.append("documents", file);
+        formData.append('documents', file);
       });
     }
 
@@ -114,8 +109,8 @@ export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
     if (buildingId && getBuilding) {
       setInitialValues({
         ...getBuilding,
-        status: getBuilding?.status ? [getBuilding?.status] : [""],
-        city: getBuilding?.city ? [getBuilding?.city] : [""],
+        status: getBuilding?.status ? [getBuilding?.status] : [''],
+        city: getBuilding?.city ? [getBuilding?.city] : [''],
         landId: getBuilding?.landId ? [getBuilding?.landId] : [],
       });
       setDocumentsURL(getBuilding?.documents);
@@ -124,11 +119,9 @@ export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
 
   return (
     <FormContainer
-      pageTitle={buildingId ? "Modifier ce bâtiment" : "Nouveau bâtiment"}
+      pageTitle={buildingId ? 'Modifier ce bâtiment' : 'Nouveau bâtiment'}
       pageDescription={
-        buildingId
-          ? "Modifier ce bâtiment"
-          : "Ajoutez un nouvel bâtiment à votre portefeuille"
+        buildingId ? 'Modifier ce bâtiment' : 'Ajoutez un nouvel bâtiment à votre portefeuille'
       }
       isLoading={isAllBuildingLoad}
     >

@@ -1,6 +1,6 @@
-import { TabsRootProps, TabsValueChangeDetails } from "@chakra-ui/react";
-import { ActionButtonTypes } from "_components/custom/button";
-import { ReactNode } from "react";
+import { TabsRootProps, TabsValueChangeDetails } from '@chakra-ui/react';
+import { ActionButtonTypes } from '_components/custom/button';
+import { ReactNode } from 'react';
 
 interface TabsProps extends TabsRootProps {
   items: {
@@ -15,7 +15,7 @@ interface TabsProps extends TabsRootProps {
   description?: string;
   onChangeTabs?: (value: number) => void;
   onValueChange?: ((details: TabsValueChangeDetails) => void) | undefined;
-  mode?: "manual" | "automatic";
+  mode?: 'manual' | 'automatic';
   withActionButtons?: boolean;
   actionsButtonProps?: ActionButtonTypes | undefined;
 }

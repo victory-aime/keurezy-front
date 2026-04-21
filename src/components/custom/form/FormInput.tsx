@@ -1,25 +1,21 @@
-"use client";
-import React, { useState } from "react";
-import { useField, useFormikContext } from "formik";
-import { Input, Field, Flex, InputGroup, Spinner } from "@chakra-ui/react";
-import { TextInputProps } from "./interface/input";
-import { TbLockBitcoin } from "react-icons/tb";
-import { HiOutlineInformationCircle } from "react-icons/hi";
-import {
-  BaseText,
-  BaseTooltip,
-  CustomSkeletonLoader,
-} from "_components/custom";
-import { useTranslation } from "react-i18next";
-import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
-import { ENUM } from "_types/enum";
+'use client';
+import React, { useState } from 'react';
+import { useField, useFormikContext } from 'formik';
+import { Input, Field, Flex, InputGroup, Spinner } from '@chakra-ui/react';
+import { TextInputProps } from './interface/input';
+import { TbLockBitcoin } from 'react-icons/tb';
+import { HiOutlineInformationCircle } from 'react-icons/hi';
+import { BaseText, BaseTooltip, CustomSkeletonLoader } from '_components/custom';
+import { useTranslation } from 'react-i18next';
+import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
+import { ENUM } from '_types/enum';
 
 const FormTextInput = ({
   name,
   label,
-  type = "text",
-  placeholder = "",
-  infoMessage = "",
+  type = 'text',
+  placeholder = '',
+  infoMessage = '',
   required = false,
   isReadOnly = false,
   isDisabled = false,
@@ -27,7 +23,7 @@ const FormTextInput = ({
   rightAccessory,
   leftAccessory,
   customRadius,
-  height = "40px",
+  height = '40px',
   validate,
   toolTipInfo,
   isLoading,
@@ -42,45 +38,43 @@ const FormTextInput = ({
   };
   const [field, { touched, error }] = useField(fieldHookConfig);
   const { submitCount, handleSubmit } = useFormikContext();
-  const isError = isReadOnly
-    ? !!error
-    : !!(error && (touched || submitCount > 0));
-  const isPassword = type === "password";
-  const isCurrency = type === "amount";
+  const isError = isReadOnly ? !!error : !!(error && (touched || submitCount > 0));
+  const isPassword = type === 'password';
+  const isCurrency = type === 'amount';
   const [secureTextEntry, setSecureTextEntry] = useState(isPassword);
 
   return (
     <Field.Root id={name} invalid={isError}>
       {label && (
-        <Field.Label display={"flex"} gap={"6px"} fontSize={"14px"}>
+        <Field.Label display={'flex'} gap={'6px'} fontSize={'14px'}>
           {isLoading ? (
             <CustomSkeletonLoader type="TEXT" numberOfLines={1} />
           ) : (
             <>
               {t(label)}
-              {required && <BaseText color={"red"}> * </BaseText>}
+              {required && <BaseText color={'red'}> * </BaseText>}
             </>
           )}
         </Field.Label>
       )}
 
       {isLoading ? (
-        <CustomSkeletonLoader type="FORM" height={height} width={"100%"} />
+        <CustomSkeletonLoader type="FORM" height={height} width={'100%'} />
       ) : (
         <InputGroup
-          width={"full"}
+          width={'full'}
           startElement={
             isPassword ? (
-              <Flex alignItems={"flex-start"} justifyContent={"flex-start"}>
+              <Flex alignItems={'flex-start'} justifyContent={'flex-start'}>
                 <TbLockBitcoin />
               </Flex>
             ) : isCurrency && currency === ENUM.COMMON.Currency.USD ? (
-              <Flex alignItems={"flex-start"} justifyContent={"flex-start"}>
+              <Flex alignItems={'flex-start'} justifyContent={'flex-start'}>
                 {currency}
               </Flex>
             ) : (
               leftAccessory && (
-                <Flex alignItems={"flex-start"} justifyContent={"flex-start"}>
+                <Flex alignItems={'flex-start'} justifyContent={'flex-start'}>
                   {leftAccessory}
                 </Flex>
               )
@@ -89,12 +83,12 @@ const FormTextInput = ({
           endElement={
             isPassword ? (
               <Flex
-                mt={"5px"}
-                pr={"5px"}
-                alignItems={"center"}
-                justifyContent={"center"}
+                mt={'5px'}
+                pr={'5px'}
+                alignItems={'center'}
+                justifyContent={'center'}
                 onClick={() => setSecureTextEntry(!secureTextEntry)}
-                cursor={"pointer"}
+                cursor={'pointer'}
               >
                 {secureTextEntry ? <RiEyeOffLine /> : <RiEyeLine />}
               </Flex>
@@ -108,7 +102,7 @@ const FormTextInput = ({
               currency
             ) : (
               rightAccessory && (
-                <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>
+                <Flex alignItems={'flex-end'} justifyContent={'flex-end'}>
                   {rightAccessory}
                 </Flex>
               )
@@ -119,7 +113,7 @@ const FormTextInput = ({
             {...field}
             {...rest}
             name={field.name}
-            type={isPassword ? (secureTextEntry ? "password" : "text") : type}
+            type={isPassword ? (secureTextEntry ? 'password' : 'text') : type}
             onBlur={(e) => {
               field?.onBlur(e);
             }}
@@ -127,27 +121,23 @@ const FormTextInput = ({
               field.onChange(e);
               onChangeFunction?.(e);
             }}
-            value={
-              field.value !== undefined && field.value !== null
-                ? field.value
-                : ""
-            }
+            value={field.value !== undefined && field.value !== null ? field.value : ''}
             onKeyPress={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 handleSubmit();
               }
             }}
             placeholder={t(placeholder)}
-            borderRadius={customRadius ?? "12px"}
-            border={"1px solid"}
-            borderColor={isError ? "red.500" : "inherit"}
-            _focus={{ borderColor: isError ? "red.500" : "primary.500" }}
-            _placeholder={{ color: isError ? "red.500" : "gray.400" }}
-            variant={"outline"}
+            borderRadius={customRadius ?? '12px'}
+            border={'1px solid'}
+            borderColor={isError ? 'red.500' : 'inherit'}
+            _focus={{ borderColor: isError ? 'red.500' : 'primary.500' }}
+            _placeholder={{ color: isError ? 'red.500' : 'gray.400' }}
+            variant={'outline'}
             //bg={"bg.muted"}
             readOnly={isReadOnly}
             disabled={isDisabled || isLoading}
-            fontSize={{ base: "16px", sm: "14px" }}
+            fontSize={{ base: '16px', sm: '14px' }}
             height={height}
             autoCapitalize="none"
             autoCorrect="off"
@@ -157,24 +147,22 @@ const FormTextInput = ({
       )}
 
       {isVerified && !isError ? (
-        <Flex gap={1} mt={1} alignItems={"center"} color={"primary.500"}>
+        <Flex gap={1} mt={1} alignItems={'center'} color={'primary.500'}>
           <Spinner />
           <BaseText>verification en cours ...</BaseText>
         </Flex>
       ) : (
         isError && (
-          <Flex gap={1} mt={1} alignItems={"center"}>
-            <Field.ErrorIcon width={2.5} height={2.5} color={"red.500"} />
+          <Flex gap={1} mt={1} alignItems={'center'}>
+            <Field.ErrorIcon width={2.5} height={2.5} color={'red.500'} />
             <Field.ErrorText>{error}</Field.ErrorText>
           </Flex>
         )
       )}
       {infoMessage && !isLoading && (
-        <Flex gap={1} mt={1} alignItems={"center"}>
-          <Field.ErrorIcon width={2} height={2} color={"info.500"} />
-          <Field.HelperText fontSize={"x-small"}>
-            {t(infoMessage)}
-          </Field.HelperText>
+        <Flex gap={1} mt={1} alignItems={'center'}>
+          <Field.ErrorIcon width={2} height={2} color={'info.500'} />
+          <Field.HelperText fontSize={'x-small'}>{t(infoMessage)}</Field.HelperText>
         </Flex>
       )}
     </Field.Root>

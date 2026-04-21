@@ -1,11 +1,11 @@
-import { useRouter } from "next/navigation";
-import { APP_ROUTES } from "_config/routes";
-import { useGlobalLoader } from "_context/loaderContext";
-import { ProviderKeys } from "_constants/StorageKeys";
-import { handleApiError } from "_utils/handleApiError";
-import { handleApiSuccess } from "_utils/handleApiSuccess";
-import { authClient } from "../lib/auth-client";
-import { queryClient } from "../lib/query-client";
+import { useRouter } from 'next/navigation';
+import { APP_ROUTES } from '_config/routes';
+import { useGlobalLoader } from '_context/loaderContext';
+import { ProviderKeys } from '_constants/StorageKeys';
+import { handleApiError } from '_utils/handleApiError';
+import { handleApiSuccess } from '_utils/handleApiSuccess';
+import { authClient } from '../lib/auth-client';
+import { queryClient } from '../lib/query-client';
 
 interface AuthTypes {
   name?: string;
@@ -33,12 +33,7 @@ export const useAuth = () => {
     }
   };
 
-  const login = async ({
-    email,
-    password,
-    callbackUrl,
-    providerType,
-  }: AuthTypes) => {
+  const login = async ({ email, password, callbackUrl, providerType }: AuthTypes) => {
     try {
       if (providerType === ProviderKeys.GOOGLE) {
         const result = await authClient.signIn.social({
@@ -78,12 +73,12 @@ export const useAuth = () => {
           return;
         }
         if (result?.data.url) {
-          handleApiSuccess({ status: 200, message: "Connexion réussie" });
+          handleApiSuccess({ status: 200, message: 'Connexion réussie' });
           router.replace(result.data.url);
         }
       }
     } catch (error) {
-      console.log("error catch", error);
+      console.log('error catch', error);
     }
   };
 

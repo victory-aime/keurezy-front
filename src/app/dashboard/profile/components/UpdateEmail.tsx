@@ -1,18 +1,13 @@
-import { BaseModal, BaseText, ModalOpenProps } from "_components/custom";
-import { FC } from "react";
-import { useTranslation } from "react-i18next";
-import { HiOutlineMail } from "react-icons/hi";
+import { BaseModal, BaseText, ModalOpenProps } from '_components/custom';
+import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
+import { HiOutlineMail } from 'react-icons/hi';
 
-export const UpdateEmailModal: FC<ModalOpenProps> = ({
-  isOpen,
-  onChange,
-  callback,
-  isLoading,
-}) => {
+export const UpdateEmailModal: FC<ModalOpenProps> = ({ isOpen, onChange, callback, isLoading }) => {
   const { t } = useTranslation();
   return (
     <BaseModal
-      size={"md"}
+      size={'md'}
       isOpen={isOpen}
       ignoreFooter={false}
       onChange={onChange}
@@ -22,7 +17,7 @@ export const UpdateEmailModal: FC<ModalOpenProps> = ({
       iconBackgroundColor="primary.300"
       isLoading={isLoading}
     >
-      <BaseText textAlign={"center"}>{t("PROFILE.EMAIL_UPDATE_INFO")}</BaseText>
+      <BaseText textAlign={'center'}>{t('PROFILE.EMAIL_UPDATE_INFO')}</BaseText>
     </BaseModal>
   );
 };

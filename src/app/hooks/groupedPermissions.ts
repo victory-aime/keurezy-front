@@ -1,4 +1,4 @@
-import { MODELS } from "_types/*";
+import { MODELS } from '_types/*';
 
 export function groupPermissionsByCategory(data: MODELS.ITeam) {
   const grouped: Record<string, any[]> = {};

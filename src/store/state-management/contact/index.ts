@@ -1,2 +1,2 @@
-export * from "./constants";
-export * from "./contact.queries";
+export * from './constants';
+export * from './contact.queries';

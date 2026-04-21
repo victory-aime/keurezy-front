@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   BaseContainer,
@@ -7,26 +7,25 @@ import {
   BaseTag,
   DataTableContainer,
   BaseFormatNumber,
-} from "_components/custom";
-import { BuildingModule, PropertyModule } from "_store/state-management";
-import { CONSTANTS, ENUM, MODELS } from "_types/*";
-import { useRouter } from "next/navigation";
-import { DASHBOARD_ROUTES } from "../../routes";
-import { PropertyStatsCard } from "./AppartStats";
-import { useMemo, useState } from "react";
-import { FormikValues } from "formik";
-import { PropertyFilter } from "./PropertyFilter";
-import { useUserContext } from "_context/user-context";
-import { usePermissions } from "_hooks/usePermissions";
-import { AppPermissions } from "_utils/app-permissions";
+} from '_components/custom';
+import { BuildingModule, PropertyModule } from '_store/state-management';
+import { CONSTANTS, ENUM, MODELS } from '_types/*';
+import { useRouter } from 'next/navigation';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { PropertyStatsCard } from './AppartStats';
+import { useMemo, useState } from 'react';
+import { FormikValues } from 'formik';
+import { PropertyFilter } from './PropertyFilter';
+import { useUserContext } from '_context/user-context';
+import { usePermissions } from '_hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
 
 export const PropertyList = () => {
   const router = useRouter();
   const { user } = useUserContext();
   const { hasPermission } = usePermissions();
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
-  const [filterValues, setFilterValues] =
-    useState<MODELS.IAgencyFilters | null>(null);
+  const [filterValues, setFilterValues] = useState<MODELS.IAgencyFilters | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const agencyId = user?.agencyId;
@@ -88,60 +87,59 @@ export const PropertyList = () => {
 
   const appartColumns: ColumnsDataTable[] = [
     {
-      header: "",
-      accessor: "select",
+      header: '',
+      accessor: 'select',
     },
     {
-      header: "Propriété",
-      accessor: "title",
+      header: 'Propriété',
+      accessor: 'title',
     },
     {
-      header: "Immeuble/proprietaire",
-      accessor: "fullObject",
+      header: 'Immeuble/proprietaire',
+      accessor: 'fullObject',
       cell: (values) => (
         <BaseText>
-          {values.batimentId
-            ? extractName(values?.batimentId)
-            : values?.propertyOwner}
+          {values.batimentId ? extractName(values?.batimentId) : values?.propertyOwner}
         </BaseText>
       ),
     },
     {
-      header: "Numéro",
-      accessor: "propertyNumber",
-      cell: (propertyNumber) => (
-        <BaseText>{propertyNumber ?? "Aucun"}</BaseText>
-      ),
+      header: 'Numéro',
+      accessor: 'propertyNumber',
+      cell: (propertyNumber) => <BaseText>{propertyNumber ?? 'Aucun'}</BaseText>,
     },
     {
-      header: "Type",
-      accessor: "type",
+      header: 'Type',
+      accessor: 'type',
       cell: (type: string) =>
-        CONSTANTS.propertyTypes.find((item) => item.value === type)?.label ||
-        type,
+        CONSTANTS.propertyTypes.find((item) => item.value === type)?.label || type,
     },
     {
-      header: "Loyer",
-      accessor: "price",
+      header: 'Loyer',
+      accessor: 'price',
       cell: (price: number) => <BaseFormatNumber value={price} />,
     },
 
     {
-      header: "Status",
-      accessor: "status",
+      header: 'Status',
+      accessor: 'status',
       cell: (status: ENUM.COMMON.Status) => <BaseTag status={status} />,
     },
     {
-      header: "Actions",
-      accessor: "actions",
+      header: 'Actions',
+      accessor: 'actions',
       actions: [
         {
-          name: "edit",
+          name: 'edit',
           isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.UPDATE),
           handleClick(data) {
-            router.push(
-              `${DASHBOARD_ROUTES.PROPERTIES.ADD}?requestId=${data?.id}`,
-            );
+            router.push(`${DASHBOARD_ROUTES.PROPERTIES.ADD}?requestId=${data?.id}`);
+          },
+        },
+        {
+          name: 'publish',
+          handleClick() {
+            router.push(DASHBOARD_ROUTES.ANNONCES.ADD);
           },
         },
       ],
@@ -150,11 +148,9 @@ export const PropertyList = () => {
 
   return (
     <BaseContainer
-      border={"none"}
-      title={"Propriétes"}
-      description={
-        "Gérez l'ensemble de vos propriétes locative avec efficacité"
-      }
+      border={'none'}
+      title={'Propriétes'}
+      description={"Gérez l'ensemble de vos propriétes locative avec efficacité"}
       loader={isLoading}
       numberOfLines={2}
       withActionButtons
@@ -173,7 +169,7 @@ export const PropertyList = () => {
         />
       }
       actionsButtonProps={{
-        validateTitle: "Ajouter une propriété",
+        validateTitle: 'Ajouter une propriété',
         isEmailVerified: user?.emailVerified,
         onReload: async () => {
           await refetchProperty();
@@ -183,10 +179,7 @@ export const PropertyList = () => {
         },
       }}
     >
-      <PropertyStatsCard
-        properties={allProperties?.content ?? []}
-        isLoading={isLoading}
-      />
+      <PropertyStatsCard properties={allProperties?.content ?? []} isLoading={isLoading} />
 
       <DataTableContainer
         data={allProperties?.content ?? []}

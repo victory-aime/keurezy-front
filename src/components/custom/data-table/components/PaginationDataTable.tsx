@@ -1,6 +1,6 @@
-"use client";
-import React, { FC, useEffect, useState } from "react";
-import { PaginationProps } from "../interface/data-types";
+'use client';
+import React, { FC, useEffect, useState } from 'react';
+import { PaginationProps } from '../interface/data-types';
 import {
   ButtonGroup,
   Flex,
@@ -8,9 +8,9 @@ import {
   Input,
   useBreakpointValue,
   Pagination,
-} from "@chakra-ui/react";
-import { BaseText, Icons, TextVariant } from "_components/custom";
-import { useTranslation } from "react-i18next";
+} from '@chakra-ui/react';
+import { BaseText, Icons, TextVariant } from '_components/custom';
+import { useTranslation } from 'react-i18next';
 
 export const PaginationDataTable: FC<PaginationProps> = ({
   totalPages,
@@ -21,9 +21,7 @@ export const PaginationDataTable: FC<PaginationProps> = ({
   onLazyLoad,
 }) => {
   if (lazy && (totalPages === undefined || currentPage === undefined)) {
-    throw new Error(
-      "With lazy loading, totalPages and current Page are required",
-    );
+    throw new Error('With lazy loading, totalPages and current Page are required');
   }
 
   const responsiveMode = useBreakpointValue({ base: false, lg: true });
@@ -37,9 +35,7 @@ export const PaginationDataTable: FC<PaginationProps> = ({
     onLazyLoad?.(page);
   };
 
-  const [inputPageValue, setInputPageValue] = useState<string>(
-    currentPage.toString(),
-  );
+  const [inputPageValue, setInputPageValue] = useState<string>(currentPage.toString());
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputPageValue(event.target?.value);
   };
@@ -62,14 +58,8 @@ export const PaginationDataTable: FC<PaginationProps> = ({
   };
 
   return (
-    <Flex
-      alignItems="center"
-      justifyContent={"space-between"}
-      w="full"
-      mt={8}
-      mb={8}
-    >
-      <Flex width={"full"}>
+    <Flex alignItems="center" justifyContent={'space-between'} w="full" mt={8} mb={8}>
+      <Flex width={'full'}>
         <Pagination.Root
           count={totalItems}
           pageSize={totalDataPerPage}
@@ -89,8 +79,8 @@ export const PaginationDataTable: FC<PaginationProps> = ({
               render={(page) => (
                 <IconButton
                   key={page.value}
-                  variant={{ base: "ghost", _selected: "solid" }}
-                  colorPalette={{ _selected: "purple" }}
+                  variant={{ base: 'ghost', _selected: 'solid' }}
+                  colorPalette={{ _selected: 'purple' }}
                   onClick={() => handleClick(page?.value)}
                 >
                   {page?.value}
@@ -107,13 +97,8 @@ export const PaginationDataTable: FC<PaginationProps> = ({
         </Pagination.Root>
       </Flex>
       {responsiveMode && (
-        <Flex
-          width={"full"}
-          alignItems={"center"}
-          justifyContent={"flex-end"}
-          gap={4}
-        >
-          <BaseText variant={TextVariant.XS}>{t("COMMON.GO_PAGE")}</BaseText>
+        <Flex width={'full'} alignItems={'center'} justifyContent={'flex-end'} gap={4}>
+          <BaseText variant={TextVariant.XS}>{t('COMMON.GO_PAGE')}</BaseText>
           <Input
             type="number"
             min={1}
@@ -122,12 +107,12 @@ export const PaginationDataTable: FC<PaginationProps> = ({
             onChange={handleInputChange}
             disabled={totalPages === 1}
             onKeyPress={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 handleGoToPage();
               }
             }}
-            p={"10px"}
-            width={"80px"}
+            p={'10px'}
+            width={'80px'}
           />
         </Flex>
       )}

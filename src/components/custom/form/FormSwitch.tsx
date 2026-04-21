@@ -1,16 +1,16 @@
-import { Fieldset, Switch, Box, Flex } from "@chakra-ui/react";
-import { useField, useFormikContext } from "formik";
-import React, { FC } from "react";
-import { SwitchProps } from "./interface/input";
-import { useTranslation } from "react-i18next";
-import { BaseText, TextVariant } from "../base-text";
-import { CustomSkeletonLoader } from "../custom-skeleton";
+import { Fieldset, Switch, Box, Flex } from '@chakra-ui/react';
+import { useField, useFormikContext } from 'formik';
+import React, { FC } from 'react';
+import { SwitchProps } from './interface/input';
+import { useTranslation } from 'react-i18next';
+import { BaseText, TextVariant } from '../base-text';
+import { CustomSkeletonLoader } from '../custom-skeleton';
 
 export const FormSwitch: FC<SwitchProps> = ({
   name,
   validate,
-  label = "",
-  description = "",
+  label = '',
+  description = '',
   isLoading,
   isReadOnly,
   onCheckedChange,
@@ -22,9 +22,7 @@ export const FormSwitch: FC<SwitchProps> = ({
   };
   const [field, { touched, error }, helpers] = useField(fieldHookConfig);
   const { submitCount } = useFormikContext();
-  const isError = isReadOnly
-    ? !!error
-    : !!(error && (touched || submitCount > 0));
+  const isError = isReadOnly ? !!error : !!(error && (touched || submitCount > 0));
 
   const { setValue } = helpers;
 
@@ -33,7 +31,7 @@ export const FormSwitch: FC<SwitchProps> = ({
   };
 
   return (
-    <Fieldset.Root id={name} invalid={isError} width={"fit-content"} mb={4}>
+    <Fieldset.Root id={name} invalid={isError} width={'fit-content'} mb={4}>
       <Switch.Root
         name={name}
         checked={field.value}
@@ -41,13 +39,13 @@ export const FormSwitch: FC<SwitchProps> = ({
           await handleCheckedChange(e);
           onCheckedChange?.(e.checked);
         }}
-        colorPalette={"green"}
-        size={"md"}
+        colorPalette={'green'}
+        size={'md'}
         disabled={isLoading || isReadOnly}
       >
-        <Flex gap={2} alignItems={"flex-start"} justifyContent={"flex-start"}>
+        <Flex gap={2} alignItems={'flex-start'} justifyContent={'flex-start'}>
           {isLoading ? (
-            <CustomSkeletonLoader type="IMAGE" height={"25px"} />
+            <CustomSkeletonLoader type="IMAGE" height={'25px'} />
           ) : (
             <>
               <Switch.HiddenInput />
@@ -62,14 +60,14 @@ export const FormSwitch: FC<SwitchProps> = ({
           ) : (
             <Box>
               <BaseText variant={TextVariant.S}>{t(label)}</BaseText>
-              <BaseText variant={TextVariant.XS} color={"gray.500"}>
+              <BaseText variant={TextVariant.XS} color={'gray.500'}>
                 {t(description)}
               </BaseText>
             </Box>
           )}
         </Flex>
       </Switch.Root>
-      {isError && <Fieldset.ErrorText>{"error"}</Fieldset.ErrorText>}
+      {isError && <Fieldset.ErrorText>{'error'}</Fieldset.ErrorText>}
     </Fieldset.Root>
   );
 };

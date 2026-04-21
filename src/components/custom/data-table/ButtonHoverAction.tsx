@@ -1,9 +1,9 @@
-"use client";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { BaseText, BaseTooltip, TextVariant } from "_components/custom";
-import { Button, HStack } from "@chakra-ui/react";
-import { HoverActionButtonProps } from "./interface/data-types";
+'use client';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { BaseText, BaseTooltip, TextVariant } from '_components/custom';
+import { Button, HStack } from '@chakra-ui/react';
+import { HoverActionButtonProps } from './interface/data-types';
 
 export const ButtonHoverAction = ({
   label,
@@ -27,10 +27,10 @@ export const ButtonHoverAction = ({
         disabled={isDisabled}
         overflow="hidden"
         px={2}
-        w={"36px"}
+        w={'36px'}
         transition="all 0.25s ease"
         _hover={{
-          w: "120px",
+          w: '120px',
         }}
         onMouseEnter={() => {
           setHover(!hover);

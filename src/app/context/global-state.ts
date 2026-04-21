@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { applicationInstance } from "rise-core-frontend";
-import { GlobalApplicationContext } from "./applicationContext";
+import { applicationInstance } from 'rise-core-frontend';
+import { GlobalApplicationContext } from './applicationContext';
 
 /**
  * Instantiate the GlobalApplicationContext

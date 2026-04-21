@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Loader } from "_components/custom";
-import { APP_ROUTES } from "_config/routes";
-import { roleToDashboardMap } from "_constants/role";
-import { Center } from "@chakra-ui/react";
-import { authClient } from "../lib/auth-client";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Loader } from '_components/custom';
+import { APP_ROUTES } from '_config/routes';
+import { roleToDashboardMap } from '_constants/role';
+import { Center } from '@chakra-ui/react';
+import { authClient } from '../lib/auth-client';
 
 export default function RedirectAfterLogin() {
   const router = useRouter();
@@ -17,10 +17,7 @@ export default function RedirectAfterLogin() {
 
     if (!session) {
       router.push(APP_ROUTES.PROTECTED);
-    } else if (
-      session?.session?.token &&
-      roleToDashboardMap[session?.user?.role]
-    ) {
+    } else if (session?.session?.token && roleToDashboardMap[session?.user?.role]) {
       router.push(roleToDashboardMap[session?.user?.role]);
     } else {
       router.replace(APP_ROUTES.ROOT);
@@ -28,7 +25,7 @@ export default function RedirectAfterLogin() {
   }, [session, isPending, router]);
 
   return (
-    <Center h={"100vh"}>
+    <Center h={'100vh'}>
       <Loader loader showText />
     </Center>
   );

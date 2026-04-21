@@ -1,11 +1,9 @@
-import * as Constants from "./constants";
-import { chatServiceInstance } from "./chat.service-instance";
-import { MODELS } from "_types/index";
-import { QUERIES } from "rise-core-frontend";
+import * as Constants from './constants';
+import { chatServiceInstance } from './chat.service-instance';
+import { MODELS } from '_types/index';
+import { QUERIES } from 'rise-core-frontend';
 
-const getConversationQueries = (
-  args: QUERIES.QueryPayload<{ userId: string }>,
-) => {
+const getConversationQueries = (args: QUERIES.QueryPayload<{ userId: string }>) => {
   return QUERIES.useCustomQuery<MODELS.IConversationResponse[]>({
     queryKey: [Constants.CHAT_KEYS.GET_CONV],
     queryFn: () => chatServiceInstance().getConversation(args?.params?.userId!),
@@ -18,8 +16,7 @@ const createConversationtMutation = (
 ) => {
   return QUERIES.useCustomMutation<{ rentalAgreementId: string }, any>({
     mutationKey: [Constants.CHAT_KEYS.CREATE_CONV],
-    mutationFn: ({ params }) =>
-      chatServiceInstance().createConversation(params!),
+    mutationFn: ({ params }) => chatServiceInstance().createConversation(params!),
     options: args.mutationOptions,
   });
 };
@@ -38,9 +35,7 @@ const getMessagesQueries = (
     options: args.queryOptions,
   });
 };
-const sendMessageMutation = (
-  args: QUERIES.MutationPayload<MODELS.ISendMessage>,
-) => {
+const sendMessageMutation = (args: QUERIES.MutationPayload<MODELS.ISendMessage>) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.CHAT_KEYS.SEND_MESSAGE],
     mutationFn: ({ payload, params }) =>

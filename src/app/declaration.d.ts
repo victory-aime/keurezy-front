@@ -1,1 +1,1 @@
-declare module "react-international-phone/style.css";
+declare module 'react-international-phone/style.css';

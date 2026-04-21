@@ -1,32 +1,26 @@
-import { MODELS, VALIDATION } from "_types/*";
+import { MODELS, VALIDATION } from '_types/*';
 
 const TOTAL_ONBOARD_STEPS = 5;
 
-const onboardStepLabels = [
-  "Introduction",
-  "Découverte",
-  "Compte",
-  "Agence",
-  "Terminé",
-];
+const onboardStepLabels = ['Introduction', 'Découverte', 'Compte', 'Agence', 'Terminé'];
 
 const onboardInitialValues: {
   account: MODELS.IAuthSignUp;
   business: MODELS.ICreateAgency;
 } = {
   account: {
-    name: "",
-    email: "",
-    password: "",
+    name: '',
+    email: '',
+    password: '',
   },
   business: {
     acceptTerms: false,
-    address: "",
-    description: "",
+    address: '',
+    description: '',
     documents: [],
-    name: "",
-    phone: "",
-    userId: "",
+    name: '',
+    phone: '',
+    userId: '',
   },
 };
 

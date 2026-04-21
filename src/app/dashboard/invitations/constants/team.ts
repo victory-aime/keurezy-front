@@ -1,6 +1,6 @@
-import { Icons } from "_components/custom";
-import { MODELS, VALIDATION } from "_types/*";
-import { AgencyRole } from "../../../../types/enum";
+import { Icons } from '_components/custom';
+import { MODELS, VALIDATION } from '_types/*';
+import { AgencyRole } from '../../../../types/enum';
 
 export interface IInviteTeamUserInfo extends MODELS.IAuthSignUp {
   role: AgencyRole | any;
@@ -16,9 +16,9 @@ const onboardInviteTeamInitialValues: {
   permissions: ISelectPermissions[];
 } = {
   account: {
-    name: "",
-    email: "",
-    password: "",
+    name: '',
+    email: '',
+    password: '',
     role: [AgencyRole.AGENT],
   },
   permissions: [],
@@ -27,10 +27,10 @@ const onboardInviteTeamInitialValues: {
 const TOTAL_INVITE_TEAM_STEPS = 4;
 
 const INVITE_TEAM_STEPS = [
-  { title: "Informations", icon: Icons.User },
-  { title: "Permissions", icon: Icons.Shield },
-  { title: "Confirmation", icon: Icons.Send },
-  { title: "Terminé", icon: Icons.Check },
+  { title: 'Informations', icon: Icons.User },
+  { title: 'Permissions', icon: Icons.Shield },
+  { title: 'Confirmation', icon: Icons.Send },
+  { title: 'Terminé', icon: Icons.Check },
 ];
 
 const INVITE_TEAM_SLIDE_VARIANTS = {

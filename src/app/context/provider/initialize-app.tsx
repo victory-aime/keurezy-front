@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Loader } from "_components/custom";
-import { Center } from "@chakra-ui/react";
+import React from 'react';
+import { Loader } from '_components/custom';
+import { Center } from '@chakra-ui/react';
 
 export const InitializeApp: React.FC<{
   children: React.ReactNode;

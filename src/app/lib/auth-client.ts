@@ -1,11 +1,11 @@
-import { createAuthClient } from "better-auth/react";
+import { createAuthClient } from 'better-auth/react';
 import {
   customSessionClient,
   inferAdditionalFields,
   twoFactorClient,
-} from "better-auth/client/plugins";
-import { APP_ROUTES } from "_config/routes";
-import { passkeyClient } from "@better-auth/passkey/client";
+} from 'better-auth/client/plugins';
+import { APP_ROUTES } from '_config/routes';
+import { passkeyClient } from '@better-auth/passkey/client';
 
 export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -20,13 +20,13 @@ export const authClient = createAuthClient({
     inferAdditionalFields({
       session: {
         permissions: {
-          type: "json",
+          type: 'json',
           input: false,
         },
       },
       user: {
         role: {
-          type: "string",
+          type: 'string',
           input: false,
         },
       },

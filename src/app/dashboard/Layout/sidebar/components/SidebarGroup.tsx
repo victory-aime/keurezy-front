@@ -1,17 +1,17 @@
-import { Accordion, Badge, Flex, Icon, VStack } from "@chakra-ui/react";
-import { useIsActive } from "../hooks/useIsActive";
-import { SidebarNavGroupProps } from "../types";
-import { BaseText } from "_components/custom";
-import { SideToolTip } from "./SideToolTip";
-import { useTranslation } from "react-i18next";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Icons } from "_components/custom";
-import { UpgradePlanModal } from "./UpgradePlanModal";
-import { MotionFlex } from "_constants/motion";
-import { AnimatePresence } from "framer-motion";
-import { useAppTheme } from "_context/theme-context";
-import { useThemeColors } from "_theme/useThemeColors";
+import { Accordion, Badge, Box, Flex, Icon, VStack } from '@chakra-ui/react';
+import { useIsActive } from '../hooks/useIsActive';
+import { SidebarNavGroupProps } from '../types';
+import { BaseText } from '_components/custom';
+import { SideToolTip } from './SideToolTip';
+import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Icons } from '_components/custom';
+import { UpgradePlanModal } from './UpgradePlanModal';
+import { MotionFlex } from '_constants/motion';
+import { AnimatePresence } from 'framer-motion';
+import { useAppTheme } from '_context/theme-context';
+import { useThemeColors } from '_theme/useThemeColors';
 
 export const SidebarGroup = ({
   links,
@@ -23,7 +23,6 @@ export const SidebarGroup = ({
   isCollapsed: boolean;
   mobileCloseDrawer?: () => void;
 }) => {
-  const { vars } = useAppTheme();
   const { hexToRGB } = useThemeColors();
   const [openUpgradeModal, setOpenUpgradeModal] = useState(false);
 
@@ -41,18 +40,18 @@ export const SidebarGroup = ({
             fontWeight="bold"
             textTransform="uppercase"
             color="gray.500"
-            alignItems={"center"}
-            justifyContent={"space-between"}
-            cursor={"pointer"}
-            _focus={{ bgColor: "none", color: "none" }}
+            alignItems={'center'}
+            justifyContent={'space-between'}
+            cursor={'pointer'}
+            _focus={{ bgColor: 'none', color: 'none' }}
           >
             {isCollapsed ? (
-              <Flex gap={2} alignItems={"center"}>
-                <Icon as={icon} size={"md"} />
+              <Flex gap={2} alignItems={'center'}>
+                <Icon as={icon} size={'md'} />
                 {t(title)}
               </Flex>
             ) : (
-              <Icon as={icon} size={"xs"} />
+              <Icon as={icon} size={'xs'} />
             )}
 
             <Accordion.ItemIndicator />
@@ -60,9 +59,10 @@ export const SidebarGroup = ({
 
           <Accordion.ItemContent>
             <Accordion.ItemBody px={0}>
-              <VStack align="stretch" gap={1} width={"full"}>
+              <VStack align="stretch" gap={1} width={'full'}>
                 {links?.map((item, i) => {
                   const isActive = isActiveLink(item?.path);
+                  const isHighlighted = item.highlight;
 
                   const handleClick = () => {
                     if (item.disabled) {
@@ -76,14 +76,11 @@ export const SidebarGroup = ({
                   return (
                     <SideToolTip
                       key={i}
-                      label={
-                        item.disabled
-                          ? "Disponible dans un plan supérieur"
-                          : t(item.label)
-                      }
+                      label={item.disabled ? 'Disponible dans un plan supérieur' : t(item.label)}
                       disabled={isCollapsed && !item.disabled}
                     >
                       <MotionFlex
+                        position="relative"
                         transition={{
                           duration: 0.45,
                           ease: [0.22, 1, 0.36, 1],
@@ -92,39 +89,49 @@ export const SidebarGroup = ({
                           item.disabled
                             ? {}
                             : {
-                                scale: 0.95,
+                                scale: 0.97,
                               }
                         }
-                        whileTap={!item.disabled ? { scale: 0.97 } : {}}
+                        whileTap={!item.disabled ? { scale: 0.98 } : {}}
                         align="center"
                         width="full"
                         gap={3}
                         px={3}
                         py={2}
                         borderRadius="md"
-                        justifyContent={isCollapsed ? "center" : "flex-start"}
-                        bg={isActive ? hexToRGB(500, 0.2) : "transparent"}
+                        justifyContent={isCollapsed ? 'center' : 'flex-start'}
+                        bg={isActive ? hexToRGB(500, 0.2) : 'transparent'}
                         color={
                           item.disabled
-                            ? "gray.400"
-                            : isActive
-                              ? "primary.600"
-                              : "gray.600"
+                            ? 'gray.400'
+                            : isActive || isHighlighted
+                              ? 'primary.600'
+                              : 'gray.600'
                         }
-                        fontWeight={isActive ? "semibold" : "normal"}
-                        cursor={item.disabled ? "not-allowed" : "pointer"}
+                        fontWeight={isActive || isHighlighted ? 'semibold' : 'normal'}
+                        cursor={item.disabled ? 'not-allowed' : 'pointer'}
                         opacity={item.disabled ? 0.5 : 1}
                         onClick={handleClick}
                         _hover={
                           item.disabled
                             ? {}
                             : {
-                                bg: hexToRGB(500, 0.2),
-                                color: vars.primary600,
+                                bg: hexToRGB(500, 0.08),
                               }
                         }
                       >
-                        <Icon as={item.icon} size={"sm"} />
+                        {isHighlighted && (
+                          <Box
+                            position="absolute"
+                            left="0"
+                            top="6px"
+                            bottom="6px"
+                            width="3px"
+                            borderRadius="full"
+                            bg={'primary.500'}
+                          />
+                        )}
+                        <Icon as={item.icon} size={'sm'} />
 
                         <AnimatePresence initial={false}>
                           {isCollapsed && (
@@ -137,12 +144,23 @@ export const SidebarGroup = ({
                                 ease: [0.22, 1, 0.36, 1],
                               }}
                               style={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center',
                                 gap: 8,
                                 flex: 1,
                               }}
                             >
+                              {item.highlight && (
+                                <Box
+                                  position="absolute"
+                                  left="0"
+                                  top="6px"
+                                  bottom="6px"
+                                  width="3px"
+                                  borderRadius="full"
+                                  bg={'primary.500'}
+                                />
+                              )}
                               <BaseText flex="1" fontSize="sm">
                                 {t(item.label)}
                               </BaseText>
@@ -152,15 +170,17 @@ export const SidebarGroup = ({
                                   borderRadius="full"
                                   fontSize="0.8em"
                                   bgColor={hexToRGB(500, 0.8)}
-                                  color={"white"}
+                                  color={'white'}
                                 >
                                   {item.badge}
                                 </Badge>
                               )}
-
-                              {item.disabled && (
-                                <Icon as={Icons.Lock} color="gray" />
+                              {item.highlight && (
+                                <Badge fontSize="0.6em" colorPalette={'red'}>
+                                  NEW
+                                </Badge>
                               )}
+                              {item.disabled && <Icon as={Icons.Lock} color="gray" />}
                             </MotionFlex>
                           )}
                         </AnimatePresence>
@@ -173,10 +193,7 @@ export const SidebarGroup = ({
           </Accordion.ItemContent>
         </Accordion.Item>
       </Accordion.Root>
-      <UpgradePlanModal
-        onChange={setOpenUpgradeModal}
-        isOpen={openUpgradeModal}
-      />
+      <UpgradePlanModal onChange={setOpenUpgradeModal} isOpen={openUpgradeModal} />
     </main>
   );
 };

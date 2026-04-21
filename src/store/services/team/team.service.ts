@@ -1,5 +1,5 @@
-import { MODELS } from "_types/*";
-import { BaseApi } from "rise-core-frontend";
+import { MODELS } from '_types/*';
+import { BaseApi } from 'rise-core-frontend';
 
 export class TeamService extends BaseApi {
   getAllTeamByAgency(agencyId: string) {

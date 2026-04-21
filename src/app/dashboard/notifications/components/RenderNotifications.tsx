@@ -1,8 +1,8 @@
-import { MODELS } from "_types/*";
-import { NotificationsDisplay } from "./NotificationsDisplay";
-import { BaseText, Icons } from "_components/custom";
-import { VariablesColors } from "_theme/variables";
-import { VStack } from "@chakra-ui/react";
+import { MODELS } from '_types/*';
+import { NotificationsDisplay } from './NotificationsDisplay';
+import { BaseText, Icons } from '_components/custom';
+import { VariablesColors } from '_theme/variables';
+import { VStack } from '@chakra-ui/react';
 
 export const RenderNotifications = ({
   list,
@@ -15,11 +15,7 @@ export const RenderNotifications = ({
 }) => {
   if (isLoading) {
     return (
-      <NotificationsDisplay
-        request={{} as MODELS.INotificationListResponse}
-        index={0}
-        isLoading
-      />
+      <NotificationsDisplay request={{} as MODELS.INotificationListResponse} index={0} isLoading />
     );
   }
 

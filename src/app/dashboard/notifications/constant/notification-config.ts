@@ -1,6 +1,6 @@
-import { ColorPalette } from "@chakra-ui/react";
-import { Icons } from "_components/custom";
-import { ENUM } from "_types/*";
+import { ColorPalette } from '@chakra-ui/react';
+import { Icons } from '_components/custom';
+import { ENUM } from '_types/*';
 
 export const notificationUIConfig: Record<
   ENUM.NotificationType,
@@ -11,28 +11,28 @@ export const notificationUIConfig: Record<
   }
 > = {
   REQUEST: {
-    title: "Nouvelle demande",
-    icon: "Home",
-    color: "purple",
+    title: 'Nouvelle demande',
+    icon: 'Home',
+    color: 'purple',
   },
   MESSAGE: {
-    title: "Nouveau message",
-    icon: "Chat",
-    color: "green",
+    title: 'Nouveau message',
+    icon: 'Chat',
+    color: 'green',
   },
   PAYMENT: {
-    title: "Paiement reçu",
-    icon: "CreditCard",
-    color: "blue",
+    title: 'Paiement reçu',
+    icon: 'CreditCard',
+    color: 'blue',
   },
   MAINTENANCE: {
-    title: "Maintenance",
-    icon: "Wrench",
-    color: "orange",
+    title: 'Maintenance',
+    icon: 'Wrench',
+    color: 'orange',
   },
   SYSTEM: {
-    title: "Notification système",
-    icon: "BellOff",
-    color: "gray",
+    title: 'Notification système',
+    icon: 'BellOff',
+    color: 'gray',
   },
 };

@@ -1,6 +1,6 @@
-"use client";
-import { createContext, useContext, useState, ReactNode } from "react";
-import { GlobalLoader } from "_components/custom";
+'use client';
+import { createContext, useContext, useState, ReactNode } from 'react';
+import { GlobalLoader } from '_components/custom';
 
 type LoaderContextType = {
   showLoader: () => void;
@@ -27,7 +27,7 @@ export const LoaderProvider = ({ children }: { children: ReactNode }) => {
 export const useGlobalLoader = () => {
   const context = useContext(LoaderContext);
   if (!context) {
-    throw new Error("useGlobalLoader must be used within a LoaderProvider");
+    throw new Error('useGlobalLoader must be used within a LoaderProvider');
   }
   return context;
 };

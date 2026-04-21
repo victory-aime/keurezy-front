@@ -1,9 +1,9 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 
-import { Image } from "@chakra-ui/react";
-import { FlagKeys, FlagIcon } from "_assets/images/flag";
-import { ImageProps } from "@chakra-ui/react";
-import { Loader } from "_components/custom";
+import { Image } from '@chakra-ui/react';
+import { FlagKeys, FlagIcon } from '_assets/images/flag';
+import { ImageProps } from '@chakra-ui/react';
+import { Loader } from '_components/custom';
 
 export interface FlagIconProps extends ImageProps {
   countryImage: FlagKeys;
@@ -11,12 +11,7 @@ export interface FlagIconProps extends ImageProps {
   isLoading?: boolean;
 }
 
-export const FlagImagesIcon: FC<FlagIconProps> = ({
-  isLoading,
-  countryImage,
-  border,
-  ...rest
-}) => {
+export const FlagImagesIcon: FC<FlagIconProps> = ({ isLoading, countryImage, border, ...rest }) => {
   const flagImage = FlagIcon[countryImage];
 
   if (!flagImage) {

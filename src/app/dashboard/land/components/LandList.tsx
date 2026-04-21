@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   BaseContainer,
   BaseFormatNumber,
@@ -8,20 +8,20 @@ import {
   ColumnsDataTable,
   DataTableContainer,
   ToastStatus,
-} from "_components/custom";
-import { useMemo, useState } from "react";
-import { LandFilter } from "./LandFilter";
-import { LandModule } from "_store/state-management";
-import { useRouter } from "next/navigation";
-import { DASHBOARD_ROUTES } from "../../routes";
-import { CONSTANTS, MODELS } from "_types/*";
-import { LandDelete } from "./LandDelete";
-import { LandDetails } from "./LandDetails";
-import { FormikValues } from "formik";
-import { IuseExportData, PDFService } from "rise-core-frontend";
-import { useTranslation } from "react-i18next";
-import { LandStatsCard } from "./LandStats";
-import { useUserContext } from "_context/user-context";
+} from '_components/custom';
+import { useMemo, useState } from 'react';
+import { LandFilter } from './LandFilter';
+import { LandModule } from '_store/state-management';
+import { useRouter } from 'next/navigation';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { CONSTANTS, MODELS } from '_types/*';
+import { LandDelete } from './LandDelete';
+import { LandDetails } from './LandDetails';
+import { FormikValues } from 'formik';
+import { IuseExportData, PDFService } from 'rise-core-frontend';
+import { useTranslation } from 'react-i18next';
+import { LandStatsCard } from './LandStats';
+import { useUserContext } from '_context/user-context';
 
 export const LandList = () => {
   const router = useRouter();
@@ -33,11 +33,8 @@ export const LandList = () => {
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
-  const [selectedValues, setSelectedValues] =
-    useState<MODELS.LandResponseDto | null>(null);
-  const [filterValues, setFilterValues] = useState<MODELS.ILandFilter | null>(
-    null,
-  );
+  const [selectedValues, setSelectedValues] = useState<MODELS.LandResponseDto | null>(null);
+  const [filterValues, setFilterValues] = useState<MODELS.ILandFilter | null>(null);
 
   const agencyId = currentUser?.agencyId;
 
@@ -62,63 +59,60 @@ export const LandList = () => {
     refetch: reloadLandsList,
   } = LandModule.getAllLandsByAgencyQueries(queryPayload);
 
-  const { mutateAsync: deleteLand, isPending: isLandPending } =
-    LandModule.deleteLandMutation({
-      mutationOptions: {
-        onSuccess: async () => {
-          setFilterValues(null);
-          await reloadLandsList();
-        },
+  const { mutateAsync: deleteLand, isPending: isLandPending } = LandModule.deleteLandMutation({
+    mutationOptions: {
+      onSuccess: async () => {
+        setFilterValues(null);
+        await reloadLandsList();
       },
-    });
+    },
+  });
 
   const landColumns: ColumnsDataTable[] = [
-    { header: "Terrain", accessor: "title" },
+    { header: 'Terrain', accessor: 'title' },
     {
-      header: "Prix de vente",
-      accessor: "purchasePrice",
+      header: 'Prix de vente',
+      accessor: 'purchasePrice',
       cell: (value) => <BaseFormatNumber value={value} />,
     },
     {
-      header: "ville",
-      accessor: "city",
+      header: 'ville',
+      accessor: 'city',
       cell: (value) => (
-        <BaseText textTransform={"capitalize"} fontSize={"sm"}>
+        <BaseText textTransform={'capitalize'} fontSize={'sm'}>
           {value}
         </BaseText>
       ),
     },
     {
-      header: "adresse",
-      accessor: "address",
-      cell: (value) => (
-        <BaseText fontSize={"sm"}>{value ?? "Aucune addresse"}</BaseText>
-      ),
+      header: 'adresse',
+      accessor: 'address',
+      cell: (value) => <BaseText fontSize={'sm'}>{value ?? 'Aucune addresse'}</BaseText>,
     },
     {
-      header: "Status",
-      accessor: "status",
+      header: 'Status',
+      accessor: 'status',
       cell: (value) => <BaseTag status={value} />,
     },
     {
-      header: "Actions",
-      accessor: "actions",
+      header: 'Actions',
+      accessor: 'actions',
       actions: [
         {
-          name: "view",
+          name: 'view',
           handleClick(data) {
             setOpenDetails(true);
             setSelectedValues(data);
           },
         },
         {
-          name: "edit",
+          name: 'edit',
           handleClick(data) {
             router.push(`${DASHBOARD_ROUTES.LAND.ADD}?landId=${data?.id}`);
           },
         },
         {
-          name: "delete",
+          name: 'delete',
           handleClick(data) {
             setOpenDelete(true);
             setSelectedValues(data);
@@ -154,9 +148,8 @@ export const LandList = () => {
   const handleExportPdf = async () => {
     if (allLands?.content?.length === 0) {
       return BaseToast({
-        title: "Export impossible",
-        description:
-          "Vous ne pouvez pas exporter la liste car vous ne disposer d'aucun terrain",
+        title: 'Export impossible',
+        description: "Vous ne pouvez pas exporter la liste car vous ne disposer d'aucun terrain",
         type: ToastStatus.INFO,
       });
     }
@@ -167,7 +160,7 @@ export const LandList = () => {
     }));
     await exportTableToPdf(
       allLands?.content as unknown as IuseExportData[],
-      "Liste des Terrains",
+      'Liste des Terrains',
       translatedColumns,
     );
   };
@@ -176,7 +169,7 @@ export const LandList = () => {
     <BaseContainer
       title="Gestion des Terrains"
       description="Gérez vos terrains avec efficacité"
-      border={"none"}
+      border={'none'}
       withActionButtons
       isFilterActive={toggleFilter}
       onToggleFilter={() => setToggleFilter(!toggleFilter)}
@@ -192,7 +185,7 @@ export const LandList = () => {
         />
       }
       actionsButtonProps={{
-        validateTitle: "Ajouter",
+        validateTitle: 'Ajouter',
         downloadTitle: `Exporter PDF (${allLands?.content?.length ?? 0})`,
         onClick() {
           router.push(DASHBOARD_ROUTES.LAND.ADD);

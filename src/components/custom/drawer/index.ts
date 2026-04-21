@@ -1,3 +1,3 @@
-import { BaseDrawer, type DrawerProps } from "./BaseDrawer";
+import { BaseDrawer, type DrawerProps } from './BaseDrawer';
 
 export { DrawerProps, BaseDrawer };

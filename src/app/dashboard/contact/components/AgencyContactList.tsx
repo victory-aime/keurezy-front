@@ -1,9 +1,9 @@
-"use client";
-import { BaseTabs, Icons } from "_components/custom";
-import { ContactModule, UserModule } from "_store/state-management";
-import { useMemo } from "react";
-import { ENUM } from "_types/*";
-import { RenderAgencyContactRequestsList } from "./RenderAgencyContactRequest";
+'use client';
+import { BaseTabs, Icons } from '_components/custom';
+import { ContactModule, UserModule } from '_store/state-management';
+import { useMemo } from 'react';
+import { ENUM } from '_types/*';
+import { RenderAgencyContactRequestsList } from './RenderAgencyContactRequest';
 
 export const AgencyContactList = () => {
   const { data: user } = UserModule.getUserInfo({
@@ -21,14 +21,13 @@ export const AgencyContactList = () => {
     queryOptions: { enabled: false },
   });
 
-  const { mutateAsync: readAll, isPending } =
-    ContactModule.readAllAgencyContactMutation({
-      mutationOptions: {
-        onSuccess: async () => {
-          await refetchAgencyContactList();
-        },
+  const { mutateAsync: readAll, isPending } = ContactModule.readAllAgencyContactMutation({
+    mutationOptions: {
+      onSuccess: async () => {
+        await refetchAgencyContactList();
       },
-    });
+    },
+  });
 
   const onReadAll = async () => {
     await readAll({
@@ -43,9 +42,7 @@ export const AgencyContactList = () => {
     const all = resquestList ?? [];
     return {
       allRequests: all,
-      unreadRequests: all.filter(
-        (r) => r.status === ENUM.COMMON.Status.PENDING,
-      ),
+      unreadRequests: all.filter((r) => r.status === ENUM.COMMON.Status.PENDING),
       readRequests: all.filter((r) => r.status === ENUM.COMMON.Status.READ),
     };
   }, [resquestList]);
@@ -57,7 +54,7 @@ export const AgencyContactList = () => {
       withActionButtons
       actionsButtonProps={{
         withGradient: false,
-        validateTitle: "Marque tout comme lues",
+        validateTitle: 'Marque tout comme lues',
         isEmailVerified: user?.emailVerified,
         validatePermission: unreadRequests.length > 0,
         icon: <Icons.DoubleCheck />,
@@ -65,7 +62,7 @@ export const AgencyContactList = () => {
           await onReadAll();
         },
       }}
-      width={"full"}
+      width={'full'}
       items={[
         {
           tabIndex: 0,

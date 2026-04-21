@@ -15,8 +15,8 @@
  *  - `isActiveLink(link: string): boolean` : indique si la route correspond au lien donné.
  *  - `pathname: string` : le chemin d'URL actuel.
  */
-import { APP_ROUTES } from "_config/routes";
-import { usePathname } from "next/navigation";
+import { APP_ROUTES } from '_config/routes';
+import { usePathname } from 'next/navigation';
 
 export const useIsActive = () => {
   const pathname = usePathname();
@@ -35,9 +35,7 @@ export const useIsActive = () => {
     // Actif si on est sur le lien exact ou une sous-route
     return pathname === link || pathname.startsWith(`${link}/`);
   };
-  const itHasActiveChildLink = (
-    links?: { label: string; path: string }[],
-  ): boolean => {
+  const itHasActiveChildLink = (links?: { label: string; path: string }[]): boolean => {
     if (!pathname || !links) return false;
 
     return links.some((link) => {

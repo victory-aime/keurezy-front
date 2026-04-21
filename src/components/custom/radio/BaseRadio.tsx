@@ -1,5 +1,5 @@
-import { HStack, RadioGroup } from "@chakra-ui/react";
-import { IRadioProps } from "./interface/radio";
+import { HStack, RadioGroup } from '@chakra-ui/react';
+import { IRadioProps } from './interface/radio';
 
 export const BaseRadio = ({
   items,

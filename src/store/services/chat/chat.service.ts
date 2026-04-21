@@ -1,5 +1,5 @@
-import { BaseApi } from "rise-core-frontend";
-import { MODELS } from "_types/index";
+import { BaseApi } from 'rise-core-frontend';
+import { MODELS } from '_types/index';
 
 /**
  * ChatService provides methods for handling Chat-related operations
@@ -31,10 +31,7 @@ export class ChatService extends BaseApi {
     );
   }
 
-  sendMessage(
-    message: string,
-    data: { conversationId: string; userId: string },
-  ) {
+  sendMessage(message: string, data: { conversationId: string; userId: string }) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().CHAT.SEND_MESSAGE,
       { message },

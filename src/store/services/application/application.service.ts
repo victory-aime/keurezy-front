@@ -1,5 +1,5 @@
-import { BaseApi } from "rise-core-frontend";
-import { MODELS } from "_types/index";
+import { BaseApi } from 'rise-core-frontend';
+import { MODELS } from '_types/index';
 
 /**
  * ApplicationService provides methods for handling application-related operations
@@ -7,15 +7,11 @@ import { MODELS } from "_types/index";
  */
 export class ApplicationService extends BaseApi {
   createApplicationRequest(data: MODELS.IApplicationRequest) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().APPLICATION.CREATE,
-      data,
-    );
+    return this.apiService.invoke(this.applicationContext.getApiConfig().APPLICATION.CREATE, data);
   }
   agencyApplicationList(params: MODELS.IAgencyFilters) {
     return this.apiService.invoke(
-      this.applicationContext.getApiConfig().APPLICATION
-        .AGENCY_APPLICATION_LIST,
+      this.applicationContext.getApiConfig().APPLICATION.AGENCY_APPLICATION_LIST,
       {},
       { params },
     );

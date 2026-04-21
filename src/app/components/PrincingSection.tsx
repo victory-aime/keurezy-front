@@ -6,59 +6,52 @@ import {
   Icons,
   TextVariant,
   TextWeight,
-} from "_components/custom";
-import {
-  Box,
-  Container,
-  Float,
-  HStack,
-  List,
-  SimpleGrid,
-} from "@chakra-ui/react";
-import { MotionBox } from "_constants/motion";
+} from '_components/custom';
+import { Box, Container, Float, HStack, List, SimpleGrid } from '@chakra-ui/react';
+import { MotionBox } from '_constants/motion';
 
 const pricingPlans = [
   {
-    name: "Starter",
+    name: 'Starter',
     price: 0,
-    description: "Perfect for getting started",
+    description: 'Perfect for getting started',
     features: [
-      "Up to 3 properties",
-      "Basic tenant management",
-      "Online rent collection",
-      "Email support",
+      'Up to 3 properties',
+      'Basic tenant management',
+      'Online rent collection',
+      'Email support',
     ],
-    cta: "Get Started Free",
+    cta: 'Get Started Free',
     popular: false,
   },
   {
-    name: "Professional",
+    name: 'Professional',
     price: 29,
-    description: "For growing portfolios",
+    description: 'For growing portfolios',
     features: [
-      "Up to 25 properties",
-      "Advanced analytics",
-      "Maintenance tracking",
-      "Automated reminders",
-      "Priority support",
-      "Document storage",
+      'Up to 25 properties',
+      'Advanced analytics',
+      'Maintenance tracking',
+      'Automated reminders',
+      'Priority support',
+      'Document storage',
     ],
-    cta: "Start Free Trial",
+    cta: 'Start Free Trial',
     popular: true,
   },
   {
-    name: "Enterprise",
+    name: 'Enterprise',
     price: 79,
-    description: "For large-scale management",
+    description: 'For large-scale management',
     features: [
-      "Unlimited properties",
-      "Custom reporting",
-      "API access",
-      "Dedicated account manager",
-      "Multi-user access",
-      "White-label option",
+      'Unlimited properties',
+      'Custom reporting',
+      'API access',
+      'Dedicated account manager',
+      'Multi-user access',
+      'White-label option',
     ],
-    cta: "Contact Sales",
+    cta: 'Contact Sales',
     popular: false,
   },
 ];
@@ -71,37 +64,24 @@ export const PricingSection = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          maxW={"2xl"}
-          mx={"auto"}
+          maxW={'2xl'}
+          mx={'auto'}
           mb={16}
-          textAlign={"center"}
+          textAlign={'center'}
         >
-          <BaseText
-            color={"primary.500"}
-            textTransform={"uppercase"}
-            fontWeight={"semibold"}
-          >
+          <BaseText color={'primary.500'} textTransform={'uppercase'} fontWeight={'semibold'}>
             Tarifs
           </BaseText>
 
-          <BaseText
-            fontWeight={"bold"}
-            variant={TextVariant.H2}
-            lineHeight={1.2}
-          >
+          <BaseText fontWeight={'bold'} variant={TextVariant.H2} lineHeight={1.2}>
             Des prix simples et transparents
           </BaseText>
-          <BaseText variant={TextVariant.L} mb={2} mt={1} color={"gray.400"}>
+          <BaseText variant={TextVariant.L} mb={2} mt={1} color={'gray.400'}>
             Commencez gratuitement, évoluez quand vous êtes prêt.
           </BaseText>
         </MotionBox>
 
-        <SimpleGrid
-          columns={{ base: 1, sm: 3 }}
-          gap={6}
-          mx={"auto"}
-          maxW={"5xl"}
-        >
+        <SimpleGrid columns={{ base: 1, sm: 3 }} gap={6} mx={'auto'} maxW={'5xl'}>
           {pricingPlans.map((plan, i) => (
             <MotionBox
               key={plan.name}
@@ -109,21 +89,17 @@ export const PricingSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              border={"1px solid"}
+              border={'1px solid'}
               p={8}
-              position={"relative"}
-              rounded={"xl"}
-              borderColor={plan.popular ? "primary.500" : "bg.muted"}
-              shadow={plan.popular ? "2xl" : "xs"}
-              scale={plan.popular ? "1.1" : "none"}
+              position={'relative'}
+              rounded={'xl'}
+              borderColor={plan.popular ? 'primary.500' : 'bg.muted'}
+              shadow={plan.popular ? '2xl' : 'xs'}
+              scale={plan.popular ? '1.1' : 'none'}
             >
               {plan.popular && (
-                <Float placement={"top-center"}>
-                  <BaseBadge
-                    label="Populaire"
-                    borderRadius={"full"}
-                    color="primary"
-                  />
+                <Float placement={'top-center'}>
+                  <BaseBadge label="Populaire" borderRadius={'full'} color="primary" />
                 </Float>
               )}
               <BaseText variant={TextVariant.L} weight={TextWeight.SemiBold}>
@@ -132,31 +108,23 @@ export const PricingSection = () => {
 
               <BaseText variant={TextVariant.S}>{plan.description}</BaseText>
 
-              <HStack mt={2} mb={3} fontSize={"x-large"}>
+              <HStack mt={2} mb={3} fontSize={'x-large'}>
                 <BaseFormatNumber value={plan.price} />
-                <BaseText color={"gray.500"} variant={TextVariant.S}>
+                <BaseText color={'gray.500'} variant={TextVariant.S}>
                   /mois
                 </BaseText>
               </HStack>
 
               <BaseButton
-                width={"full"}
-                variant={plan.popular ? "solid" : "outline"}
-                colorType={plan.popular ? "primary" : "neutral"}
+                width={'full'}
+                variant={plan.popular ? 'solid' : 'outline'}
+                colorType={plan.popular ? 'primary' : 'neutral'}
                 onClick={() => {}}
               >
-                <BaseText color={plan.popular ? "inherit" : "none"}>
-                  {plan.cta}
-                </BaseText>
+                <BaseText color={plan.popular ? 'inherit' : 'none'}>{plan.cta}</BaseText>
               </BaseButton>
 
-              <List.Root
-                gap="2"
-                variant="plain"
-                align="center"
-                mt={4}
-                spaceY={1}
-              >
+              <List.Root gap="2" variant="plain" align="center" mt={4} spaceY={1}>
                 {plan.features.map((f) => (
                   <List.Item
                     key={f}

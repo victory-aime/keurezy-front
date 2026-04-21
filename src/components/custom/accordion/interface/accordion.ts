@@ -1,8 +1,5 @@
-import {
-  AccordionItemContentProps,
-  AccordionRootProps,
-} from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { AccordionItemContentProps, AccordionRootProps } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 
 interface AccordionProps extends AccordionRootProps {
   items: {

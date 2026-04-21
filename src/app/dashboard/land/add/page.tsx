@@ -1,4 +1,4 @@
-import { LandForm } from "../components/LandForm";
+import { LandForm } from '../components/LandForm';
 
 export default async function AddOrEditLand({
   searchParams,

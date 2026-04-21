@@ -1,3 +1,3 @@
-import { BaseStepper } from "./BaseStepper";
+import { BaseStepper } from './BaseStepper';
 
 export { BaseStepper };

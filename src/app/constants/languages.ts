@@ -1,6 +1,6 @@
-import { createListCollection } from "@chakra-ui/react";
+import { createListCollection } from '@chakra-ui/react';
 
-export const listLanguages = ["fr", "en"];
+export const listLanguages = ['fr', 'en'];
 
 export const selectLanguages = (t: any) => {
   return createListCollection({

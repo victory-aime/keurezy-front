@@ -1,16 +1,10 @@
-import { Box, HStack, Stack, VStack } from "@chakra-ui/react";
-import {
-  BaseText,
-  CustomSkeletonLoader,
-  Icons,
-  TextVariant,
-  TextWeight,
-} from "_components/custom";
-import { useRouter } from "next/navigation";
-import { ReactNode } from "react";
+import { Box, HStack, Stack, VStack } from '@chakra-ui/react';
+import { BaseText, CustomSkeletonLoader, Icons, TextVariant, TextWeight } from '_components/custom';
+import { useRouter } from 'next/navigation';
+import { ReactNode } from 'react';
 
 export const FormContainer = ({
-  pageTitle = "Page title",
+  pageTitle = 'Page title',
   pageDescription,
   children,
   isLoading,
@@ -26,35 +20,32 @@ export const FormContainer = ({
       width="full"
       // maxW={{ base: "2xl", sm: "4xl" }}
       p={{ base: 3, sm: 4 }}
-      mx={"auto"}
-      spaceY={"6"}
+      mx={'auto'}
+      spaceY={'6'}
     >
       {isLoading ? (
         <>
           {Array.from({ length: 5 }).map((_, idx) => (
-            <VStack gap={3} width={"full"} key={idx}>
+            <VStack gap={3} width={'full'} key={idx}>
               <CustomSkeletonLoader type="TEXT" numberOfLines={2} />
-              <CustomSkeletonLoader type="FORM" width={"full"} />
+              <CustomSkeletonLoader type="FORM" width={'full'} />
             </VStack>
           ))}
         </>
       ) : (
-        <VStack width={"full"} alignItems={"flex-start"}>
-          <HStack gap={8} alignItems={"center"}>
-            <Icons.IoIosArrowRoundBack
-              onClick={() => router.back()}
-              cursor={"pointer"}
-            />
+        <VStack width={'full'} alignItems={'flex-start'}>
+          <HStack gap={8} alignItems={'center'}>
+            <Icons.IoIosArrowRoundBack onClick={() => router.back()} cursor={'pointer'} />
             <Stack gap={0}>
               <BaseText variant={TextVariant.L} weight={TextWeight.SemiBold}>
                 {pageTitle}
               </BaseText>
-              <BaseText variant={TextVariant.S} color={"gray.400"}>
+              <BaseText variant={TextVariant.S} color={'gray.400'}>
                 {pageDescription}
               </BaseText>
             </Stack>
           </HStack>
-          <Box width={"full"}>{children}</Box>
+          <Box width={'full'}>{children}</Box>
         </VStack>
       )}
     </Box>

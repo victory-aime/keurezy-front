@@ -1,2 +1,2 @@
-export * from "./interface/toats";
-export * from "./BaseToast";
+export * from './interface/toats';
+export * from './BaseToast';

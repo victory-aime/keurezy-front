@@ -2,7 +2,7 @@ interface ITourStep {
   target: string;
   title: string;
   description: string;
-  position: "bottom" | "right" | "left" | "top" | "center";
+  position: 'bottom' | 'right' | 'left' | 'top' | 'center';
 }
 
 interface IGuidedTourProps {

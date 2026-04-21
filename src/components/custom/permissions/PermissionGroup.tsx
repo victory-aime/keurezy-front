@@ -1,16 +1,16 @@
-"use client";
-import { Box, SimpleGrid, Center, Flex, Field } from "@chakra-ui/react";
-import React, { memo, useCallback, useState, FC } from "react";
-import { hexToRGB } from "_theme/colors";
-import { boxStyle } from "_components/custom/container/style";
-import { NoDataAnimation } from "_components/custom/data-table/NoDataAnimation";
+'use client';
+import { Box, SimpleGrid, Center, Flex, Field } from '@chakra-ui/react';
+import React, { memo, useCallback, useState, FC } from 'react';
+import { hexToRGB } from '_theme/colors';
+import { boxStyle } from '_components/custom/container/style';
+import { NoDataAnimation } from '_components/custom/data-table/NoDataAnimation';
 import {
   BaseContainer,
   BaseText,
   CollapsePermissionCheckBox,
   ICollapseCheckBoxGroup,
   ISelectedCheckboxElement,
-} from "_components/custom";
+} from '_components/custom';
 
 export const PermissionListGroup: FC<ICollapseCheckBoxGroup> = memo(
   ({
@@ -23,8 +23,7 @@ export const PermissionListGroup: FC<ICollapseCheckBoxGroup> = memo(
     isTouched = false,
   }) => {
     // ✅ useState au lieu de let pour déclencher les re-renders
-    const [selectedGroups, setSelectedGroups] =
-      useState<ISelectedCheckboxElement[]>(defaultValues);
+    const [selectedGroups, setSelectedGroups] = useState<ISelectedCheckboxElement[]>(defaultValues);
 
     const handleGroupElementSelection = useCallback(
       (incoming: ISelectedCheckboxElement) => {
@@ -43,8 +42,7 @@ export const PermissionListGroup: FC<ICollapseCheckBoxGroup> = memo(
             }
           } else {
             // Nouveau groupe avec au moins une permission
-            updated =
-              incoming.permissions.length > 0 ? [...prev, incoming] : prev;
+            updated = incoming.permissions.length > 0 ? [...prev, incoming] : prev;
           }
 
           onChange(updated);
@@ -55,27 +53,17 @@ export const PermissionListGroup: FC<ICollapseCheckBoxGroup> = memo(
     );
 
     return (
-      <BaseContainer
-        title={title}
-        description={description}
-        border="none"
-        p={0}
-      >
+      <BaseContainer title={title} description={description} border="none" p={0}>
         <Box
           {...boxStyle}
-          bg={hexToRGB("lighter", 0.1, 500)}
+          bg={hexToRGB('lighter', 0.1, 500)}
           display="flex"
-          flexDir={{ base: "column", sm: "row" }}
+          flexDir={{ base: 'column', sm: 'row' }}
           gap={2}
           mt={3}
         >
           {groupList?.length > 0 ? (
-            <SimpleGrid
-              gap="20px"
-              columns={{ base: 1, sm: 2 }}
-              p="10px 0px"
-              w="full"
-            >
+            <SimpleGrid gap="20px" columns={{ base: 1, sm: 2 }} p="10px 0px" w="full">
               {groupList.map((elt) => (
                 <CollapsePermissionCheckBox
                   key={elt.category}
@@ -84,9 +72,7 @@ export const PermissionListGroup: FC<ICollapseCheckBoxGroup> = memo(
                     category: elt.category,
                   }}
                   onSelectGroupElement={handleGroupElementSelection}
-                  defaultValue={defaultValues.find(
-                    (dv) => dv.category === elt.category,
-                  )}
+                  defaultValue={defaultValues.find((dv) => dv.category === elt.category)}
                   checkBoxColor="purple"
                 />
               ))}

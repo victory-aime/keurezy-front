@@ -1,18 +1,10 @@
-"use client";
+'use client';
 
-import {
-  Spinner,
-  Image,
-  Box,
-  SpinnerProps,
-  VStack,
-  Flex,
-  For,
-} from "@chakra-ui/react";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { BaseText } from "_components/custom";
-import { VariablesColors } from "_theme/variables";
+import { Spinner, Image, Box, SpinnerProps, VStack, Flex, For } from '@chakra-ui/react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { BaseText } from '_components/custom';
+import { VariablesColors } from '_theme/variables';
 
 interface Spinner extends SpinnerProps {
   loader: boolean;
@@ -20,31 +12,24 @@ interface Spinner extends SpinnerProps {
   text?: string;
 }
 
-export const Loader = ({
-  loader,
-  showText = false,
-  text,
-  ...rest
-}: Spinner) => {
+export const Loader = ({ loader, showText = false, text, ...rest }: Spinner) => {
   const { t } = useTranslation();
   return (
     loader && (
       <VStack gap={1}>
         <Spinner
           {...rest}
-          size={rest.size ?? "lg"}
+          size={rest.size ?? 'lg'}
           animationDuration="0.6s"
           css={{
-            border: "4px solid transparent",
-            borderTopColor: "transparent",
+            border: '4px solid transparent',
+            borderTopColor: 'transparent',
             borderImage: `linear-gradient(45deg, ${VariablesColors.primary}, ${VariablesColors.secondary}, ${VariablesColors.tertiary}) 0.5`,
-            animation: "spin 0.6s linear infinite",
+            animation: 'spin 0.6s linear infinite',
           }}
         />
         {showText && (
-          <BaseText color={"primary.500"}>
-            {text ? text : t("COMMON.LOADING_TEXT")}
-          </BaseText>
+          <BaseText color={'primary.500'}>{text ? text : t('COMMON.LOADING_TEXT')}</BaseText>
         )}
       </VStack>
     )
@@ -74,8 +59,8 @@ export const GlobalLoader = ({ loader }: Spinner) => {
                 w="12px"
                 h="12px"
                 borderRadius="full"
-                bg={["cyan.solid", "orange.solid", "purple.solid"][index % 3]}
-                animation={`${"dotBounce"} 1s ${i * 0.2}s infinite ease-in-out`}
+                bg={['cyan.solid', 'orange.solid', 'purple.solid'][index % 3]}
+                animation={`${'dotBounce'} 1s ${i * 0.2}s infinite ease-in-out`}
               />
             )}
           </For>

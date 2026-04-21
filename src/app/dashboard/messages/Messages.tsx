@@ -1,22 +1,13 @@
-"use client";
+'use client';
 
-import { ScrollArea, Box, Flex, VStack, Text, Center } from "@chakra-ui/react";
-import {
-  BaseContainer,
-  BaseIcon,
-  FormTextInput,
-  Icons,
-} from "_components/custom";
-import { Avatar } from "_components/ui/avatar";
-import {
-  ChatModule,
-  RentalAgreementModule,
-  UserModule,
-} from "_store/state-management";
-import { MODELS } from "_types/*";
-import { Formik, FormikValues } from "formik";
-import { useState } from "react";
-import { formatCreatedAt } from "rise-core-frontend";
+import { ScrollArea, Box, Flex, VStack, Text, Center } from '@chakra-ui/react';
+import { BaseContainer, BaseIcon, FormTextInput, Icons } from '_components/custom';
+import { Avatar } from '_components/ui/avatar';
+import { ChatModule, RentalAgreementModule, UserModule } from '_store/state-management';
+import { MODELS } from '_types/*';
+import { Formik, FormikValues } from 'formik';
+import { useState } from 'react';
+import { formatCreatedAt } from 'rise-core-frontend';
 
 export const Messages = () => {
   const [selectedConv, setSelectedConv] = useState<{
@@ -28,26 +19,26 @@ export const Messages = () => {
     tenantId: string;
   } | null>(null);
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   const { data: user } = UserModule.getUserInfo({
     queryOptions: { enabled: false },
   });
 
-  const { data: rentalAgreements } =
-    RentalAgreementModule.getRentalAgreementListByAgencyQueries({
-      queryOptions: { enabled: false },
-    });
+  const { data: rentalAgreements } = RentalAgreementModule.getRentalAgreementListByAgencyQueries({
+    queryOptions: { enabled: false },
+  });
 
-  const { data: getConversations, refetch: reloadConversation } =
-    ChatModule.getConversationQueries({
+  const { data: getConversations, refetch: reloadConversation } = ChatModule.getConversationQueries(
+    {
       params: {
         //userId: user?.propertyOwner?.id,
       },
       queryOptions: {
         enabled: false,
       },
-    });
+    },
+  );
 
   const { mutateAsync: createConv } = ChatModule.createConversationtMutation({
     mutationOptions: {
@@ -84,9 +75,7 @@ export const Messages = () => {
   };
 
   const extractUser = (rentalAgreementId: string) => {
-    const data = rentalAgreements?.content?.find(
-      (data) => data?.id === rentalAgreementId,
-    );
+    const data = rentalAgreements?.content?.find((data) => data?.id === rentalAgreementId);
     return { tenants: data?.tenant, property: data?.property };
   };
 
@@ -128,29 +117,20 @@ export const Messages = () => {
   // }, []);
 
   return (
-    <BaseContainer
-      title="Messages"
-      description="Communiquez avec vos locataires"
-      border={"none"}
-    >
+    <BaseContainer title="Messages" description="Communiquez avec vos locataires" border={'none'}>
       <Formik
-        initialValues={{ message: "" }}
+        initialValues={{ message: '' }}
         onSubmit={(values, actions) => {
           handleSend(values);
           actions.resetForm();
         }}
       >
         {({ handleSubmit }) => (
-          <Flex
-            overflow="hidden"
-            width="full"
-            mt="30px"
-            flexDir={{ base: "column", sm: "row" }}
-          >
+          <Flex overflow="hidden" width="full" mt="30px" flexDir={{ base: 'column', sm: 'row' }}>
             {/* LEFT PANEL - Locataires actifs */}
             <Flex
               flexDir="column"
-              w={{ base: "full", sm: "33%" }}
+              w={{ base: 'full', sm: '33%' }}
               borderRight="1px solid"
               borderColor="border"
               p={3}
@@ -166,11 +146,8 @@ export const Messages = () => {
 
               <Flex flex={1} flexDir="column" overflowY="auto" mt={5}>
                 {getConversations?.map((data) => {
-                  const isActive =
-                    selectedConv?.rentalAgreementId === data?.rentalAgreementId;
-                  const { tenants, property } = extractUser(
-                    data.rentalAgreementId,
-                  );
+                  const isActive = selectedConv?.rentalAgreementId === data?.rentalAgreementId;
+                  const { tenants, property } = extractUser(data.rentalAgreementId);
 
                   return (
                     <Flex
@@ -180,16 +157,12 @@ export const Messages = () => {
                       p={3}
                       gap={3}
                       cursor="pointer"
-                      bgColor={isActive ? "primary.50" : "transparent"}
+                      bgColor={isActive ? 'primary.50' : 'transparent'}
                       borderLeftWidth="3px"
-                      borderLeftColor={isActive ? "primary.500" : "transparent"}
-                      _hover={{ bgColor: "bg.subtle" }}
+                      borderLeftColor={isActive ? 'primary.500' : 'transparent'}
+                      _hover={{ bgColor: 'bg.subtle' }}
                     >
-                      <Avatar
-                        name={tenants?.name}
-                        src={tenants?.image}
-                        size="sm"
-                      />
+                      <Avatar name={tenants?.name} src={tenants?.image} size="sm" />
                       <VStack flex={1} align="stretch" gap={0}>
                         <Text fontWeight="medium" fontSize="sm">
                           {tenants?.name}
@@ -205,20 +178,12 @@ export const Messages = () => {
             </Flex>
 
             {/* RIGHT PANEL - Chat */}
-            <Flex flex={1} flexDir="column" minH={0} mt={{ base: "30px" }}>
+            <Flex flex={1} flexDir="column" minH={0} mt={{ base: '30px' }}>
               {selectedConv ? (
                 <>
                   {/* Header */}
-                  <Flex
-                    align="center"
-                    p={4}
-                    borderBottom="1px solid"
-                    borderColor="border"
-                  >
-                    <Avatar
-                      name={selectedConv.tenantName}
-                      src={selectedConv?.tenantImg}
-                    />
+                  <Flex align="center" p={4} borderBottom="1px solid" borderColor="border">
+                    <Avatar name={selectedConv.tenantName} src={selectedConv?.tenantImg} />
                     <Box ml={3}>
                       <Text fontWeight="medium" fontSize="sm">
                         {selectedConv.tenantName}
@@ -231,54 +196,38 @@ export const Messages = () => {
 
                   {/* Messages */}
 
-                  <ScrollArea.Root
-                    height={{ base: "30rem", sm: "15rem" }}
-                    size="xs"
-                  >
+                  <ScrollArea.Root height={{ base: '30rem', sm: '15rem' }} size="xs">
                     <ScrollArea.Viewport>
                       <ScrollArea.Content p={4}>
                         <VStack align="stretch">
                           {extractMessage().length === 0 ? (
-                            <Center height={{ base: "30rem", sm: "15rem" }}>
-                              <Text
-                                textAlign="center"
-                                color="fg.muted"
-                                fontSize="sm"
-                              >
+                            <Center height={{ base: '30rem', sm: '15rem' }}>
+                              <Text textAlign="center" color="fg.muted" fontSize="sm">
                                 Aucun message
                               </Text>
                             </Center>
                           ) : (
                             extractMessage().map((message) => {
-                              const isMe =
-                                message.senderId === selectedConv?.tenantId;
+                              const isMe = message.senderId === selectedConv?.tenantId;
 
                               return (
-                                <Flex
-                                  key={message.id}
-                                  justify={isMe ? "flex-end" : "flex-start"}
-                                >
+                                <Flex key={message.id} justify={isMe ? 'flex-end' : 'flex-start'}>
                                   <Box
                                     maxW="70%"
                                     rounded="2xl"
-                                    roundedBottomRight={isMe ? "sm" : "2xl"}
-                                    roundedBottomLeft={isMe ? "2xl" : "sm"}
+                                    roundedBottomRight={isMe ? 'sm' : '2xl'}
+                                    roundedBottomLeft={isMe ? '2xl' : 'sm'}
                                     px={4}
                                     py={2.5}
-                                    bgColor={isMe ? "primary.500" : "bg.muted"}
+                                    bgColor={isMe ? 'primary.500' : 'bg.muted'}
                                   >
-                                    <Text
-                                      color={isMe ? "white" : "fg"}
-                                      fontSize="sm"
-                                    >
+                                    <Text color={isMe ? 'white' : 'fg'} fontSize="sm">
                                       {message.content}
                                     </Text>
                                     <Text
                                       fontSize="xs"
                                       mt={1}
-                                      color={
-                                        isMe ? "whiteAlpha.700" : "fg.muted"
-                                      }
+                                      color={isMe ? 'whiteAlpha.700' : 'fg.muted'}
                                     >
                                       {formatCreatedAt(message.createdAt)}
                                     </Text>
@@ -296,22 +245,9 @@ export const Messages = () => {
                   </ScrollArea.Root>
 
                   {/* Input */}
-                  <Flex
-                    align="center"
-                    gap={3}
-                    p={4}
-                    borderTop="1px solid"
-                    borderColor="border"
-                  >
-                    <FormTextInput
-                      name="message"
-                      placeholder="Écrire un message..."
-                    />
-                    <BaseIcon
-                      boxSize={"40px"}
-                      cursor={"pointer"}
-                      onClick={() => handleSubmit()}
-                    >
+                  <Flex align="center" gap={3} p={4} borderTop="1px solid" borderColor="border">
+                    <FormTextInput name="message" placeholder="Écrire un message..." />
+                    <BaseIcon boxSize={'40px'} cursor={'pointer'} onClick={() => handleSubmit()}>
                       <Icons.Send />
                     </BaseIcon>
                   </Flex>

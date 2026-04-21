@@ -1,38 +1,38 @@
 export const AppPermissions = {
   PROPERTIES: {
-    UPDATE: "update_property",
-    VIEW: "view_properties",
-    CREATE: "create_property",
-    DELETE: "delete_property",
-    PUBLISH: "publish_property",
-    UNPUBLISH: "unpublish_property",
+    UPDATE: 'update_property',
+    VIEW: 'view_properties',
+    CREATE: 'create_property',
+    DELETE: 'delete_property',
+    PUBLISH: 'publish_property',
+    UNPUBLISH: 'unpublish_property',
   },
 
   LEADS: {
-    VIEW: "view_leads",
-    CREATE: "create_lead",
-    UPDATE: "update_lead",
-    DELETE: "delete_lead",
-    ASSIGN: "assign_lead",
+    VIEW: 'view_leads',
+    CREATE: 'create_lead',
+    UPDATE: 'update_lead',
+    DELETE: 'delete_lead',
+    ASSIGN: 'assign_lead',
   },
 
   USERS: {
-    VIEW: "view_users",
-    INVITE: "invite_users",
-    UPDATE: "update_users",
-    DELETE: "delete_users",
+    VIEW: 'view_users',
+    INVITE: 'invite_users',
+    UPDATE: 'update_users',
+    DELETE: 'delete_users',
   },
 
   REPORTS: {
-    VIEW: "view_reports",
-    EXPORT: "export_reports",
+    VIEW: 'view_reports',
+    EXPORT: 'export_reports',
   },
 
   ACCOUNTING: {
-    VIEW: "view_accounting",
-    CREATE_TRANSACTION: "create_transaction",
-    UPDATE_TRANSACTION: "update_transaction",
-    DELETE_TRANSACTION: "delete_transaction",
+    VIEW: 'view_accounting',
+    CREATE_TRANSACTION: 'create_transaction',
+    UPDATE_TRANSACTION: 'update_transaction',
+    DELETE_TRANSACTION: 'delete_transaction',
   },
 };
 

@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { Flex, HStack, parseColor, VStack } from "@chakra-ui/react";
-import { BaseButton, FormTextInput } from "_components/custom";
-import { Formik } from "formik";
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { CiUser } from "react-icons/ci";
-import { HiOutlineMail } from "react-icons/hi";
-import { UserModule } from "_store/state-management";
-import { ProfileForm } from "./ProfileForm";
-import { MODELS } from "_types/index";
-import { useAuthContext } from "_context/auth-context";
-import { ENUM } from "_types/";
-import { ProviderKeys } from "_constants/StorageKeys";
-import { FormGroupColorPicker } from "_components/custom/form/FormGroupColorPicker";
-import { rgbaToHex } from "_utils/rgbaToHex";
-import { ColorMode, useColorMode } from "_components/ui/color-mode";
-import { AppearanceThemeSelector } from "./AppearanceThemeSelector";
-import { UpdateEmailModal } from "./UpdateEmail";
-import { authClient } from "../../../lib/auth-client";
+import { Flex, HStack, parseColor, VStack } from '@chakra-ui/react';
+import { BaseButton, FormTextInput } from '_components/custom';
+import { Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { CiUser } from 'react-icons/ci';
+import { HiOutlineMail } from 'react-icons/hi';
+import { UserModule } from '_store/state-management';
+import { ProfileForm } from './ProfileForm';
+import { MODELS } from '_types/index';
+import { useAuthContext } from '_context/auth-context';
+import { ENUM } from '_types/';
+import { ProviderKeys } from '_constants/StorageKeys';
+import { FormGroupColorPicker } from '_components/custom/form/FormGroupColorPicker';
+import { rgbaToHex } from '_utils/rgbaToHex';
+import { ColorMode, useColorMode } from '_components/ui/color-mode';
+import { AppearanceThemeSelector } from './AppearanceThemeSelector';
+import { UpdateEmailModal } from './UpdateEmail';
+import { authClient } from '../../../lib/auth-client';
 
 export const ProfileInfo = () => {
   const { t } = useTranslation();
@@ -28,9 +28,7 @@ export const ProfileInfo = () => {
   const [emailHasChanged, setEmailHasChanged] = useState<boolean>(false);
   const [pendingValues, setPendingValues] = useState<MODELS.IUser | null>(null);
 
-  const [initialValues, setInitialValues] = useState<MODELS.IUser>(
-    {} as MODELS.IUser,
-  );
+  const [initialValues, setInitialValues] = useState<MODELS.IUser>({} as MODELS.IUser);
 
   const {
     data: currentUser,
@@ -43,14 +41,13 @@ export const ProfileInfo = () => {
 
   const currentColor = themeColor ?? currentUser?.theme_color;
 
-  const { mutateAsync: updateUserInfo, isPending: isUpdated } =
-    UserModule.updateUserMutation({
-      mutationOptions: {
-        onSuccess: async () => {
-          await reloadUserInfo();
-        },
+  const { mutateAsync: updateUserInfo, isPending: isUpdated } = UserModule.updateUserMutation({
+    mutationOptions: {
+      onSuccess: async () => {
+        await reloadUserInfo();
       },
-    });
+    },
+  });
 
   const extractorProviderId = currentUser?.accounts?.find(
     (item) => item?.providerId === ProviderKeys.GOOGLE,
@@ -91,7 +88,7 @@ export const ProfileInfo = () => {
       setEmailHasChanged(false);
       setPendingValues(null);
     } catch (error) {
-      console.error("Erreur changeEmail", error);
+      console.error('Erreur changeEmail', error);
     }
   };
 
@@ -110,11 +107,7 @@ export const ProfileInfo = () => {
 
   return (
     <main>
-      <Formik
-        enableReinitialize
-        initialValues={initialValues}
-        onSubmit={handleSubmitWithCheck}
-      >
+      <Formik enableReinitialize initialValues={initialValues} onSubmit={handleSubmitWithCheck}>
         {({ values, handleSubmit, dirty }) => {
           return (
             <main>
@@ -132,9 +125,7 @@ export const ProfileInfo = () => {
                       isLoading={userDataLoading}
                       isDisabled={!!extractorProviderId}
                       infoMessage={
-                        !!extractorProviderId
-                          ? "Données gérer par votre compte Google"
-                          : null
+                        !!extractorProviderId ? 'Données gérer par votre compte Google' : null
                       }
                     />
                   </HStack>
@@ -146,9 +137,7 @@ export const ProfileInfo = () => {
                     isLoading={userDataLoading}
                     isDisabled={!!extractorProviderId}
                     infoMessage={
-                      !!extractorProviderId
-                        ? "Données gérer par votre compte Google"
-                        : null
+                      !!extractorProviderId ? 'Données gérer par votre compte Google' : null
                     }
                   />
                 </VStack>
@@ -161,9 +150,7 @@ export const ProfileInfo = () => {
                 <HStack gap={4} alignItems="flex-start" mt={10}>
                   <FormGroupColorPicker
                     value={parseColor(currentColor as string)}
-                    onValueChange={(value) =>
-                      setThemeColor(rgbaToHex(value.valueAsString))
-                    }
+                    onValueChange={(value) => setThemeColor(rgbaToHex(value.valueAsString))}
                   />
                 </HStack>
               </ProfileForm>
@@ -178,17 +165,13 @@ export const ProfileInfo = () => {
                   onChange={(color) => setColorMode(color)}
                 />
               </ProfileForm>
-              <Flex
-                width="full"
-                alignItems="flex-end"
-                justifyContent="flex-end"
-              >
+              <Flex width="full" alignItems="flex-end" justifyContent="flex-end">
                 <BaseButton
                   onClick={() => handleSubmit()}
-                  width={"120px"}
+                  width={'120px'}
                   isLoading={isUpdated || userDataLoading}
                 >
-                  {t("COMMON.VALIDATE")}
+                  {t('COMMON.VALIDATE')}
                 </BaseButton>
               </Flex>
             </main>

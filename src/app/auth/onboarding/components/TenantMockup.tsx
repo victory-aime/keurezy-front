@@ -1,43 +1,35 @@
-import {
-  Box,
-  Flex,
-  Text,
-  VStack,
-  HStack,
-  Circle,
-  Span,
-} from "@chakra-ui/react";
-import { BaseTag, Icons } from "_components/custom";
-import { Avatar } from "_components/ui/avatar";
-import { VariablesColors } from "_theme/variables";
-import { TopBarMockup } from "./TopBarMockup";
-import { Colors, hexToRGB } from "_theme/colors";
-import { MotionBox } from "_constants/motion";
-import { useStyles } from "../constants/style";
+import { Box, Flex, Text, VStack, HStack, Circle, Span } from '@chakra-ui/react';
+import { BaseTag, Icons } from '_components/custom';
+import { Avatar } from '_components/ui/avatar';
+import { VariablesColors } from '_theme/variables';
+import { TopBarMockup } from './TopBarMockup';
+import { Colors, hexToRGB } from '_theme/colors';
+import { MotionBox } from '_constants/motion';
+import { useStyles } from '../constants/style';
 
 export const TenantsMockup = () => {
   const { bg, border, muted, textMuted } = useStyles();
 
   const tenants = [
     {
-      name: "Marc Laurent",
-      property: "Apt. Haussmann",
-      since: "Jan 2023",
-      status: "Actif",
+      name: 'Marc Laurent',
+      property: 'Apt. Haussmann',
+      since: 'Jan 2023',
+      status: 'Actif',
       score: 98,
     },
     {
-      name: "Sophie Petit",
-      property: "Studio Marais",
-      since: "Mar 2023",
-      status: "Actif",
+      name: 'Sophie Petit',
+      property: 'Studio Marais',
+      since: 'Mar 2023',
+      status: 'Actif',
       score: 95,
     },
     {
-      name: "Carlos Garcia",
-      property: "Loft Bastille",
-      since: "Jun 2024",
-      status: "Nouveau",
+      name: 'Carlos Garcia',
+      property: 'Loft Bastille',
+      since: 'Jun 2024',
+      status: 'Nouveau',
       score: 88,
     },
   ];
@@ -53,11 +45,7 @@ export const TenantsMockup = () => {
       shadow="xl"
       overflow="hidden"
     >
-      <TopBarMockup
-        border={border}
-        muted={muted}
-        link={"app.rentflow.com/tenants"}
-      />
+      <TopBarMockup border={border} muted={muted} link={'app.rentflow.com/tenants'} />
 
       <Box spaceY={3} py={4} px={3}>
         {/* Stats row */}
@@ -65,23 +53,23 @@ export const TenantsMockup = () => {
           {[
             {
               icon: Icons.FaUsers,
-              label: "Locataires",
-              value: "47",
-              bg: "primary",
+              label: 'Locataires',
+              value: '47',
+              bg: 'primary',
               color: VariablesColors.primary,
             },
             {
               icon: Icons.Star,
-              label: "Satisfaction",
-              value: "4.8/5",
-              bg: "secondary",
+              label: 'Satisfaction',
+              value: '4.8/5',
+              bg: 'secondary',
               color: VariablesColors.secondary,
             },
             {
               icon: Icons.Paper,
-              label: "Baux actifs",
-              value: "44",
-              bg: "tertiary",
+              label: 'Baux actifs',
+              value: '44',
+              bg: 'tertiary',
               color: VariablesColors.tertiary,
             },
           ].map((stat, idx) => (
@@ -91,19 +79,19 @@ export const TenantsMockup = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + idx * 0.1 }}
               p={2.5}
-              display={"flex"}
-              width={"full"}
-              alignItems={"center"}
+              display={'flex'}
+              width={'full'}
+              alignItems={'center'}
               gap={2}
-              rounded={"xl"}
+              rounded={'xl'}
               bgColor={hexToRGB(stat.bg as keyof Colors, 0.1)}
             >
               <stat.icon color={stat.color} />
               <div>
-                <Text fontSize={"sm"} fontWeight={"bold"} color={stat.color}>
+                <Text fontSize={'sm'} fontWeight={'bold'} color={stat.color}>
                   {stat.value}
                 </Text>
-                <Text fontSize={"xx-small"} color={textMuted}>
+                <Text fontSize={'xx-small'} color={textMuted}>
                   {stat.label}
                 </Text>
               </div>
@@ -129,12 +117,7 @@ export const TenantsMockup = () => {
           >
             <Flex justify="space-between">
               <HStack>
-                <Avatar
-                  name={t.name}
-                  size={"xs"}
-                  fontSize={"xx-small"}
-                  bg="purple.200"
-                />
+                <Avatar name={t.name} size={'xs'} fontSize={'xx-small'} bg="purple.200" />
 
                 <Box>
                   <Text fontWeight="medium" fontSize="xs">
@@ -148,12 +131,12 @@ export const TenantsMockup = () => {
 
               <Box textAlign="right">
                 <BaseTag
-                  color={t.status === "Actif" ? "green" : "orange"}
+                  color={t.status === 'Actif' ? 'green' : 'orange'}
                   label={t.status}
-                  borderRadius={"full"}
+                  borderRadius={'full'}
                 />
 
-                <Flex gap={1} alignItems={"center"}>
+                <Flex gap={1} alignItems={'center'}>
                   <Box mt={2} w="60px" h="4px" bg="gray.300" rounded="full">
                     <MotionBox
                       initial={{ width: 0 }}
@@ -164,7 +147,7 @@ export const TenantsMockup = () => {
                       rounded="full"
                     />
                   </Box>
-                  <Span fontSize={"xx-small"}>{t.score}%</Span>
+                  <Span fontSize={'xx-small'}>{t.score}%</Span>
                 </Flex>
               </Box>
             </Flex>
@@ -178,32 +161,32 @@ export const TenantsMockup = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          rounded={"xl"}
+          rounded={'xl'}
           border={border}
           p={4}
           bg={muted}
         >
-          <Flex mb={2} alignItems={"center"} gap={2}>
+          <Flex mb={2} alignItems={'center'} gap={2}>
             <Icons.Chat color={VariablesColors.primary} />
-            <Span fontWeight={"medium"} fontSize={"xx-small"}>
+            <Span fontWeight={'medium'} fontSize={'xx-small'}>
               Activité récente
             </Span>
           </Flex>
           {[
             {
-              text: "M. Laurent a payé son loyer",
-              time: "Il y a 2h",
-              dot: "tertiary.500",
+              text: 'M. Laurent a payé son loyer',
+              time: 'Il y a 2h',
+              dot: 'tertiary.500',
             },
             {
-              text: "Demande de maintenance #45",
-              time: "Il y a 5h",
-              dot: "secondary.500",
+              text: 'Demande de maintenance #45',
+              time: 'Il y a 5h',
+              dot: 'secondary.500',
             },
             {
-              text: "Bail de Mme. Dubois renouvelé",
-              time: "Hier",
-              dot: "primary.500",
+              text: 'Bail de Mme. Dubois renouvelé',
+              time: 'Hier',
+              dot: 'primary.500',
             },
           ].map((a, i) => (
             <MotionBox
@@ -211,16 +194,16 @@ export const TenantsMockup = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 + i * 0.08 }}
-              display={"flex"}
+              display={'flex'}
               gap={3}
               py={1}
-              alignItems={"center"}
+              alignItems={'center'}
             >
               <Circle h={1.5} width={1.5} bgColor={a.dot} />
-              <Span fontSize={"xx-small"} color={textMuted} flex={1}>
+              <Span fontSize={'xx-small'} color={textMuted} flex={1}>
                 {a.text}
               </Span>
-              <Span fontSize={"xx-small"} color={textMuted}>
+              <Span fontSize={'xx-small'} color={textMuted}>
                 {a.time}
               </Span>
             </MotionBox>

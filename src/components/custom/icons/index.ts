@@ -1,4 +1,4 @@
-import { CgCreditCard, CgSync } from "react-icons/cg";
+import { CgCreditCard, CgSync } from 'react-icons/cg';
 import {
   CiBellOff,
   CiBellOn,
@@ -15,16 +15,17 @@ import {
   CiUser,
   CiViewList,
   CiWarning,
-} from "react-icons/ci";
-import { FaCog, FaUserAlt, FaUserPlus, FaUsers } from "react-icons/fa";
-import { HiOutlineMail } from "react-icons/hi";
+} from 'react-icons/ci';
+import { FaCog, FaUserAlt, FaUserPlus, FaUsers } from 'react-icons/fa';
+import { HiOutlineMail } from 'react-icons/hi';
 import {
   HiHeart,
   HiHome,
+  HiMiniMegaphone,
   HiMiniPlusSmall,
   HiOutlineFolderOpen,
   HiOutlineWrenchScrewdriver,
-} from "react-icons/hi2";
+} from 'react-icons/hi2';
 import {
   IoIosArrowRoundBack,
   IoIosArrowRoundForward,
@@ -33,7 +34,7 @@ import {
   IoIosGitPullRequest,
   IoIosHelpCircle,
   IoIosTrendingUp,
-} from "react-icons/io";
+} from 'react-icons/io';
 import {
   IoBarChartOutline,
   IoBedOutline,
@@ -43,41 +44,30 @@ import {
   IoLockClosed,
   IoRocketSharp,
   IoShieldCheckmarkSharp,
-} from "react-icons/io5";
-import { RiMailSendLine, RiSearch2Line } from "react-icons/ri";
+} from 'react-icons/io5';
+import { RiMailSendLine, RiSearch2Line } from 'react-icons/ri';
 import {
   TbFileDownload,
   TbLayoutSidebarRightCollapse,
   TbLayoutSidebarRightExpand,
   TbSparkles,
   TbTaxEuro,
-} from "react-icons/tb";
-import { FaTrashAlt } from "react-icons/fa";
-import {
-  IoCopyOutline,
-  IoDownloadOutline,
-  IoKeyOutline,
-  IoShareOutline,
-} from "react-icons/io5";
-import { MdEdit, MdLocalPhone } from "react-icons/md";
-import { PiBathtubLight, PiEyeLight } from "react-icons/pi";
-import { GrMoney } from "react-icons/gr";
-import { TbRestore } from "react-icons/tb";
-import { RxDotsHorizontal, RxHamburgerMenu, RxLapTimer } from "react-icons/rx";
-import {
-  LuBuilding2,
-  LuClipboardList,
-  LuHeartHandshake,
-  LuMaximize,
-  LuSend,
-} from "react-icons/lu";
-import { BsCalendar3, BsSliders } from "react-icons/bs";
-import { CiGrid31 } from "react-icons/ci";
-import { ImOffice } from "react-icons/im";
-import { GoZap } from "react-icons/go";
-import { BiWorld } from "react-icons/bi";
-import { FiMinus, FiTarget } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
+} from 'react-icons/tb';
+import { FaTrashAlt } from 'react-icons/fa';
+import { IoCopyOutline, IoDownloadOutline, IoKeyOutline, IoShareOutline } from 'react-icons/io5';
+import { MdEdit, MdLocalPhone } from 'react-icons/md';
+import { PiBathtubLight, PiEyeLight } from 'react-icons/pi';
+import { GrMoney } from 'react-icons/gr';
+import { TbRestore } from 'react-icons/tb';
+import { RxDotsHorizontal, RxHamburgerMenu, RxLapTimer } from 'react-icons/rx';
+import { LuBuilding2, LuClipboardList, LuHeartHandshake, LuMaximize, LuSend } from 'react-icons/lu';
+import { BsCalendar3, BsSliders } from 'react-icons/bs';
+import { CiGrid31 } from 'react-icons/ci';
+import { ImOffice } from 'react-icons/im';
+import { GoZap } from 'react-icons/go';
+import { BiWorld } from 'react-icons/bi';
+import { FiMinus, FiTarget } from 'react-icons/fi';
+import { FcGoogle } from 'react-icons/fc';
 
 export const Icons = {
   MapPin: CiMapPin,
@@ -158,4 +148,5 @@ export const Icons = {
   Minus: FiMinus,
   SendMail: RiMailSendLine,
   Lock: IoLockClosed,
+  Megaphone: HiMiniMegaphone,
 };

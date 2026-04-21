@@ -1,6 +1,6 @@
-import { Flex, SimpleGrid } from "@chakra-ui/react";
-import { BaseStats, Icons } from "_components/custom";
-import { MODELS, ENUM } from "_types/*";
+import { Flex, SimpleGrid } from '@chakra-ui/react';
+import { BaseStats, Icons } from '_components/custom';
+import { MODELS, ENUM } from '_types/*';
 
 export const TenantStatsCard = ({
   rentalAgreementList,
@@ -11,33 +11,26 @@ export const TenantStatsCard = ({
 }) => {
   const stats = [
     {
-      label: "Total locataires",
+      label: 'Total locataires',
       value: rentalAgreementList?.content?.length,
-      color: "primary.500",
+      color: 'primary.500',
     },
     {
-      label: "Actifs",
-      value: rentalAgreementList?.content?.filter(
-        (p) => p.status === ENUM.COMMON.Status.ACTIVE,
-      ).length,
-      color: "tertiary.500",
+      label: 'Actifs',
+      value: rentalAgreementList?.content?.filter((p) => p.status === ENUM.COMMON.Status.ACTIVE)
+        .length,
+      color: 'tertiary.500',
     },
     {
-      label: "En retard",
-      value: rentalAgreementList?.content?.filter(
-        (p) => p.status !== ENUM.COMMON.Status.ACTIVE,
-      ).length,
-      color: "danger.500",
+      label: 'En retard',
+      value: rentalAgreementList?.content?.filter((p) => p.status !== ENUM.COMMON.Status.ACTIVE)
+        .length,
+      color: 'danger.500',
     },
   ];
   return (
-    <Flex width={"full"} gap={4}>
-      <SimpleGrid
-        width={"full"}
-        mt={"40px"}
-        columns={{ base: 1, sm: 3 }}
-        gap={4}
-      >
+    <Flex width={'full'} gap={4}>
+      <SimpleGrid width={'full'} mt={'40px'} columns={{ base: 1, sm: 3 }} gap={4}>
         {stats.map((s, i) => (
           <BaseStats
             key={i}

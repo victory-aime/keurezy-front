@@ -1,5 +1,5 @@
-import { BaseApi } from "rise-core-frontend";
-import { MODELS } from "_types/index";
+import { BaseApi } from 'rise-core-frontend';
+import { MODELS } from '_types/index';
 
 /**
  * UserService provides methods for handling user-related operations
@@ -7,23 +7,14 @@ import { MODELS } from "_types/index";
  */
 export class UserService extends BaseApi {
   user_info(userId: MODELS.IUser) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().USER.INFO,
-      { userId },
-    );
+    return this.apiService.invoke(this.applicationContext.getApiConfig().USER.INFO, { userId });
   }
   update_user_info(data: MODELS.IUser) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().USER.UPDATE_USER,
-      data,
-    );
+    return this.apiService.invoke(this.applicationContext.getApiConfig().USER.UPDATE_USER, data);
   }
 
   register_user(data: MODELS.ICreateUser) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().USER.REGISTER,
-      data,
-    );
+    return this.apiService.invoke(this.applicationContext.getApiConfig().USER.REGISTER, data);
   }
 
   resend_email_verification(data: { email: string }) {
@@ -33,9 +24,8 @@ export class UserService extends BaseApi {
     );
   }
   check_email(email: string) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().USER.CHECK_EMAIL,
-      { email },
-    );
+    return this.apiService.invoke(this.applicationContext.getApiConfig().USER.CHECK_EMAIL, {
+      email,
+    });
   }
 }

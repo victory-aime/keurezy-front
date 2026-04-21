@@ -1,46 +1,32 @@
-"use client";
-import { JSX, useRef, useState } from "react";
-import { AnimatePresence } from "framer-motion";
-import {
-  Box,
-  Progress,
-  Flex,
-  HStack,
-  Text,
-  Span,
-  Image,
-} from "@chakra-ui/react";
-import {
-  BaseButton,
-  BaseText,
-  FloatSwitchColorMode,
-  Icons,
-  TextVariant,
-} from "_components/custom";
-import { useRouter } from "next/navigation";
-import { StepIntro } from "../components/StepIntro";
-import { Step2ProductValue } from "../components/Step2ProductValue";
-import { StepUserAccount } from "../components/StepUserAccount";
-import { StepBusiness } from "../components/StepBusiness";
-import { ASSETS } from "_assets/images";
-import { APP_ROUTES } from "_config/routes";
-import { MODELS } from "_types/*";
-import { OnboardFinish } from "../components/FinalStep";
-import { Formik } from "formik";
-import { useAuth } from "_hooks/useAuth";
-import { AgencyModule } from "_store/state-management";
-import { AgencyNameWatcher } from "../../components/AgencyNameWatcher";
+'use client';
+import { JSX, useRef, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { Box, Progress, Flex, HStack, Text, Span, Image } from '@chakra-ui/react';
+import { BaseButton, BaseText, FloatSwitchColorMode, Icons, TextVariant } from '_components/custom';
+import { useRouter } from 'next/navigation';
+import { StepIntro } from '../components/StepIntro';
+import { Step2ProductValue } from '../components/Step2ProductValue';
+import { StepUserAccount } from '../components/StepUserAccount';
+import { StepBusiness } from '../components/StepBusiness';
+import { ASSETS } from '_assets/images';
+import { APP_ROUTES } from '_config/routes';
+import { MODELS } from '_types/*';
+import { OnboardFinish } from '../components/FinalStep';
+import { Formik } from 'formik';
+import { useAuth } from '_hooks/useAuth';
+import { AgencyModule } from '_store/state-management';
+import { AgencyNameWatcher } from '../../components/AgencyNameWatcher';
 import {
   TOTAL_ONBOARD_STEPS,
   onboardInitialValues,
   onboardStepLabels,
   onboardStepValidationSchemas,
   slideVariants,
-} from "../constants/onboard";
-import { StorageKey } from "_constants/StorageKeys";
-import { MotionBox } from "_constants/motion";
-import { DASHBOARD_ROUTES } from "../../../dashboard/routes";
-import { useColorMode } from "_components/ui/color-mode";
+} from '../constants/onboard';
+import { StorageKey } from '_constants/StorageKeys';
+import { MotionBox } from '_constants/motion';
+import { DASHBOARD_ROUTES } from '../../../dashboard/routes';
+import { useColorMode } from '_components/ui/color-mode';
 
 export const MainOnboarding = () => {
   const { colorMode } = useColorMode();
@@ -53,9 +39,7 @@ export const MainOnboarding = () => {
   const formikRef = useRef<any>(null);
 
   const { login } = useAuth();
-  const { mutateAsync: verifiedAgencyName } = AgencyModule.checkNameMutation(
-    {},
-  );
+  const { mutateAsync: verifiedAgencyName } = AgencyModule.checkNameMutation({});
 
   const { mutateAsync: createAgency } = AgencyModule.createAgencyMutation({
     mutationOptions: {
@@ -77,7 +61,7 @@ export const MainOnboarding = () => {
   ];
 
   const markAllTouched = (errors: any) => {
-    if (typeof errors !== "object" || errors === null) return true;
+    if (typeof errors !== 'object' || errors === null) return true;
 
     return Object.keys(errors).reduce((acc: any, key) => {
       acc[key] = markAllTouched(errors[key]);
@@ -128,19 +112,19 @@ export const MainOnboarding = () => {
       const business = formikRef.current.values.business;
       const account = formikRef.current.values.account;
 
-      formData.append("name", business.name);
-      formData.append("username", account.name);
-      formData.append("userEmail", account.email);
-      formData.append("password", account.password);
-      formData.append("email", business.email);
-      formData.append("description", business.description);
-      formData.append("address", business.address);
-      formData.append("phone", business.phone);
-      formData.append("acceptTerms", String(business.acceptTerms));
+      formData.append('name', business.name);
+      formData.append('username', account.name);
+      formData.append('userEmail', account.email);
+      formData.append('password', account.password);
+      formData.append('email', business.email);
+      formData.append('description', business.description);
+      formData.append('address', business.address);
+      formData.append('phone', business.phone);
+      formData.append('acceptTerms', String(business.acceptTerms));
 
       if (business.documents?.length > 0) {
         business.documents.forEach((file: File) => {
-          formData.append("documents", file);
+          formData.append('documents', file);
         });
       }
 
@@ -151,7 +135,7 @@ export const MainOnboarding = () => {
       // 4️⃣ Aller au step final
       setStep(TOTAL_ONBOARD_STEPS - 1);
     } catch (error) {
-      console.error("Onboarding failed:", error);
+      console.error('Onboarding failed:', error);
       // ici tu peux afficher un toast
     } finally {
       setIsLoading(false);
@@ -178,7 +162,7 @@ export const MainOnboarding = () => {
     }
 
     if (step === TOTAL_ONBOARD_STEPS - 1) {
-      localStorage.setItem(StorageKey.ENABLED_GUIDED_TOUR, "true");
+      localStorage.setItem(StorageKey.ENABLED_GUIDED_TOUR, 'true');
       navigate.push(APP_ROUTES.DASHBOARD);
       return;
     }
@@ -220,7 +204,7 @@ export const MainOnboarding = () => {
         if (step === 3 && nameAlreadyExists) {
           errors.business = {
             ...errors.business,
-            name: "Une agence avec ce nom existe déjà",
+            name: 'Une agence avec ce nom existe déjà',
           };
         }
 
@@ -245,22 +229,15 @@ export const MainOnboarding = () => {
           top={0}
           zIndex={50}
         >
-          <Flex
-            maxW="6xl"
-            mx="auto"
-            px={4}
-            h="64px"
-            align="center"
-            justify="space-between"
-          >
+          <Flex maxW="6xl" mx="auto" px={4} h="64px" align="center" justify="space-between">
             <Flex
-              alignItems={"center"}
+              alignItems={'center'}
               gap={2.5}
               onClick={() => navigate.push(APP_ROUTES.ROOT)}
-              cursor={"pointer"}
+              cursor={'pointer'}
             >
               <Image
-                src={colorMode === "light" ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+                src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
                 alt="logo"
                 width={45}
                 height={45}
@@ -269,25 +246,23 @@ export const MainOnboarding = () => {
             </Flex>
 
             <HStack gap={4}>
-              <Text fontSize="sm" display={{ base: "none", sm: "block" }}>
+              <Text fontSize="sm" display={{ base: 'none', sm: 'block' }}>
                 Étape {step + 1} / {TOTAL_ONBOARD_STEPS}
               </Text>
               <Box w="128px">
                 <Progress.Root
-                  size={"sm"}
+                  size={'sm'}
                   value={progress}
-                  colorPalette={"orange"}
-                  variant={"subtle"}
+                  colorPalette={'orange'}
+                  variant={'subtle'}
                   animated
                 >
-                  <Progress.Track borderRadius={"full"}>
-                    <Progress.Range bgColor={"primary.500"} />
+                  <Progress.Track borderRadius={'full'}>
+                    <Progress.Range bgColor={'primary.500'} />
                   </Progress.Track>
                 </Progress.Root>
               </Box>
-              {step < 2 && (
-                <BaseButton onClick={() => goToStep(2)}>Passer</BaseButton>
-              )}
+              {step < 2 && <BaseButton onClick={() => goToStep(2)}>Passer</BaseButton>}
             </HStack>
           </Flex>
         </Box>
@@ -300,7 +275,7 @@ export const MainOnboarding = () => {
                 <MotionBox
                   whileHover={{ scale: 1.05 }}
                   onClick={() => goToStep(i)}
-                  cursor={"pointer"}
+                  cursor={'pointer'}
                 >
                   <HStack gap={1.5}>
                     <Flex
@@ -311,21 +286,9 @@ export const MainOnboarding = () => {
                       borderRadius="full"
                       fontSize="xs"
                       fontWeight="semibold"
-                      bg={
-                        i === step
-                          ? "primary.500"
-                          : i < step
-                            ? "tertiary.100"
-                            : "gray.100"
-                      }
-                      color={
-                        i === step
-                          ? "white"
-                          : i < step
-                            ? "tertiary.600"
-                            : "gray.500"
-                      }
-                      boxShadow={i === step ? "md" : "none"}
+                      bg={i === step ? 'primary.500' : i < step ? 'tertiary.100' : 'gray.100'}
+                      color={i === step ? 'white' : i < step ? 'tertiary.600' : 'gray.500'}
+                      boxShadow={i === step ? 'md' : 'none'}
                       transition="all 0.2s"
                     >
                       {i < step ? <Icons.Check size={13} /> : i + 1}
@@ -333,14 +296,8 @@ export const MainOnboarding = () => {
                     <Text
                       fontSize="xs"
                       fontWeight="medium"
-                      display={{ base: "none", md: "block" }}
-                      color={
-                        i === step
-                          ? "primary.500"
-                          : i < step
-                            ? "tertiary.500"
-                            : "gray.500"
-                      }
+                      display={{ base: 'none', md: 'block' }}
+                      color={i === step ? 'primary.500' : i < step ? 'tertiary.500' : 'gray.500'}
                     >
                       {label}
                     </Text>
@@ -348,11 +305,11 @@ export const MainOnboarding = () => {
                 </MotionBox>
                 {i < TOTAL_ONBOARD_STEPS - 1 && (
                   <Box
-                    w={{ base: "16px", lg: "40px" }}
+                    w={{ base: '16px', lg: '40px' }}
                     h="2px"
                     mx={1}
                     borderRadius="full"
-                    bg={i < step ? "tertiary.200" : "gray.200"}
+                    bg={i < step ? 'tertiary.200' : 'gray.200'}
                     transition="all 0.3s"
                   />
                 )}
@@ -362,14 +319,7 @@ export const MainOnboarding = () => {
         </Box>
 
         {/* Content */}
-        <Box
-          flex={1}
-          mx="auto"
-          px={4}
-          py={{ base: 4, md: 6 }}
-          w="full"
-          overflow="hidden"
-        >
+        <Box flex={1} mx="auto" px={4} py={{ base: 4, md: 6 }} w="full" overflow="hidden">
           <AnimatePresence mode="wait" custom={direction}>
             <MotionBox
               key={step}
@@ -378,8 +328,8 @@ export const MainOnboarding = () => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.35, ease: "easeInOut" }}
-              mt={"30px"}
+              transition={{ duration: 0.35, ease: 'easeInOut' }}
+              mt={'30px'}
             >
               <CurrentStep />
             </MotionBox>
@@ -387,21 +337,8 @@ export const MainOnboarding = () => {
         </Box>
 
         {/* Footer */}
-        <Box
-          as="footer"
-          borderTop="1px solid"
-          borderColor="inherit"
-          position="sticky"
-          bottom={0}
-        >
-          <Flex
-            maxW="6xl"
-            mx="auto"
-            px={4}
-            h="80px"
-            align="center"
-            justify="space-between"
-          >
+        <Box as="footer" borderTop="1px solid" borderColor="inherit" position="sticky" bottom={0}>
+          <Flex maxW="6xl" mx="auto" px={4} h="80px" align="center" justify="space-between">
             <BaseButton
               variant="outline"
               isDisabled={step === TOTAL_ONBOARD_STEPS - 1} // 👈 ajout
@@ -414,7 +351,7 @@ export const MainOnboarding = () => {
               }}
               leftIcon={<Icons.IoIosArrowRoundBack size={16} />}
             >
-              <Span display={{ base: "none", sm: "inline" }}>Précédent</Span>
+              <Span display={{ base: 'none', sm: 'inline' }}>Précédent</Span>
             </BaseButton>
 
             {/* Dot indicators */}
@@ -423,15 +360,9 @@ export const MainOnboarding = () => {
                 <Box
                   key={i}
                   h="6px"
-                  w={i === step ? "24px" : "6px"}
+                  w={i === step ? '24px' : '6px'}
                   borderRadius="full"
-                  bg={
-                    i === step
-                      ? "primary.500"
-                      : i < step
-                        ? "primary.200"
-                        : "gray.200"
-                  }
+                  bg={i === step ? 'primary.500' : i < step ? 'primary.200' : 'gray.200'}
                   transition="all 0.3s"
                 />
               ))}
@@ -449,12 +380,12 @@ export const MainOnboarding = () => {
               }
             >
               {step === TOTAL_ONBOARD_STEPS - 1 ? (
-                "Launch My Dashboard"
+                'Launch My Dashboard'
               ) : step === 1 ? (
-                "Continue Setup"
+                'Continue Setup'
               ) : (
-                <Span display={{ base: "none", sm: "inline" }}>
-                  {step === 3 ? "Valider" : "Suivant"}
+                <Span display={{ base: 'none', sm: 'inline' }}>
+                  {step === 3 ? 'Valider' : 'Suivant'}
                 </Span>
               )}
             </BaseButton>

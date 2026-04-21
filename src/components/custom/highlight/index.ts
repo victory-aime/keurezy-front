@@ -1,1 +1,1 @@
-export * from "./BaseHighlight";
+export * from './BaseHighlight';

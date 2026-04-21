@@ -1,42 +1,42 @@
-"use client";
+'use client';
 
-import { Box, Flex, Grid, Text, HStack } from "@chakra-ui/react";
-import { BaseTag, Icons } from "_components/custom";
-import { TopBarMockup } from "./TopBarMockup";
-import { VariablesColors } from "_theme/variables";
-import { MotionBox, MotionTag } from "_constants/motion";
-import { useStyles } from "../constants/style";
+import { Box, Flex, Grid, Text, HStack } from '@chakra-ui/react';
+import { BaseTag, Icons } from '_components/custom';
+import { TopBarMockup } from './TopBarMockup';
+import { VariablesColors } from '_theme/variables';
+import { MotionBox, MotionTag } from '_constants/motion';
+import { useStyles } from '../constants/style';
 
 export const PropertiesMockup = () => {
   const { bg, border, muted, textMuted } = useStyles();
   const properties = [
     {
-      name: "Apt. Haussmann",
-      address: "12 Rue de Rivoli, Paris",
-      status: "Occupé",
-      rent: "2 450€",
-      emoji: "🏢",
+      name: 'Apt. Haussmann',
+      address: '12 Rue de Rivoli, Paris',
+      status: 'Occupé',
+      rent: '2 450€',
+      emoji: '🏢',
     },
     {
-      name: "Studio Marais",
-      address: "8 Rue des Rosiers",
-      status: "Occupé",
-      rent: "1 200€",
-      emoji: "🏠",
+      name: 'Studio Marais',
+      address: '8 Rue des Rosiers',
+      status: 'Occupé',
+      rent: '1 200€',
+      emoji: '🏠',
     },
     {
-      name: "Loft Bastille",
-      address: "45 Rue de la Roquette",
-      status: "Vacant",
-      rent: "3 100€",
-      emoji: "🏗️",
+      name: 'Loft Bastille',
+      address: '45 Rue de la Roquette',
+      status: 'Vacant',
+      rent: '3 100€',
+      emoji: '🏗️',
     },
     {
-      name: "T3 Montmartre",
-      address: "22 Rue Lepic",
-      status: "Occupé",
-      rent: "1 850€",
-      emoji: "🏘️",
+      name: 'T3 Montmartre',
+      address: '22 Rue Lepic',
+      status: 'Occupé',
+      rent: '1 850€',
+      emoji: '🏘️',
     },
   ];
 
@@ -51,16 +51,12 @@ export const PropertiesMockup = () => {
       overflow="hidden"
       shadow="xl"
     >
-      <TopBarMockup
-        border={border}
-        muted={muted}
-        link={"app.myimmo.com/properties"}
-      />
+      <TopBarMockup border={border} muted={muted} link={'app.myimmo.com/properties'} />
 
       <Box p={4}>
         <Flex justify="space-between" mb={4}>
           <Text fontWeight="bold">Mes Propriétés</Text>
-          <BaseTag color="purple" label="24 biens" borderRadius={"full"} />
+          <BaseTag color="purple" label="24 biens" borderRadius={'full'} />
         </Flex>
 
         <Grid templateColumns="repeat(2,1fr)" gap={3}>
@@ -86,8 +82,8 @@ export const PropertiesMockup = () => {
 
               <Flex justify="space-between" mt={2}>
                 <BaseTag
-                  color={p.status === "Occupé" ? "green" : "orange"}
-                  borderRadius={"full"}
+                  color={p.status === 'Occupé' ? 'green' : 'orange'}
+                  borderRadius={'full'}
                   label={p.status}
                 />
                 <Text fontWeight="medium" fontSize="sm">
@@ -98,14 +94,7 @@ export const PropertiesMockup = () => {
           ))}
         </Grid>
 
-        <MotionBox
-          mt={4}
-          bg={muted}
-          p={5}
-          rounded="xl"
-          border="1px solid"
-          borderColor={border}
-        >
+        <MotionBox mt={4} bg={muted} p={5} rounded="xl" border="1px solid" borderColor={border}>
           <HStack mb={2}>
             <Icons.World color={VariablesColors.primary} />
             <Text fontSize="x-small" fontWeight="medium">
@@ -113,18 +102,18 @@ export const PropertiesMockup = () => {
             </Text>
           </HStack>
 
-          <HStack gap={3} justifyContent={"center"}>
-            {["Paris 75%", "Lyon 15%", "Nice 10%"].map((loc, i) => (
+          <HStack gap={3} justifyContent={'center'}>
+            {['Paris 75%', 'Lyon 15%', 'Nice 10%'].map((loc, i) => (
               <MotionTag
                 key={loc}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 + i * 0.1 }}
-                borderRadius={"full"}
+                borderRadius={'full'}
                 color="purple"
                 label={loc}
                 mt={3}
-                fontSize={"x-small"}
+                fontSize={'x-small'}
               />
             ))}
           </HStack>

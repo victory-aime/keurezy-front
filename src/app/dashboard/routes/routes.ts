@@ -1,11 +1,12 @@
-import { APP_ROUTES } from "_config/routes";
+import { APP_ROUTES } from '_config/routes';
 
 enum PATHS {
-  PROPERTIES = "properties",
-  BUILDING = "building",
-  LAND = "land",
-  TEAM = "team",
-  INVITATIONS = "invitations",
+  PROPERTIES = 'properties',
+  BUILDING = 'building',
+  LAND = 'land',
+  TEAM = 'team',
+  INVITATIONS = 'invitations',
+  ANNONCES = 'annonces',
 }
 
 export const DASHBOARD_ROUTES = {
@@ -34,6 +35,10 @@ export const DASHBOARD_ROUTES = {
   PROFILE: `${APP_ROUTES.DASHBOARD}/profile`,
   SECURITY: `${APP_ROUTES.DASHBOARD}/security`,
   AGENCY: `${APP_ROUTES.DASHBOARD}/agency`,
+  ANNONCES: {
+    LIST: `${APP_ROUTES.DASHBOARD}/${PATHS.ANNONCES}`,
+    ADD: `${APP_ROUTES.DASHBOARD}/${PATHS.ANNONCES}/add`,
+  },
   CONTACT_REQUEST: `${APP_ROUTES.DASHBOARD}/contact`,
   RENTAL_REQUEST: `${APP_ROUTES.DASHBOARD}/application`,
   MESSAGES: `${APP_ROUTES.DASHBOARD}/messages`,

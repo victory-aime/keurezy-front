@@ -1,5 +1,5 @@
-import { ENUM, MODELS } from "_types/*";
-import * as React from "react";
+import { ENUM, MODELS } from '_types/*';
+import * as React from 'react';
 
 interface MonthlyRevenueBarChartProps {
   data: { propertyId: string; propertyTitle: string; revenue: number }[];

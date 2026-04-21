@@ -1,2 +1,2 @@
-import { BaseFormatNumber } from "./BaseFormatNumber";
+import { BaseFormatNumber } from './BaseFormatNumber';
 export { BaseFormatNumber };

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Alert,
@@ -16,26 +16,26 @@ import {
   Circle,
   VStack,
   Flex,
-} from "@chakra-ui/react";
-import { ReactNode, useEffect, useState } from "react";
-import { HiOutlineInformationCircle, HiX } from "react-icons/hi";
-import { LuUpload } from "react-icons/lu";
+} from '@chakra-ui/react';
+import { ReactNode, useEffect, useState } from 'react';
+import { HiOutlineInformationCircle, HiX } from 'react-icons/hi';
+import { LuUpload } from 'react-icons/lu';
 import {
   ACCEPTED_TYPES,
   MAX_FILE_SIZE,
   MAX_FILE_SIZE_MB,
   MAX_FILES,
   TYPES_FILES,
-} from "./constant/constants";
-import { convertUrlsToFiles } from "rise-core-frontend";
-import { BaseText, TextVariant } from "../base-text";
-import { VariablesColors } from "_theme/variables";
-import { useTranslation } from "react-i18next";
-import { useFileUploadErrors } from "./useFileUploadErrors";
-import { CustomSkeletonLoader } from "../custom-skeleton";
-import { BaseRatio } from "../aspect-ratio";
-import { Button } from "@chakra-ui/react";
-import { HiUpload } from "react-icons/hi";
+} from './constant/constants';
+import { convertUrlsToFiles } from 'rise-core-frontend';
+import { BaseText, TextVariant } from '../base-text';
+import { VariablesColors } from '_theme/variables';
+import { useTranslation } from 'react-i18next';
+import { useFileUploadErrors } from './useFileUploadErrors';
+import { CustomSkeletonLoader } from '../custom-skeleton';
+import { BaseRatio } from '../aspect-ratio';
+import { Button } from '@chakra-ui/react';
+import { HiUpload } from 'react-icons/hi';
 
 const FileImageList = ({
   getFilesUploaded,
@@ -52,11 +52,7 @@ const FileImageList = ({
   });
 
   useEffect(() => {
-    if (
-      initialImageUrls &&
-      initialImageUrls.length > 0 &&
-      fileUpload.acceptedFiles.length === 0
-    ) {
+    if (initialImageUrls && initialImageUrls.length > 0 && fileUpload.acceptedFiles.length === 0) {
       convertUrlsToFiles(initialImageUrls).then((files) => {
         fileUpload.setFiles([...files]);
       });
@@ -64,24 +60,13 @@ const FileImageList = ({
   }, [initialImageUrls]);
 
   return (
-    <Box w={"full"}>
-      <HStack width={"full"} justifyContent={"flex-start"} wrap="wrap" gap="3">
+    <Box w={'full'}>
+      <HStack width={'full'} justifyContent={'flex-start'} wrap="wrap" gap="3">
         {fileUpload.acceptedFiles.map((file, index) => (
           <FileUpload.ItemGroup key={index} asChild>
-            <FileUpload.Item
-              p="2"
-              width="auto"
-              key={file.name}
-              file={file}
-              pos="relative"
-            >
+            <FileUpload.Item p="2" width="auto" key={file.name} file={file} pos="relative">
               <Float>
-                <FileUpload.ItemDeleteTrigger
-                  p="0.5"
-                  rounded="l1"
-                  bg="red.500"
-                  borderWidth="1px"
-                >
+                <FileUpload.ItemDeleteTrigger p="0.5" rounded="l1" bg="red.500" borderWidth="1px">
                   <HiX color={VariablesColors.white} />
                 </FileUpload.ItemDeleteTrigger>
               </Float>
@@ -91,15 +76,15 @@ const FileImageList = ({
         ))}
       </HStack>
       {error && (
-        <Alert.Root status="error" mt={5} p={4} width={"full"}>
+        <Alert.Root status="error" mt={5} p={4} width={'full'}>
           <Alert.Indicator />
           <Alert.Content>
             <Alert.Title>
-              {errorType === "max_file"
-                ? t("DRAG_DROP.ERROR.MAX_FILES_TITLE")
-                : errorType === "size"
-                  ? t("DRAG_DROP.ERROR.MAX_SIZES_TITLE")
-                  : t("DRAG_DROP.ERROR.TYPE_FILES_TITLE")}
+              {errorType === 'max_file'
+                ? t('DRAG_DROP.ERROR.MAX_FILES_TITLE')
+                : errorType === 'size'
+                  ? t('DRAG_DROP.ERROR.MAX_SIZES_TITLE')
+                  : t('DRAG_DROP.ERROR.TYPE_FILES_TITLE')}
             </Alert.Title>
             <Alert.Description>{error}</Alert.Description>
           </Alert.Content>
@@ -114,14 +99,14 @@ const SimpleImageFileUpload = ({
   avatarImage,
   name,
   handleDeleteAvatar,
-  shape = "rounded",
+  shape = 'rounded',
   isReadOnly,
 }: {
   getFileUploaded: (file: File | undefined) => void;
   avatarImage?: string;
   name?: string;
   handleDeleteAvatar?: () => void;
-  shape?: "square" | "rounded" | "full";
+  shape?: 'square' | 'rounded' | 'full';
   isReadOnly?: boolean;
 }) => {
   const { t } = useTranslation();
@@ -133,11 +118,7 @@ const SimpleImageFileUpload = ({
   });
 
   useEffect(() => {
-    if (
-      typeof avatarImage === "string" &&
-      avatarImage &&
-      fileUpload.acceptedFiles.length === 0
-    ) {
+    if (typeof avatarImage === 'string' && avatarImage && fileUpload.acceptedFiles.length === 0) {
       convertUrlsToFiles(avatarImage).then((file) => {
         fileUpload.setFiles([...file]);
       });
@@ -172,19 +153,15 @@ const SimpleImageFileUpload = ({
           <BaseRatio
             _disabled={{
               opacity: isReadOnly ? 0.6 : 1,
-              cursor: isReadOnly ? "not-allowed" : "none",
+              cursor: isReadOnly ? 'not-allowed' : 'none',
             }}
             cursor="pointer"
-            colorPalette={
-              (previewUrl || avatarImage) && !isImageDeleted ? "green" : "none"
-            }
+            colorPalette={(previewUrl || avatarImage) && !isImageDeleted ? 'green' : 'none'}
             image={
               !isImageDeleted
                 ? previewUrl ||
-                  (avatarImage?.trim()
-                    ? avatarImage
-                    : "/assets/images/placeholder-image.png")
-                : "/assets/images/placeholder-image.png"
+                  (avatarImage?.trim() ? avatarImage : '/assets/images/placeholder-image.png')
+                : '/assets/images/placeholder-image.png'
             }
           />
         </FileUpload.Trigger>
@@ -194,12 +171,7 @@ const SimpleImageFileUpload = ({
             {(file, index) => (
               <FileUpload.ItemGroup key={index}>
                 {isReadOnly ? null : (
-                  <Float
-                    placement="bottom-end"
-                    offsetX="3"
-                    offsetY="3"
-                    key={file.name}
-                  >
+                  <Float placement="bottom-end" offsetX="3" offsetY="3" key={file.name}>
                     <FileUpload.Item
                       rounded="full"
                       bg="red.500"
@@ -226,8 +198,8 @@ const SimpleImageFileUpload = ({
                 placement="bottom-end"
                 offsetX="3"
                 offsetY="3"
-                key={"image"}
-                cursor={"pointer"}
+                key={'image'}
+                cursor={'pointer'}
               >
                 <Circle
                   bg="red.500"
@@ -248,11 +220,11 @@ const SimpleImageFileUpload = ({
         <Alert.Root status="error" mt={5} p={4} width="full">
           <Alert.Indicator />
           <Alert.Content>
-            {errorType === "max_file"
-              ? t("DRAG_DROP.ERROR.MAX_FILES_TITLE")
-              : errorType === "size"
-                ? t("DRAG_DROP.ERROR.MAX_SIZES_TITLE")
-                : t("DRAG_DROP.ERROR.TYPE_FILES_TITLE")}
+            {errorType === 'max_file'
+              ? t('DRAG_DROP.ERROR.MAX_FILES_TITLE')
+              : errorType === 'size'
+                ? t('DRAG_DROP.ERROR.MAX_SIZES_TITLE')
+                : t('DRAG_DROP.ERROR.TYPE_FILES_TITLE')}
             <Alert.Description>{error}</Alert.Description>
           </Alert.Content>
         </Alert.Root>
@@ -277,11 +249,7 @@ export const MultipleFilesUpload = ({
   });
 
   useEffect(() => {
-    if (
-      initialImageUrls &&
-      initialImageUrls.length > 0 &&
-      fileUpload.acceptedFiles.length === 0
-    ) {
+    if (initialImageUrls && initialImageUrls.length > 0 && fileUpload.acceptedFiles.length === 0) {
       convertUrlsToFiles(initialImageUrls).then((files) => {
         fileUpload.setFiles([...files]);
       });
@@ -289,30 +257,26 @@ export const MultipleFilesUpload = ({
   }, [initialImageUrls]);
 
   return (
-    <VStack alignItems={"flex-start"} mt={1} gap={3} width={"full"}>
-      {label === "string" ? (
-        <BaseText fontSize={"sm"}>{label}</BaseText>
-      ) : (
-        label
-      )}
+    <VStack alignItems={'flex-start'} mt={1} gap={3} width={'full'}>
+      {label === 'string' ? <BaseText fontSize={'sm'}>{label}</BaseText> : label}
       <FileUpload.HiddenInput />
       <FileUpload.Trigger asChild>
-        <Button variant="outline" size="sm" width={"full"}>
+        <Button variant="outline" size="sm" width={'full'}>
           <HiUpload /> Télecharger vos fichiers
         </Button>
       </FileUpload.Trigger>
       <FileUpload.List showSize clearable />
 
       {error && (
-        <Alert.Root status="error" mt={5} p={4} width={"full"}>
+        <Alert.Root status="error" mt={5} p={4} width={'full'}>
           <Alert.Indicator />
           <Alert.Content>
             <Alert.Title>
-              {errorType === "max_file"
-                ? t("DRAG_DROP.ERROR.MAX_FILES_TITLE")
-                : errorType === "size"
-                  ? t("DRAG_DROP.ERROR.MAX_SIZES_TITLE")
-                  : t("DRAG_DROP.ERROR.TYPE_FILES_TITLE")}
+              {errorType === 'max_file'
+                ? t('DRAG_DROP.ERROR.MAX_FILES_TITLE')
+                : errorType === 'size'
+                  ? t('DRAG_DROP.ERROR.MAX_SIZES_TITLE')
+                  : t('DRAG_DROP.ERROR.TYPE_FILES_TITLE')}
             </Alert.Title>
             <Alert.Description>{error}</Alert.Description>
           </Alert.Content>
@@ -329,6 +293,7 @@ export const BaseDragDropZone = ({
   maxFileSize = MAX_FILE_SIZE,
   label,
   messageInfo,
+  isError = false,
 }: {
   getFilesUploaded: (files: File[]) => void;
   initialImageUrls: string[];
@@ -336,6 +301,7 @@ export const BaseDragDropZone = ({
   maxFileSize?: number;
   label?: string | ReactNode;
   messageInfo?: string;
+  isError?: boolean;
 }) => {
   const { getRootProps } = useFileUpload();
   const { t } = useTranslation();
@@ -347,40 +313,36 @@ export const BaseDragDropZone = ({
       maxFileSize={maxFileSize}
       alignItems="stretch"
       accept={ACCEPTED_TYPES}
-      cursor={"pointer"}
-      _dragging={{ borderColor: "primary.500" }}
+      cursor={'pointer'}
+      _dragging={{ borderColor: 'primary.500' }}
     >
       <FileUpload.HiddenInput />
-      {label === "string" ? (
-        <BaseText fontSize={"sm"}>{label}</BaseText>
-      ) : (
-        label
-      )}
-      <FileUploadDropzone _hover={{ borderColor: "primary.500" }}>
+      {label === 'string' ? <BaseText fontSize={'sm'}>{label}</BaseText> : label}
+      <FileUploadDropzone _hover={{ borderColor: 'primary.500' }}>
         <Icon fontSize="xl" color="fg.muted">
           <LuUpload />
         </Icon>
         <FileUploadDropzoneContent>
-          <BaseText color={"fg.muted"} variant={TextVariant.S}>
-            {t("DRAG_DROP.TITLE")}
+          <BaseText color={'fg.muted'} variant={TextVariant.S}>
+            {t('DRAG_DROP.TITLE')}
           </BaseText>
           <BaseText color="fg.subtle">
-            {t("DRAG_DROP.DESC", {
+            {t('DRAG_DROP.DESC', {
               max_size: MAX_FILE_SIZE_MB,
               type_files: TYPES_FILES,
             })}
           </BaseText>
           <BaseText color="fg.subtle" variant={TextVariant.S}>
-            {t("DRAG_DROP.FILES_NUMBER", { max_files: maxFiles })}
+            {t('DRAG_DROP.FILES_NUMBER', { max_files: maxFiles })}
           </BaseText>
         </FileUploadDropzoneContent>
       </FileUploadDropzone>
       {messageInfo && (
         <Flex
           gap={2}
-          fontSize={"sm"}
-          alignItems={"center"}
-          color={VariablesColors.info}
+          fontSize={'sm'}
+          alignItems={'center'}
+          color={isError ? 'red' : VariablesColors.info}
         >
           <HiOutlineInformationCircle size={18} />
           {messageInfo}
@@ -411,14 +373,14 @@ export const UploadAvatar = ({
   isLoading?: boolean;
   isReadOnly?: boolean;
   handleDeleteAvatar?: () => void;
-  shape?: "square" | "rounded" | "full";
+  shape?: 'square' | 'rounded' | 'full';
   messageInfo?: string;
 }) => {
   const { getRootProps } = useFileUpload();
   return (
     <>
       {isLoading ? (
-        <CustomSkeletonLoader type="IMAGE" width={"full"} height={"150px"} />
+        <CustomSkeletonLoader type="IMAGE" width={'full'} height={'150px'} />
       ) : (
         <FileUpload.Root
           {...getRootProps()}
@@ -437,7 +399,7 @@ export const UploadAvatar = ({
             isReadOnly={isReadOnly}
           />
           {messageInfo && (
-            <Flex gap={2} alignItems={"center"} color={VariablesColors.red}>
+            <Flex gap={2} alignItems={'center'} color={VariablesColors.red}>
               <HiOutlineInformationCircle size={18} />
               {messageInfo}
             </Flex>
@@ -470,9 +432,9 @@ export const BaseUploadMultipleFiles = ({
       maxFiles={maxFiles}
       maxFileSize={maxFileSize}
       alignItems="stretch"
-      accept={[...ACCEPTED_TYPES, "application/pdf"]}
-      cursor={"pointer"}
-      _dragging={{ borderColor: "primary.500" }}
+      accept={[...ACCEPTED_TYPES, 'application/pdf']}
+      cursor={'pointer'}
+      _dragging={{ borderColor: 'primary.500' }}
     >
       <MultipleFilesUpload
         label={label}
@@ -480,12 +442,7 @@ export const BaseUploadMultipleFiles = ({
         initialImageUrls={initialImageUrls}
       />
       {messageInfo && (
-        <Flex
-          gap={2}
-          fontSize={"sm"}
-          alignItems={"center"}
-          color={VariablesColors.info}
-        >
+        <Flex gap={2} fontSize={'sm'} alignItems={'center'} color={VariablesColors.info}>
           <HiOutlineInformationCircle size={18} />
           {messageInfo}
         </Flex>

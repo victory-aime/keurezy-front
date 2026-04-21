@@ -1,31 +1,21 @@
-import { Box, Flex, SimpleGrid, Stack, Table } from "@chakra-ui/react";
-import { FunctionComponent, JSX } from "react";
-import {
-  Skeleton,
-  SkeletonCircle,
-  SkeletonText,
-} from "_components/ui/skeleton";
-import {
-  BaseButton,
-  CustomSkeletonLoaderProps,
-  LoaderType,
-} from "_components/custom";
+import { Box, Flex, SimpleGrid, Stack, Table } from '@chakra-ui/react';
+import { FunctionComponent, JSX } from 'react';
+import { Skeleton, SkeletonCircle, SkeletonText } from '_components/ui/skeleton';
+import { BaseButton, CustomSkeletonLoaderProps, LoaderType } from '_components/custom';
 
-export const CustomSkeletonLoader: FunctionComponent<
-  CustomSkeletonLoaderProps
-> = ({
+export const CustomSkeletonLoader: FunctionComponent<CustomSkeletonLoaderProps> = ({
   tableColumns = 1,
   tableRows = 5,
   type,
-  width = "250px",
-  height = "300px",
-  variant = "pulse",
-  direction = "column",
+  width = '250px',
+  height = '300px',
+  variant = 'pulse',
+  direction = 'column',
   numberOfLines = 3,
   statisticBars = 4,
-  colorButton = "info",
+  colorButton = 'info',
   count = 4,
-  raduis = "7px",
+  raduis = '7px',
 }) => {
   const DefaultBlockLoader = <Skeleton height={height} variant={variant} />;
 
@@ -98,13 +88,7 @@ export const CustomSkeletonLoader: FunctionComponent<
           </Box>
         ))}
       </Flex>
-      <Flex
-        position="absolute"
-        bottom="0"
-        left="0"
-        width="100%"
-        justify="space-between"
-      >
+      <Flex position="absolute" bottom="0" left="0" width="100%" justify="space-between">
         {Array.from({ length: 8 }, (_, i) => (
           <SkeletonCircle key={i} size="3" mt={`${Math.random() * -60}px`} />
         ))}
@@ -116,45 +100,27 @@ export const CustomSkeletonLoader: FunctionComponent<
     <Flex
       width={width}
       h={height}
-      mt={"20px"}
+      mt={'20px'}
       justifyContent="space-between"
       position="relative"
       alignItems="flex-end"
     >
       {Array.from({ length: statisticBars }, (_, index) => {
         const randomHeight = `${Math.floor(Math.random() * 60) + 40}%`;
-        return (
-          <Skeleton
-            key={`bar-${index}`}
-            width={10}
-            height={randomHeight}
-            variant={variant}
-          />
-        );
+        return <Skeleton key={`bar-${index}`} width={10} height={randomHeight} variant={variant} />;
       })}
     </Flex>
   );
   const SkeletonTextLoader = (
-    <SkeletonText
-      noOfLines={numberOfLines}
-      gap={2}
-      variant={variant}
-      width={width}
-    />
+    <SkeletonText noOfLines={numberOfLines} gap={2} variant={variant} width={width} />
   );
 
-  const SkeletonFormLoader = (
-    <Skeleton height={height} width={width} variant={variant} />
-  );
+  const SkeletonFormLoader = <Skeleton height={height} width={width} variant={variant} />;
 
   const SkeletonImage = <Skeleton height={height} />;
 
   const SkeletonTextImage = (
-    <Flex
-      gap={direction === "column" ? 4 : 1}
-      flexDir={direction}
-      width={width}
-    >
+    <Flex gap={direction === 'column' ? 4 : 1} flexDir={direction} width={width}>
       <Skeleton height={height} />
       <Flex width={width}>
         <SkeletonText noOfLines={numberOfLines} variant={variant} gap={3} />
@@ -163,11 +129,9 @@ export const CustomSkeletonLoader: FunctionComponent<
   );
 
   const SkeletionCircle = (
-    <Flex width={width} alignItems={"center"} gap={4} flexDir={direction}>
+    <Flex width={width} alignItems={'center'} gap={4} flexDir={direction}>
       <SkeletonCircle size="10" />
-      {numberOfLines && (
-        <SkeletonText noOfLines={numberOfLines} variant={variant} gap={3} />
-      )}
+      {numberOfLines && <SkeletonText noOfLines={numberOfLines} variant={variant} gap={3} />}
     </Flex>
   );
 
@@ -193,36 +157,36 @@ export const CustomSkeletonLoader: FunctionComponent<
 
   const renderSkeletonSwitch = (param: LoaderType): JSX.Element | null => {
     switch (param) {
-      case "DATA_TABLE":
+      case 'DATA_TABLE':
         return TableLoader;
-      case "DONUT_CHART":
+      case 'DONUT_CHART':
         return DonutChartLoader;
-      case "BAR_CHART":
+      case 'BAR_CHART':
         return BarChartLoader;
-      case "LINE_CHART":
+      case 'LINE_CHART':
         return LineChartLoader;
-      case "PRODUCT_LIST_CARD":
+      case 'PRODUCT_LIST_CARD':
         return PublicProductCard;
-      case "DEFAULT":
+      case 'DEFAULT':
         return DefaultBlockLoader;
-      case "TEXT":
+      case 'TEXT':
         return SkeletonTextLoader;
-      case "TEXT_IMAGE":
+      case 'TEXT_IMAGE':
         return SkeletonTextImage;
-      case "IMAGE":
+      case 'IMAGE':
         return SkeletonImage;
-      case "BUTTON":
+      case 'BUTTON':
         return SkeletonButton;
-      case "FORM":
+      case 'FORM':
         return SkeletonFormLoader;
-      case "DATA_GRID":
+      case 'DATA_GRID':
         return GridLoader;
-      case "CIRCLE":
+      case 'CIRCLE':
         return SkeletionCircle;
       default:
         return null;
     }
   };
 
-  return renderSkeletonSwitch(type ?? "DEFAULT");
+  return renderSkeletonSwitch(type ?? 'DEFAULT');
 };

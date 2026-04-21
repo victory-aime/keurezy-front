@@ -1,18 +1,18 @@
-import { Flex, Box } from "@chakra-ui/react";
-import { LinkFooter } from "./LinkFooter";
-import { BaseText, TextVariant } from "_components/custom";
-import { version } from "../../../../../package.json";
+import { Flex, Box } from '@chakra-ui/react';
+import { LinkFooter } from './LinkFooter';
+import { BaseText, TextVariant } from '_components/custom';
+import { version } from '../../../../../package.json';
 
 export const Footer = () => {
   return (
     <Flex
       as="footer"
       zIndex="1000"
-      ml={"0"}
+      ml={'0'}
       align="center"
       transition="left 0.2s ease"
       justify="space-between"
-      flexDirection={{ base: "column", sm: "row" }}
+      flexDirection={{ base: 'column', sm: 'row' }}
       borderTop="1px solid"
       borderColor="inherit"
       px={{ base: 4, md: 6 }}

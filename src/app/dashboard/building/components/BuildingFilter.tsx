@@ -1,16 +1,16 @@
-import { HStack, VStack } from "@chakra-ui/react";
+import { HStack, VStack } from '@chakra-ui/react';
 import {
   ActionsButton,
   FormSelect,
   FormTextInput,
   Icons,
   ModalOpenProps,
-} from "_components/custom";
-import { Formik } from "formik";
-import { buildingStatusList } from "../constants/building";
-import { cityList } from "_constants/city";
-import { MODELS } from "_types/*";
-import { useEffect, useState } from "react";
+} from '_components/custom';
+import { Formik } from 'formik';
+import { buildingStatusList } from '../constants/building';
+import { cityList } from '_constants/city';
+import { MODELS } from '_types/*';
+import { useEffect, useState } from 'react';
 
 export const BuildingFilter = ({
   onChange,
@@ -34,18 +34,9 @@ export const BuildingFilter = ({
       onReset={onChange}
     >
       {({ setFieldValue, handleSubmit, resetForm }) => (
-        <VStack
-          width={"full"}
-          gap={4}
-          alignItems={"flex-end"}
-          justifyContent={"flex-end"}
-        >
-          <HStack width={"full"}>
-            <FormTextInput
-              name="name"
-              label="Nom"
-              placeholder="rechercher par nom"
-            />
+        <VStack width={'full'} gap={4} alignItems={'flex-end'} justifyContent={'flex-end'}>
+          <HStack width={'full'}>
+            <FormTextInput name="name" label="Nom" placeholder="rechercher par nom" />
             <FormSelect
               name="city"
               label="Ville"
@@ -53,11 +44,7 @@ export const BuildingFilter = ({
               listItems={cityList}
               setFieldValue={setFieldValue}
             />
-            <FormTextInput
-              name="district"
-              label="Quartier"
-              placeholder="rechercher par quartier"
-            />
+            <FormTextInput name="district" label="Quartier" placeholder="rechercher par quartier" />
             <FormSelect
               name="status"
               label="Statut"
@@ -69,10 +56,10 @@ export const BuildingFilter = ({
             onClick={() => handleSubmit()}
             onCancel={() => resetForm()}
             cancelShow={show}
-            cancelVariant={"outline"}
-            cancelTitle={"COMMON.CLEAR_FILTER"}
-            alignItems={"flex-end"}
-            justifyContent={"flex-end"}
+            cancelVariant={'outline'}
+            cancelTitle={'COMMON.CLEAR_FILTER'}
+            alignItems={'flex-end'}
+            justifyContent={'flex-end'}
             validateTitle="Appliquer les filtres"
             isLoading={isLoading}
             icon={<Icons.Search />}

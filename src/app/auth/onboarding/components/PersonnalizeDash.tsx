@@ -1,33 +1,25 @@
-import {
-  Grid,
-  VStack,
-  Flex,
-  Heading,
-  Box,
-  HStack,
-  Text,
-} from "@chakra-ui/react";
-import { Icons } from "_components/custom";
-import { useColorMode } from "_components/ui/color-mode";
-import { hexToRGB } from "_theme/colors";
-import { Formik } from "formik";
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { DashboardMockup } from "./DashboardMockup";
-import { OnboardCardWrapper } from "./OnboardCardWrapper";
+import { Grid, VStack, Flex, Heading, Box, HStack, Text } from '@chakra-ui/react';
+import { Icons } from '_components/custom';
+import { useColorMode } from '_components/ui/color-mode';
+import { hexToRGB } from '_theme/colors';
+import { Formik } from 'formik';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { DashboardMockup } from './DashboardMockup';
+import { OnboardCardWrapper } from './OnboardCardWrapper';
 
 const StepPersonalize = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [notifications, setNotifications] = useState(true);
-  const [currency, setCurrency] = useState("€");
+  const [currency, setCurrency] = useState('€');
   const [darkMode, setDarkMode] = useState(false);
-  const [teamEmail, setTeamEmail] = useState("");
+  const [teamEmail, setTeamEmail] = useState('');
 
   return (
     <Formik initialValues={{}} onSubmit={() => {}}>
       {({}) => (
         <Grid
-          templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
+          templateColumns={{ base: '1fr', lg: '1fr 1fr' }}
           gap={8}
           maxW="6xl"
           mx="auto"
@@ -36,8 +28,8 @@ const StepPersonalize = () => {
           <VStack gap={6} align="stretch">
             <VStack gap={2} align="flex-start">
               <Flex
-                bgColor={hexToRGB("secondary", 0.1)}
-                color={"secondary.500"}
+                bgColor={hexToRGB('secondary', 0.1)}
+                color={'secondary.500'}
                 borderRadius="full"
                 px={3}
                 py={1}
@@ -48,9 +40,7 @@ const StepPersonalize = () => {
                 Préférences
               </Flex>
               <Heading size="lg">Customize Your Experience</Heading>
-              <Text color="gray.500">
-                Le tableau de bord reflète instantanément vos choix
-              </Text>
+              <Text color="gray.500">Le tableau de bord reflète instantanément vos choix</Text>
             </VStack>
 
             <OnboardCardWrapper></OnboardCardWrapper>

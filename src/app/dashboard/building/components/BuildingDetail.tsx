@@ -1,4 +1,4 @@
-import { Flex, Box, Stack, Separator, VStack, HStack } from "@chakra-ui/react";
+import { Flex, Box, Stack, Separator, VStack, HStack } from '@chakra-ui/react';
 import {
   BaseAccordion,
   BaseButton,
@@ -12,12 +12,12 @@ import {
   DataTableContainer,
   Icons,
   ModalOpenProps,
-} from "_components/custom";
-import { useRouter } from "next/navigation";
-import { FormCard } from "../../components/FormCard";
-import { formatDisplayDate } from "rise-core-frontend";
-import { DASHBOARD_ROUTES } from "../../routes";
-import { CONSTANTS, ENUM, MODELS } from "_types/*";
+} from '_components/custom';
+import { useRouter } from 'next/navigation';
+import { FormCard } from '../../components/FormCard';
+import { formatDisplayDate } from 'rise-core-frontend';
+import { DASHBOARD_ROUTES } from '../../routes';
+import { CONSTANTS, ENUM, MODELS } from '_types/*';
 
 interface IBuildingDetail extends ModalOpenProps {
   data: MODELS.IBuilding | null;
@@ -34,37 +34,36 @@ export const BuildingDetails = ({
 
   const propertyColumns: ColumnsDataTable[] = [
     {
-      header: "Propriété",
-      accessor: "title",
+      header: 'Propriété',
+      accessor: 'title',
     },
 
     {
-      header: "Type",
-      accessor: "type",
+      header: 'Type',
+      accessor: 'type',
       cell: (type: string) =>
-        CONSTANTS.propertyTypes.find((item) => item.value === type)?.label ||
-        type,
+        CONSTANTS.propertyTypes.find((item) => item.value === type)?.label || type,
     },
     {
-      header: "Loyer",
-      accessor: "price",
+      header: 'Loyer',
+      accessor: 'price',
       cell: (price: number) => <BaseFormatNumber value={price} />,
     },
 
     {
-      header: "Status",
-      accessor: "status",
+      header: 'Status',
+      accessor: 'status',
       cell: (status: ENUM.COMMON.Status) => <BaseTag status={status} />,
     },
   ];
 
   const buildingDetailsAccordions = [
     {
-      label: "Informations Générales",
+      label: 'Informations Générales',
       icon: <Icons.Target />,
       content: (
         <FormCard title="">
-          <VStack align="stretch" gap={0} width={"full"}>
+          <VStack align="stretch" gap={0} width={'full'}>
             <Flex py={2} justify="space-between">
               <BaseText color="gray.500">Prpriétaire</BaseText>
               <BaseText>{data?.buildingOwner}</BaseText>
@@ -88,7 +87,7 @@ export const BuildingDetails = ({
             <Separator />
             <Flex py={2} justify="space-between">
               <BaseText color="gray.500">Terrain associé</BaseText>
-              <BaseText>{data?.land?.title ?? "Aucun"}</BaseText>
+              <BaseText>{data?.land?.title ?? 'Aucun'}</BaseText>
             </Flex>
             <Separator />
             <Flex py={2} justify="space-between">
@@ -111,21 +110,14 @@ export const BuildingDetails = ({
     },
 
     {
-      label: "Propriétes associée",
+      label: 'Propriétes associée',
       icon: <Icons.Home />,
       content: (
-        <VStack p={4} mt={4} width={"full"} alignItems={"flex-start"}>
-          <Flex
-            alignItems={"center"}
-            justifyContent={"space-between"}
-            width={"full"}
-          >
-            <BaseText>
-              {" "}
-              Au moins {data?.properties?.length} proprietes associés{" "}
-            </BaseText>
+        <VStack p={4} mt={4} width={'full'} alignItems={'flex-start'}>
+          <Flex alignItems={'center'} justifyContent={'space-between'} width={'full'}>
+            <BaseText> Au moins {data?.properties?.length} proprietes associés </BaseText>
             <BaseIcon
-              cursor={"pointer"}
+              cursor={'pointer'}
               onClick={() => {
                 onChange(!isOpen);
                 router.push(DASHBOARD_ROUTES.PROPERTIES.ADD);
@@ -148,9 +140,9 @@ export const BuildingDetails = ({
 
   return (
     <BaseDrawer
-      title={"Detail du bâtiment"}
-      description={" Visualisation des informations du bâtiment"}
-      size={"xl"}
+      title={'Detail du bâtiment'}
+      description={' Visualisation des informations du bâtiment'}
+      size={'xl'}
       icon={<Icons.RiBuildingLine />}
       onChange={onChange}
       isOpen={isOpen}
@@ -158,28 +150,24 @@ export const BuildingDetails = ({
     >
       <Box
         borderLeftWidth={2}
-        boxShadow={"sm"}
-        borderRadius={"lg"}
-        borderColor={"primary.500"}
+        boxShadow={'sm'}
+        borderRadius={'lg'}
+        borderColor={'primary.500'}
         p={4}
       >
-        <Flex alignItems={"center"} justifyContent={"space-between"} gap={5}>
+        <Flex alignItems={'center'} justifyContent={'space-between'} gap={5}>
           <HStack>
             <BaseIcon>
               <Icons.RiBuildingLine />
             </BaseIcon>
             <Stack gap={0}>
               <BaseText>{data?.name}</BaseText>
-              <BaseText textTransform={"capitalize"}>
+              <BaseText textTransform={'capitalize'}>
                 {data?.city},{data?.address},{data?.district}
               </BaseText>
             </Stack>
           </HStack>
-          <BaseButton
-            colorType="danger"
-            variant={"outline"}
-            onClick={() => callback?.()}
-          >
+          <BaseButton colorType="danger" variant={'outline'} onClick={() => callback?.()}>
             Supprimer
           </BaseButton>
         </Flex>
@@ -190,8 +178,8 @@ export const BuildingDetails = ({
         isLoading={isLoading}
         mt={5}
         itemContentProps={{
-          p: "0",
-          mt: "2",
+          p: '0',
+          mt: '2',
         }}
       />
     </BaseDrawer>

@@ -1,22 +1,17 @@
-"use client";
-import { Box, CheckboxGroup, Flex, Menu, Portal } from "@chakra-ui/react";
-import React, { memo, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Checkbox } from "_components/ui/checkbox";
-import { BaseText, TextVariant, TextWeight } from "_components/custom";
-import { hexToRGB } from "_theme/colors";
-import { VariablesColors } from "_theme/variables";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import { SideToolTip } from "../../../app/dashboard/Layout/sidebar/components/SideToolTip";
-import { ICheckboxGroup, ISelectedPermission } from "_components/custom";
+'use client';
+import { Box, CheckboxGroup, Flex, Menu, Portal } from '@chakra-ui/react';
+import React, { memo, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Checkbox } from '_components/ui/checkbox';
+import { BaseText, TextVariant, TextWeight } from '_components/custom';
+import { hexToRGB } from '_theme/colors';
+import { VariablesColors } from '_theme/variables';
+import { MdKeyboardArrowDown } from 'react-icons/md';
+import { SideToolTip } from '../../../app/dashboard/Layout/sidebar/components/SideToolTip';
+import { ICheckboxGroup, ISelectedPermission } from '_components/custom';
 
 export const CollapsePermissionCheckBox: React.FC<ICheckboxGroup> = memo(
-  ({
-    checkBoxGroup,
-    onSelectGroupElement,
-    defaultValue,
-    checkBoxColor = "purple",
-  }) => {
+  ({ checkBoxGroup, onSelectGroupElement, defaultValue, checkBoxColor = 'purple' }) => {
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
 
@@ -26,9 +21,7 @@ export const CollapsePermissionCheckBox: React.FC<ICheckboxGroup> = memo(
     // Initialiser depuis defaultValue
     useEffect(() => {
       if (defaultValue?.permissions?.length) {
-        const initial = defaultValue.permissions.reduce<
-          Record<string, boolean>
-        >((acc, p) => {
+        const initial = defaultValue.permissions.reduce<Record<string, boolean>>((acc, p) => {
           acc[p.id] = p.granted;
           return acc;
         }, {});
@@ -76,7 +69,7 @@ export const CollapsePermissionCheckBox: React.FC<ICheckboxGroup> = memo(
 
     return (
       <Menu.Root
-        positioning={{ strategy: "fixed", hideWhenDetached: true }}
+        positioning={{ strategy: 'fixed', hideWhenDetached: true }}
         size="md"
         closeOnSelect={false}
         open={open}
@@ -87,28 +80,23 @@ export const CollapsePermissionCheckBox: React.FC<ICheckboxGroup> = memo(
             p="2"
             alignItems="center"
             justifyContent="space-between"
-            bgColor={hexToRGB("purple", 0.1)}
+            bgColor={hexToRGB('purple', 0.1)}
             borderRadius="7px"
             width="full"
           >
             <Flex gap="3" width="full">
               <Checkbox
-                checked={isIndeterminate ? "indeterminate" : isAllSelected}
+                checked={isIndeterminate ? 'indeterminate' : isAllSelected}
                 onCheckedChange={(e) => handleGroupCheck(!!e.checked)}
                 colorPalette={checkBoxColor}
                 variant="subtle"
               />
               <BaseText weight={TextWeight.Bold}>
-                {t("PERMISSIONS.MODULES." + checkBoxGroup.category)}
+                {t('PERMISSIONS.MODULES.' + checkBoxGroup.category)}
               </BaseText>
             </Flex>
 
-            <Flex
-              alignItems="center"
-              justifyContent="flex-end"
-              gap="3"
-              width="1/4"
-            >
+            <Flex alignItems="center" justifyContent="flex-end" gap="3" width="1/4">
               {selectedCount > 0 && (
                 <Flex
                   alignItems="center"
@@ -119,19 +107,12 @@ export const CollapsePermissionCheckBox: React.FC<ICheckboxGroup> = memo(
                   color="white"
                 >
                   <BaseText variant={TextVariant.XS}>
-                    {isAllSelected ? t("Tous") : selectedCount}
+                    {isAllSelected ? t('Tous') : selectedCount}
                   </BaseText>
                 </Flex>
               )}
-              <Box
-                transition="all ease-in-out 200ms"
-                transform={open ? "rotate(180deg)" : ""}
-              >
-                <MdKeyboardArrowDown
-                  width="18px"
-                  height="18px"
-                  color={VariablesColors.grayScale}
-                />
+              <Box transition="all ease-in-out 200ms" transform={open ? 'rotate(180deg)' : ''}>
+                <MdKeyboardArrowDown width="18px" height="18px" color={VariablesColors.grayScale} />
               </Box>
             </Flex>
           </Flex>
@@ -140,9 +121,7 @@ export const CollapsePermissionCheckBox: React.FC<ICheckboxGroup> = memo(
         <Portal>
           <Menu.Positioner>
             <Menu.Content width="full">
-              <CheckboxGroup
-                value={Object.keys(selectedMap).filter((id) => selectedMap[id])}
-              >
+              <CheckboxGroup value={Object.keys(selectedMap).filter((id) => selectedMap[id])}>
                 {checkBoxGroup.permissions?.map((perm) => (
                   <Menu.CheckboxItem
                     key={perm.id}
@@ -161,10 +140,7 @@ export const CollapsePermissionCheckBox: React.FC<ICheckboxGroup> = memo(
                           />
                         </Menu.ItemIndicator>
                         <BaseText>
-                          {t(
-                            "PERMISSIONS.FEATURE_LIST." +
-                              perm.name.toUpperCase(),
-                          )}
+                          {t('PERMISSIONS.FEATURE_LIST.' + perm.name.toUpperCase())}
                         </BaseText>
                       </Flex>
                     </SideToolTip>

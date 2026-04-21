@@ -1,36 +1,20 @@
-"use client";
+'use client';
 
-import { Chart, useChart } from "@chakra-ui/charts";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import {
-  BaseContainer,
-  BaseText,
-  CustomSkeletonLoader,
-  TextVariant,
-} from "_components/custom";
-import { NoDataAnimation } from "_components/custom/data-table/NoDataAnimation";
-import { IoBarChartOutline } from "react-icons/io5";
-import { OccupationRateByTypeBarChartProps } from "./types/chart";
+import { Chart, useChart } from '@chakra-ui/charts';
+import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'recharts';
+import { BaseContainer, BaseText, CustomSkeletonLoader, TextVariant } from '_components/custom';
+import { NoDataAnimation } from '_components/custom/data-table/NoDataAnimation';
+import { IoBarChartOutline } from 'react-icons/io5';
+import { OccupationRateByTypeBarChartProps } from './types/chart';
 
-export const OccupationRateByType = ({
-  data,
-  isLoading,
-}: OccupationRateByTypeBarChartProps) => {
+export const OccupationRateByType = ({ data, isLoading }: OccupationRateByTypeBarChartProps) => {
   const chart = useChart({
     data,
     series: [
       {
-        name: "occupationRate",
+        name: 'occupationRate',
         label: "Taux d'occupation",
-        color: "yellow.solid",
+        color: 'yellow.solid',
       },
     ],
   });
@@ -53,14 +37,11 @@ export const OccupationRateByType = ({
       ) : !data?.length ? (
         <NoDataAnimation animationType="folder" />
       ) : (
-        <Chart.Root maxH="md" chart={chart} mt={"30px"}>
-          <BarChart data={chart.data} barCategoryGap={"25%"} responsive>
-            <CartesianGrid
-              stroke={chart.color("border.muted")}
-              vertical={false}
-            />
+        <Chart.Root maxH="md" chart={chart} mt={'30px'}>
+          <BarChart data={chart.data} barCategoryGap={'25%'} responsive>
+            <CartesianGrid stroke={chart.color('border.muted')} vertical={false} />
             <XAxis
-              dataKey={chart.key("propertyType")}
+              dataKey={chart.key('propertyType')}
               axisLine={false}
               tickLine={false}
               tickMargin={6}
@@ -76,9 +57,7 @@ export const OccupationRateByType = ({
             <Tooltip
               cursor={false}
               animationDuration={100}
-              content={
-                <Chart.Tooltip formatter={(value: number) => `${value}%`} />
-              }
+              content={<Chart.Tooltip formatter={(value: number) => `${value}%`} />}
             />
 
             <Legend content={<Chart.Legend />} />

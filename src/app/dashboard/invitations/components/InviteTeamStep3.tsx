@@ -1,13 +1,13 @@
-import { MotionBox } from "_constants/motion";
-import { FormCard } from "../../components/FormCard";
-import { useFormikContext } from "formik";
-import { Avatar } from "_components/ui/avatar";
-import { Flex, Stack, VStack } from "@chakra-ui/react";
-import { BaseTag, BaseText } from "_components/custom";
-import { ISelectPermissions, IInviteTeamUserInfo } from "../constants/team";
-import { MODELS } from "_types/*";
-import { useGroupedPermissions } from "_hooks/useGroupedPermissions";
-import { SelectedPermissionsRecap } from "../../components/SelectedPermissionsRecap";
+import { MotionBox } from '_constants/motion';
+import { FormCard } from '../../components/FormCard';
+import { useFormikContext } from 'formik';
+import { Avatar } from '_components/ui/avatar';
+import { Flex, Stack, VStack } from '@chakra-ui/react';
+import { BaseTag, BaseText } from '_components/custom';
+import { ISelectPermissions, IInviteTeamUserInfo } from '../constants/team';
+import { MODELS } from '_types/*';
+import { useGroupedPermissions } from '_hooks/useGroupedPermissions';
+import { SelectedPermissionsRecap } from '../../components/SelectedPermissionsRecap';
 
 export const InviteTeamStep3 = ({
   permissions,
@@ -21,22 +21,19 @@ export const InviteTeamStep3 = ({
     permissions: ISelectPermissions[];
   }>();
 
-  const groupedPermissions = useGroupedPermissions(
-    permissions,
-    values?.permissions,
-  );
+  const groupedPermissions = useGroupedPermissions(permissions, values?.permissions);
 
   return (
     <MotionBox
       initial="enter"
       animate="center"
       exit="exit"
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
-      <FormCard title="Vérification & Envoi" isLoading={isLoading}>
-        <VStack gap={3} alignItems={"flex-start"} width={"full"} p={3}>
-          <Flex alignItems={"flex-start"} gap={3} width={"full"} mt={4}>
-            <Avatar name={values?.account?.name} size={"lg"} />
+      <FormCard title="Vérification & Envoi" loader={isLoading}>
+        <VStack gap={3} alignItems={'flex-start'} width={'full'} p={3}>
+          <Flex alignItems={'flex-start'} gap={3} width={'full'} mt={4}>
+            <Avatar name={values?.account?.name} size={'lg'} />
             <Stack gap={0}>
               <BaseText fontWeight="bold">{values?.account?.name}</BaseText>
               <BaseText color="gray.500">{values?.account?.email}</BaseText>

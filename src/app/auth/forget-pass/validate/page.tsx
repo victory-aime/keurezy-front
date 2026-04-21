@@ -1,4 +1,4 @@
-import { ForgetPassword } from "../../components/ForgetPassword";
+import { ForgetPassword } from '../../components/ForgetPassword';
 
 export default async function ForgetPasswordPage({
   searchParams,
