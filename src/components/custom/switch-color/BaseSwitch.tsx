@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { Spinner, Switch } from '@chakra-ui/react';
-import { useAppTheme } from '_context/theme-context';
 
 interface BaseSwitchProps {
   hideIcon?: boolean;
@@ -17,12 +16,11 @@ export const BaseSwitch: FC<BaseSwitchProps> = ({
   isLoading,
   isDisabled,
 }) => {
-  const { vars } = useAppTheme();
   return (
     <Switch.Root
       checked={isChecked}
       onCheckedChange={(value) => onSwitchChange(value.checked)}
-      colorPalette={vars.primary50}
+      colorPalette={isChecked ? 'teal' : 'red'}
       size={'md'}
       disabled={isDisabled}
     >

@@ -1,12 +1,16 @@
-import { MODELS, VALIDATION } from '_types/*';
+import { ENUM, MODELS, VALIDATION } from '_types/*';
 
-const TOTAL_ONBOARD_STEPS = 5;
+const TOTAL_ONBOARD_STEPS = 6;
 
-const onboardStepLabels = ['Introduction', 'Découverte', 'Compte', 'Agence', 'Terminé'];
+const onboardStepLabels = ['Introduction', 'Découverte', 'Compte', 'Agence', 'Plan', 'Terminé'];
 
 const onboardInitialValues: {
   account: MODELS.IAuthSignUp;
   business: MODELS.ICreateAgency;
+  plan: {
+    planId: string;
+    paymentMode: ENUM.BillingCycle;
+  };
 } = {
   account: {
     name: '',
@@ -22,6 +26,10 @@ const onboardInitialValues: {
     phone: '',
     userId: '',
   },
+  plan: {
+    planId: '',
+    paymentMode: 'MONTHLY',
+  },
 };
 
 const slideVariants = {
@@ -35,6 +43,7 @@ const onboardStepValidationSchemas = [
   null, // step 2
   VALIDATION.ONBOARD.onboardUserAccountSchema, // step 3
   VALIDATION.ONBOARD.onboardUserAgencySchema, // step 4
+  VALIDATION.ONBOARD.onboardUserAgencySelectPlanSchema, // step 5
   null, // final step
 ];
 

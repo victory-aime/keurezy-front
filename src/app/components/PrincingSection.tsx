@@ -1,72 +1,61 @@
-import {
-  BaseBadge,
-  BaseButton,
-  BaseFormatNumber,
-  BaseText,
-  Icons,
-  TextVariant,
-  TextWeight,
-} from '_components/custom';
-import { Box, Container, Float, HStack, List, SimpleGrid } from '@chakra-ui/react';
-import { MotionBox } from '_constants/motion';
+'use client';
 
-const pricingPlans = [
-  {
-    name: 'Starter',
-    price: 0,
-    description: 'Perfect for getting started',
-    features: [
-      'Up to 3 properties',
-      'Basic tenant management',
-      'Online rent collection',
-      'Email support',
-    ],
-    cta: 'Get Started Free',
-    popular: false,
-  },
-  {
-    name: 'Professional',
-    price: 29,
-    description: 'For growing portfolios',
-    features: [
-      'Up to 25 properties',
-      'Advanced analytics',
-      'Maintenance tracking',
-      'Automated reminders',
-      'Priority support',
-      'Document storage',
-    ],
-    cta: 'Start Free Trial',
-    popular: true,
-  },
-  {
-    name: 'Enterprise',
-    price: 79,
-    description: 'For large-scale management',
-    features: [
-      'Unlimited properties',
-      'Custom reporting',
-      'API access',
-      'Dedicated account manager',
-      'Multi-user access',
-      'White-label option',
-    ],
-    cta: 'Contact Sales',
-    popular: false,
-  },
-];
+import { BaseText, BaseToast, TextVariant } from '_components/custom';
+import { Container, SimpleGrid, VStack } from '@chakra-ui/react';
+import { MotionBox } from '_constants/motion';
+import { CommonModule } from '_store/state-management';
+import { useRouter } from 'next/navigation';
+import { useState, useMemo } from 'react';
+import { ENUM } from '_types/*';
+import { BillingCycleToggle } from './pricing/BillingCycleToggle';
+import { PlanSelectorMode } from './pricing/PlanSelectMode';
+import { PlanCard } from './pricing/PlanCard';
+import { APP_ROUTES } from '_config/routes';
+import { getBestYearlySavings, getFilteredPlans } from '../components/pricing/functions/pricing';
 
 export const PricingSection = () => {
+  const navigate = useRouter();
+  const [mode, setMode] = useState<ENUM.PricingType>('SUBSCRIPTION');
+  const [billingCycle, setBillingCycle] = useState<ENUM.BillingCycle>('MONTHLY');
+
+  const { data: allPacks } = CommonModule.getAllPacksQueries({
+    queryOptions: {
+      enabled: true,
+    },
+  });
+
+  const filteredPlans = getFilteredPlans(allPacks, mode);
+
+  const handleSelect = ({
+    planId,
+    billingCycle: cycle,
+  }: {
+    planId: string;
+    billingCycle?: ENUM.BillingCycle;
+  }) => {
+    const plan = allPacks?.find((p) => p.id === planId);
+    if (!plan) return;
+    const safeCycle: ENUM.BillingCycle | undefined =
+      plan.pricingType === 'SUBSCRIPTION' ? (cycle ?? 'MONTHLY') : undefined;
+    BaseToast({
+      title: `Plan ${plan.name} sélectionné`,
+      description:
+        plan.pricingType === 'SUBSCRIPTION'
+          ? `Facturation ${safeCycle === 'YEARLY' ? 'annuelle' : 'mensuelle'}`
+          : `Commission de ${plan.commissionRate}% par loyer`,
+    });
+    navigate.push(`${APP_ROUTES.AUTH.ONBOARD}?planId=${planId}&billingCycle=${safeCycle}`);
+  };
+
   return (
-    <Box py={10}>
-      <Container mx="auto" px={{ base: 6, sm: 8 }}>
+    <Container mx="auto" px={{ base: 6, sm: 8 }}>
+      <VStack width={'full'} gap={5}>
         <MotionBox
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           maxW={'2xl'}
           mx={'auto'}
-          mb={16}
           textAlign={'center'}
         >
           <BaseText color={'primary.500'} textTransform={'uppercase'} fontWeight={'semibold'}>
@@ -74,73 +63,36 @@ export const PricingSection = () => {
           </BaseText>
 
           <BaseText fontWeight={'bold'} variant={TextVariant.H2} lineHeight={1.2}>
-            Des prix simples et transparents
+            Choisissez votre modèle de tarification
           </BaseText>
           <BaseText variant={TextVariant.L} mb={2} mt={1} color={'gray.400'}>
-            Commencez gratuitement, évoluez quand vous êtes prêt.
+            Payez à la commission ou souscrivez à un abonnement. Vous restez libre.
           </BaseText>
         </MotionBox>
 
-        <SimpleGrid columns={{ base: 1, sm: 3 }} gap={6} mx={'auto'} maxW={'5xl'}>
-          {pricingPlans.map((plan, i) => (
-            <MotionBox
-              key={plan.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              border={'1px solid'}
-              p={8}
-              position={'relative'}
-              rounded={'xl'}
-              borderColor={plan.popular ? 'primary.500' : 'bg.muted'}
-              shadow={plan.popular ? '2xl' : 'xs'}
-              scale={plan.popular ? '1.1' : 'none'}
-            >
-              {plan.popular && (
-                <Float placement={'top-center'}>
-                  <BaseBadge label="Populaire" borderRadius={'full'} color="primary" />
-                </Float>
-              )}
-              <BaseText variant={TextVariant.L} weight={TextWeight.SemiBold}>
-                {plan.name}
-              </BaseText>
+        <VStack textAlign={'center'}>
+          <PlanSelectorMode value={mode} onChange={setMode} />
+          {mode === 'SUBSCRIPTION' && (
+            <BillingCycleToggle
+              value={billingCycle}
+              onChange={setBillingCycle}
+              yearlySavings={getBestYearlySavings(mode, filteredPlans)}
+            />
+          )}
+        </VStack>
 
-              <BaseText variant={TextVariant.S}>{plan.description}</BaseText>
-
-              <HStack mt={2} mb={3} fontSize={'x-large'}>
-                <BaseFormatNumber value={plan.price} />
-                <BaseText color={'gray.500'} variant={TextVariant.S}>
-                  /mois
-                </BaseText>
-              </HStack>
-
-              <BaseButton
-                width={'full'}
-                variant={plan.popular ? 'solid' : 'outline'}
-                colorType={plan.popular ? 'primary' : 'neutral'}
-                onClick={() => {}}
-              >
-                <BaseText color={plan.popular ? 'inherit' : 'none'}>{plan.cta}</BaseText>
-              </BaseButton>
-
-              <List.Root gap="2" variant="plain" align="center" mt={4} spaceY={1}>
-                {plan.features.map((f) => (
-                  <List.Item
-                    key={f}
-                    className="flex items-center gap-3 text-sm text-muted-foreground"
-                  >
-                    <List.Indicator asChild color="tertiary.500">
-                      <Icons.Check size={20} />
-                    </List.Indicator>
-                    {f}
-                  </List.Item>
-                ))}
-              </List.Root>
-            </MotionBox>
+        <SimpleGrid columns={{ base: 1, sm: 3 }} gap={6} mt={'45px'} mx={'auto'} maxW={'5xl'}>
+          {filteredPlans?.map((plan, i) => (
+            <PlanCard
+              key={plan.id}
+              plan={plan}
+              billingCycle={billingCycle}
+              index={i}
+              onSelect={handleSelect}
+            />
           ))}
         </SimpleGrid>
-      </Container>
-    </Box>
+      </VStack>
+    </Container>
   );
 };

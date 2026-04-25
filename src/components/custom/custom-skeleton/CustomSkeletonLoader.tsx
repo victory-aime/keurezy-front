@@ -35,15 +35,10 @@ export const CustomSkeletonLoader: FunctionComponent<CustomSkeletonLoaderProps> 
     </Table.Root>
   );
 
-  const PublicProductCard = (
-    <SimpleGrid columns={{ base: 2, md: 4 }} width="full">
-      {Array.from({ length: 6 }, (_, i) => (
-        <Box key={i} p={5} width="full">
-          <Skeleton borderRadius="7px" height={height} variant={variant} />
-          <Stack mt={4}>
-            <SkeletonText variant={variant} noOfLines={numberOfLines} />
-          </Stack>
-        </Box>
+  const PacksCard = (
+    <SimpleGrid columns={{ base: 2, sm: 4 }} width="full">
+      {Array.from({ length: tableRows }, (_, i) => (
+        <Skeleton borderRadius="7px" height={height} variant={variant} />
       ))}
     </SimpleGrid>
   );
@@ -166,7 +161,7 @@ export const CustomSkeletonLoader: FunctionComponent<CustomSkeletonLoaderProps> 
       case 'LINE_CHART':
         return LineChartLoader;
       case 'PRODUCT_LIST_CARD':
-        return PublicProductCard;
+        return PacksCard;
       case 'DEFAULT':
         return DefaultBlockLoader;
       case 'TEXT':

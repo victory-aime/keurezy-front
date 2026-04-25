@@ -85,7 +85,12 @@ export const StepBusiness = () => {
               maxCharacters={500}
             />
             <HStack width={'full'} flexDirection={{ base: 'column-reverse', md: 'row-reverse' }}>
-              <FormPhonePicker required name="business.phone" label="Telephone" />
+              <FormPhonePicker
+                required
+                name="business.phone"
+                label="Telephone"
+                listAvailableCountries={['sn']}
+              />
               <FormTextInput
                 required
                 name="business.address"

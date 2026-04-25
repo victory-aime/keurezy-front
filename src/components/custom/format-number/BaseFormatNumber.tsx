@@ -9,7 +9,7 @@ export const BaseFormatNumber: FC<BaseFormatNumberProps> = ({
   value,
   notation = 'standard',
   style = 'decimal',
-  currencyCode = ENUM.COMMON.Currency.XAF,
+  currencyCode,
   maximumDigits,
   minimumDigits,
 }) => {

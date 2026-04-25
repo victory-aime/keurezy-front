@@ -54,7 +54,6 @@ export const BaseDrawer: React.FC<DrawerProps> = ({
   ref,
 }) => {
   const { t } = useTranslation();
-  const drawerColor = useColorModeValue(drawerContentColor, 'black');
 
   return (
     <DrawerRoot
@@ -66,7 +65,7 @@ export const BaseDrawer: React.FC<DrawerProps> = ({
       lazyMount
     >
       <DrawerBackdrop />
-      <DrawerContent height={'full'} width={'full'} bgColor={drawerColor}>
+      <DrawerContent height={'full'} width={'full'}>
         <DrawerHeader display={'flex'} alignItems={'center'} justifyContent={'space-between'} p={4}>
           <Flex alignItems={'center'} gap={4}>
             {icon && (
@@ -74,23 +73,12 @@ export const BaseDrawer: React.FC<DrawerProps> = ({
                 {icon}
               </BaseIcon>
             )}
-            <BaseText
-              variant={TextVariant.S}
-              color={drawerContentColor !== 'white' ? 'white' : 'none'}
-            >
-              {t(title)}
-            </BaseText>
+            <BaseText variant={TextVariant.S}>{t(title)}</BaseText>
 
-            {showCloseButton && (
-              <DrawerCloseTrigger color={drawerContentColor !== 'white' ? 'white' : 'none'} />
-            )}
+            {showCloseButton && <DrawerCloseTrigger />}
           </Flex>
         </DrawerHeader>
-        {description && (
-          <DrawerDescription px={4} color={drawerContentColor !== 'white' ? 'white' : 'none'}>
-            {description}
-          </DrawerDescription>
-        )}
+        {description && <DrawerDescription px={4}>{description}</DrawerDescription>}
         <DrawerBody width={'full'} height={'full'} ref={ref} mt={2} p={4}>
           {children}
         </DrawerBody>

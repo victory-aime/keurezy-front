@@ -14,6 +14,7 @@ const APIS_ROUTES_MODULES_PATH = {
   LAND: '/land',
   COMMON: {
     PERMS: '/common/perms',
+    PACKS: '/common/packs',
   },
   INVITATION: '/invitation',
   TEAM: '/team',
@@ -336,6 +337,14 @@ export const APIS = (baseUrl?: string) => {
         ALL_PERMS: api({
           path: `${APIS_ROUTES_MODULES_PATH.COMMON.PERMS}`,
           pathBase: 'SECURED_API',
+          method: 'GET',
+          showResponse: false,
+        }),
+      },
+      PACKS: {
+        ALL_PACKS: api({
+          path: `${APIS_ROUTES_MODULES_PATH.COMMON.PACKS}`,
+          pathBase: 'UNSECURED_API',
           method: 'GET',
           showResponse: false,
         }),

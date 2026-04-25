@@ -1,27 +1,34 @@
-import { IUser } from '../users';
+import { BillingCycle, PlanCategory, PlanType, PricingType } from '../../enum';
 
-export interface ISubscription {
+export interface IPlanFeature {
   id: string;
-  name: string;
-  price: string;
-  currency: string;
-  trialDays: number;
-  createdAt: string;
-  planFeatures?: {
-    limits: {
-      id: string;
-      planFeatureId: string;
-      key: string;
-      type: string;
-      numberValue: number;
-      booleanValue: null;
-      enumValue: null;
-    }[];
-  }[];
-  limits: { id: string; planId: string; key: string; limitValue: number }[];
-  modules: { id: string; name: string; features: { name: string }[] }[];
+  label: string;
+  limit: number | null; // null = unlimited
+  enabled: true;
+  feature: {
+    id: string;
+    name: string;
+    description: string;
+    category: string;
+  };
 }
 
-export interface ICreateSimpleUserDto extends IUser {
-  packId: string;
+export interface IPlanPricing {
+  billingCycle: BillingCycle;
+  price: number;
+  currency: string;
+  discountPercentage?: number;
+}
+
+export interface ISubscriptionPlan {
+  id: string;
+  name: PlanType;
+  planCategory: PlanCategory;
+  pricingType: PricingType;
+  description: string;
+  commissionRate?: number;
+  pricings?: IPlanPricing[];
+  planFeatures: IPlanFeature[];
+  popular?: boolean;
+  highlight?: boolean;
 }

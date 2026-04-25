@@ -39,3 +39,9 @@ export const onboardUserAgencySchema = Yup.object({
     acceptTerms: Yup.boolean().oneOf([true], 'Vous devez accepter les conditions'),
   }),
 });
+
+export const onboardUserAgencySelectPlanSchema = Yup.object({
+  plan: Yup.object({
+    planId: Yup.string().required('Veuillez selectionner une offre'),
+  }),
+});

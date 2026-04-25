@@ -1,4 +1,4 @@
-import { COMMON, PropertyType } from '../enum';
+import { BillingCycle, COMMON, PropertyType } from '../enum';
 import { IPagination } from './pagination';
 interface ICreateAgency {
   name?: string;
@@ -12,6 +12,10 @@ interface ICreateAgency {
   userId?: string;
   acceptTerms?: boolean;
   documents?: File[];
+  plan?: {
+    planId: string;
+    billingCycle: BillingCycle;
+  };
 }
 
 interface IUpdateAgency extends ICreateAgency {

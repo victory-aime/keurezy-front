@@ -2,7 +2,6 @@ import { Flex, Box, Stack, Separator, VStack, HStack } from '@chakra-ui/react';
 import {
   BaseButton,
   BaseDrawer,
-  BaseFormatNumber,
   BaseIcon,
   BaseTag,
   BaseText,

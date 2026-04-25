@@ -55,7 +55,7 @@ import {
 } from 'react-icons/tb';
 import { FaTrashAlt } from 'react-icons/fa';
 import { IoCopyOutline, IoDownloadOutline, IoKeyOutline, IoShareOutline } from 'react-icons/io5';
-import { MdEdit, MdLocalPhone } from 'react-icons/md';
+import { MdEdit, MdLocalPhone, MdWallet } from 'react-icons/md';
 import { PiBathtubLight, PiEyeLight } from 'react-icons/pi';
 import { GrMoney } from 'react-icons/gr';
 import { TbRestore } from 'react-icons/tb';
@@ -149,4 +149,5 @@ export const Icons = {
   SendMail: RiMailSendLine,
   Lock: IoLockClosed,
   Megaphone: HiMiniMegaphone,
+  Wallet: MdWallet,
 };

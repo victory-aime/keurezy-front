@@ -19,12 +19,14 @@ import { ColorMode, useColorMode } from '_components/ui/color-mode';
 import { AppearanceThemeSelector } from './AppearanceThemeSelector';
 import { UpdateEmailModal } from './UpdateEmail';
 import { authClient } from '../../../lib/auth-client';
+import { useAppTheme } from '_context/theme-context';
 
 export const ProfileInfo = () => {
   const { t } = useTranslation();
   const { session } = useAuthContext();
   const { colorMode, setColorMode } = useColorMode();
-  const [themeColor, setThemeColor] = useState<string | null>(null);
+  const { primaryColor } = useAppTheme();
+  const [themeColor, setThemeColor] = useState<string | null>(primaryColor);
   const [emailHasChanged, setEmailHasChanged] = useState<boolean>(false);
   const [pendingValues, setPendingValues] = useState<MODELS.IUser | null>(null);
 
@@ -100,15 +102,17 @@ export const ProfileInfo = () => {
         twoFactorEnabled: currentUser?.twoFactorEnabled,
         status: currentUser?.status ?? ENUM.COMMON.Status.ACTIVE,
       });
-      setThemeColor(currentUser?.theme_color!);
       setColorMode((currentUser?.theme_mode as ColorMode) ?? colorMode);
+    }
+    if (currentUser?.theme_color) {
+      setThemeColor(currentUser?.theme_color);
     }
   }, [currentUser]);
 
   return (
     <main>
       <Formik enableReinitialize initialValues={initialValues} onSubmit={handleSubmitWithCheck}>
-        {({ values, handleSubmit, dirty }) => {
+        {({ handleSubmit }) => {
           return (
             <main>
               <ProfileForm

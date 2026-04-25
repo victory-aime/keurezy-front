@@ -30,7 +30,7 @@ const getBadgeContent = (
       case 'RENTED':
         return { variant: 'warning', label: t('COMMON.STATUS.RENTED') };
       default:
-        return { variant: 'success', label: t('inconnu') };
+        return { variant: 'primary', label: t('inconnu') };
     }
   } else if (type === 'payment') {
     switch (status) {
@@ -63,7 +63,7 @@ export const BaseBadge: FC<Props> = ({
 
   const { variant: resolvedVariant, label: resolvedLabel } = getBadgeContent(status, type, t);
 
-  const { bg, gradient, hover, textColor } = useVariantStyles(variant, true);
+  const { bg, gradient, hover, textColor } = useVariantStyles(resolvedVariant, variant, true);
 
   const isSubtle = variant === 'subtle';
   const backgroundColor = isSubtle ? hexToRGB(500, 0.2) : (gradient ?? bg ?? 'none');

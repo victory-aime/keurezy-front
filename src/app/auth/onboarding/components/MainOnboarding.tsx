@@ -10,11 +10,11 @@ import { StepUserAccount } from '../components/StepUserAccount';
 import { StepBusiness } from '../components/StepBusiness';
 import { ASSETS } from '_assets/images';
 import { APP_ROUTES } from '_config/routes';
-import { MODELS } from '_types/*';
+import { ENUM, MODELS } from '_types/*';
 import { OnboardFinish } from '../components/FinalStep';
 import { Formik } from 'formik';
 import { useAuth } from '_hooks/useAuth';
-import { AgencyModule } from '_store/state-management';
+import { AgencyModule, CommonModule } from '_store/state-management';
 import { AgencyNameWatcher } from '../../components/AgencyNameWatcher';
 import {
   TOTAL_ONBOARD_STEPS,
@@ -25,10 +25,16 @@ import {
 } from '../constants/onboard';
 import { StorageKey } from '_constants/StorageKeys';
 import { MotionBox } from '_constants/motion';
-import { DASHBOARD_ROUTES } from '../../../dashboard/routes';
 import { useColorMode } from '_components/ui/color-mode';
+import { StepPlanSelection } from './StepPlanSelection';
 
-export const MainOnboarding = () => {
+export const MainOnboarding = ({
+  planId,
+  billingCycle,
+}: {
+  planId?: string;
+  billingCycle?: ENUM.BillingCycle;
+}) => {
   const { colorMode } = useColorMode();
   const navigate = useRouter();
   const [step, setStep] = useState(0);
@@ -40,6 +46,7 @@ export const MainOnboarding = () => {
 
   const { login } = useAuth();
   const { mutateAsync: verifiedAgencyName } = AgencyModule.checkNameMutation({});
+  const { data: allPacks } = CommonModule.getAllPacksQueries({});
 
   const { mutateAsync: createAgency } = AgencyModule.createAgencyMutation({
     mutationOptions: {
@@ -57,6 +64,15 @@ export const MainOnboarding = () => {
     { component: Step2ProductValue, blocking: false },
     { component: StepUserAccount, blocking: true },
     { component: StepBusiness, blocking: true },
+    {
+      component: () => (
+        <StepPlanSelection
+          allPacks={allPacks ?? []}
+          value={{ selectedPlanId: planId!, billingCycle }}
+        />
+      ),
+      blocking: true,
+    },
     { component: OnboardFinish, blocking: false },
   ];
 
@@ -111,16 +127,25 @@ export const MainOnboarding = () => {
       const formData = new FormData();
       const business = formikRef.current.values.business;
       const account = formikRef.current.values.account;
+      const plan = formikRef.current.values.plan;
 
-      formData.append('name', business.name);
-      formData.append('username', account.name);
-      formData.append('userEmail', account.email);
-      formData.append('password', account.password);
-      formData.append('email', business.email);
-      formData.append('description', business.description);
-      formData.append('address', business.address);
-      formData.append('phone', business.phone);
-      formData.append('acceptTerms', String(business.acceptTerms));
+      const payload: MODELS.ICreateAgency = {
+        name: business.name,
+        username: account.name,
+        userEmail: account.email,
+        password: account.password,
+        email: business.email,
+        description: business.description,
+        address: business.address,
+        phone: business.phone,
+        acceptTerms: business.acceptTerms,
+        plan: {
+          planId: plan?.planId,
+          billingCycle: plan?.billingCycle,
+        },
+      };
+
+      formData.append('data', JSON.stringify(payload));
 
       if (business.documents?.length > 0) {
         business.documents.forEach((file: File) => {
@@ -129,7 +154,7 @@ export const MainOnboarding = () => {
       }
 
       await createAgency({
-        payload: formData as MODELS.ICreateAgency,
+        payload: { data: formData as MODELS.ICreateAgency },
       });
 
       // 4️⃣ Aller au step final
@@ -155,8 +180,8 @@ export const MainOnboarding = () => {
       }
     }
 
-    // 🔥 Step 4 (création user et agence)
-    if (step === 3) {
+    // 🔥 Step 5 (création user et agence, et liaision avec le pack)
+    if (step === 4) {
       await completeOnboarding();
       return;
     }
@@ -212,187 +237,189 @@ export const MainOnboarding = () => {
       }}
       onSubmit={() => {}}
     >
-      <Flex direction="column" minH="100vh">
-        <AgencyNameWatcher
-          verifiedAgencyName={verifiedAgencyName}
-          setIsCheckingName={setIsCheckingName}
-          setNameAlreadyExists={setNameAlreadyExists}
-        />
+      {({}) => (
+        <Flex direction="column" minH="100vh">
+          <AgencyNameWatcher
+            verifiedAgencyName={verifiedAgencyName}
+            setIsCheckingName={setIsCheckingName}
+            setNameAlreadyExists={setNameAlreadyExists}
+          />
 
-        {/* Header */}
-        <Box
-          as="header"
-          borderBottom="1px solid"
-          borderColor="border"
-          backdropFilter="blur(8px)"
-          position="sticky"
-          top={0}
-          zIndex={50}
-        >
-          <Flex maxW="6xl" mx="auto" px={4} h="64px" align="center" justify="space-between">
-            <Flex
-              alignItems={'center'}
-              gap={2.5}
-              onClick={() => navigate.push(APP_ROUTES.ROOT)}
-              cursor={'pointer'}
-            >
-              <Image
-                src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
-                alt="logo"
-                width={45}
-                height={45}
-              />
-              <BaseText variant={TextVariant.M}>MyImmo</BaseText>
-            </Flex>
-
-            <HStack gap={4}>
-              <Text fontSize="sm" display={{ base: 'none', sm: 'block' }}>
-                Étape {step + 1} / {TOTAL_ONBOARD_STEPS}
-              </Text>
-              <Box w="128px">
-                <Progress.Root
-                  size={'sm'}
-                  value={progress}
-                  colorPalette={'orange'}
-                  variant={'subtle'}
-                  animated
-                >
-                  <Progress.Track borderRadius={'full'}>
-                    <Progress.Range bgColor={'primary.500'} />
-                  </Progress.Track>
-                </Progress.Root>
-              </Box>
-              {step < 2 && <BaseButton onClick={() => goToStep(2)}>Passer</BaseButton>}
-            </HStack>
-          </Flex>
-        </Box>
-
-        {/* Step indicators */}
-        <Box maxW="6xl" mx="auto" px={4} py={4} w="full">
-          <HStack gap={1.5} justify="center" flexWrap="wrap">
-            {onboardStepLabels.map((label, i) => (
-              <HStack key={i} gap={0}>
-                <MotionBox
-                  whileHover={{ scale: 1.05 }}
-                  onClick={() => goToStep(i)}
-                  cursor={'pointer'}
-                >
-                  <HStack gap={1.5}>
-                    <Flex
-                      align="center"
-                      justify="center"
-                      h="28px"
-                      w="28px"
-                      borderRadius="full"
-                      fontSize="xs"
-                      fontWeight="semibold"
-                      bg={i === step ? 'primary.500' : i < step ? 'tertiary.100' : 'gray.100'}
-                      color={i === step ? 'white' : i < step ? 'tertiary.600' : 'gray.500'}
-                      boxShadow={i === step ? 'md' : 'none'}
-                      transition="all 0.2s"
-                    >
-                      {i < step ? <Icons.Check size={13} /> : i + 1}
-                    </Flex>
-                    <Text
-                      fontSize="xs"
-                      fontWeight="medium"
-                      display={{ base: 'none', md: 'block' }}
-                      color={i === step ? 'primary.500' : i < step ? 'tertiary.500' : 'gray.500'}
-                    >
-                      {label}
-                    </Text>
-                  </HStack>
-                </MotionBox>
-                {i < TOTAL_ONBOARD_STEPS - 1 && (
-                  <Box
-                    w={{ base: '16px', lg: '40px' }}
-                    h="2px"
-                    mx={1}
-                    borderRadius="full"
-                    bg={i < step ? 'tertiary.200' : 'gray.200'}
-                    transition="all 0.3s"
-                  />
-                )}
-              </HStack>
-            ))}
-          </HStack>
-        </Box>
-
-        {/* Content */}
-        <Box flex={1} mx="auto" px={4} py={{ base: 4, md: 6 }} w="full" overflow="hidden">
-          <AnimatePresence mode="wait" custom={direction}>
-            <MotionBox
-              key={step}
-              custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.35, ease: 'easeInOut' }}
-              mt={'30px'}
-            >
-              <CurrentStep />
-            </MotionBox>
-          </AnimatePresence>
-        </Box>
-
-        {/* Footer */}
-        <Box as="footer" borderTop="1px solid" borderColor="inherit" position="sticky" bottom={0}>
-          <Flex maxW="6xl" mx="auto" px={4} h="80px" align="center" justify="space-between">
-            <BaseButton
-              variant="outline"
-              isDisabled={step === TOTAL_ONBOARD_STEPS - 1} // 👈 ajout
-              onClick={() => {
-                if (step === 0) {
-                  navigate.push(APP_ROUTES.ROOT);
-                } else {
-                  prevStep();
-                }
-              }}
-              leftIcon={<Icons.IoIosArrowRoundBack size={16} />}
-            >
-              <Span display={{ base: 'none', sm: 'inline' }}>Précédent</Span>
-            </BaseButton>
-
-            {/* Dot indicators */}
-            <HStack gap={1.5}>
-              {Array.from({ length: TOTAL_ONBOARD_STEPS }).map((_, i) => (
-                <Box
-                  key={i}
-                  h="6px"
-                  w={i === step ? '24px' : '6px'}
-                  borderRadius="full"
-                  bg={i === step ? 'primary.500' : i < step ? 'primary.200' : 'gray.200'}
-                  transition="all 0.3s"
+          {/* Header */}
+          <Box
+            as="header"
+            borderBottom="1px solid"
+            borderColor="border"
+            backdropFilter="blur(8px)"
+            position="sticky"
+            top={0}
+            zIndex={50}
+          >
+            <Flex maxW="6xl" mx="auto" px={4} h="64px" align="center" justify="space-between">
+              <Flex
+                alignItems={'center'}
+                gap={2.5}
+                onClick={() => navigate.push(APP_ROUTES.ROOT)}
+                cursor={'pointer'}
+              >
+                <Image
+                  src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+                  alt="logo"
+                  width={45}
+                  height={45}
                 />
+                <BaseText variant={TextVariant.M}>MyImmo</BaseText>
+              </Flex>
+
+              <HStack gap={4}>
+                <Text fontSize="sm" display={{ base: 'none', sm: 'block' }}>
+                  Étape {step + 1} / {TOTAL_ONBOARD_STEPS}
+                </Text>
+                <Box w="128px">
+                  <Progress.Root
+                    size={'sm'}
+                    value={progress}
+                    colorPalette={'orange'}
+                    variant={'subtle'}
+                    animated
+                  >
+                    <Progress.Track borderRadius={'full'}>
+                      <Progress.Range bgColor={'primary.500'} />
+                    </Progress.Track>
+                  </Progress.Root>
+                </Box>
+                {step < 2 && <BaseButton onClick={() => goToStep(2)}>Passer</BaseButton>}
+              </HStack>
+            </Flex>
+          </Box>
+
+          {/* Step indicators */}
+          <Box maxW="6xl" mx="auto" px={4} py={4} w="full">
+            <HStack gap={1.5} justify="center" flexWrap="wrap">
+              {onboardStepLabels.map((label, i) => (
+                <HStack key={i} gap={0}>
+                  <MotionBox
+                    whileHover={{ scale: 1.05 }}
+                    onClick={() => goToStep(i)}
+                    cursor={'pointer'}
+                  >
+                    <HStack gap={1.5}>
+                      <Flex
+                        align="center"
+                        justify="center"
+                        h="28px"
+                        w="28px"
+                        borderRadius="full"
+                        fontSize="xs"
+                        fontWeight="semibold"
+                        bg={i === step ? 'primary.500' : i < step ? 'tertiary.100' : 'gray.100'}
+                        color={i === step ? 'white' : i < step ? 'tertiary.600' : 'gray.500'}
+                        boxShadow={i === step ? 'md' : 'none'}
+                        transition="all 0.2s"
+                      >
+                        {i < step ? <Icons.Check size={13} /> : i + 1}
+                      </Flex>
+                      <Text
+                        fontSize="xs"
+                        fontWeight="medium"
+                        display={{ base: 'none', md: 'block' }}
+                        color={i === step ? 'primary.500' : i < step ? 'tertiary.500' : 'gray.500'}
+                      >
+                        {label}
+                      </Text>
+                    </HStack>
+                  </MotionBox>
+                  {i < TOTAL_ONBOARD_STEPS - 1 && (
+                    <Box
+                      w={{ base: '16px', lg: '40px' }}
+                      h="2px"
+                      mx={1}
+                      borderRadius="full"
+                      bg={i < step ? 'tertiary.200' : 'gray.200'}
+                      transition="all 0.3s"
+                    />
+                  )}
+                </HStack>
               ))}
             </HStack>
+          </Box>
 
-            <BaseButton
-              onClick={nexStep}
-              isLoading={isLoading}
-              rightIcon={
-                step === TOTAL_ONBOARD_STEPS - 1 ? (
-                  <Icons.Rocket size={16} />
+          {/* Content */}
+          <Box flex={1} mx="auto" px={4} py={{ base: 4, md: 6 }} w="full" overflow="hidden">
+            <AnimatePresence mode="wait" custom={direction}>
+              <MotionBox
+                key={step}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.35, ease: 'easeInOut' }}
+                mt={'30px'}
+              >
+                <CurrentStep />
+              </MotionBox>
+            </AnimatePresence>
+          </Box>
+
+          {/* Footer */}
+          <Box as="footer" borderTop="1px solid" borderColor="inherit" position="sticky" bottom={0}>
+            <Flex maxW="6xl" mx="auto" px={4} h="80px" align="center" justify="space-between">
+              <BaseButton
+                variant="outline"
+                isDisabled={step === TOTAL_ONBOARD_STEPS - 1} // 👈 ajout
+                onClick={() => {
+                  if (step === 0) {
+                    navigate.push(APP_ROUTES.ROOT);
+                  } else {
+                    prevStep();
+                  }
+                }}
+                leftIcon={<Icons.IoIosArrowRoundBack size={16} />}
+              >
+                <Span display={{ base: 'none', sm: 'inline' }}>Précédent</Span>
+              </BaseButton>
+
+              {/* Dot indicators */}
+              <HStack gap={1.5}>
+                {Array.from({ length: TOTAL_ONBOARD_STEPS }).map((_, i) => (
+                  <Box
+                    key={i}
+                    h="6px"
+                    w={i === step ? '24px' : '6px'}
+                    borderRadius="full"
+                    bg={i === step ? 'primary.500' : i < step ? 'primary.200' : 'gray.200'}
+                    transition="all 0.3s"
+                  />
+                ))}
+              </HStack>
+
+              <BaseButton
+                onClick={nexStep}
+                isLoading={isLoading}
+                rightIcon={
+                  step === TOTAL_ONBOARD_STEPS - 1 ? (
+                    <Icons.Rocket size={16} />
+                  ) : (
+                    <Icons.ArrowRight size={16} />
+                  )
+                }
+              >
+                {step === TOTAL_ONBOARD_STEPS - 1 ? (
+                  'Launch My Dashboard'
+                ) : step === 1 ? (
+                  'Continue Setup'
                 ) : (
-                  <Icons.ArrowRight size={16} />
-                )
-              }
-            >
-              {step === TOTAL_ONBOARD_STEPS - 1 ? (
-                'Launch My Dashboard'
-              ) : step === 1 ? (
-                'Continue Setup'
-              ) : (
-                <Span display={{ base: 'none', sm: 'inline' }}>
-                  {step === 3 ? 'Valider' : 'Suivant'}
-                </Span>
-              )}
-            </BaseButton>
-          </Flex>
-        </Box>
-        <FloatSwitchColorMode />
-      </Flex>
+                  <Span display={{ base: 'none', sm: 'inline' }}>
+                    {step === 3 ? 'Valider' : 'Suivant'}
+                  </Span>
+                )}
+              </BaseButton>
+            </Flex>
+          </Box>
+          <FloatSwitchColorMode />
+        </Flex>
+      )}
     </Formik>
   );
 };

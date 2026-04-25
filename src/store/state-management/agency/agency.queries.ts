@@ -23,10 +23,10 @@ const getAgencySubscriptionInfo = (args: QUERIES.QueryPayload<{ agencyId: string
   });
 };
 
-const createAgencyMutation = (args: QUERIES.MutationPayload<MODELS.ICreateAgency>) => {
+const createAgencyMutation = (args: QUERIES.MutationPayload<{ data: MODELS.ICreateAgency }>) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.AGENCY_KEYS.CREATE_AGENCY],
-    mutationFn: ({ payload }) => agencyServiceInstance().create_agency(payload!),
+    mutationFn: ({ payload }) => agencyServiceInstance().create_agency(payload?.data!),
     options: args.mutationOptions,
   });
 };

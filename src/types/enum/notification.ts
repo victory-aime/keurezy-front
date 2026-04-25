@@ -1,7 +1,0 @@
-export enum NotificationType {
-  REQUEST = 'REQUEST',
-  MESSAGE = 'MESSAGE',
-  PAYMENT = 'PAYMENT',
-  MAINTENANCE = 'MAINTENANCE',
-  SYSTEM = 'SYSTEM',
-}

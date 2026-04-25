@@ -1,0 +1,3 @@
+export enum COMMON_KEYS {
+  GET_ALL_PACKS = 'GET_ALL_PACKS',
+}
