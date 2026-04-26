@@ -3,12 +3,12 @@ import { teamServiceInstance } from './team.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
-const getAllTeamByAgency = (args: QUERIES.QueryPayload<{ agencyId: string }>) => {
+const getAllTeamByAgency = (args: QUERIES.QueryPayload<{ agencyId: string, userId :string}>) => {
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<MODELS.ITeam[]>({
     queryKey: [Constants.TEAM_KEYS.ALL_TEAMS],
-    queryFn: () => teamServiceInstance().getAllTeamByAgency(params?.agencyId),
+    queryFn: () => teamServiceInstance().getAllTeamByAgency(params?.agencyId,params?.userId),
     options: queryOptions,
   });
 };

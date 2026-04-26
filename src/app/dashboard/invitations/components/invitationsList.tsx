@@ -23,15 +23,19 @@ export const InvitationsList = () => {
   const [open, setOpen] = useState(false);
   const [selectedInvitation, setSelectedInvitation] = useState<string | null>(null);
 
+  const agencyId = user?.agencyId;
+  const userId = user?.ownerId ?? user?.staffId;
+
   const {
     data: allInvitations,
     isLoading: isInvitationLoad,
     refetch: refetchAllInvitations,
   } = InvitationModule.getAllInvitationByAgency({
     params: {
-      agencyId: user?.agencyId,
+      agencyId,
+      userId,
     },
-    queryOptions: { enabled: !!user?.agencyId },
+    queryOptions: { enabled: !!agencyId && !!userId },
   });
 
   const { mutateAsync: cancelInvitation, isPending: cancelLoading } =
@@ -122,7 +126,7 @@ export const InvitationsList = () => {
         isOpen={open}
         isLoading={cancelLoading}
         callback={async () => {
-          await cancelInvitation({ params: { inviteId: selectedInvitation! } });
+          await cancelInvitation({ params: { inviteId: selectedInvitation!, agencyId, userId } });
         }}
         ignoreFooter={false}
       >

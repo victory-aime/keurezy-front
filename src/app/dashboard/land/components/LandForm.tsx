@@ -5,27 +5,26 @@ import { useEffect, useState } from 'react';
 import { CONSTANTS, ENUM, MODELS, VALIDATION } from '_types/*';
 import { useRouter } from 'next/navigation';
 import { DASHBOARD_ROUTES } from '../../routes';
-import { UserModule, LandModule } from '_store/state-management';
+import { LandModule } from '_store/state-management';
 import { findDynamicIdInList } from 'rise-core-frontend';
 import { LandFormInner } from './LandFormInner';
+import { useUserContext } from '_context/user-context';
 
 export const LandForm = ({ landId }: { landId: string }) => {
+  const { user } = useUserContext();
   const router = useRouter();
   const [documentsURL, setDocumentsURL] = useState<string[]>([]);
   const [initialValues, setInitialValues] = useState<MODELS.CreateLandDto>({
     paymentType: [ENUM.LandPaymentType.CASH] as any,
   });
 
-  const { data: currentUser } = UserModule.getUserInfo({
-    queryOptions: {
-      enabled: false,
-    },
-  });
-  const agencyId = currentUser?.agencyId;
+  const agencyId = user?.agencyId;
+  const userId = user?.ownerId ?? user?.staffId;
 
   const { data: allLands, isLoading: isAllLandsLoad } = LandModule.getAllLandsByAgencyQueries({
     params: {
       agencyId,
+      userId,
       initialPage: CONSTANTS.PAGINATION.INIT,
       limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
     },
@@ -65,6 +64,7 @@ export const LandForm = ({ landId }: { landId: string }) => {
       landOwner: data.landOwner ?? null,
       status: data.status?.[0],
       agencyId,
+      userId,
     };
 
     formData.append('data', JSON.stringify(payload));

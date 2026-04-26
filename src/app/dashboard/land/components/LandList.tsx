@@ -37,17 +37,19 @@ export const LandList = () => {
   const [filterValues, setFilterValues] = useState<MODELS.ILandFilter | null>(null);
 
   const agencyId = currentUser?.agencyId;
+  const userId = currentUser?.ownerId ?? currentUser?.staffId;
 
   const queryPayload = useMemo(
     () => ({
       params: {
         ...filterValues,
         agencyId,
+        userId,
         initialPage: currentPage,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
       queryOptions: {
-        enabled: !!agencyId,
+        enabled: !!agencyId && !!userId,
       },
     }),
     [filterValues, currentPage, agencyId],

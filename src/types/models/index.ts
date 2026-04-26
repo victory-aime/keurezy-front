@@ -3,7 +3,7 @@ export * from './users';
 export * from './property';
 export * from './agency';
 export * from './contact';
-export * from './applications';
+export * from './leads';
 export * from './auth';
 export * from './rental-agreement';
 export * from './chat';

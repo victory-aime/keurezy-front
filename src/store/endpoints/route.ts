@@ -6,7 +6,7 @@ const APIS_ROUTES_MODULES_PATH = {
   AGENCY: '/agency',
   PROPERTY: '/property',
   CONTACT: '/contact',
-  APPLICATION: '/application',
+  LEADS: '/leads',
   RENTAL_AGREEMENT: '/rental-agreement',
   CHAT: '/chat',
   NOTIFICATION: '/notif',
@@ -177,20 +177,30 @@ export const APIS = (baseUrl?: string) => {
         showResponse: false,
       }),
     },
-    APPLICATION: {
+    LEADS: {
       CREATE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.APPLICATION}/create`,
+        path: `${APIS_ROUTES_MODULES_PATH.LEADS}/create`,
         method: 'POST',
         pathBase: 'SECURED_API',
       }),
-      AGENCY_APPLICATION_LIST: api({
-        path: `${APIS_ROUTES_MODULES_PATH.APPLICATION}/agency-application-list`,
+      ASSIGN: api({
+        path: `${APIS_ROUTES_MODULES_PATH.LEADS}/assign`,
+        method: 'PATCH',
+        pathBase: 'SECURED_API',
+      }),
+      DELETE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.LEADS}/delete`,
+        method: 'DELETE',
+        pathBase: 'SECURED_API',
+      }),
+      AGENCY_LEADS_LIST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.LEADS}/agency-leads`,
         method: 'GET',
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
-      USER_APPLICATION_LIST: api({
-        path: `${APIS_ROUTES_MODULES_PATH.APPLICATION}/user-application-list`,
+      USER_LEADS_LIST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.LEADS}/user-leads-list`,
         method: 'GET',
         pathBase: 'SECURED_API',
         showResponse: false,

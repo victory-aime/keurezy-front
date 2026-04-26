@@ -2,11 +2,11 @@ import { BaseApi } from 'rise-core-frontend';
 import { MODELS } from '_types/*';
 
 export class AnnoncesService extends BaseApi {
-  get_annonces_by_agency(agencyId: string) {
+  get_annonces_by_agency(agencyId: string, userId: string) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().ANNONCES.FIND_BY_AGENCY,
       {},
-      { params: { agencyId } },
+      { params: { agencyId, userId } },
     );
   }
 

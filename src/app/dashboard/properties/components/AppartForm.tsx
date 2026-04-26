@@ -9,53 +9,48 @@ import {
   Icons,
 } from '_components/custom';
 import { Flex, HStack, VStack } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { MODELS, CONSTANTS, VALIDATION } from '_types/';
 import { FormCard } from '../../components/FormCard';
 import { FormContainer } from '../../components/FormContainer';
 import { useRouter } from 'next/navigation';
-import { BuildingModule, PropertyModule, UserModule } from '_store/state-management';
+import { BuildingModule, PropertyModule } from '_store/state-management';
 import { findDynamicIdInList } from 'rise-core-frontend';
 import { cityList } from '_constants/city';
 import { DASHBOARD_ROUTES } from '../../routes';
 import { getBuildingsList, propertyStatusList, propertyTypes } from '../constants/properties';
+import { useUserContext } from '_context/user-context';
 
 export const PropertyForm = ({ appartId }: { appartId: string }) => {
+  const { user } = useUserContext();
   const router = useRouter();
   const [initialValues, setInitialValues] = useState<MODELS.ICreateProperty>(
     {} as MODELS.ICreateProperty,
   );
 
-  const { data: user } = UserModule.getUserInfo({
-    queryOptions: {
-      enabled: false,
-    },
-  });
-
   const agencyId = user?.agencyId;
+  const userId = user?.ownerId ?? user?.staffId;
 
-  const { data: allProperties, isLoading: fetchLoading } = PropertyModule.getAllPropertiesByAgency({
-    params: {
-      agencyId,
-      initialPage: CONSTANTS.PAGINATION.INIT,
-      limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
-    },
-    queryOptions: {
-      enabled: !!agencyId,
-    },
-  });
-
-  const { data: allBuildings, isLoading: isAllBuildingsLoad } =
-    BuildingModule.getAllBuildingByAgencyQueries({
+  const queryPayload = useMemo(
+    () => ({
       params: {
         agencyId,
+        userId,
         initialPage: CONSTANTS.PAGINATION.INIT,
         limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
       },
       queryOptions: {
-        enabled: !!agencyId,
+        enabled: !!agencyId && !!userId,
       },
-    });
+    }),
+    [agencyId, userId],
+  );
+
+  const { data: allProperties, isLoading: fetchLoading } =
+    PropertyModule.getAllPropertiesByAgency(queryPayload);
+
+  const { data: allBuildings, isLoading: isAllBuildingsLoad } =
+    BuildingModule.getAllBuildingByAgencyQueries(queryPayload);
 
   const { mutateAsync: createProperty, isPending: createPending } =
     PropertyModule.createPropertyMutation({
@@ -106,6 +101,7 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
     const request: MODELS.ICreateProperty = {
       ...rest,
       agencyId: agencyId!,
+      userId: userId!,
       batimentId: hasBatiment ? values.batimentId?.[0] : null,
       type: values.type?.[0],
       city: values.city?.[0],

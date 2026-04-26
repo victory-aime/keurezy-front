@@ -3,55 +3,55 @@ import { BaseStats, Icons } from '_components/custom';
 import { MODELS, ENUM } from '_types/*';
 import { useMemo } from 'react';
 
-export const ApplicationStatsCard = ({
-  agencyApplicationList,
+export const LeadsStatsCard = ({
+  agencyLeadsList,
   isLoading,
 }: {
-  agencyApplicationList: MODELS.IApplicationAgencyListResponse;
+  agencyLeadsList: MODELS.ILeadsAgency[];
   isLoading?: boolean;
 }) => {
   const {
-    allAgencyApplication,
-    pendingAgencyApplication,
-    rejectedAgencyApplication,
-    acceptedAgencyApplication,
+    allAgencyLeads,
+    pendingAgencyLeads,
+    rejectedAgencyLeads,
+    acceptedAgencyLeads,
   } = useMemo(() => {
     return {
-      allAgencyApplication: agencyApplicationList?.totalItems,
-      pendingAgencyApplication: agencyApplicationList?.content?.filter(
+      allAgencyLeads: agencyLeadsList?.length,
+      pendingAgencyLeads: agencyLeadsList?.filter(
         (p) => p.status === ENUM.COMMON.Status.PENDING,
       ).length,
-      acceptedAgencyApplication: agencyApplicationList?.content?.filter(
+      acceptedAgencyLeads: agencyLeadsList?.filter(
         (p) => p.status === ENUM.COMMON.Status.ACCEPTED,
       ).length,
-      rejectedAgencyApplication: agencyApplicationList?.content?.filter(
+      rejectedAgencyLeads: agencyLeadsList?.filter(
         (p) => p.status === ENUM.COMMON.Status.REJECTED,
       ).length,
     };
-  }, [agencyApplicationList]);
+  }, [agencyLeadsList]);
 
   const stats = [
     {
       label: 'Total',
-      value: allAgencyApplication,
+      value: allAgencyLeads,
       icon: <Icons.Clipboard />,
       iconBgColor: 'primary.500',
     },
     {
       label: 'En attente',
-      value: pendingAgencyApplication,
+      value: pendingAgencyLeads,
       icon: <Icons.Timer />,
       iconBgColor: 'warning.500',
     },
     {
       label: 'Acceptées',
-      value: acceptedAgencyApplication,
+      value: acceptedAgencyLeads,
       icon: <Icons.Check />,
       iconBgColor: 'tertiary.500',
     },
     {
       label: 'Rejetées',
-      value: rejectedAgencyApplication,
+      value: rejectedAgencyLeads,
       icon: <Icons.Close />,
       iconBgColor: 'red.500',
     },

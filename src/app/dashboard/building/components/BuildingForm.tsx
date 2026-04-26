@@ -5,43 +5,41 @@ import { useEffect, useState } from 'react';
 import { CONSTANTS, MODELS, VALIDATION } from '_types/*';
 import { useRouter } from 'next/navigation';
 import { DASHBOARD_ROUTES } from '../../routes';
-import { UserModule, BuildingModule, LandModule } from '_store/state-management';
+import { BuildingModule, LandModule } from '_store/state-management';
 import { findDynamicIdInList } from 'rise-core-frontend';
 import { BuildingFormInner } from './BuildingFromInner';
+import { useUserContext } from '_context/user-context';
 
 export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
+  const { user } = useUserContext();
   const router = useRouter();
   const [documentsURL, setDocumentsURL] = useState<string[]>([]);
   const [initialValues, setInitialValues] = useState<MODELS.CreateBuildingDto>({
     floors: 1,
   });
 
-  const { data: currentUser } = UserModule.getUserInfo({
-    queryOptions: {
-      enabled: false,
-    },
-  });
-  const agencyId = currentUser?.agencyId;
+  const agencyId = user?.agencyId;
+  const userId = user?.ownerId ?? user?.staffId;
 
   const { data: allBuildings, isLoading: isAllBuildingLoad } =
     BuildingModule.getAllBuildingByAgencyQueries({
       params: {
         agencyId,
-
+        userId,
         initialPage: CONSTANTS.PAGINATION.INIT,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
-      queryOptions: { enabled: !!buildingId && !!agencyId },
+      queryOptions: { enabled: !!agencyId && !!userId },
     });
 
   const { data: allLands, isLoading: isAllLandLoad } = LandModule.getAllLandsByAgencyQueries({
     params: {
       agencyId,
-
+      userId,
       initialPage: CONSTANTS.PAGINATION.INIT,
       limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
     },
-    queryOptions: { enabled: !!agencyId },
+    queryOptions: { enabled: !!agencyId && !!userId },
   });
 
   const { mutateAsync: createBuilding, isPending: isCreateBuilding } =
@@ -77,6 +75,7 @@ export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
       status: data.status?.[0],
       floors: data.floors,
       agencyId,
+      userId,
       landId: data.landId?.[0] ?? null,
     };
 

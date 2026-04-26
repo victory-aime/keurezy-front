@@ -4,6 +4,7 @@ export type InvitationVerificationState = 'loading' | 'success' | 'ERR_BAD_REQUE
 
 export interface ICreateInvitation {
   adminId: string;
+  userId: string | null;
   agencyId: string;
   payload: {
     name: string;

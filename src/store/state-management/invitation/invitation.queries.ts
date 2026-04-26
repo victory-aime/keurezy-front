@@ -3,12 +3,15 @@ import { invitationServiceInstance } from './invitation.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
-const getAllInvitationByAgency = (args: QUERIES.QueryPayload<{ agencyId: string }>) => {
+const getAllInvitationByAgency = (
+  args: QUERIES.QueryPayload<{ agencyId: string; userId: string }>,
+) => {
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<any[]>({
     queryKey: [Constants.INVITE_KEYS.INVITATION_AGENCY_LIST],
-    queryFn: () => invitationServiceInstance().getAllInvitationsByAgency(params?.agencyId),
+    queryFn: () =>
+      invitationServiceInstance().getAllInvitationsByAgency(params?.agencyId, params?.userId),
     options: queryOptions,
   });
 };
@@ -29,10 +32,17 @@ const acceptInvitationMutation = (args: QUERIES.MutationPayload<{ token: string 
   });
 };
 
-const cancelInvitationMutation = (args: QUERIES.MutationPayload<{ inviteId: string }>) => {
+const cancelInvitationMutation = (
+  args: QUERIES.MutationPayload<{ inviteId: string; agencyId: string; userId: string }>,
+) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.INVITE_KEYS.CANCEL_INVITATION],
-    mutationFn: ({ params }) => invitationServiceInstance().cancelInvitation(params!.inviteId),
+    mutationFn: ({ params }) =>
+      invitationServiceInstance().cancelInvitation(
+        params!.inviteId,
+        params?.agencyId,
+        params?.userId,
+      ),
     options: args.mutationOptions,
   });
 };

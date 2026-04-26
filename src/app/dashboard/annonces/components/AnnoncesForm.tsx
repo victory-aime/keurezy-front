@@ -18,15 +18,18 @@ export const AnnonceForm = ({ annonceId }: { annonceId: string }) => {
   const [galleryImagesUrl, setGalleryImagesUrl] = useState<string[]>([]);
   const [initialValues, setInitialValues] = useState<MODELS.ICreateAnnonce>({});
   const agencyId = user?.agencyId;
+  const userId = user?.ownerId ?? user?.staffId;
 
   const { data: allProperties } = PropertyModule.getAllPropertiesByAgency({
-    params: { agencyId },
-    queryOptions: { enabled: !!agencyId && hasPermission(AppPermissions.PROPERTIES.VIEW) },
+    params: { agencyId, userId },
+    queryOptions: {
+      enabled: !!agencyId && !!userId && hasPermission(AppPermissions.PROPERTIES.VIEW),
+    },
   });
 
   const { data: allAnnonces } = AnnonceModule.getAllAnnoncesByAgency({
-    params: { agencyId },
-    queryOptions: { enabled: !!agencyId },
+    params: { agencyId, userId },
+    queryOptions: { enabled: !!agencyId && !!userId },
   });
 
   const { mutateAsync: createAnnonce, isPending: isCreatePending } =
@@ -60,6 +63,7 @@ export const AnnonceForm = ({ annonceId }: { annonceId: string }) => {
       status: data.status?.[0],
       propertyId: data.propertyId?.[0],
       agencyId,
+      userId,
     };
 
     formData.append('data', JSON.stringify(payload));

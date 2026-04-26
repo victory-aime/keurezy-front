@@ -26,14 +26,15 @@ export const AnnoncesList = () => {
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openDetails, setOpenDetails] = useState<boolean>(false);
   const agencyId = user?.agencyId;
+  const userId = user?.ownerId ?? user?.staffId;
 
   const {
     data: allAnnonces,
     isLoading: isAnnonceLoad,
     refetch: reloadAnnonceList,
   } = AnnonceModule.getAllAnnoncesByAgency({
-    params: { agencyId },
-    queryOptions: { enabled: !!agencyId },
+    params: { agencyId, userId },
+    queryOptions: { enabled: !!agencyId && !!userId },
   });
 
   const { mutateAsync: deleteAnnonce, isPending: isDeletePending } =

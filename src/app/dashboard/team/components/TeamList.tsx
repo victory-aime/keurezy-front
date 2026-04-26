@@ -18,16 +18,20 @@ export const TeamList = () => {
   const [selectedValues, setSelectedValues] = useState<MODELS.ITeam | null>(null);
   const [openDetails, setOpenDetails] = useState(false);
 
+  const agencyId = user?.agencyId;
+  const userId = user?.ownerId ?? user?.staffId;
+
   const {
     data: teamList,
     isLoading: isTeamLoading,
     refetch: reloadTeamList,
   } = TeamModule.getAllTeamByAgency({
     params: {
-      agencyId: user?.agencyId,
+      agencyId,
+      userId,
     },
     queryOptions: {
-      enabled: !!user?.agencyId,
+      enabled: !!agencyId && !!userId,
     },
   });
 

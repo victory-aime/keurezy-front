@@ -29,20 +29,22 @@ export const PropertyList = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const agencyId = user?.agencyId;
+  const userId = user?.ownerId ?? user?.staffId;
 
   const queryPayload = useMemo(
     () => ({
       params: {
         ...filterValues,
         agencyId,
+        userId,
         initialPage: currentPage,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
       queryOptions: {
-        enabled: !!agencyId,
+        enabled: !!agencyId && !!userId,
       },
     }),
-    [filterValues, currentPage, agencyId],
+    [filterValues, currentPage, agencyId, userId],
   );
 
   const {
@@ -54,10 +56,11 @@ export const PropertyList = () => {
   const { data: allBuildings } = BuildingModule.getAllBuildingByAgencyQueries({
     params: {
       agencyId,
+      userId,
       limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
     },
     queryOptions: {
-      enabled: !!agencyId,
+      enabled: !!agencyId && !!userId,
     },
   });
 

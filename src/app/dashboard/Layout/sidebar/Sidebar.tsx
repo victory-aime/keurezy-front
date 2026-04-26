@@ -12,6 +12,7 @@ import {
   TeamModule,
   InvitationModule,
   LandModule,
+  LeadsModule,
 } from '_store/state-management';
 import { ALL_CSA_ROUTES } from './routes/routes';
 import { RenderGroupedLinks } from './components/RenderGroupedLinks';
@@ -41,23 +42,25 @@ export const Sidebar = ({
   const { hasPermission } = usePermissions();
   const { canAccess, isLoading: accessControlLoading } = useAccessControl();
   const agencyId = user?.agencyId;
+  const userId = user?.ownerId ?? user?.staffId;
 
   const queryPayload = useMemo(
     () => ({
       params: {
         agencyId,
+        userId,
       },
       queryOptions: {
-        enabled: !!agencyId,
+        enabled: !!agencyId && !!userId,
       },
     }),
     [agencyId],
   );
 
   const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
-    params: { agencyId },
+    params: { agencyId, userId },
     queryOptions: {
-      enabled: !!agencyId && hasPermission(AppPermissions.PROPERTIES.VIEW),
+      enabled: !!agencyId && !!userId && hasPermission(AppPermissions.PROPERTIES.VIEW),
     },
   });
 
@@ -69,6 +72,8 @@ export const Sidebar = ({
 
   const { data: invitationList } = InvitationModule.getAllInvitationByAgency(queryPayload);
 
+  const { data: leadsList } = LeadsModule.agencyLeadsListQueries(queryPayload);
+
   const badgesByPath = useMemo(() => {
     return {
       [DASHBOARD_ROUTES.LAND.LIST]: allLandsList?.totalItems,
@@ -76,6 +81,7 @@ export const Sidebar = ({
       [DASHBOARD_ROUTES.PROPERTIES.LIST]: propertyList?.totalItems,
       [DASHBOARD_ROUTES.TEAM.LIST]: teamList?.length,
       [DASHBOARD_ROUTES.INVITATIONS.LIST]: invitationList?.length,
+      [DASHBOARD_ROUTES.LEADS]: leadsList?.length,
     };
   }, [
     propertyList?.totalItems,
@@ -83,6 +89,7 @@ export const Sidebar = ({
     allLandsList?.totalItems,
     teamList?.length,
     invitationList?.length,
+    leadsList?.length,
   ]);
 
   const sidebarLinks = useMemo(() => {

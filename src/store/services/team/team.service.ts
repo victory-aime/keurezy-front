@@ -2,11 +2,11 @@ import { MODELS } from '_types/*';
 import { BaseApi } from 'rise-core-frontend';
 
 export class TeamService extends BaseApi {
-  getAllTeamByAgency(agencyId: string) {
+  getAllTeamByAgency(agencyId: string, userId: string) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().TEAM.ALL_TEAMS,
       {},
-      { params: { agencyId } },
+      { params: { agencyId, userId } },
     );
   }
 

@@ -9,7 +9,7 @@ export const BaseFormatNumber: FC<BaseFormatNumberProps> = ({
   value,
   notation = 'standard',
   style = 'decimal',
-  currencyCode,
+  currencyCode = ENUM.COMMON.Currency.XAF,
   maximumDigits,
   minimumDigits,
 }) => {
@@ -46,7 +46,7 @@ export const BaseFormatNumber: FC<BaseFormatNumberProps> = ({
             maximumFractionDigits={style === 'percent' ? maximumDigits : 0}
             minimumFractionDigits={style === 'percent' ? minimumDigits : 0}
           />{' '}
-          {currencyCode}
+          {style === 'percent' ? null : currencyCode}
         </>
       )}
     </>

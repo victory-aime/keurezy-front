@@ -18,6 +18,7 @@ const STATUS_META = {
   CURRENTLY_ON_SALE: 'info',
   SOLD: 'warning',
   EXPIRED: 'info',
+  NEW: 'info',
 } as const satisfies Partial<Record<ENUM.COMMON.Status, variantColorType>>;
 
 const VARIANT_CONFIG: Partial<Record<variantColorType, { colorPalette: ColorPalette }>> = {
@@ -38,6 +39,7 @@ const STATUS_ICONS: Partial<Record<ENUM.COMMON.Status, React.ElementType>> = {
   SOLD: Icons.Payment,
   CANCELLED: Icons.Close,
   EXPIRED: Icons.Timer,
+  NEW: Icons.Bell,
 };
 
 export { STATUS_ICONS, STATUS_META, VARIANT_CONFIG };

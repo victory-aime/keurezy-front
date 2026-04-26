@@ -4,12 +4,12 @@ import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 import { IAnnonceResponse } from '../../../types/models';
 
-const getAllAnnoncesByAgency = (args: QUERIES.QueryPayload<{ agencyId: string }>) => {
+const getAllAnnoncesByAgency = (args: QUERIES.QueryPayload<{ agencyId: string, userId:string }>) => {
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<IAnnonceResponse[]>({
     queryKey: [Constants.ANNONCES_KEY.ANNONCES_LIST_BY_AGENCY],
-    queryFn: () => annoncesServiceInstance().get_annonces_by_agency(params?.agencyId),
+    queryFn: () => annoncesServiceInstance().get_annonces_by_agency(params?.agencyId, params?.userId),
     options: queryOptions,
   });
 };

@@ -37,17 +37,19 @@ export const BuildingList = () => {
   const [filterValues, setFilterValues] = useState<MODELS.IBuildingFilter | null>(null);
 
   const agencyId = currentUser?.agencyId;
+  const userId = currentUser?.ownerId ?? currentUser?.staffId;
 
   const queryPayload = useMemo(
     () => ({
       params: {
         ...filterValues,
         agencyId,
+        userId,
         initialPage: currentPage,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
       queryOptions: {
-        enabled: !!agencyId,
+        enabled: !!agencyId && !!userId,
       },
     }),
     [filterValues, currentPage, agencyId],
@@ -58,17 +60,6 @@ export const BuildingList = () => {
     isLoading: isBuildingLoad,
     refetch: reloadBuildingList,
   } = BuildingModule.getAllBuildingByAgencyQueries(queryPayload);
-
-  const { data: allLands } = LandModule.getAllLandsByAgencyQueries({
-    params: {
-      agencyId,
-      initialPage: currentPage,
-      limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
-    },
-    queryOptions: {
-      enabled: !!agencyId,
-    },
-  });
 
   const { mutateAsync: deleteBuilding, isPending: isDeletePending } =
     BuildingModule.deleteBuildingMutation({
@@ -88,7 +79,7 @@ export const BuildingList = () => {
       cell: (value) => (
         <VStack alignItems={'flex-start'} gap={0}>
           <BaseText>{value?.floors} étages</BaseText>
-          <BaseText fontSize={'xs'}>{value?.nombre_appartements ?? 0} apparts</BaseText>
+          <BaseText fontSize={'xs'}>{value?.properties.length ?? 0} apparts</BaseText>
         </VStack>
       ),
     },

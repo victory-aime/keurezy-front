@@ -23,20 +23,22 @@ import { APP_ROUTES } from '_config/routes';
 import { authClient } from '../../../lib/auth-client';
 import { useGlobalLoader } from '_context/loaderContext';
 import { DocumentPreviewModal } from './DocumentPreviewModal';
+import { useUserContext } from '_context/user-context';
 
 export const AgencyInfo = () => {
+  const { user } = useUserContext();
+  const { showLoader, hideLoader } = useGlobalLoader();
+  const router = useRouter();
+
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [closeAgencyOpen, setCloseAgencyOpen] = useState(false);
-  const router = useRouter();
-  const { showLoader, hideLoader } = useGlobalLoader();
+
   const [initialAgencyValues, setInitialAgencyValues] = useState<MODELS.IAgency>(
     {} as MODELS.IAgency,
   );
-
-  const { data: user } = UserModule.getUserInfo({
-    queryOptions: { enabled: false },
-  });
+  const agencyId = user?.agencyId;
+  const userId = user?.ownerId ?? user?.staffId;
 
   const {
     data: agency,
@@ -44,10 +46,11 @@ export const AgencyInfo = () => {
     refetch: refetchAgencyInfo,
   } = AgencyModule.getAgencyInfo({
     params: {
-      agencyId: user?.agencyId,
+      agencyId,
+      userId,
     },
     queryOptions: {
-      enabled: true,
+      enabled: !!agencyId && !!userId,
     },
   });
 

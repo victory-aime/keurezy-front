@@ -87,6 +87,13 @@ const ACTION_CONFIG = {
     color: 'white',
     aria: 'Publish',
   },
+  assign: {
+    tooltip: 'COMMON.ASSIGN',
+    icon: Icons.Assignment,
+    bg: 'yellow',
+    color: 'white',
+    aria: 'assign',
+  },
 } as const;
 
 export const DataTableActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {

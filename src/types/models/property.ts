@@ -14,6 +14,7 @@ interface ICreateProperty {
   status?: COMMON.Status;
   documents?: string[];
   agencyId?: string;
+  userId?: string;
   batimentId?: string;
   hasBatiment?: boolean;
 }

@@ -43,11 +43,18 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     icon: Icons.FolderOpen,
     links: [
       {
+        label: 'Demandes',
+        path: DASHBOARD_ROUTES.LEADS,
+        icon: Icons.Clipboard,
+        badge: 5,
+      },
+      {
         label: 'Invitations',
         path: DASHBOARD_ROUTES.INVITATIONS.LIST,
         icon: Icons.SendMail,
         badge: 5,
       },
+
       {
         label: 'Equipe',
         path: DASHBOARD_ROUTES.TEAM.LIST,

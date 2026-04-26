@@ -1,7 +1,7 @@
 import { VStack, Flex, HStack, Span } from '@chakra-ui/react';
 import { BaseText } from '_components/custom';
 
-export const ApplicationModalSection = ({
+export const LeadsModalSection = ({
   icon,
   title,
   children,
@@ -19,7 +19,7 @@ export const ApplicationModalSection = ({
   </VStack>
 );
 
-export const ApplicationInfoItem = ({
+export const LeadsInfoItem = ({
   icon,
   label,
   value,
