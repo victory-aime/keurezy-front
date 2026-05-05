@@ -1,6 +1,6 @@
 import * as Constants from './constants';
 import { leadsServiceInstance } from './leads.service-instance';
-import {  MODELS } from '_types/index';
+import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
 const agencyLeadsListQueries = (args: QUERIES.QueryPayload<MODELS.IAgencyFilters>) => {
@@ -12,13 +12,13 @@ const agencyLeadsListQueries = (args: QUERIES.QueryPayload<MODELS.IAgencyFilters
   });
 };
 
-const assignAgentLeadsMutation=(args:QUERIES.MutationPayload<MODELS.IAssignAgentLeads>)=> {
+const assignAgentLeadsMutation = (args: QUERIES.MutationPayload<MODELS.IAssignAgentLeads>) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.LEAD_KEYS.ASSIGN_LEADS],
-    mutationFn:({payload})=> leadsServiceInstance().assignLeads(payload!),
-    options:args.mutationOptions
-  })
-}
+    mutationFn: ({ payload }) => leadsServiceInstance().assignLeads(payload!),
+    options: args.mutationOptions,
+  });
+};
 
 const userLeadsListQueries = (args: QUERIES.QueryPayload<{ userId: string }>) => {
   const { params } = args;

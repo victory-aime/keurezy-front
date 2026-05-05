@@ -5,7 +5,7 @@ export const TopBarMockup = ({
   border,
   muted,
   notifications = false,
-  link = 'app.myimmo.com/dashboard',
+  link = 'app.keurezy.com/dashboard',
 }: any) => {
   return (
     <Flex

@@ -163,8 +163,7 @@ export const Sidebar = ({
         >
           <Flex
             align="center"
-            justifyContent={!sideToggled ? 'center' : 'flex-start'}
-            gap={3}
+            justifyContent={'center'}
             px={3}
             py={2}
             borderBottom="1px solid"
@@ -173,25 +172,9 @@ export const Sidebar = ({
             <Image
               src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
               alt="logo"
-              width={45}
-              height={45}
+              width={200}
+              height={200}
             />
-
-            {sideToggled && (
-              <MotionBox
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{
-                  duration: 0.3,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              >
-                <BaseText fontSize="sm" fontWeight="medium">
-                  MyImmo
-                </BaseText>
-              </MotionBox>
-            )}
           </Flex>
 
           {/* LINKS */}

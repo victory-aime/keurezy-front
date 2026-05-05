@@ -100,6 +100,8 @@ const FormTextInput = ({
               </>
             ) : isCurrency && currency !== ENUM.COMMON.Currency.USD ? (
               currency
+            ) : isVerified && !isError ? (
+              <Spinner size={'xs'} color={'primary.500'} />
             ) : (
               rightAccessory && (
                 <Flex alignItems={'flex-end'} justifyContent={'flex-end'}>
@@ -146,18 +148,11 @@ const FormTextInput = ({
         </InputGroup>
       )}
 
-      {isVerified && !isError ? (
-        <Flex gap={1} mt={1} alignItems={'center'} color={'primary.500'}>
-          <Spinner />
-          <BaseText>verification en cours ...</BaseText>
+      {isError && (
+        <Flex gap={1} mt={1} alignItems={'center'}>
+          <Field.ErrorIcon width={2.5} height={2.5} color={'red.500'} />
+          <Field.ErrorText>{error}</Field.ErrorText>
         </Flex>
-      ) : (
-        isError && (
-          <Flex gap={1} mt={1} alignItems={'center'}>
-            <Field.ErrorIcon width={2.5} height={2.5} color={'red.500'} />
-            <Field.ErrorText>{error}</Field.ErrorText>
-          </Flex>
-        )
       )}
       {infoMessage && !isLoading && (
         <Flex gap={1} mt={1} alignItems={'center'}>

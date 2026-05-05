@@ -41,7 +41,7 @@ export const PaymentsMockup = () => {
       shadow="xl"
       overflow="hidden"
     >
-      <TopBarMockup border={border} muted={muted} link={'app.myimmo.com/payments'} />
+      <TopBarMockup border={border} muted={muted} link={'app.keurezy.com/payments'} />
       <Box p={4}>
         <Grid templateColumns="repeat(3,1fr)" gap={3} mb={4}>
           {[

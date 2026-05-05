@@ -7,7 +7,7 @@ export const AssignLeadModal = ({
   isLoading,
   agentList,
   callback = () => {},
-  staffListLoad
+  staffListLoad,
 }: ModalOpenProps) => {
   return (
     <Formik initialValues={{ staffId: '' }} onSubmit={callback}>
@@ -24,7 +24,12 @@ export const AssignLeadModal = ({
           onClick={() => handleSubmit()}
           colorSaveButton="warning"
         >
-          <FormSelect name={'staffId'} setFieldValue={setFieldValue} listItems={agentList ?? []} isLoading={staffListLoad} />
+          <FormSelect
+            name={'staffId'}
+            setFieldValue={setFieldValue}
+            listItems={agentList ?? []}
+            isLoading={staffListLoad}
+          />
         </BaseModal>
       )}
     </Formik>

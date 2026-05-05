@@ -39,7 +39,9 @@ export const useFileUploadErrors = ({
         );
       } else if (invalidType) {
         setErrorType('type');
-        setError(t('DRAG_DROP.ERROR.TYPE_FILES', { type_files: ACCEPTED_TYPES }));
+        setError(
+          t('DRAG_DROP.ERROR.TYPE_FILES', { type_files: [...ACCEPTED_TYPES, 'application/pdf'] }),
+        );
       } else if (tooMany) {
         setErrorType('max_file');
         setError(t('DRAG_DROP.ERROR.MAX_FILES', { max_files: MAX_FILES }));

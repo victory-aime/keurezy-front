@@ -47,8 +47,9 @@ export const LeadsList = () => {
   const { data: allTeams, isLoading: isTeamLoad } = TeamModule.getAllTeamByAgency({
     params: {
       agencyId,
+      userId,
     },
-    queryOptions: { enabled: !!agencyId },
+    queryOptions: { enabled: !!agencyId && !!userId },
   });
 
   const { mutateAsync: assignAgentLeads, isPending: isLeadAssign } =

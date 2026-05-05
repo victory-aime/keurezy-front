@@ -69,7 +69,7 @@ export const FeaturesSection = () => {
             fontWeight={'semibold'}
             mb={2}
           >
-            Pourquoi MyIMMO
+            Pourquoi Keurezy
           </BaseText>
           <BaseText fontWeight={'semibold'} variant={TextVariant.H1} lineHeight={1.2}>
             La plateforme qui fait la différence

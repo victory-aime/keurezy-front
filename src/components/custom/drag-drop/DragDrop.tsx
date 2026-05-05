@@ -250,22 +250,27 @@ export const MultipleFilesUpload = ({
 
   useEffect(() => {
     if (initialImageUrls && initialImageUrls.length > 0 && fileUpload.acceptedFiles.length === 0) {
-      convertUrlsToFiles(initialImageUrls).then((files) => {
-        fileUpload.setFiles([...files]);
-      });
+      const test = async () =>
+        await convertUrlsToFiles(initialImageUrls).then((files) => {
+          fileUpload.setFiles([...files]);
+        });
+      test();
     }
   }, [initialImageUrls]);
 
   return (
-    <VStack alignItems={'flex-start'} mt={1} gap={3} width={'full'}>
+    <VStack alignItems={'flex-start'} mt={1} gap={4} width={'full'}>
       {label === 'string' ? <BaseText fontSize={'sm'}>{label}</BaseText> : label}
+
       <FileUpload.HiddenInput />
       <FileUpload.Trigger asChild>
         <Button variant="outline" size="sm" width={'full'}>
           <HiUpload /> Télecharger vos fichiers
         </Button>
       </FileUpload.Trigger>
-      <FileUpload.List showSize clearable />
+      <HStack wrap={'wrap'}>
+        <FileUpload.List showSize clearable />
+      </HStack>
 
       {error && (
         <Alert.Root status="error" mt={5} p={4} width={'full'}>
@@ -432,8 +437,7 @@ export const BaseUploadMultipleFiles = ({
       maxFiles={maxFiles}
       maxFileSize={maxFileSize}
       alignItems="stretch"
-      accept={[...ACCEPTED_TYPES, 'application/pdf']}
-      cursor={'pointer'}
+      accept={[...ACCEPTED_TYPES, 'application/pdf', 'application/octet-stream']}
       _dragging={{ borderColor: 'primary.500' }}
     >
       <MultipleFilesUpload

@@ -1,7 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { APP_ROUTES } from '_config/routes';
 import { useGlobalLoader } from '_context/loaderContext';
-import { ProviderKeys } from '_constants/StorageKeys';
 import { handleApiError } from '_utils/handleApiError';
 import { handleApiSuccess } from '_utils/handleApiSuccess';
 import { authClient } from '../lib/auth-client';
@@ -33,49 +32,35 @@ export const useAuth = () => {
     }
   };
 
-  const login = async ({ email, password, callbackUrl, providerType }: AuthTypes) => {
+  const login = async ({ email, password, callbackUrl }: AuthTypes) => {
     try {
-      if (providerType === ProviderKeys.GOOGLE) {
-        const result = await authClient.signIn.social({
-          provider: providerType,
-          callbackURL: callbackUrl,
+      const result = await authClient.signIn.email(
+        {
+          email: email!,
+          password: password!,
+        },
+        {
+          async onSuccess(context) {
+            if (context.data.twoFactorRedirect) {
+              router.replace(APP_ROUTES.AUTH._2FA);
+            } else if (callbackUrl) {
+              router.push(callbackUrl);
+            } else {
+              return;
+            }
+          },
+        },
+      );
+      if (result.error) {
+        handleApiError({
+          status: result.error.status,
+          message: result.error.message!,
         });
-        if (result?.error) {
-          handleApiError({
-            status: result.error.status,
-            message: result.error.message!,
-          });
-          return;
-        }
-      } else {
-        const result = await authClient.signIn.email(
-          {
-            email: email!,
-            password: password!,
-          },
-          {
-            async onSuccess(context) {
-              if (context.data.twoFactorRedirect) {
-                router.replace(APP_ROUTES.AUTH._2FA);
-              } else if (callbackUrl) {
-                router.push(callbackUrl);
-              } else {
-                return;
-              }
-            },
-          },
-        );
-        if (result.error) {
-          handleApiError({
-            status: result.error.status,
-            message: result.error.message!,
-          });
-          return;
-        }
-        if (result?.data.url) {
-          handleApiSuccess({ status: 200, message: 'Connexion réussie' });
-          router.replace(result.data.url);
-        }
+        return;
+      }
+      if (result?.data.url) {
+        handleApiSuccess({ status: 200, message: 'Connexion réussie' });
+        router.replace(result.data.url);
       }
     } catch (error) {
       console.log('error catch', error);

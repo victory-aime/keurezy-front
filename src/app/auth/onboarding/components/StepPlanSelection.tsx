@@ -17,6 +17,7 @@ import { ENUM, MODELS } from '_types/*';
 import { useState, useEffect } from 'react';
 import { PricingType, BillingCycle } from '../../../../types/enum';
 import {
+  BaseButton,
   BaseFormatNumber,
   BaseText,
   CustomSkeletonLoader,
@@ -42,7 +43,6 @@ type PlanSelectionState = {
 
 interface StepPlanSelectionProps {
   value: PlanSelectionState;
-  onChange?: (value: PlanSelectionState) => void;
   allPacks: MODELS.COMMON.ISubscriptionPlan[];
 }
 
@@ -116,42 +116,6 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
   // ✅ Change billing cycle
   const handleBillingCycleChange = (cycle: BillingCycle) => {
     setFieldValue('plan.paymentMode', cycle);
-  };
-
-  const pricing =
-    selectedPlan?.pricingType === 'SUBSCRIPTION'
-      ? getPricing(selectedPlan, values.plan.paymentMode ?? 'MONTHLY')
-      : null;
-
-  const api = async () => {
-    const response = await axios.post(
-      process.env.NEXT_PUBLIC_NABOO_PAY_URL!,
-      {
-        method_of_payment: ['wave', 'orange_money'],
-        products: [
-          {
-            name: selectedPlan?.name,
-            price: Number(pricing?.price) ?? 0,
-            quantity: 1,
-            description:
-              selectedPlan?.pricingType === 'SUBSCRIPTION'
-                ? `${values.plan.paymentMode} plan`
-                : `Commission plan ${selectedPlan?.commissionRate}%`,
-          },
-        ],
-        success_url: 'https://yourapp.com/success',
-        error_url: 'https://yourapp.com/error',
-        fees_customer_side: true,
-        is_escrow: false,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_NABOO_PAY_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-    console.log(response);
   };
 
   return (
@@ -249,8 +213,8 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
 
                 {/* Features */}
                 <For each={plan.planFeatures}>
-                  {(features) => (
-                    <List.Root gap="2" variant="plain" align="center" mt={4} spaceY={1}>
+                  {(features, i) => (
+                    <List.Root key={i} gap="2" variant="plain" align="center" mt={4} spaceY={1}>
                       <List.Item key={features.label} alignItems={'center'} gap={0} fontSize={'sm'}>
                         <List.Indicator asChild color="tertiary.500">
                           <Icons.Check size={20} />

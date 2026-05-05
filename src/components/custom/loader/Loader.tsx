@@ -6,13 +6,14 @@ import { useTranslation } from 'react-i18next';
 import { BaseText } from '_components/custom';
 import { VariablesColors } from '_theme/variables';
 
-interface Spinner extends SpinnerProps {
+interface LoaderProps extends SpinnerProps {
   loader: boolean;
   showText?: boolean;
   text?: string;
+  renderSpinnerContent?: React.ReactNode;
 }
 
-export const Loader = ({ loader, showText = false, text, ...rest }: Spinner) => {
+export const Loader = ({ loader, showText = false, text, ...rest }: LoaderProps) => {
   const { t } = useTranslation();
   return (
     loader && (
@@ -36,7 +37,7 @@ export const Loader = ({ loader, showText = false, text, ...rest }: Spinner) => 
   );
 };
 
-export const GlobalLoader = ({ loader }: Spinner) => {
+export const GlobalLoader = ({ loader, renderSpinnerContent }: LoaderProps) => {
   return (
     loader && (
       <Box
@@ -45,31 +46,29 @@ export const GlobalLoader = ({ loader }: Spinner) => {
         left="0"
         w="100vw"
         h="100vh"
-        bg="rgba(10,16,16,0.85)"
+        bg="rgba(10,16,16,0.95)"
         display="flex"
         justifyContent="center"
         alignItems="center"
         zIndex={1000}
       >
-        <Flex gap={3}>
-          <For each={[0, 1, 2]}>
-            {(i, index) => (
-              <Box
-                key={i}
-                w="12px"
-                h="12px"
-                borderRadius="full"
-                bg={['cyan.solid', 'orange.solid', 'purple.solid'][index % 3]}
-                animation={`${'dotBounce'} 1s ${i * 0.2}s infinite ease-in-out`}
-              />
-            )}
-          </For>
-        </Flex>
-        {/*<Image*/}
-        {/*  src={'/assets/images/manaratha.png'}*/}
-        {/*  animation={'logo_animation'}*/}
-        {/*  alt="loader-animation"*/}
-        {/*/>*/}
+        <VStack>
+          <Flex gap={3} mb={3}>
+            <For each={[0, 1, 2]}>
+              {(i, index) => (
+                <Box
+                  key={i}
+                  w="12px"
+                  h="12px"
+                  borderRadius="full"
+                  bg={['cyan.solid', 'orange.solid', 'purple.solid'][index % 3]}
+                  animation={`${'dotBounce'} 1s ${i * 0.2}s infinite ease-in-out`}
+                />
+              )}
+            </For>
+          </Flex>
+          {renderSpinnerContent}
+        </VStack>
       </Box>
     )
   );

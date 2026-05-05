@@ -4,14 +4,12 @@ import {
   FormTextInput,
   FormPhonePicker,
   FormTextArea,
-  BaseDragDropZone,
   BaseText,
   FormCheckbox,
   BaseUploadMultipleFiles,
 } from '_components/custom';
 import { hexToRGB } from '_theme/colors';
 import { useFormikContext } from 'formik';
-import { motion } from 'framer-motion';
 import { DashboardMockup } from './DashboardMockup';
 import { OnboardCardWrapper } from './OnboardCardWrapper';
 import { VariablesColors } from '_theme/variables';
@@ -20,10 +18,11 @@ import { DirectLive } from './DirectLive';
 import { GridContainer } from './GridContainer';
 import { MODELS } from '_types/*';
 import { MotionBox } from '_constants/motion';
+import { useAgencyCheck } from '_context/agency-context';
 
-export const StepBusiness = () => {
+export const StepBusiness = ({ initialDocUrls }: { initialDocUrls?: string[] }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
-
+  const { isCheckingName } = useAgencyCheck();
   const { values, setFieldValue, errors } = useFormikContext<{
     account: MODELS.IAuthSignUp;
     business: MODELS.ICreateAgency;
@@ -68,6 +67,7 @@ export const StepBusiness = () => {
                 name="business.name"
                 label="Société"
                 placeholder="Nom de votre société"
+                isVerified={isCheckingName}
               />
               <FormTextInput
                 required
@@ -94,13 +94,14 @@ export const StepBusiness = () => {
               <FormTextInput
                 required
                 name="business.address"
-                placeholder="Sousse,Tunis, Monastir"
+                placeholder="Dakar, Saint-Louis"
                 label="Addresse"
               />
             </HStack>
 
             <BaseUploadMultipleFiles
               getFilesUploaded={(files) => setFieldValue('business.documents', files)}
+              initialImageUrls={initialDocUrls}
               label={
                 <Flex fontSize={'sm'} alignItems={'center'} gap={2}>
                   <Icons.Paper />

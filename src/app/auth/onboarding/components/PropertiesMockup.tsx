@@ -51,7 +51,7 @@ export const PropertiesMockup = () => {
       overflow="hidden"
       shadow="xl"
     >
-      <TopBarMockup border={border} muted={muted} link={'app.myimmo.com/properties'} />
+      <TopBarMockup border={border} muted={muted} link={'app.keurezy.com/properties'} />
 
       <Box p={4}>
         <Flex justify="space-between" mb={4}>

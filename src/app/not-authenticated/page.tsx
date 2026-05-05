@@ -1,15 +1,8 @@
 'use client';
 
-import { Card, Center, Flex, HStack, VStack } from '@chakra-ui/react';
+import { Card, Center, Flex, VStack } from '@chakra-ui/react';
 import Image from 'next/image';
-import {
-  BaseButton,
-  BaseIcon,
-  BaseText,
-  FloatSwitchColorMode,
-  TextVariant,
-  TextWeight,
-} from '_components/custom';
+import { BaseButton, BaseIcon, BaseText, FloatSwitchColorMode } from '_components/custom';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
 import { VariablesColors } from '_theme/variables';
@@ -29,17 +22,12 @@ export default function UnauthorizedPage() {
     <Flex direction="column" minH="100vh">
       <Flex width={'full'} p={4} justifyContent={'space-between'}>
         <Link href={APP_ROUTES.ROOT}>
-          <HStack>
-            <Image
-              src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
-              width={45}
-              height={45}
-              alt="logo"
-            />
-            <BaseText variant={TextVariant.L} weight={TextWeight.Bold} color={'primary.500'}>
-              MyImmo
-            </BaseText>
-          </HStack>
+          <Image
+            src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+            width={200}
+            height={200}
+            alt="logo"
+          />
         </Link>
 
         <BaseButton
@@ -77,7 +65,7 @@ export default function UnauthorizedPage() {
             <Card.Title fontSize="xl">{'Accès restreint'}</Card.Title>
             <VStack fontSize="sm" color="gray.500" textAlign="center">
               Vous ne disposez pas des autorisations nécessaires pour afficher cette page.Si vous
-              pensez qu’il s’agit d’une erreur, contactez votre administrateur.
+              pensez qu’il s’agit d’une erreur, contactez l'équipe support de Keurezy .
             </VStack>
           </Card.Header>
           <Card.Body px={{ base: 0, md: 6 }} gap={3}>

@@ -22,10 +22,6 @@ export const TokenExpired = () => {
       mutationOptions: {
         onSuccess: () => {
           setOpenRecap(true);
-          handleApiSuccess({
-            status: 201,
-            message: 'Le lien a été renvoyé',
-          });
         },
       },
     });

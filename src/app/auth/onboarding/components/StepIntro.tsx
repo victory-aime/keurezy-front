@@ -44,7 +44,7 @@ export const StepIntro = () => {
             fontWeight="bold"
             lineHeight="1"
           >
-            MyImmo est la plateforme de gestion intelligente des locations pour{' '}
+            Keurezy est la plateforme de gestion intelligente des locations pour{' '}
             <Span
               bgClip={'text'}
               gradientFrom={'primary.400'}

@@ -10,25 +10,20 @@ export const LeadsStatsCard = ({
   agencyLeadsList: MODELS.ILeadsAgency[];
   isLoading?: boolean;
 }) => {
-  const {
-    allAgencyLeads,
-    pendingAgencyLeads,
-    rejectedAgencyLeads,
-    acceptedAgencyLeads,
-  } = useMemo(() => {
-    return {
-      allAgencyLeads: agencyLeadsList?.length,
-      pendingAgencyLeads: agencyLeadsList?.filter(
-        (p) => p.status === ENUM.COMMON.Status.PENDING,
-      ).length,
-      acceptedAgencyLeads: agencyLeadsList?.filter(
-        (p) => p.status === ENUM.COMMON.Status.ACCEPTED,
-      ).length,
-      rejectedAgencyLeads: agencyLeadsList?.filter(
-        (p) => p.status === ENUM.COMMON.Status.REJECTED,
-      ).length,
-    };
-  }, [agencyLeadsList]);
+  const { allAgencyLeads, pendingAgencyLeads, rejectedAgencyLeads, acceptedAgencyLeads } =
+    useMemo(() => {
+      return {
+        allAgencyLeads: agencyLeadsList?.length,
+        pendingAgencyLeads: agencyLeadsList?.filter((p) => p.status === ENUM.COMMON.Status.PENDING)
+          .length,
+        acceptedAgencyLeads: agencyLeadsList?.filter(
+          (p) => p.status === ENUM.COMMON.Status.ACCEPTED,
+        ).length,
+        rejectedAgencyLeads: agencyLeadsList?.filter(
+          (p) => p.status === ENUM.COMMON.Status.REJECTED,
+        ).length,
+      };
+    }, [agencyLeadsList]);
 
   const stats = [
     {

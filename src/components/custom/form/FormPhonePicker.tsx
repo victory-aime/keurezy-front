@@ -5,7 +5,7 @@ import { useField, useFormikContext } from 'formik';
 import { PhoneInputProps } from './interface/input';
 import { BaseText, CustomSkeletonLoader } from '_components/custom';
 import { useTranslation } from 'react-i18next';
-import { useColorModeValue } from '_components/ui/color-mode';
+import { useColorMode } from '_components/ui/color-mode';
 import { VariablesColors } from '_theme/variables';
 import './utils/phone-dropdown.css';
 import { hexToRGB } from '_theme/colors';
@@ -24,15 +24,16 @@ export const FormPhonePicker = ({
   listAvailableCountries = ['sn', 'cg', 'cd', 'tn'],
 }: PhoneInputProps) => {
   const { t } = useTranslation();
+  const { colorMode } = useColorMode();
   const [field, { touched, error }, helpers] = useField({ name, validate });
   const { submitCount } = useFormikContext();
   const isError = isReadOnly ? !!error : !!(error && (touched || submitCount > 0));
 
-  const bgColor = useColorModeValue(VariablesColors.white, hexToRGB('overlay', 0.03));
-  const colorBorder = useColorModeValue(VariablesColors.gray200, VariablesColors.black);
-  const colorDropdown = useColorModeValue(VariablesColors.white, VariablesColors.black);
-  const colorText = useColorModeValue(VariablesColors.black, VariablesColors.white);
-  const inputFontSize = useBreakpointValue({ base: '16px', md: '12px' }) || '16px';
+  const bgColor = colorMode === 'light' ? VariablesColors.white : hexToRGB('overlay', 0.3);
+  const colorBorder = colorMode === 'light' ? VariablesColors.gray200 : 'rgb(40, 45, 45)';
+  const colorDropdown = colorMode === 'light' ? VariablesColors.white : VariablesColors.black;
+  const colorText = colorMode === 'light' ? VariablesColors.black : VariablesColors.white;
+  const inputFontSize = useBreakpointValue({ base: '16px', md: '14px' }) || '16px';
 
   const availableCountries = React.useMemo(() => {
     if (!listAvailableCountries?.length) {
@@ -58,7 +59,7 @@ export const FormPhonePicker = ({
   return (
     <Field.Root id={name} invalid={isError}>
       {label && (
-        <Field.Label display="flex" gap="6px" mb="4px" fontSize={{ base: '14px', md: '12px' }}>
+        <Field.Label display="flex" gap="6px" fontSize={'14px'}>
           {isLoading ? (
             <CustomSkeletonLoader type="TEXT" numberOfLines={1} />
           ) : (

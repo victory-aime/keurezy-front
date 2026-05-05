@@ -68,7 +68,7 @@ export const CTASection = () => {
               Prêt à transformer votre expérience locative ?
             </BaseText>
             <BaseText maxW={'xl'} mx={'auto'} mb={4} variant={TextVariant.XL} color={'white'}>
-              Rejoignez des milliers d'utilisateurs qui font confiance à MyIMMO.
+              Rejoignez des milliers d'utilisateurs qui font confiance à Keurezy.
             </BaseText>
             <HStack gap={2} justifyContent={'center'} flexDirection={{ base: 'column', md: 'row' }}>
               {/* <Link href={APP_ROUTES.AUTH.SIGN_UP}>

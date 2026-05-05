@@ -160,7 +160,11 @@ export const AgencyInfo = () => {
                       leftAccessory={<Icons.MapPin />}
                     />
 
-                    <FormPhonePicker name="phone" label="Téléphone professionnel" />
+                    <FormPhonePicker
+                      name="phone"
+                      label="Téléphone professionnel"
+                      listAvailableCountries={['sn']}
+                    />
                   </HStack>
                 </VStack>
               </Flex>

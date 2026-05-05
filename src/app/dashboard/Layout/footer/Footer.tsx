@@ -19,7 +19,7 @@ export const Footer = () => {
       py={3}
     >
       <BaseText variant={TextVariant.XS} color="gray.600">
-        © {new Date().getUTCFullYear()} MyImmo. Tous droits réservés.
+        © {new Date().getUTCFullYear()} Keurezy. Tous droits réservés.
       </BaseText>
       <Flex align="center" gap={2}>
         <Box bg="tertiary.400" h="8px" w="8px" borderRadius="full" />
