@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { APP_ROUTES } from '_config/routes';
 import { UserRole } from './types/enum';
 import { DASHBOARD_ROUTES } from './app/dashboard/routes';
-import { getCookieCache, getSessionCookie } from 'better-auth/cookies';
+import { getCookieCache } from 'better-auth/cookies';
 
 const PROTECTED_ROUTES: Record<string, string[]> = {
   ...Object.fromEntries(
@@ -65,6 +65,21 @@ function redirectTo(request: NextRequest, pathname: string, clearSearch = false)
   return NextResponse.redirect(url);
 }
 
+function getSessionCookieValue(request: NextRequest): string | undefined {
+  // En HTTPS, better-auth utilise le préfixe __Secure-
+  return (
+    request.cookies.get('__Secure-better-auth.session_token')?.value ??
+    request.cookies.get('better-auth.session_token')?.value
+  );
+}
+
+function getCookieCacheValue(request: NextRequest): string | undefined {
+  return (
+    request.cookies.get('__Secure-better-auth.session_data')?.value ??
+    request.cookies.get('better-auth.session_data')?.value
+  );
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
@@ -73,9 +88,12 @@ export async function proxy(request: NextRequest) {
     return redirectTo(request, APP_ROUTES.AUTH.SIGN_IN, true);
   }
 
-  const sessionCookie = getSessionCookie(request);
+  const sessionCookieValue = getSessionCookieValue(request);
 
-  console.log('sessionCookies', sessionCookie);
+  console.log('sessionCookies', sessionCookieValue);
+  console.log('all cookies:', request.cookies.getAll());
+  console.log('URL:', request.nextUrl.pathname);
+  console.log('COOKIE HEADER RAW:', request.headers.get('cookie'));
 
   const totpCookie =
     request.cookies.get('__Secure-better-auth.two_factor') ??
@@ -96,7 +114,7 @@ export async function proxy(request: NextRequest) {
 
   if (matchedRoute) {
     // Pas de cookie de session = redirect immédiat, pas d'appel réseau
-    if (!sessionCookie) {
+    if (!sessionCookieValue) {
       return redirectTo(request, APP_ROUTES.PROTECTED);
     }
 

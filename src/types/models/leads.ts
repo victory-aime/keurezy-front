@@ -19,11 +19,11 @@ export interface ILeadsAgency {
   clientId: string;
   assignedToId: string;
   agencyId: string;
-
   property: {
     title: string;
     type: ENUM.PropertyType;
     city: null;
+    price: number;
   };
   client: {
     phone: null;

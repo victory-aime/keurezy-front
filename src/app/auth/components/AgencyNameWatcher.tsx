@@ -1,34 +1,50 @@
 import { useFormikContext } from 'formik';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { useAgencyCheck } from '_context/agency-context';
 
-export const AgencyNameWatcher = ({
-  verifiedAgencyName,
-  setIsCheckingName,
-  setNameAlreadyExists,
-}: any) => {
+const MIN_LENGTH = 3;
+const DEBOUNCE_DELAY = 600;
+
+export const AgencyNameWatcher = ({ verifiedAgencyName }: any) => {
+  const { setIsCheckingName, setNameAlreadyExists } = useAgencyCheck(); // ← depuis le context
+
   const { values } = useFormikContext<any>();
-  const name = values.business.name;
+  const name = values.business.name?.trim();
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    if (!name) return;
-    setIsCheckingName(true);
-    setNameAlreadyExists(false);
+    if (!name || name.length < MIN_LENGTH) {
+      setIsCheckingName(false);
+      setNameAlreadyExists(false);
+      return;
+    }
+
     const timeout = setTimeout(async () => {
+      abortRef.current?.abort();
+      abortRef.current = new AbortController();
+
+      // Sauvegarde l'élément actif avant la requête
+      const activeElement = document.activeElement as HTMLElement;
+
+      setIsCheckingName(true);
+      setNameAlreadyExists(false);
+
       try {
         const data = await verifiedAgencyName({
           payload: { name },
+          signal: abortRef.current.signal,
         });
-        if (!data) {
-          setNameAlreadyExists(!data);
-        } else {
-          setNameAlreadyExists(false);
+        setNameAlreadyExists(!data);
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          console.error(e);
         }
-      } catch (e) {
-        console.log(e);
       } finally {
         setIsCheckingName(false);
+        activeElement?.focus();
       }
-    }, 700);
+    }, DEBOUNCE_DELAY);
+
     return () => clearTimeout(timeout);
   }, [name]);
 

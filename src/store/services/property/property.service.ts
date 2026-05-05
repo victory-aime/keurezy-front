@@ -19,10 +19,7 @@ export class PropertyService extends BaseApi {
       data,
     );
   }
-  update_property(
-    data: MODELS.ICreateProperty | FormData,
-    params: { ownerId: string; appartId: string },
-  ) {
+  update_property(data: MODELS.ICreateProperty | FormData, params: { appartId: string }) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().PROPERTY.UPDATE_PROPERTY,
       data,

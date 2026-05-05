@@ -16,7 +16,7 @@
   },
   "WELCOME": "Bonjour {{username}}",
   "FORM": {
-    "LOGIN_TITLE": "MyIMMO",
+    "LOGIN_TITLE": "Keurezy",
     "LOGIN_DESC": "Votre plateforme de location immobilière tout-en-un",
     "EMAIL": "Adresse e-mail",
     "EMAIL_PLACEHOLDER": "Entrez votre adresse e-mail",
@@ -81,6 +81,7 @@
     "VALIDATE": "Valider",
     "DEACTIVATE": "Désactiver",
     "EDIT": "Modifier",
+    "ASSIGN": "Assigner",
     "CREATED_BY": "Créé par",
     "CREATED_AT": "Créé le",
     "EDIT_BY": "Modifier par",
@@ -125,7 +126,8 @@
       "REJECTED": "Rejetée",
       "ACCEPTED": "Acceptée",
       "CURRENTLY_ON_SALE": "vente en cours",
-      "SOLD": "Vendu"
+      "SOLD": "Vendu",
+      "NEW": "Nouvelle"
     },
     "TODAY": "Aujourd'hui",
     "MONTH": "Mois",

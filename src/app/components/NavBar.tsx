@@ -41,15 +41,12 @@ export const Navbar = () => {
       >
         <Flex alignItems={'center'} justifyContent={'space-between'} width={'full'}>
           <Link href={APP_ROUTES.ROOT}>
-            <Flex alignItems={'center'} gap={2}>
-              <Image
-                src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
-                alt="logo"
-                width={45}
-                height={45}
-              />
-              <BaseText variant={TextVariant.M}>MyImmo</BaseText>
-            </Flex>
+            <Image
+              src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
+              alt="logo"
+              width={220}
+              height={200}
+            />
           </Link>
 
           {/* Desktop nav */}

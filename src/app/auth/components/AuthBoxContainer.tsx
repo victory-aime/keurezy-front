@@ -54,8 +54,8 @@ export const AuthBoxContainer = ({
           >
             <Image
               src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
-              width={45}
-              height={45}
+              width={220}
+              height={220}
               alt="logo"
             />
           </motion.div>

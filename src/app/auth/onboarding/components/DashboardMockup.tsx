@@ -21,10 +21,10 @@ interface DashboardMockupProps {
 export const DashboardMockup = ({
   userName = 'Jean Dupont',
   role = 'Propriétaire',
-  company = 'MyImmo',
+  company = 'Keurezy',
   properties = 12,
   rent = 2450,
-  location = 'Paris',
+  location = 'Dakar',
   currency = ENUM.COMMON.Currency.XOF,
   notifications = true,
   activeTab = 0,
@@ -102,7 +102,7 @@ export const DashboardMockup = ({
         </HStack>
         <Flex flex={1} alignItems={'center'} justifyContent={'center'} mx={4}>
           <Text px={3} py={1} fontSize={'xs'} color={'gray.400'}>
-            app.myimmo.com/dashboard
+            app.Keurezy.com/dashboard
           </Text>
         </Flex>
 

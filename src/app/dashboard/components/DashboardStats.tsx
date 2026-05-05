@@ -15,7 +15,6 @@ import {
   RentalAgreementModule,
 } from '_store/state-management';
 import { ENUM } from '_types/*';
-import { Colors } from '_theme/colors';
 import { OccupationRateByType } from './OccupationRateByType';
 import { MonthlyRevenueAreaChart } from './MonthlyRevenueAreaChart';
 import { useUserContext } from '_context/user-context';
@@ -23,23 +22,22 @@ import { useMemo } from 'react';
 import { DASHBOARD_ROUTES } from '../routes';
 import { useRouter } from 'next/navigation';
 import { useAppTheme } from '_context/theme-context';
-import { useThemeColors } from '_theme/useThemeColors';
 
 export const DashboardStats = () => {
   const { push } = useRouter();
   const { vars } = useAppTheme();
-  const { hexToRGB } = useThemeColors();
   const { user } = useUserContext();
-
   const agencyId = user?.agencyId;
+  const userId = user?.ownerId ?? user?.staffId;
 
   const queryPayload = useMemo(
     () => ({
       params: {
         agencyId,
+        userId,
       },
       queryOptions: {
-        enabled: !!agencyId,
+        enabled: !!agencyId && !!userId,
       },
     }),
     [agencyId],
@@ -104,6 +102,29 @@ export const DashboardStats = () => {
       iconBgColor: 'tertiary.500',
     },
   ];
+
+  const cashout = async () => {
+    const response = await fetch('https://api.naboopay.com/api/v2/payouts', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_NABOO_PAY_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        selected_payment_method: 'wave',
+        amount: 100,
+        recipient: {
+          first_name: 'Aminata',
+          last_name: 'Diba',
+          phone: '+221786068122',
+        },
+        reason: 'Invoice payment',
+      }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+  };
   return (
     <BaseContainer
       title="Tableau de bord"
@@ -117,6 +138,13 @@ export const DashboardStats = () => {
         </BaseText>
       }
       border={'none'}
+      withActionButtons
+      actionsButtonProps={{
+        validateTitle: 'Payer aminata',
+        onClick: async () => {
+          await cashout();
+        },
+      }}
     >
       <SimpleGrid data-tour="kpis" columns={3} mt={10} width={'full'} gap={3}>
         <For each={stats}>

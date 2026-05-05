@@ -20,32 +20,12 @@ export const confettiColors = [
 export const OnboardFinish = () => {
   const { width, height } = useWindowSize();
 
-  const summaryItems = [
-    {
-      icon: Icons.RiBuildingLine,
-      label: 'Propriétés configurées',
-      value: '12',
-      color: VariablesColors.primary,
-    },
-    {
-      icon: Icons.TrendingUp,
-      label: 'Revenus projetés',
-      value: '29 400€/mois',
-      color: VariablesColors.tertiary,
-    },
-    {
-      icon: Icons.Bell,
-      label: 'Notifications',
-      value: 'Activées',
-      color: VariablesColors.secondary,
-    },
-  ];
-
   return (
     <VStack maxW={'5xl'} mx={'auto'} spaceY={8} position={'relative'} overflow={'hidden'}>
       <Box position={'fixed'} inset={0} pointerEvents={'none'} zIndex={50} overflow={'hidden'}>
         {Array.from({ length: 40 }).map((_, i) => (
           <Confetti
+            key={i}
             width={width}
             height={height}
             numberOfPieces={4}

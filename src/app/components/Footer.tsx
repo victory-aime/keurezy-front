@@ -31,7 +31,7 @@ export const Footer = () => {
             <Flex alignItems={'center'} gap={2}>
               <Icons.Home color={VariablesColors.primary} width={45} height={45} />
               <Heading size="md" textTransform={'capitalize'}>
-                MyImmo
+                Keurezy
               </Heading>
             </Flex>
             <BaseText variant={TextVariant.S} color={'whiteAlpha.600'}>
@@ -83,7 +83,7 @@ export const Footer = () => {
           alignItems={'center'}
           width={'full'}
         >
-          <BaseText mt={2}>© {new Date().getUTCFullYear()} MyIMMO. Tous droits réservés.</BaseText>
+          <BaseText mt={2}>© {new Date().getUTCFullYear()} Keurezy. Tous droits réservés.</BaseText>
           <Flex gap={3}>
             <BaseText _hover={{ color: VariablesColors.primary, cursor: 'pointer' }}>
               Politique de confidentialité

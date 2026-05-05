@@ -13,6 +13,7 @@ const APIS_ROUTES_MODULES_PATH = {
   BUILDING: '/building',
   LAND: '/land',
   COMMON: {
+    GLOBAL_ROUTES: '/common',
     PERMS: '/common/perms',
     PACKS: '/common/packs',
   },
@@ -359,6 +360,12 @@ export const APIS = (baseUrl?: string) => {
           showResponse: false,
         }),
       },
+      POLLING_STATUS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.COMMON.GLOBAL_ROUTES}/polling`,
+        pathBase: 'UNSECURED_API',
+        method: 'GET',
+        showResponse: false,
+      }),
     },
     INVITATION: {
       ALL_INVITATIONS_AGENCY: api({
