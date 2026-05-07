@@ -11,7 +11,7 @@ import { BillingCycleToggle } from './pricing/BillingCycleToggle';
 import { PlanSelectorMode } from './pricing/PlanSelectMode';
 import { PlanCard } from './pricing/PlanCard';
 import { APP_ROUTES } from '_config/routes';
-import { getBestYearlySavings, getFilteredPlans } from '../components/pricing/functions/pricing';
+import { getBestYearlySavings, getFilteredPlans } from '_component/pricing/functions/pricing';
 
 export const PricingSection = () => {
   const navigate = useRouter();

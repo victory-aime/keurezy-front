@@ -35,6 +35,7 @@ import {
 import { MotionBox } from '_constants/motion';
 import { useFormikContext } from 'formik';
 import axios from 'axios';
+import {t} from "i18next";
 
 type PlanSelectionState = {
   selectedPlanId: string | null;
@@ -219,7 +220,7 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
                         <List.Indicator asChild color="tertiary.500">
                           <Icons.Check size={20} />
                         </List.Indicator>
-                        {formatLimit(features)}
+                        {formatLimit(features, t)}
                       </List.Item>
                     </List.Root>
                   )}

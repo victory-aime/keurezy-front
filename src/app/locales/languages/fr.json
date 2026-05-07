@@ -244,75 +244,63 @@
       "IP_ADDRESS": "Adresse IP Hôte"
     }
   },
+
   "PERMISSIONS": {
     "MODULES": {
-      "ADMINISTRATION": "Gestion de l'administration",
       "KPI": "Vue 360°",
       "USERS": "Gestion des utilisateurs",
-      "STUDENT": "Gestion des élèves",
-      "CLASS": "Gestion des classes",
       "PAYMENTS": "Gestion des paiements",
-      "SCHOOL_CONFIG": "Gestion des configurations",
-      "FEE": "Gestion des configurations de frais",
-      "FINANCES": "Vue globale sur les activités financières"
+      "PROPERTIES": "Gestion des biens",
+      "ANNONCES": "Gestion des annonces"
     },
     "FEATURE_LIST": {
-      "VIEW_PAYMENT_PARTIAL": "Voir les paiements partiels",
-      "VIEW_PAYMENT_STATUS_SUMMARY": "Voir le résumé des statuts de paiement",
-      "VIEW_GENDER": "Voir la répartition par genre",
-      "VIEW_MONTHLY": "Voir les statistiques mensuelles",
-      "VIEW_FINANCE_OVERVIEW": "Voir les statistiques par catégorie",
-
-      "VIEW_USERS_LIST": "Voir la liste des utilisateurs",
-      "REGENERATE_PASSWORD": "Régénérer le mot de passe",
-      "CREATE_USER": "Créer un utilisateur",
-      "UPDATE_USER": "Modifier un utilisateur",
-      "DELETE_USER": "Supprimer un utilisateur",
-
-      "CREATE_CLASS": "Créer une classe",
-      "UPDATE_CLASS": "Modifier une classe",
-      "VIEW_CLASS": "Voir les classes",
-      "DELETE_CLASS": "Supprimer une classe",
-
-      "CREATE_STUDENT": "Créer un élève",
-      "UPDATE_STUDENT": "Modifier un élève",
-      "ALL_STUDENT": "Voir les élèves",
-      "GET_STUDENT_ID": "Voir un élève",
+      "MANAGE_PROPERTIES": "Gérer les biens immobiliers",
+      "PUBLISH_PROPERTIES": "Publier des annonces immobilières",
+      "MANAGE_USERS": "Gérer les utilisateurs et collaborateurs",
+      "PREMIUM_SUPPORT": "Support premium prioritaire",
+      "BOOST_ANNONCES": "Booster les annonces immobilières",
 
       "VIEW_PAYMENT": "Voir les paiements",
       "ADD_PAYMENT": "Ajouter un paiement",
       "DOWNLOAD_PAYMENT": "Télécharger un reçu de paiement",
       "EDIT_PAYMENT": "Modifier un paiement",
-      "DELETE_PAYMENT": "Supprimer un paiement",
-
-      "CREATE_SCHOOL_CONFIG": "Créer une configuration",
-      "ALL_SCHOOL_CONFIG": "Voir la liste des configuration",
-      "UPDATE_SCHOOL_CONFIG": "Modifier une configuration",
-      "CHANGE_SCHOOL_CONFIG_STATUS": "Changer le statut de configuration",
-
-      "ADD_CLASS_FEE_CONFIG": "Ajouter une classe a une configuration de frais",
-      "ALL_FEE_CONFIG": "Voir la liste de configuration des frais",
-      "CREATE_FEE_CONFIG": "Créer une configuration de frais",
-      "UPDATE_FEE_CONFIG": "Modifier une configuration de frais",
-      "DELETE_FEE_CONFIG": "Supprimer une configuration de frais",
-
-      "ADD_NEW_EXPENSE": "Ajouter une nouvelle dépense",
-      "EDIT_EXPENSE": "Modifier les dépenses",
-      "DELETE_EXPENSE": "Supprimer les dépenses",
-      "VIEW_FINANCE_LIST": "Voir la liste des dépenses"
+      "DELETE_PAYMENT": "Supprimer un paiement"
     }
   },
-  "SUBSCRIPTION": {
-    "PLANS": {
-      "BASIC": "Débutant",
-      "PRO": "Professionnel",
-      "PREMIUM": "Entreprise",
 
-      "MAX_BOOKINGS_PER_MONTH": "Réservations / mois",
-      "MAX_STYLISTS": "Coiffeuses",
-      "MAX_CLIENTS": "Clients",
-      "MAX_SMS_PER_MONTH": "SMS / mois",
-      "MAX_SALONS": "Gestion multi-salon"
+  "SUBSCRIPTION": {
+    "PLAN_CATEGORY": {
+      "COMMISSION_BASED": "Commission",
+      "SUBSCRIPTION_BASED": "Abonnement"
+    },
+
+    "PRICING_TYPE": {
+      "COMMISSION": "Commission",
+      "SUBSCRIPTION": "Abonnement"
+    },
+
+    "BILLING_CYCLE": {
+      "MONTHLY": "Mensuel",
+      "YEARLY": "Annuel"
+    },
+
+    "PLANS": {
+      "DESCRIPTIONS": {
+        "BASIC_COMMISSION": "Idéal pour démarrer avec une faible commission.",
+        "STANDARD_COMMISSION": "Un équilibre parfait entre visibilité et rentabilité.",
+        "PREMIUM_COMMISSION": "La solution premium avec des fonctionnalités illimitées.",
+
+        "BASIC_SUB": "Une formule accessible pour les petites agences.",
+        "STANDARD_SUB": "Une offre complète pour les agences en croissance.",
+        "PREMIUM_SUB": "Toutes les fonctionnalités avancées pour les grandes agences."
+      },
+      "BASIC_COMMISSION": "Commission Débutant",
+      "STANDARD_COMMISSION": "Commission Standard",
+      "PREMIUM_COMMISSION": "Commission Entreprise",
+
+      "BASIC_SUB": "Abonnement Débutant",
+      "STANDARD_SUB": "Abonnement Standard",
+      "PREMIUM_SUB": "Abonnement Entreprise"
     }
   }
 }

@@ -11,9 +11,19 @@ export const getPricing = (
   );
 };
 
-export const formatLimit = (feature: MODELS.COMMON.IPlanFeature): string => {
-  if (feature.limit === null) return `${feature.feature?.name} illimités`;
-  return `${feature.limit} ${feature.feature?.name}`.trim();
+export const formatLimit = (
+    feature: MODELS.COMMON.IPlanFeature,
+    t: (key: string) => string,
+): string => {
+  const featureName = t(
+      `PERMISSIONS.FEATURE_LIST.${feature.feature?.name?.toUpperCase()}`,
+  );
+
+  if (feature.limit === null) {
+    return `${featureName} illimités`;
+  }
+
+  return `${feature.limit} ${featureName}`.trim();
 };
 
 export const getFilteredPlans = (
