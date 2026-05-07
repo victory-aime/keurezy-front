@@ -2,13 +2,17 @@ import { ENUM } from '..';
 
 interface INotificationListResponse {
   id: string;
-  recipientId: string;
-  senderId: string;
-  agencyId: string;
-  type: ENUM.NotificationType;
-  content: string;
   isRead: boolean;
-  createdAt: string;
+  notificationId: string;
+  userId: string;
+  notification: {
+    id: string;
+    type: ENUM.NotificationType;
+    title: string;
+    content: string;
+    scope: string;
+    createdAt: string;
+  };
 }
 
 export type { INotificationListResponse };

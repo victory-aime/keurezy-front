@@ -16,11 +16,14 @@ import {
   CiViewList,
   CiWarning,
 } from 'react-icons/ci';
-import { FaCog, FaUserAlt, FaUserPlus, FaUsers } from 'react-icons/fa';
+import { FaBook, FaUsers } from 'react-icons/fa6';
+import { FaCog, FaUserAlt, FaUserPlus } from 'react-icons/fa';
 import { HiOutlineMail } from 'react-icons/hi';
 import {
   HiHeart,
   HiHome,
+  HiMiniChevronLeft,
+  HiMiniChevronRight,
   HiMiniMegaphone,
   HiMiniPlusSmall,
   HiOutlineFolderOpen,
@@ -151,4 +154,7 @@ export const Icons = {
   Megaphone: HiMiniMegaphone,
   Wallet: MdWallet,
   Assignment: MdAssignmentInd,
+  Agenda: FaBook,
+  ChevronLeft: HiMiniChevronLeft,
+  ChevronRight: HiMiniChevronRight,
 };

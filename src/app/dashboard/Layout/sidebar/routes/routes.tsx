@@ -42,12 +42,25 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     title: 'Gestion',
     icon: Icons.FolderOpen,
     links: [
+      // {
+      //   label: 'Agenda',
+      //   path: DASHBOARD_ROUTES.AGENGA,
+      //   icon: Icons.Agenda,
+      //   badge: 5,
+      // },
+      {
+        label: 'Rendez-vous',
+        path: DASHBOARD_ROUTES.VISITS,
+        icon: Icons.Calendar,
+        badge: 5,
+      },
       {
         label: 'Demandes',
         path: DASHBOARD_ROUTES.LEADS,
         icon: Icons.Clipboard,
         badge: 5,
       },
+
       {
         label: 'Invitations',
         path: DASHBOARD_ROUTES.INVITATIONS.LIST,

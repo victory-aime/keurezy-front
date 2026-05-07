@@ -26,19 +26,20 @@ export const NotificationsDisplay = ({
 }) => {
   const { colorMode } = useColorMode();
   const router = useRouter();
-  const config = notificationUIConfig[request?.type];
+  const config = notificationUIConfig[request?.notification?.type];
   const IconComponent = Icons[config?.icon];
 
   const { mutateAsync: readNotification } = NotificationsModule.readNotificationMutation({
     mutationOptions: {
       onSuccess: () => {
+        NotificationsModule.NotificationsCache.invalidateAllUnreadNotificationCache();
         refetchNotificationList?.();
       },
     },
   });
 
-  const onReadNotification = async (notificationId: string, recipientId: string) => {
-    await readNotification({ params: { notificationId, recipientId } });
+  const onReadNotification = async (notificationId: string, userId: string) => {
+    await readNotification({ params: { notificationId, userId } });
   };
 
   return (
@@ -75,9 +76,9 @@ export const NotificationsDisplay = ({
           cursor={'pointer'}
           onClick={() => {
             if (!request.isRead) {
-              onReadNotification(request?.id, request?.recipientId);
+              onReadNotification(request?.notificationId, request?.userId);
             }
-            router.push(DASHBOARD_ROUTES.RENTAL_REQUEST);
+            //router.push(DASHBOARD_ROUTES.RENTAL_REQUEST);
           }}
         >
           <BaseIcon color={hexToRGB(config?.color as keyof Colors, 0.4)}>
@@ -92,11 +93,11 @@ export const NotificationsDisplay = ({
             </HStack>
 
             <Text color={'gray.400'} fontSize="sm">
-              {request?.content}
+              {request?.notification?.content}
             </Text>
 
             <Span color={'gray.400'} fontSize="xs">
-              {formatCreatedAt(request?.createdAt!)}
+              {formatCreatedAt(request?.notification.createdAt!)}
             </Span>
           </VStack>
         </Flex>

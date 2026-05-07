@@ -20,6 +20,7 @@ const APIS_ROUTES_MODULES_PATH = {
   INVITATION: '/invitation',
   TEAM: '/team',
   ANNONCES: '/annonces',
+  VISITS: '/visits',
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -424,6 +425,35 @@ export const APIS = (baseUrl?: string) => {
         path: `${APIS_ROUTES_MODULES_PATH.ANNONCES}/agency`,
         pathBase: 'SECURED_API',
         method: 'GET',
+        showResponse: false,
+      }),
+    },
+    VISITS: {
+      CREATE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.VISITS}/create`,
+        pathBase: 'SECURED_API',
+        method: 'POST',
+      }),
+      UPDATE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.VISITS}/update-status`,
+        pathBase: 'SECURED_API',
+        method: 'PATCH',
+      }),
+      DELETE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.VISITS}/delete`,
+        pathBase: 'SECURED_API',
+        method: 'DELETE',
+      }),
+      ALL_BY_AGENCY: api({
+        path: `${APIS_ROUTES_MODULES_PATH.VISITS}/agency-visits`,
+        pathBase: 'SECURED_API',
+        method: 'GET',
+        showResponse: false,
+      }),
+      ASSIGN_AGENT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.VISITS}/assign-agent`,
+        pathBase: 'SECURED_API',
+        method: 'PATCH',
         showResponse: false,
       }),
     },

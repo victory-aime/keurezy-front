@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Flex, useBreakpointValue } from '@chakra-ui/react';
-import { BaseButton, BaseText, Icons } from '_components/custom';
+import { BaseButton, Icons } from '_components/custom';
 import { MobileSidebar } from './components/MobileSidebar';
 import { ASSETS } from '_assets/images';
 import Image from 'next/image';
@@ -13,6 +13,7 @@ import {
   InvitationModule,
   LandModule,
   LeadsModule,
+  NotificationsModule,
 } from '_store/state-management';
 import { ALL_CSA_ROUTES } from './routes/routes';
 import { RenderGroupedLinks } from './components/RenderGroupedLinks';
@@ -26,8 +27,6 @@ import { useUserContext } from '_context/user-context';
 import { useAccessControl } from '_hooks/useAccessControl';
 import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
-import { MotionBox } from '_constants/motion';
-import { AnimatePresence } from 'framer-motion';
 
 export const Sidebar = ({
   onShowSidebar,
@@ -74,6 +73,13 @@ export const Sidebar = ({
 
   const { data: leadsList } = LeadsModule.agencyLeadsListQueries(queryPayload);
 
+  const { data: unreadNotificationsList } = NotificationsModule.getAllUnreadNotificationsQueries({
+    params: {
+      userId: user?.id,
+    },
+    queryOptions: { enabled: !!user?.id },
+  });
+
   const badgesByPath = useMemo(() => {
     return {
       [DASHBOARD_ROUTES.LAND.LIST]: allLandsList?.totalItems,
@@ -82,6 +88,7 @@ export const Sidebar = ({
       [DASHBOARD_ROUTES.TEAM.LIST]: teamList?.length,
       [DASHBOARD_ROUTES.INVITATIONS.LIST]: invitationList?.length,
       [DASHBOARD_ROUTES.LEADS]: leadsList?.length,
+      [DASHBOARD_ROUTES.NOTIFICATION]: unreadNotificationsList?.length,
     };
   }, [
     propertyList?.totalItems,
@@ -90,6 +97,7 @@ export const Sidebar = ({
     teamList?.length,
     invitationList?.length,
     leadsList?.length,
+    unreadNotificationsList?.length,
   ]);
 
   const sidebarLinks = useMemo(() => {
@@ -174,6 +182,10 @@ export const Sidebar = ({
               alt="logo"
               width={200}
               height={200}
+              style={{
+                width: 'auto',
+                height: 'auto',
+              }}
             />
           </Flex>
 

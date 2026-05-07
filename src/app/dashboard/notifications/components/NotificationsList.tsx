@@ -3,24 +3,24 @@ import { BaseTabs, Icons } from '_components/custom';
 import { NotificationsModule, UserModule } from '_store/state-management';
 import { useMemo } from 'react';
 import { RenderNotifications } from './RenderNotifications';
+import { useUserContext } from '_context/user-context';
 
 export const NotificationsList = () => {
-  const { data: user } = UserModule.getUserInfo({
-    queryOptions: { enabled: false },
-  });
+  const { user } = useUserContext();
 
   const {
     data: notificationsList,
     isLoading,
     refetch: refetchNotificationList,
   } = NotificationsModule.getAllNotificationsQueries({
-    params: { recipientId: user?.id },
-    queryOptions: { enabled: false },
+    params: { userId: user?.id },
+    queryOptions: { enabled: !!user?.id },
   });
 
   const { mutateAsync: readAll, isPending } = NotificationsModule.readAllNotificationsMutation({
     mutationOptions: {
       onSuccess: async () => {
+        NotificationsModule.NotificationsCache.invalidateAllUnreadNotificationCache();
         await refetchNotificationList();
       },
     },
@@ -34,7 +34,7 @@ export const NotificationsList = () => {
     const all = notificationsList ?? [];
     return {
       allRequests: all,
-      unreadRequests: all.filter((r) => r.isRead === false),
+      unreadRequests: all?.filter((r) => r.isRead === false),
       readRequests: all.filter((r) => r.isRead === true),
     };
   }, [notificationsList]);

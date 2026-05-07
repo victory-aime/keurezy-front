@@ -18,6 +18,7 @@ import { VariablesColors } from '_theme/variables';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useUserContext } from '_context/user-context';
+import { NotificationHeaderMenu } from '../../notifications/components/NotificationHeaderMenu';
 
 export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
   const { t } = useTranslation();
@@ -27,14 +28,11 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
 
   const { data: unreadNotificationsList, isLoading: unreadListLoad } =
     NotificationsModule.getAllUnreadNotificationsQueries({
-      params: { recipientId: user?.id },
-      queryOptions: { enabled: false },
+      params: {
+        userId: user?.id,
+      },
+      queryOptions: { enabled: !!user?.id },
     });
-
-  const { refetch: refetchNotificationList } = NotificationsModule.getAllNotificationsQueries({
-    params: { recipientId: user?.id },
-    queryOptions: { enabled: false },
-  });
 
   const links = [
     {
@@ -108,11 +106,10 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
               </>
             ) : (
               <>
-                {/* <NotificationHeaderMenu
+                <NotificationHeaderMenu
                   notifications={unreadNotificationsList ?? []}
                   isLoading={unreadListLoad}
-                  refetchUnreadList={refetchNotificationList}
-                /> */}
+                />
 
                 <Separator orientation="vertical" height={6} mx={1} />
 

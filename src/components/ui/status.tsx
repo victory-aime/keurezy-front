@@ -2,7 +2,7 @@ import type { ColorPalette } from '@chakra-ui/react';
 import { Status as ChakraStatus } from '@chakra-ui/react';
 import * as React from 'react';
 
-type StatusValue = 'success' | 'error' | 'warning' | 'info';
+type StatusValue = 'success' | 'error' | 'warning' | 'info' | 'danger';
 
 export interface StatusProps extends ChakraStatus.RootProps {
   value?: StatusValue;
@@ -11,6 +11,7 @@ export interface StatusProps extends ChakraStatus.RootProps {
 const statusMap: Record<StatusValue, ColorPalette> = {
   success: 'green',
   error: 'red',
+  danger: 'red',
   warning: 'orange',
   info: 'blue',
 };

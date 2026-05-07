@@ -13,3 +13,4 @@ export * from './common';
 export * from './invitation';
 export * from './team';
 export * from './annonces';
+export * from './visits';

@@ -1,0 +1,3 @@
+export enum VISITS_KEYS {
+  ALL_AGENCY_VISITS = 'ALL_AGENCY_VISITS',
+}

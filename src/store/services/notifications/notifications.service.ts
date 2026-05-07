@@ -6,30 +6,30 @@ import { MODELS } from '_types/index';
  * such as fetching all rental and creating a new notif through API endpoints.
  */
 export class NotificationsService extends BaseApi {
-  getAllNotifications(recipientId: string) {
+  getAllNotifications(userId: string) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().NOTIFICATION.GET_ALL,
       {},
-      { params: { recipientId } },
+      { params: { userId } },
     );
   }
 
-  getAllUnreadNotifications(recipientId: string) {
+  getAllUnreadNotifications(userId: string) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().NOTIFICATION.GET_ALL_UNREAD,
       {},
-      { params: { recipientId } },
+      { params: { userId } },
     );
   }
 
-  readAllNotifications(recipientId: string) {
+  readAllNotifications(userId: string) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().NOTIFICATION.READ_ALL,
       {},
-      { params: { recipientId } },
+      { params: { userId } },
     );
   }
-  readNotification(data: { notificationId: string; recipientId: string }) {
+  readNotification(data: { notificationId: string; userId: string }) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().NOTIFICATION.READ_ONE,
       {},

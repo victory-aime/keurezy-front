@@ -3,7 +3,7 @@ import { variantColorType } from '../button';
 import { ColorPalette } from '@chakra-ui/react';
 import { Icons } from '../icons';
 
-const STATUS_META = {
+const STATUS_META: Partial<Record<ENUM.COMMON.Status, variantColorType>> = {
   ACTIVE: 'success',
   AVAILABLE: 'success',
   ACCEPTED: 'success',
@@ -19,6 +19,9 @@ const STATUS_META = {
   SOLD: 'warning',
   EXPIRED: 'info',
   NEW: 'info',
+  PLANNED: 'info',
+  CONFIRMED: 'success',
+  DONE: 'success',
 } as const satisfies Partial<Record<ENUM.COMMON.Status, variantColorType>>;
 
 const VARIANT_CONFIG: Partial<Record<variantColorType, { colorPalette: ColorPalette }>> = {
@@ -42,4 +45,9 @@ const STATUS_ICONS: Partial<Record<ENUM.COMMON.Status, React.ElementType>> = {
   NEW: Icons.Bell,
 };
 
-export { STATUS_ICONS, STATUS_META, VARIANT_CONFIG };
+const getStatusColor = (status: ENUM.COMMON.Status): ColorPalette => {
+  const variant = STATUS_META[status];
+  return VARIANT_CONFIG[variant ?? 'info']?.colorPalette ?? 'gray';
+};
+
+export { STATUS_ICONS, STATUS_META, VARIANT_CONFIG, getStatusColor };

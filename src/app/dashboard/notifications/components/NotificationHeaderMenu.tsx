@@ -9,10 +9,9 @@ import { DASHBOARD_ROUTES } from '../../routes';
 export const NotificationHeaderMenu = ({
   notifications,
   isLoading,
-  refetchUnreadList,
 }: {
   notifications: MODELS.INotificationListResponse[];
-  refetchUnreadList: () => void;
+
   isLoading?: boolean;
 }) => {
   const router = useRouter();
@@ -48,14 +47,14 @@ export const NotificationHeaderMenu = ({
             </Flex>
             <Separator mb={4} />
 
-            {notifications.map((data, index) => {
+            {notifications?.map((data, index) => {
               return (
                 <Menu.Item key={index} value={data?.id}>
                   <NotificationsDisplay
                     request={data}
                     index={index}
                     isLoading={isLoading}
-                    refetchNotificationList={refetchUnreadList}
+                    refetchNotificationList={() => {}}
                   />
                 </Menu.Item>
               );

@@ -63,7 +63,10 @@ export const useAuth = () => {
         router.replace(result.data.url);
       }
     } catch (error) {
-      console.log('error catch', error);
+      handleApiError({
+        status: 500,
+        message: 'Une erreur interne est survenue. Veuillez réessayer plus tard.',
+      });
     }
   };
 

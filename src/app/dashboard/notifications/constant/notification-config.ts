@@ -10,7 +10,12 @@ export const notificationUIConfig: Record<
     color: ColorPalette;
   }
 > = {
-  REQUEST: {
+  VISIT: {
+    title: 'Nouvelle visite',
+    icon: 'Home',
+    color: 'purple',
+  },
+  LEAD: {
     title: 'Nouvelle demande',
     icon: 'Home',
     color: 'purple',
@@ -29,6 +34,11 @@ export const notificationUIConfig: Record<
     title: 'Maintenance',
     icon: 'Wrench',
     color: 'orange',
+  },
+  TICKET: {
+    title: 'Reclamation',
+    icon: 'Wrench',
+    color: 'yellow',
   },
   SYSTEM: {
     title: 'Notification système',

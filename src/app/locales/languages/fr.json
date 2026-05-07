@@ -127,7 +127,10 @@
       "ACCEPTED": "Acceptée",
       "CURRENTLY_ON_SALE": "vente en cours",
       "SOLD": "Vendu",
-      "NEW": "Nouvelle"
+      "NEW": "Nouvelle",
+      "PLANNED": "Planifiée",
+      "DONE": "Terminée",
+      "CONFIRMED": "Confirmée"
     },
     "TODAY": "Aujourd'hui",
     "MONTH": "Mois",
