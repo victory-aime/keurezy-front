@@ -118,7 +118,7 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
 
   // Pas de token → pas la peine d'appeler le backend
   if (!token) {
-    console.log('[proxy] Aucun session token trouvé dans les cookies');
+    //console.log('[proxy] Aucun session token trouvé dans les cookies');
     return null;
   }
 
@@ -126,8 +126,8 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
   const backendUrl = resolveBackendUrl();
   const endpoint = `${backendUrl}/api/auth/get-session`;
 
-  console.log('[proxy] token:', token.substring(0, 20) + '...');
-  console.log('[proxy] endpoint:', endpoint);
+  //console.log('[proxy] token:', token.substring(0, 20) + '...');
+  //console.log('[proxy] endpoint:', endpoint);
 
   try {
     const res = await fetch(endpoint, {
@@ -139,15 +139,15 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
       cache: 'no-store', // indispensable en middleware — jamais de cache
     });
 
-    console.log('[proxy] status:', res.status);
+    //console.log('[proxy] status:', res.status);
 
     if (!res.ok) {
-      console.error('[proxy] Réponse non-ok:', res.status, res.statusText);
+      //console.error('[proxy] Réponse non-ok:', res.status, res.statusText);
       return null;
     }
 
     const json = await res.json();
-    console.log('[proxy] session user:', json?.user?.email ?? 'null');
+    //console.log('[proxy] session user:', json?.user?.email ?? 'null');
 
     // Better-Auth retourne null directement si session invalide
     if (!json || !json.user) return null;
@@ -164,6 +164,8 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
 // ─────────────────────────────────────────
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
+  // console.log('[env] BACKEND_URL:', process.env.API_BACKEND_URL);
+  // console.log('[env] NODE_ENV:', process.env.NODE_ENV);
 
   // 🔐 Reset password sans token → signin
   if (pathname === RESET_PASSWORD_ROUTE && !searchParams.get('token')) {

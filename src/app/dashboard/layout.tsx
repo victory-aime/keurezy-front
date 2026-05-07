@@ -17,6 +17,8 @@ export default async function DashboardLayout({
     },
   });
 
+  console.log('DashboardLayout', session);
+
   return (
     <AuthContextProvider session={session?.data as any}>
       <SessionRefreshProvider error={session?.error?.toString()}>

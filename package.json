@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev --port 5080",
     "build": "next build",
+    "build:prod": "dotenv -e .env.production --override -- next build",
     "start": "next start --port 5080",
-    "start:prod": "dotenv -e .env.production -- cross-env APP_ENV=prod next start",
+    "start:prod": "dotenv -e .env.production --override -- next start",
+    "dev:prod": "dotenv -e .env.production --override -- next dev --port 5080",
     "commit": "prettier --write . && git add . && cz"
   },
   "config": {

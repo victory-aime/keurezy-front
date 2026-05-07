@@ -185,7 +185,7 @@ export const DashboardStats = () => {
       <Flex width={'full'} gap={3} flexDir={{ base: 'column', sm: 'row' }} data-tour="charts">
         <MonthlyRevenueAreaChart
           data={generateMonthlyRevenueStats()}
-          isLoading={monthlyRevenueLoad}
+          isLoading={occupationRateLoad}
         />
         <OccupationRateByType data={generateOccupationRateStats()} isLoading={occupationRateLoad} />
       </Flex>

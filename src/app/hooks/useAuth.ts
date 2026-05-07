@@ -1,10 +1,11 @@
-import { useRouter } from 'next/navigation';
-import { APP_ROUTES } from '_config/routes';
-import { useGlobalLoader } from '_context/loaderContext';
-import { handleApiError } from '_utils/handleApiError';
-import { handleApiSuccess } from '_utils/handleApiSuccess';
-import { authClient } from '../lib/auth-client';
-import { queryClient } from '../lib/query-client';
+import {useRouter} from 'next/navigation';
+import {APP_ROUTES} from '_config/routes';
+import {useGlobalLoader} from '_context/loaderContext';
+import {handleApiError} from '_utils/handleApiError';
+import {handleApiSuccess} from '_utils/handleApiSuccess';
+import {authClient} from '../lib/auth-client';
+import {queryClient} from '../lib/query-client';
+import {roleToDashboardMap} from "_constants/role";
 
 interface AuthTypes {
   name?: string;
@@ -22,11 +23,14 @@ export const useAuth = () => {
   const logout = async () => {
     try {
       showLoader();
-      const { data } = await authClient.signOut();
-      if (data?.success) {
-        router.push(APP_ROUTES.ROOT);
-        queryClient.clear();
-      }
+      await authClient.signOut();
+      queryClient.clear();
+      window.location.href = APP_ROUTES.ROOT;
+    } catch (error) {
+      handleApiError({
+        status: 500,
+        message: 'Une erreur est survenue lors de la déconnexion.',
+      });
     } finally {
       hideLoader();
     }
@@ -51,6 +55,7 @@ export const useAuth = () => {
           },
         },
       );
+      console.log('login result:', JSON.stringify(result));
       if (result.error) {
         handleApiError({
           status: result.error.status,
@@ -58,9 +63,15 @@ export const useAuth = () => {
         });
         return;
       }
-      if (result?.data.url) {
+      if (result?.data) {
         handleApiSuccess({ status: 200, message: 'Connexion réussie' });
-        router.replace(result.data.url);
+        // ✅ Hard navigation — force le browser à envoyer le cookie
+        // router.push() = client-side, le cookie n'est pas encore dans la requête
+        // ✅ Rôle disponible directement dans la réponse login
+        const role = result.data?.user?.role;
+        window.location.href = role
+            ? (roleToDashboardMap[role] ?? APP_ROUTES.REDIRECT)
+            : APP_ROUTES.REDIRECT;
       }
     } catch (error) {
       handleApiError({
