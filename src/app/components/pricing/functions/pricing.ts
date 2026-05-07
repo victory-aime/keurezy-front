@@ -12,12 +12,10 @@ export const getPricing = (
 };
 
 export const formatLimit = (
-    feature: MODELS.COMMON.IPlanFeature,
-    t: (key: string) => string,
+  feature: MODELS.COMMON.IPlanFeature,
+  t: (key: string) => string,
 ): string => {
-  const featureName = t(
-      `PERMISSIONS.FEATURE_LIST.${feature.feature?.name?.toUpperCase()}`,
-  );
+  const featureName = t(`PERMISSIONS.FEATURE_LIST.${feature.feature?.name?.toUpperCase()}`);
 
   if (feature.limit === null) {
     return `${featureName} illimités`;

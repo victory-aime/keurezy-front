@@ -35,7 +35,7 @@ import {
 import { MotionBox } from '_constants/motion';
 import { useFormikContext } from 'formik';
 import axios from 'axios';
-import {t} from "i18next";
+import { t } from 'i18next';
 
 type PlanSelectionState = {
   selectedPlanId: string | null;

@@ -2,14 +2,13 @@ import { NextResponse, NextRequest } from 'next/server';
 import { APP_ROUTES } from '_config/routes';
 import { UserRole } from './types/enum';
 import { DASHBOARD_ROUTES } from './app/dashboard/routes';
-import { getCookieCache } from 'better-auth/cookies';
 
 const PROTECTED_ROUTES: Record<string, string[]> = {
   ...Object.fromEntries(
-    Object.values(DASHBOARD_ROUTES).map((route) => [
-      route,
-      [UserRole.OWNER, UserRole.AGENCY_ADMIN, UserRole.AGENT],
-    ]),
+      Object.values(DASHBOARD_ROUTES).map((route) => [
+        route,
+        [UserRole.OWNER, UserRole.AGENCY_ADMIN, UserRole.AGENT],
+      ]),
   ),
 };
 
@@ -17,47 +16,22 @@ const PROTECTED_PREFIXES = Object.keys(PROTECTED_ROUTES);
 const RESET_PASSWORD_ROUTE = APP_ROUTES.AUTH.RESET_PASSWORD_VALIDATE;
 const TOTP_ROUTE = APP_ROUTES.AUTH._2FA;
 
-/**
- * Tente de lire le rôle depuis le cookie cache (compact).
- * Retourne null si le cache est absent ou expiré.
- * Aucun appel réseau.
- */
-async function getRoleFromCookieCache(request: NextRequest): Promise<string | null> {
-  try {
-    const cached = await getCookieCache(request);
-    return (cached?.user?.role as string) ?? null;
-  } catch {
-    return null;
-  }
-}
+// ─────────────────────────────────────────
+// Cookie names — Better-Auth préfixe avec __Secure- en HTTPS
+// ─────────────────────────────────────────
+const SESSION_COOKIE_NAMES = [
+  '__Secure-better-auth.session_token',
+  'better-auth.session_token',
+];
 
-/**
- * Fallback : appel réseau vers better-auth.
- * Utilisé uniquement si le cookie cache est absent/invalide.
- */
-async function getRoleFromSession(): Promise<string | null> {
-  try {
-    const { authClient } = await import('./app/lib/auth-client');
-    const { headers } = await import('next/headers');
+const TOTP_COOKIE_NAMES = [
+  '__Secure-better-auth.two_factor',
+  'better-auth.two_factor',
+];
 
-    // Timeout de sécurité : évite de bloquer le middleware indéfiniment
-    const sessionPromise = authClient.getSession({
-      fetchOptions: { headers: await headers() },
-    });
-
-    const timeoutPromise = new Promise<null>(
-      (resolve) => setTimeout(() => resolve(null), 3000), // 3s max
-    );
-
-    const session = await Promise.race([sessionPromise, timeoutPromise]);
-
-    console.log('session callback', session);
-    return (session?.data?.user?.role as string) ?? null;
-  } catch {
-    return null;
-  }
-}
-
+// ─────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────
 function redirectTo(request: NextRequest, pathname: string, clearSearch = false) {
   const url = request.nextUrl.clone();
   url.pathname = pathname;
@@ -65,41 +39,140 @@ function redirectTo(request: NextRequest, pathname: string, clearSearch = false)
   return NextResponse.redirect(url);
 }
 
-function getSessionCookieValue(request: NextRequest): string | undefined {
-  // En HTTPS, better-auth utilise le préfixe __Secure-
-  return (
-    request.cookies.get('__Secure-better-auth.session_token')?.value ??
-    request.cookies.get('better-auth.session_token')?.value
-  );
+/**
+ * Récupère le token de session brut depuis les cookies parsés (décodés).
+ * Gère les deux variantes : __Secure- (HTTPS) et plain (HTTP).
+ */
+function getSessionToken(request: NextRequest): string | null {
+  for (const name of SESSION_COOKIE_NAMES) {
+    const value = request.cookies.get(name)?.value;
+    if (value) return value;
+  }
+  return null;
 }
 
-function getCookieCacheValue(request: NextRequest): string | undefined {
-  return (
-    request.cookies.get('__Secure-better-auth.session_data')?.value ??
-    request.cookies.get('better-auth.session_data')?.value
-  );
+function getTotpCookie(request: NextRequest) {
+  for (const name of TOTP_COOKIE_NAMES) {
+    const value = request.cookies.get(name);
+    if (value) return value;
+  }
+  return null;
 }
 
+/**
+ * Reconstruit le header Cookie depuis les valeurs décodées par Next.js.
+ *
+ * ⚠️ NE PAS utiliser request.headers.get('cookie') :
+ *    → les valeurs sont percent-encodées (%2F, %3D)
+ *    → Better-Auth rejette le token silencieusement (data: null, error: null)
+ *
+ * request.cookies.getAll() retourne les valeurs déjà décodées ✅
+ */
+function buildCookieHeader(request: NextRequest): string {
+  return request.cookies
+      .getAll()
+      .map((c) => `${c.name}=${c.value}`)
+      .join('; ');
+}
+
+/**
+ * Résout l'URL du backend selon l'environnement.
+ * En Edge middleware, seules les variables sans NEXT_PUBLIC_ définies
+ * dans next.config sont garanties disponibles.
+ */
+function resolveBackendUrl(): string {
+  const url =
+      process.env.API_BACKEND_URL ??        // ← variable serveur (recommandé)
+      process.env.NEXT_PUBLIC_API_URL ?? // ← fallback public
+      '';
+
+  if (!url) {
+    throw new Error("[proxy] BACKEND_URL non défini — vérifie tes variables d'environnement");
+  }
+
+  return url.replace(/\/$/, ''); // supprime le slash final si présent
+}
+
+// ─────────────────────────────────────────
+// SESSION — fetch direct vers Better-Auth
+// ─────────────────────────────────────────
+interface BetterAuthSession {
+  user: {
+    id: string;
+    role: string;
+    email: string;
+    emailVerified: boolean;
+    [key: string]: unknown;
+  };
+  session: {
+    id: string;
+    token: string;
+    expiresAt: string;
+    permissions: unknown[];
+    [key: string]: unknown;
+  };
+}
+
+async function getSession(request: NextRequest): Promise<BetterAuthSession | null> {
+  const token = getSessionToken(request);
+
+  // Pas de token → pas la peine d'appeler le backend
+  if (!token) {
+    console.log('[proxy] Aucun session token trouvé dans les cookies');
+    return null;
+  }
+
+  const cookieHeader = buildCookieHeader(request);
+  const backendUrl = resolveBackendUrl();
+  const endpoint = `${backendUrl}/api/auth/get-session`;
+
+  console.log('[proxy] token:', token.substring(0, 20) + '...');
+  console.log('[proxy] endpoint:', endpoint);
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        cookie: cookieHeader,
+        'content-type': 'application/json',
+      },
+      cache: 'no-store', // indispensable en middleware — jamais de cache
+    });
+
+    console.log('[proxy] status:', res.status);
+
+    if (!res.ok) {
+      console.error('[proxy] Réponse non-ok:', res.status, res.statusText);
+      return null;
+    }
+
+    const json = await res.json();
+    console.log('[proxy] session user:', json?.user?.email ?? 'null');
+
+    // Better-Auth retourne null directement si session invalide
+    if (!json || !json.user) return null;
+
+    return json as BetterAuthSession;
+  } catch (e) {
+    console.error('[proxy] Erreur fetch session:', e);
+    return null;
+  }
+}
+
+// ─────────────────────────────────────────
+// MIDDLEWARE PRINCIPAL
+// ─────────────────────────────────────────
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
-  // 🔐 Reset password sans token
+  // 🔐 Reset password sans token → signin
   if (pathname === RESET_PASSWORD_ROUTE && !searchParams.get('token')) {
     return redirectTo(request, APP_ROUTES.AUTH.SIGN_IN, true);
   }
 
-  const sessionCookieValue = getSessionCookieValue(request);
+  // 🔐 TOTP — lecture cookie uniquement, pas de fetch réseau
+  const totpCookie = getTotpCookie(request);
 
-  console.log('sessionCookies', sessionCookieValue);
-  console.log('all cookies:', request.cookies.getAll());
-  console.log('URL:', request.nextUrl.pathname);
-  console.log('COOKIE HEADER RAW:', request.headers.get('cookie'));
-
-  const totpCookie =
-    request.cookies.get('__Secure-better-auth.two_factor') ??
-    request.cookies.get('better-auth.two_factor');
-
-  // 🔐 TOTP — lecture cookie uniquement, pas de réseau
   if (totpCookie && pathname !== TOTP_ROUTE) {
     return redirectTo(request, TOTP_ROUTE);
   }
@@ -109,26 +182,21 @@ export async function proxy(request: NextRequest) {
 
   // 🔐 Routes protégées
   const matchedRoute = PROTECTED_PREFIXES.find(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
+      (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
   if (matchedRoute) {
-    // Pas de cookie de session = redirect immédiat, pas d'appel réseau
-    if (!sessionCookieValue) {
+    const session = await getSession(request);
+
+    if (!session?.user) {
+      console.log('[proxy] Session invalide → redirection not-authenticated');
       return redirectTo(request, APP_ROUTES.PROTECTED);
     }
 
-    // ✅ Étape 1 : lire le rôle depuis le cookie cache (compact, sans réseau)
-    let userRole = await getRoleFromCookieCache(request);
+    const userRole = session.user.role as UserRole;
 
-    console.log('user role', userRole);
-
-    // ✅ Étape 2 : fallback réseau si le cache est absent ou a crashé
-    if (!userRole) {
-      userRole = await getRoleFromSession();
-    }
-
-    if (!userRole || !PROTECTED_ROUTES[matchedRoute].includes(userRole)) {
+    if (!PROTECTED_ROUTES[matchedRoute].includes(userRole)) {
+      console.log('[proxy] Rôle non autorisé:', userRole);
       return redirectTo(request, APP_ROUTES.PROTECTED);
     }
   }

@@ -12,7 +12,7 @@ import { MotionBox } from '_constants/motion';
 import { ENUM } from '_types/*';
 import { PlanCardProps } from './interface/pricing-types';
 import { formatLimit, getPricing } from './functions/pricing';
-import {t} from "i18next";
+import { t } from 'i18next';
 
 export const PlanCard = ({
   plan,
@@ -63,9 +63,9 @@ export const PlanCard = ({
         {t(`SUBSCRIPTION.PLANS.${plan.name}`)}
       </BaseText>
 
-      <BaseText variant={TextVariant.S}>
-        {t(`SUBSCRIPTION.DESCRIPTIONS.${plan.name}`)}
-      </BaseText>
+      {/*<BaseText variant={TextVariant.S}>*/}
+      {/*  {t(`SUBSCRIPTION.DESCRIPTIONS.${plan.name}`)}*/}
+      {/*</BaseText>*/}
 
       <Box mt={2} mb={3}>
         {plan.pricingType === 'COMMISSION' ? (
@@ -115,8 +115,8 @@ export const PlanCard = ({
 
       <For each={plan.planFeatures}>
         {(features, index) => (
-          <List.Root key={index} gap="2" variant="plain" align="center" mt={4} spaceY={1}>
-            <List.Item key={features.label} alignItems={'center'} gap={0} fontSize={'sm'}>
+          <List.Root key={index} gap="2" variant="plain" align="start" mt={4} spaceY={1}>
+            <List.Item key={features.label} alignItems={'flex-start'} gap={0} fontSize={'sm'}>
               <List.Indicator asChild color="tertiary.500">
                 <Icons.Check size={20} />
               </List.Indicator>

@@ -2,7 +2,6 @@ import type { NextConfig } from 'next';
 import withSerwistInit from '@serwist/next';
 import path from 'path';
 
-
 const apiUrl = process.env.API_BACKEND_URL;
 
 if (!apiUrl) {
@@ -50,7 +49,7 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
         pathname: '/**',
-      }
+      },
     ],
   },
   reactStrictMode: true,
