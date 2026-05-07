@@ -39,6 +39,10 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml
 
+      - name: Debug environment variables
+        run: |
+          echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL"
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
