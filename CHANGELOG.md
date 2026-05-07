@@ -1,3 +1,22 @@
+# [2.1.0](https://github.com/victory-aime/my-immo-front/compare/v2.0.0...v2.1.0) (2026-05-07)
+
+
+### Features
+
+* **building-property:** building-property ([ad0e271](https://github.com/victory-aime/my-immo-front/commit/ad0e271981cf9164d9d7ce18042233251b9fe5b9))
+* **dashboard and annonces:** update dashboard components and add 'annonces' features ([fc0da46](https://github.com/victory-aime/my-immo-front/commit/fc0da46c18d5a7361da61ab3ee4fe96a29811f3e))
+* **integrate rbac + plan-based access control with upgrade flow and sidebar refactor:** RBAC ([72ee852](https://github.com/victory-aime/my-immo-front/commit/72ee852f8a2b66b3d3216ece01e5559903b11a53))
+* **land:** add initial land module ([880cc6b](https://github.com/victory-aime/my-immo-front/commit/880cc6b57fa2b1d305cf55ac58fef9481574c21e))
+* **leads:** Introduce leads management feature ([7ae11e5](https://github.com/victory-aime/my-immo-front/commit/7ae11e5a4ccf390ddd3a589d036ca39ecb105e30))
+* **onboarding:** onboarding, pricing, dashboard, components, store, types, validation updates ([5fc87b4](https://github.com/victory-aime/my-immo-front/commit/5fc87b42803e449b0ec5e776dfc7de89afc80e11))
+* **team/invitations:** implement team invitations, permissions grouping, and dashboard updates ([2a46675](https://github.com/victory-aime/my-immo-front/commit/2a466752f451c0b209173afc56bf5396be9bbbba))
+* **visits:** visits services and components ([7e57f05](https://github.com/victory-aime/my-immo-front/commit/7e57f05a5dd39fc01e93276722dacf88af8dfc5f))
+* **visits:** visits services and components ([4ecb90f](https://github.com/victory-aime/my-immo-front/commit/4ecb90f6d648cdbaf4a6d4f8b7e772c9b131e796))
+* **visits:** visits services and components ([229af25](https://github.com/victory-aime/my-immo-front/commit/229af25903a236760df57e443e4a26f1364c8408))
+* **visits:** visits services and components ([3d7aa2f](https://github.com/victory-aime/my-immo-front/commit/3d7aa2fa298a6c0f324287ed9ae300e6a0205ead))
+* **visits:** visits services and components ([63da424](https://github.com/victory-aime/my-immo-front/commit/63da42455447ef18519951fd60719d971101f9e6))
+* **visits:** visits services and components ([88955f1](https://github.com/victory-aime/my-immo-front/commit/88955f1d211e4a89001ca02700ca49063b5893b3))
+
 # [2.0.0](https://github.com/victory-aime/my-immo-front/compare/v1.4.1...v2.0.0) (2026-04-06)
 
 ### Bug Fixes
