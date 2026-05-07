@@ -2,10 +2,18 @@ import type { NextConfig } from 'next';
 import withSerwistInit from '@serwist/next';
 import path from 'path';
 
+
+const apiUrl = process.env.API_BACKEND_URL;
+
+if (!apiUrl) {
+  throw new Error('API_BACKEND_URL is missing');
+}
+
 const withSerwist = withSerwistInit({
   swSrc: path.join(process.cwd(), 'app/sw.ts'),
   swDest: path.join(process.cwd(), 'public/sw.js'),
   cacheOnNavigation: true,
+  disable: process.env.NODE_ENV !== 'production',
 });
 
 const nextConfig: NextConfig = {
@@ -17,7 +25,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/v1/:path*',
-        destination: `${process.env.API_BACKEND_URL}/api/v1/:path*`,
+        destination: `${apiUrl}/api/v1/:path*`,
       },
     ];
   },
@@ -38,6 +46,11 @@ const nextConfig: NextConfig = {
         hostname: 'avatar.iran.liara.run',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      }
     ],
   },
   reactStrictMode: true,

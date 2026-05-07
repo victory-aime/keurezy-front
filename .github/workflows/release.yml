@@ -15,7 +15,7 @@ jobs:
       pull-requests: write
 
     env:
-      NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+      API_BACKEND_URL: ${{ secrets.API_BACKEND_URL }}
 
     steps:
       - name: Checkout repository
@@ -38,10 +38,6 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml
-
-      - name: Debug environment variables
-        run: |
-          echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
