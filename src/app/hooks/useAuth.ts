@@ -1,11 +1,10 @@
-import {useRouter} from 'next/navigation';
-import {APP_ROUTES} from '_config/routes';
-import {useGlobalLoader} from '_context/loaderContext';
-import {handleApiError} from '_utils/handleApiError';
-import {handleApiSuccess} from '_utils/handleApiSuccess';
-import {authClient} from '../lib/auth-client';
-import {queryClient} from '../lib/query-client';
-import {roleToDashboardMap} from "_constants/role";
+import { useRouter } from 'next/navigation';
+import { APP_ROUTES } from '_config/routes';
+import { useGlobalLoader } from '_context/loaderContext';
+import { handleApiError } from '_utils/handleApiError';
+import { handleApiSuccess } from '_utils/handleApiSuccess';
+import { authClient } from '../lib/auth-client';
+import { queryClient } from '../lib/query-client';
 
 interface AuthTypes {
   name?: string;
@@ -36,7 +35,7 @@ export const useAuth = () => {
     }
   };
 
-  const login = async ({ email, password, callbackUrl }: AuthTypes) => {
+  const login = async ({ email, password }: AuthTypes) => {
     try {
       const result = await authClient.signIn.email(
         {
@@ -47,15 +46,10 @@ export const useAuth = () => {
           async onSuccess(context) {
             if (context.data.twoFactorRedirect) {
               router.replace(APP_ROUTES.AUTH._2FA);
-            } else if (callbackUrl) {
-              router.push(callbackUrl);
-            } else {
-              return;
             }
           },
         },
       );
-      console.log('login result:', JSON.stringify(result));
       if (result.error) {
         handleApiError({
           status: result.error.status,
@@ -63,15 +57,9 @@ export const useAuth = () => {
         });
         return;
       }
-      if (result?.data) {
+      if (result?.data?.token) {
         handleApiSuccess({ status: 200, message: 'Connexion réussie' });
-        // ✅ Hard navigation — force le browser à envoyer le cookie
-        // router.push() = client-side, le cookie n'est pas encore dans la requête
-        // ✅ Rôle disponible directement dans la réponse login
-        const role = result.data?.user?.role;
-        window.location.href = role
-            ? (roleToDashboardMap[role] ?? APP_ROUTES.REDIRECT)
-            : APP_ROUTES.REDIRECT;
+        window.location.href = APP_ROUTES.REDIRECT;
       }
     } catch (error) {
       handleApiError({

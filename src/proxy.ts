@@ -5,10 +5,10 @@ import { DASHBOARD_ROUTES } from './app/dashboard/routes';
 
 const PROTECTED_ROUTES: Record<string, string[]> = {
   ...Object.fromEntries(
-      Object.values(DASHBOARD_ROUTES).map((route) => [
-        route,
-        [UserRole.OWNER, UserRole.AGENCY_ADMIN, UserRole.AGENT],
-      ]),
+    Object.values(DASHBOARD_ROUTES).map((route) => [
+      route,
+      [UserRole.OWNER, UserRole.AGENCY_ADMIN, UserRole.AGENT],
+    ]),
   ),
 };
 
@@ -19,15 +19,9 @@ const TOTP_ROUTE = APP_ROUTES.AUTH._2FA;
 // ─────────────────────────────────────────
 // Cookie names — Better-Auth préfixe avec __Secure- en HTTPS
 // ─────────────────────────────────────────
-const SESSION_COOKIE_NAMES = [
-  '__Secure-better-auth.session_token',
-  'better-auth.session_token',
-];
+const SESSION_COOKIE_NAMES = ['__Secure-better-auth.session_token', 'better-auth.session_token'];
 
-const TOTP_COOKIE_NAMES = [
-  '__Secure-better-auth.two_factor',
-  'better-auth.two_factor',
-];
+const TOTP_COOKIE_NAMES = ['__Secure-better-auth.two_factor', 'better-auth.two_factor'];
 
 // ─────────────────────────────────────────
 // HELPERS
@@ -70,9 +64,9 @@ function getTotpCookie(request: NextRequest) {
  */
 function buildCookieHeader(request: NextRequest): string {
   return request.cookies
-      .getAll()
-      .map((c) => `${c.name}=${c.value}`)
-      .join('; ');
+    .getAll()
+    .map((c) => `${c.name}=${c.value}`)
+    .join('; ');
 }
 
 /**
@@ -82,9 +76,9 @@ function buildCookieHeader(request: NextRequest): string {
  */
 function resolveBackendUrl(): string {
   const url =
-      process.env.API_BACKEND_URL ??        // ← variable serveur (recommandé)
-      process.env.NEXT_PUBLIC_API_URL ?? // ← fallback public
-      '';
+    process.env.API_BACKEND_URL ?? // ← variable serveur (recommandé)
+    process.env.NEXT_PUBLIC_API_URL ?? // ← fallback public
+    '';
 
   if (!url) {
     throw new Error("[proxy] BACKEND_URL non défini — vérifie tes variables d'environnement");
@@ -118,7 +112,7 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
 
   // Pas de token → pas la peine d'appeler le backend
   if (!token) {
-    //console.log('[proxy] Aucun session token trouvé dans les cookies');
+    console.log('[proxy] Aucun session token trouvé dans les cookies');
     return null;
   }
 
@@ -126,8 +120,8 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
   const backendUrl = resolveBackendUrl();
   const endpoint = `${backendUrl}/api/auth/get-session`;
 
-  //console.log('[proxy] token:', token.substring(0, 20) + '...');
-  //console.log('[proxy] endpoint:', endpoint);
+  console.log('[proxy] token:', token.substring(0, 20) + '...');
+  console.log('[proxy] endpoint:', endpoint);
 
   try {
     const res = await fetch(endpoint, {
@@ -136,20 +130,19 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
         cookie: cookieHeader,
         'content-type': 'application/json',
       },
-      cache: 'no-store', // indispensable en middleware — jamais de cache
+      cache: 'no-store',
     });
 
-    //console.log('[proxy] status:', res.status);
+    console.log('[proxy] status:', res.status);
 
     if (!res.ok) {
-      //console.error('[proxy] Réponse non-ok:', res.status, res.statusText);
+      console.error('[proxy] Réponse non-ok:', res.status, res.statusText);
       return null;
     }
 
     const json = await res.json();
-    //console.log('[proxy] session user:', json?.user?.email ?? 'null');
+    console.log('[proxy] session user:', json?.user?.email ?? 'null');
 
-    // Better-Auth retourne null directement si session invalide
     if (!json || !json.user) return null;
 
     return json as BetterAuthSession;
@@ -164,8 +157,8 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
 // ─────────────────────────────────────────
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
-  // console.log('[env] BACKEND_URL:', process.env.API_BACKEND_URL);
-  // console.log('[env] NODE_ENV:', process.env.NODE_ENV);
+  console.log('[env] BACKEND_URL:', process.env.API_BACKEND_URL);
+  console.log('[env] NODE_ENV:', process.env.NODE_ENV);
 
   // 🔐 Reset password sans token → signin
   if (pathname === RESET_PASSWORD_ROUTE && !searchParams.get('token')) {
@@ -184,7 +177,7 @@ export async function proxy(request: NextRequest) {
 
   // 🔐 Routes protégées
   const matchedRoute = PROTECTED_PREFIXES.find(
-      (route) => pathname === route || pathname.startsWith(`${route}/`),
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
   if (matchedRoute) {

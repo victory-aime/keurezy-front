@@ -11,25 +11,20 @@ export default function RedirectAfterLogin() {
   const { data: session, isPending } = authClient.useSession();
 
   useEffect(() => {
-    if (isPending) return; // ✅ attend
-
+    if (isPending) return;
     if (!session?.user) {
-      // ✅ Attend un tick supplémentaire avant de conclure
-      // le cookie peut ne pas encore être lu au premier render
       const timer = setTimeout(() => {
         window.location.href = APP_ROUTES.AUTH.SIGN_IN;
-      }, 900);
+      }, 1000);
       return () => clearTimeout(timer);
     }
-
     const dashboardUrl = roleToDashboardMap[session.user.role];
     window.location.href = dashboardUrl ?? APP_ROUTES.ROOT;
-
   }, [session, isPending]);
 
   return (
-      <Center h={'100vh'}>
-        <Loader loader showText />
-      </Center>
+    <Center h={'100vh'}>
+      <Loader loader showText />
+    </Center>
   );
 }

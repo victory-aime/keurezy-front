@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { AuthBoxContainer } from './AuthBoxContainer';
 import { Navbar } from '_component/NavBar';
 
-export const SignIn = ({ callbackUrl = APP_ROUTES.REDIRECT }: { callbackUrl?: string }) => {
+export const SignIn = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +23,6 @@ export const SignIn = ({ callbackUrl = APP_ROUTES.REDIRECT }: { callbackUrl?: st
     await login({
       email: values.email,
       password: values.password,
-      callbackUrl,
     })
       .catch((error) => console.log('error', error))
       .finally(() => setIsLoading(false));
