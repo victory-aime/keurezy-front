@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/victory-aime/my-immo-front/compare/v2.1.0...v2.1.1) (2026-05-08)
+
+
+### Bug Fixes
+
+* **useauth-proxy:** useAuth and proxy ([bc75d75](https://github.com/victory-aime/my-immo-front/commit/bc75d751eb50dd0f2eabd9b3a92b1466f32a5a43))
+
 # [2.1.0](https://github.com/victory-aime/my-immo-front/compare/v2.0.0...v2.1.0) (2026-05-07)
 
 ### Features
