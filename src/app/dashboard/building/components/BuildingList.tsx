@@ -18,7 +18,6 @@ import { CONSTANTS, MODELS } from '_types/*';
 import { BuildingDelete } from './BuildingDelete';
 import { BuildingDetails } from './BuildingDetail';
 import { FormikValues } from 'formik';
-import { IuseExportData, PDFService } from 'rise-core-frontend';
 import { useTranslation } from 'react-i18next';
 import { BuildingStatsCard } from './BuildingStats';
 import { useUserContext } from '_context/user-context';
@@ -28,7 +27,7 @@ export const BuildingList = () => {
   const { t } = useTranslation();
   const { user: currentUser } = useUserContext();
   const [currentPage, setCurrentPage] = useState(1);
-  const { exportTableToPdf } = PDFService.ExportService();
+  
   const [exportLoading, setExportLoading] = useState(false);
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -169,11 +168,7 @@ export const BuildingList = () => {
       ...col,
       header: t(col.header),
     }));
-    await exportTableToPdf(
-      allBuildings?.content as unknown as IuseExportData[],
-      'Liste des Bâtiments',
-      translatedColumns,
-    );
+   
   };
 
   return (

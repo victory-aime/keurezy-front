@@ -21,6 +21,7 @@ const APIS_ROUTES_MODULES_PATH = {
   TEAM: '/team',
   ANNONCES: '/annonces',
   VISITS: '/visits',
+  STATS: '/stats',
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -457,5 +458,14 @@ export const APIS = (baseUrl?: string) => {
         showResponse: false,
       }),
     },
-  };
+    STATS: {
+        AGENCY: api({
+          path: `${APIS_ROUTES_MODULES_PATH.STATS}/agency`,
+          pathBase: 'SECURED_API',
+          method: 'GET',
+      }),
+    },
+
+          
+ };
 };

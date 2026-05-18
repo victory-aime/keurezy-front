@@ -85,6 +85,13 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         path: DASHBOARD_ROUTES.AGENCY,
         icon: Icons.Office,
       },
+      
+      {
+        label: 'Statistiques',
+        path: '/dashboard/stats',
+        icon: Icons.Home,
+      },
+
     ],
   },
 

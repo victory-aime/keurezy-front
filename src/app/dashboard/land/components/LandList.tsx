@@ -18,7 +18,6 @@ import { CONSTANTS, MODELS } from '_types/*';
 import { LandDelete } from './LandDelete';
 import { LandDetails } from './LandDetails';
 import { FormikValues } from 'formik';
-import { IuseExportData, PDFService } from 'rise-core-frontend';
 import { useTranslation } from 'react-i18next';
 import { LandStatsCard } from './LandStats';
 import { useUserContext } from '_context/user-context';
@@ -28,7 +27,7 @@ export const LandList = () => {
   const { t } = useTranslation();
   const { user: currentUser } = useUserContext();
   const [currentPage, setCurrentPage] = useState(1);
-  const { exportTableToPdf } = PDFService.ExportService();
+  // const { exportTableToPdf } = PDFService.ExportService();
   const [exportLoading, setExportLoading] = useState(false);
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -160,11 +159,11 @@ export const LandList = () => {
       ...col,
       header: t(col.header),
     }));
-    await exportTableToPdf(
-      allLands?.content as unknown as IuseExportData[],
-      'Liste des Terrains',
-      translatedColumns,
-    );
+    // await exportTableToPdf(
+    //   allLands?.content as unknown as IuseExportData[],
+    //   'Liste des Terrains',
+    //   translatedColumns,
+    // );
   };
 
   return (
