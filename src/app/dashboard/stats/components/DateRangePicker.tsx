@@ -1,7 +1,8 @@
 ﻿'use client';
 
-import { HStack, Input, Button, Text } from '@chakra-ui/react';
+import { HStack, Input, Text } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
+import { BaseButton, Icons } from '_components/custom';
 
 type DateRangePickerProps = {
   startDate?: string;
@@ -40,9 +41,15 @@ export default function DateRangePicker({ startDate, endDate, onChange, label = 
         onChange={(event) => setEnd(event.target.value)}
         min={start || undefined}
       />
-      <Button onClick={handleApply} colorScheme="brand">
+      <BaseButton
+        onClick={handleApply} withGradient={false} bg="black" color="white"
+        _hover={{ bg: 'gray.800' }}
+        px={{ base: '10px', md: '15px' }}
+        minW={{ base: '40px', md: 'auto' }}
+        size="sm"
+      >
         Appliquer
-      </Button>
+      </BaseButton>
     </HStack>
   );
 }

@@ -1,6 +1,7 @@
 import { SidebarNavGroupProps } from '../types';
 import { DASHBOARD_ROUTES } from '../../../routes';
 import { Icons } from '_components/custom';
+import { title } from 'process';
 
 export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
   {
@@ -85,12 +86,7 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         path: DASHBOARD_ROUTES.AGENCY,
         icon: Icons.Office,
       },
-      
-      {
-        label: 'Statistiques',
-        path: '/dashboard/stats',
-        icon: Icons.Home,
-      },
+     
 
     ],
   },
@@ -104,6 +100,18 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         label: 'Sécurité',
         path: DASHBOARD_ROUTES.SECURITY,
         icon: Icons.Shield,
+      },
+    ],
+  },
+  {
+    title: 'Analytique',
+    icon: Icons.QueryStats,
+    links: [ 
+      
+      {
+        label: 'Statistiques',
+        path: '/dashboard/stats',
+        icon: Icons.StatsChart,
       },
     ],
   },

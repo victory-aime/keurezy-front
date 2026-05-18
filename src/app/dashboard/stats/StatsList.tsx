@@ -29,7 +29,7 @@ export function StatsList() {
       icon: <Icons.RiBuildingLine />,
     },
     {
-      label: 'Leads',
+      label: 'personne intéressées',
       value: data?.leads?.total ?? 0,
       description: 'Nouveaux prospects',
       color: 'blue.600',
@@ -59,7 +59,7 @@ export function StatsList() {
       color: 'green.600',
     },
     {
-      title: 'Leads',
+      title: 'personne intéressées',
       value: data?.leads?.total ?? 0,
       description: 'Nouveaux prospects',
       color: 'blue.600',
