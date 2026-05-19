@@ -6,7 +6,6 @@ import { BaseButton, BaseText, FormTextInput } from '_components/custom';
 import { VALIDATION } from '_types/';
 import { APP_ROUTES } from '_config/routes';
 import { useState } from 'react';
-import { handleApiSuccess } from '_utils/handleApiSuccess';
 import { SendEmailRecap } from './SendEmailRecap';
 import { useRouter } from 'next/navigation';
 import { AuthModule } from '_store/state-management';
@@ -30,13 +29,14 @@ export const TokenExpired = () => {
     await sendEmailVerification({
       payload: {
         email: values?.email,
-        callbackURL: APP_ROUTES.AUTH.VERIFIED_EMAIL,
       },
     });
   };
 
   return (
     <AuthBoxContainer
+      animatedType={'error'}
+      withAnimatedCheckmark
       title={'Ce lien de vérification a expiré ou a deja eté utilisé'}
       description={<BaseText>Aucun souci, vous pouvez en demander un nouveau.</BaseText>}
     >

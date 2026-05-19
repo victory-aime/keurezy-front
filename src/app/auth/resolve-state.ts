@@ -4,11 +4,11 @@ export function resolveState(key: string): VerificationState {
   switch (key) {
     case 'token':
       return 'loading';
-    case 'token_expired':
-      return 'token_expired';
-    case 'invalid_token':
-      return 'invalid_token';
+    case 'TOKEN_EXPIRED':
+      return 'TOKEN_EXPIRED';
+    case 'INVALID_TOKEN':
+      return 'INVALID_TOKEN';
     default:
-      return 'unknown_error';
+      return 'loading';
   }
 }

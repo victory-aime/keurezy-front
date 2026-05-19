@@ -5,6 +5,8 @@ export const UnknownError = () => {
   return (
     <AuthBoxContainer
       title={'Erreur'}
+      animatedType={'error'}
+      withAnimatedCheckmark
       description={
         <BaseText>
           Une erreur est survenue lors de la vérification. Veuillez réessayer ou contacter le

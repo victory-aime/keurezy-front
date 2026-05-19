@@ -9,15 +9,20 @@ import { motion } from 'framer-motion';
 import { MotionBox, MotionVStack } from '_constants/motion';
 import { useColorMode } from '_components/ui/color-mode';
 import { FloatSwitchColorMode } from '_components/custom';
+import { AnimatedCheckmark } from '../onboarding/components/AnimatedCheck';
 
 export const AuthBoxContainer = ({
   children,
   title,
   description,
+  withAnimatedCheckmark = false,
+  animatedType = 'success',
 }: {
   children: ReactNode;
   title: string;
   description?: ReactNode;
+  withAnimatedCheckmark?: boolean;
+  animatedType?: 'success' | 'error';
 }) => {
   const { colorMode } = useColorMode();
   const { t } = useTranslation();
@@ -47,6 +52,7 @@ export const AuthBoxContainer = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
+          {withAnimatedCheckmark && <AnimatedCheckmark type={animatedType} />}
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -56,6 +62,7 @@ export const AuthBoxContainer = ({
               src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
               width={220}
               height={220}
+              loading={'lazy'}
               alt="logo"
             />
           </motion.div>

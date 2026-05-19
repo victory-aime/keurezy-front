@@ -15,16 +15,16 @@ export const AnimatedCheckmark = ({ type = 'success' }: { type?: 'success' | 'er
     <MotionBox
       animate={{
         boxShadow: [
-          `0 0 0 0px ${hexToRGB(type === 'success' ? 'primary' : 'danger', 0.3)}`,
-          `0 0 0 20px ${hexToRGB(type === 'success' ? 'primary' : 'danger', 0)}`,
-          `0 0 0 0px ${hexToRGB(type === 'success' ? 'primary' : 'danger', 0.3)}`,
+          `0 0 0 0px ${hexToRGB(type === 'success' ? 'success' : 'danger', 0.3)}`,
+          `0 0 0 20px ${hexToRGB(type === 'success' ? 'success' : 'danger', 0)}`,
+          `0 0 0 0px ${hexToRGB(type === 'success' ? 'success' : 'danger', 0.3)}`,
         ],
       }}
       transition={{ duration: 2, repeat: Infinity }}
       h={'24'}
       w={'24'}
       bgGradient={'to-br'}
-      gradientFrom={type === 'success' ? 'primary.500' : 'danger.500'}
+      gradientFrom={type === 'success' ? 'success.500' : 'danger.500'}
       gradientTo={type === 'success' ? 'tertiary.500' : 'danger.100'}
       display={'flex'}
       alignItems={'center'}
