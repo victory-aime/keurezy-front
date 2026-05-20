@@ -46,18 +46,7 @@ export default function DateRangePicker({
         onChange={(event) => setEnd(event.target.value)}
         min={start || undefined}
       />
-      <BaseButton
-        onClick={handleApply}
-        withGradient={false}
-        bg="black"
-        color="white"
-        _hover={{ bg: 'gray.800' }}
-        px={{ base: '10px', md: '15px' }}
-        minW={{ base: '40px', md: 'auto' }}
-        size="sm"
-      >
-        Appliquer
-      </BaseButton>
+      <BaseButton onClick={handleApply}>Appliquer</BaseButton>
     </HStack>
   );
 }

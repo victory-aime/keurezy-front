@@ -44,7 +44,7 @@ export default function LineChart({ title, data, xKey, series, isLoading }: Line
   }
 
   return (
-    <Box bg="white" p={5} borderRadius="2xl" shadow="sm" width="full">
+    <Box p={5} borderRadius="2xl" shadow="sm" width="full">
       <Text fontSize="lg" fontWeight="bold" mb={4}>
         {title}
       </Text>

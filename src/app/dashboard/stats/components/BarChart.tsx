@@ -28,7 +28,7 @@ export default function BarChart({ data }: Props) {
   });
 
   return (
-    <Box bg="white" p={5} borderRadius="xl" shadow="md">
+    <Box p={5} borderRadius="xl" shadow="md">
       <Text mb={4} fontWeight="bold" fontSize="lg">
         Statistiques Agence
       </Text>

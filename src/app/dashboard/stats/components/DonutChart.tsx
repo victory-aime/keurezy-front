@@ -33,7 +33,7 @@ export default function DonutChart({ title, data, isLoading }: DonutChartProps) 
   }
 
   return (
-    <Box bg="white" p={5} borderRadius="2xl" shadow="sm" width="full">
+    <Box p={5} borderRadius="2xl" shadow="sm" width="full">
       <Text fontSize="lg" fontWeight="bold" mb={4}>
         {title}
       </Text>
