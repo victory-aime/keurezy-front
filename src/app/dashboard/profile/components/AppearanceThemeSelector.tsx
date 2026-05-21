@@ -3,6 +3,7 @@ import { ColorMode } from '_components/ui/color-mode';
 import { useThemeColors } from '_theme/useThemeColors';
 import { useState } from 'react';
 import { AutoPreview, DarkPreview, LightPreview } from './Mockup';
+import { VariablesColors } from '_theme/variables';
 
 const MODES = [
   { mode: 'light', label: 'Clair', Preview: LightPreview },
@@ -11,7 +12,7 @@ const MODES = [
 ];
 
 export const AppearanceThemeSelector = ({
-  themeColor = '#673ab6',
+  themeColor = VariablesColors.primary,
   initialMode = 'dark',
   onChange,
 }: {

@@ -6,7 +6,7 @@ import { QUERIES } from 'rise-core-frontend';
 const agencyLeadsListQueries = (args: QUERIES.QueryPayload<MODELS.IAgencyFilters>) => {
   const { params } = args;
   return QUERIES.useCustomQuery<MODELS.ILeadsAgency[]>({
-    queryKey: [Constants.LEAD_KEYS.AGENCY_LEADS_LIST, params],
+    queryKey: [Constants.LEAD_KEYS.AGENCY_LEADS_LIST],
     queryFn: () => leadsServiceInstance().agencyLeadsList(params as MODELS.IAgencyFilters),
     options: args.queryOptions,
   });

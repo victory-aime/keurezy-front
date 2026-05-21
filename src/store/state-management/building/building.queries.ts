@@ -37,7 +37,9 @@ const updateBuildingMutation = (
   });
 };
 
-const deleteBuildingMutation = (args: QUERIES.MutationPayload<MODELS.IDeleteBuilding>) => {
+const deleteBuildingMutation = (
+  args: QUERIES.MutationPayload<any, any, MODELS.IDeleteBuilding>,
+) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.BUILDING_KEYS.DELETE_BUILDING],
     mutationFn: ({ params }) => buildingServiceInstance().delete_building(params!),

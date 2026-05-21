@@ -11,7 +11,12 @@ type DateRangePickerProps = {
   label?: string;
 };
 
-export default function DateRangePicker({ startDate, endDate, onChange, label = 'Période' }: DateRangePickerProps) {
+export default function DateRangePicker({
+  startDate,
+  endDate,
+  onChange,
+  label = 'Période',
+}: DateRangePickerProps) {
   const [start, setStart] = useState(startDate ?? '');
   const [end, setEnd] = useState(endDate ?? '');
 
@@ -42,7 +47,10 @@ export default function DateRangePicker({ startDate, endDate, onChange, label = 
         min={start || undefined}
       />
       <BaseButton
-        onClick={handleApply} withGradient={false} bg="black" color="white"
+        onClick={handleApply}
+        withGradient={false}
+        bg="black"
+        color="white"
         _hover={{ bg: 'gray.800' }}
         px={{ base: '10px', md: '15px' }}
         minW={{ base: '40px', md: 'auto' }}

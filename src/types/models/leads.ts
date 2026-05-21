@@ -32,7 +32,12 @@ export interface ILeadsAgency {
       email: string;
     };
   };
-  assignedTo: null;
+  assignedTo: {
+    user: {
+      id: string;
+      name: string;
+    };
+  } | null;
   visits: [];
 }
 

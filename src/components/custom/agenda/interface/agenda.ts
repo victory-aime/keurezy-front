@@ -1,23 +1,15 @@
-// ---------------------------------------------------------------------------
-// CalendarGrid — public API
-
 import { ENUM } from '_types/*';
 import { Locale } from 'date-fns';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------
 export type CalendarView = 'day' | 'week' | 'month' | 'agenda';
 
-interface CalendarProps {
-  view: CalendarView;
-  current: Date;
-  appointments: any[];
-  onSelectSlot: (start: Date) => void;
-  onSelectEvent: (a: any) => void;
-  onMoveEvent: (id: string, newStart: Date) => void;
-  onResizeEvent: (id: string, newEnd: Date) => void;
+interface BaseLoadingProps {
+  loading?: boolean;
 }
-interface CalendarGridProps<TMeta = Record<string, any>> {
+
+interface CalendarGridProps<TMeta = Record<string, any>> extends BaseLoadingProps {
   view: CalendarView;
   current: Date;
   events: CalendarEvent<TMeta>[];
@@ -32,20 +24,21 @@ interface CalendarGridProps<TMeta = Record<string, any>> {
 interface CalendarEvent<TMeta = Record<string, any>> {
   id: string;
   title: string;
+  date: Date | string;
   start: Date | string;
   end: Date | string;
   status: ENUM.COMMON.Status;
   description?: string;
   meta?: TMeta;
 }
-interface PlaningViewProps<TMeta = Record<string, any>> {
+interface PlaningViewProps<TMeta = Record<string, any>> extends BaseLoadingProps {
   current: Date;
   events: CalendarEvent<TMeta>[];
   onSelectEvent: (event: CalendarEvent<TMeta>) => void;
   renderEventSubtitle?: (event: CalendarEvent<TMeta>) => React.ReactNode;
 }
 
-interface MonthViewProps<TMeta = Record<string, any>> {
+interface MonthViewProps<TMeta = Record<string, any>> extends BaseLoadingProps {
   current: Date;
   events: CalendarEvent<TMeta>[];
   onSelectSlot: (date: Date) => void;
@@ -54,7 +47,7 @@ interface MonthViewProps<TMeta = Record<string, any>> {
   maxVisibleEvents?: number;
 }
 
-interface TimeGridViewProps<TMeta = Record<string, any>> {
+interface TimeGridViewProps<TMeta = Record<string, any>> extends BaseLoadingProps {
   view: 'day' | 'week';
   current: Date;
   events: CalendarEvent<TMeta>[];
@@ -70,7 +63,7 @@ interface ViewDefinition {
   label: ReactNode;
 }
 
-interface BaseAgendaProps<TMeta = Record<string, unknown>> {
+interface BaseAgendaProps<TMeta = Record<string, unknown>> extends BaseLoadingProps {
   events: CalendarEvent<TMeta>[];
   title?: string;
   description?: string;
@@ -97,7 +90,6 @@ interface BaseAgendaProps<TMeta = Record<string, unknown>> {
 }
 
 export type {
-  CalendarProps,
   CalendarEvent,
   PlaningViewProps,
   MonthViewProps,

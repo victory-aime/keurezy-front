@@ -24,7 +24,7 @@ export const DatePickerInputContainer = memo(
     <DatePicker.Input
       borderRadius="12px"
       border="1px solid"
-      borderColor={isError ? 'red.500' : 'gray.200'}
+      borderColor={isError ? 'red.500' : 'inherit'}
       _focus={{
         borderColor: isError ? 'red.500' : 'primary.500',
       }}

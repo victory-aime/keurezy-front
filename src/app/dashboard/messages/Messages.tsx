@@ -3,7 +3,7 @@
 import { ScrollArea, Box, Flex, VStack, Text, Center } from '@chakra-ui/react';
 import { BaseContainer, BaseIcon, FormTextInput, Icons } from '_components/custom';
 import { Avatar } from '_components/ui/avatar';
-import { ChatModule, RentalAgreementModule, UserModule } from '_store/state-management';
+import { ChatModule, UserModule } from '_store/state-management';
 import { MODELS } from '_types/*';
 import { Formik, FormikValues } from 'formik';
 import { useState } from 'react';
@@ -22,10 +22,6 @@ export const Messages = () => {
   const [search, setSearch] = useState('');
 
   const { data: user } = UserModule.getUserInfo({
-    queryOptions: { enabled: false },
-  });
-
-  const { data: rentalAgreements } = RentalAgreementModule.getRentalAgreementListByAgencyQueries({
     queryOptions: { enabled: false },
   });
 
@@ -74,11 +70,6 @@ export const Messages = () => {
     return conv?.messages ?? [];
   };
 
-  const extractUser = (rentalAgreementId: string) => {
-    const data = rentalAgreements?.content?.find((data) => data?.id === rentalAgreementId);
-    return { tenants: data?.tenant, property: data?.property };
-  };
-
   const handleSelect = (
     conversation: MODELS.IConversationResponse,
     data: {
@@ -96,19 +87,19 @@ export const Messages = () => {
     });
   };
 
-  const handleSend = async (values: FormikValues) => {
-    if (!values?.message?.trim() || !selectedConv?.conversationId) return;
+  // const handleSend = async (values: FormikValues) => {
+  //   if (!values?.message?.trim() || !selectedConv?.conversationId) return;
 
-    await sendMessage({
-      params: {
-        conversationId: selectedConv.conversationId,
-        userId: selectedConv?.tenantId,
-      },
-      payload: {
-        message: values?.message,
-      },
-    });
-  };
+  //   await sendMessage({
+  //     params: {
+  //       conversationId: selectedConv.conversationId,
+  //       userId: selectedConv?.tenantId,
+  //     },
+  //     payload: {
+  //       message: values?.message,
+  //     },
+  //   });
+  // };
 
   // useEffect(() => {
   //   if (selectedConv?.conversationId) {
@@ -121,7 +112,7 @@ export const Messages = () => {
       <Formik
         initialValues={{ message: '' }}
         onSubmit={(values, actions) => {
-          handleSend(values);
+          //handleSend(values);
           actions.resetForm();
         }}
       >
@@ -147,12 +138,12 @@ export const Messages = () => {
               <Flex flex={1} flexDir="column" overflowY="auto" mt={5}>
                 {getConversations?.map((data) => {
                   const isActive = selectedConv?.rentalAgreementId === data?.rentalAgreementId;
-                  const { tenants, property } = extractUser(data.rentalAgreementId);
+                  //const { tenants, property } = extractUser(data.rentalAgreementId);
 
                   return (
                     <Flex
                       key={data.id}
-                      onClick={() => handleSelect(data, { tenants, property })}
+                      //onClick={() => handleSelect(data, { tenants, property })}
                       align="center"
                       p={3}
                       gap={3}
@@ -162,7 +153,7 @@ export const Messages = () => {
                       borderLeftColor={isActive ? 'primary.500' : 'transparent'}
                       _hover={{ bgColor: 'bg.subtle' }}
                     >
-                      <Avatar name={tenants?.name} src={tenants?.image} size="sm" />
+                      {/* <Avatar name={tenants?.name} src={tenants?.image} size="sm" />
                       <VStack flex={1} align="stretch" gap={0}>
                         <Text fontWeight="medium" fontSize="sm">
                           {tenants?.name}
@@ -170,7 +161,7 @@ export const Messages = () => {
                         <Text fontSize="xs" color="fg.muted">
                           {property?.title}
                         </Text>
-                      </VStack>
+                      </VStack> */}
                     </Flex>
                   );
                 })}

@@ -148,7 +148,7 @@ export const AnnoncesList = () => {
         onChange={setOpenDelete}
         isOpen={openDelete}
         isLoading={isDeletePending}
-        callback={async () => await deleteAnnonce({ params: selectedValues?.id })}
+        callback={async () => await deleteAnnonce({ params: { id: selectedValues?.id! } })}
         ignoreFooter={false}
       />
     </BaseContainer>

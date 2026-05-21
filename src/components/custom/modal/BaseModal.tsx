@@ -11,9 +11,10 @@ import { BaseButton } from '../button';
 import { ModalProps } from './interface/modal';
 import { BaseIcon } from '../base-icon';
 import { useTranslation } from 'react-i18next';
-import { BaseTag, BaseText, TextVariant } from '_components/custom';
+import { BaseTag, BaseText, Icons, TextVariant } from '_components/custom';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
+import { VariablesColors } from '_theme/variables';
 
 const BaseModal = ({
   isOpen = false,
@@ -44,6 +45,10 @@ const BaseModal = ({
   buttonRejectTitle = '',
   colorRejectButton,
   scrollBehavior = 'inside',
+  showEditButton,
+  showDeleteButton,
+  onDelete,
+  onEdit,
   ...rest
 }: ModalProps & DialogFooterProps) => {
   const { t } = useTranslation();
@@ -80,6 +85,21 @@ const BaseModal = ({
               </BaseText>
             </VStack>
             {status && <BaseTag status={status} variant="subtle" />}
+
+            {showEditButton && (
+              <Icons.Edit
+                color={VariablesColors.info}
+                cursor={'pointer'}
+                onClick={() => onEdit?.()}
+              />
+            )}
+            {showDeleteButton && (
+              <Icons.Trash
+                color={VariablesColors.danger}
+                cursor={'pointer'}
+                onClick={() => onDelete?.()}
+              />
+            )}
 
             {showCloseButton && <DialogCloseTrigger />}
           </Flex>

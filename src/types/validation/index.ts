@@ -11,3 +11,4 @@ export * as LAND from './land';
 export * as BULDING from './building';
 export * as TEAM from './team';
 export * as ANNONCES from './annonce';
+export * from './visits';

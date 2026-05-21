@@ -24,7 +24,7 @@ const createInvitationMutation = (args: QUERIES.MutationPayload<MODELS.ICreateIn
   });
 };
 
-const acceptInvitationMutation = (args: QUERIES.MutationPayload<{ token: string }>) => {
+const acceptInvitationMutation = (args: QUERIES.MutationPayload<any, any, { token: string }>) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.INVITE_KEYS.ACCEPT_INVITATION],
     mutationFn: ({ params }) => invitationServiceInstance().acceptInvitation(params!.token),
@@ -33,15 +33,15 @@ const acceptInvitationMutation = (args: QUERIES.MutationPayload<{ token: string 
 };
 
 const cancelInvitationMutation = (
-  args: QUERIES.MutationPayload<{ inviteId: string; agencyId: string; userId: string }>,
+  args: QUERIES.MutationPayload<any, any, { inviteId: string; agencyId: string; userId: string }>,
 ) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.INVITE_KEYS.CANCEL_INVITATION],
     mutationFn: ({ params }) =>
       invitationServiceInstance().cancelInvitation(
-        params!.inviteId,
-        params?.agencyId,
-        params?.userId,
+        params?.inviteId!,
+        params?.agencyId!,
+        params?.userId!,
       ),
     options: args.mutationOptions,
   });

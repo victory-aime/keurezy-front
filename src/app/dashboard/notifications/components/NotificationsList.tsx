@@ -27,7 +27,7 @@ export const NotificationsList = () => {
   });
 
   const onReadAll = async () => {
-    await readAll({ params: user?.id });
+    await readAll({ params: { userId: user?.id! } });
   };
 
   const { allRequests, unreadRequests, readRequests } = useMemo(() => {

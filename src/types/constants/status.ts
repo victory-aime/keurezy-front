@@ -22,3 +22,10 @@ export const annonceStatus = [
   { label: 'Publié', value: COMMON.Status.ACTIVE },
   { label: 'Fermé', value: COMMON.Status.INACTIVE },
 ];
+
+export const visitStatus = [
+  { label: 'Planifiée', value: COMMON.Status.PLANNED },
+  { label: 'Confirmée', value: COMMON.Status.CONFIRMED },
+  { label: 'Terminée', value: COMMON.Status.DONE },
+  { label: 'Annulée', value: COMMON.Status.CANCELLED },
+];

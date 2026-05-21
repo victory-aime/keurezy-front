@@ -1,7 +1,16 @@
 ﻿'use client';
 
 import { Chart, useChart } from '@chakra-ui/charts';
-import { Line, LineChart as RechartsLineChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from 'recharts';
+import {
+  Line,
+  LineChart as RechartsLineChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  Legend,
+} from 'recharts';
 import { Box, Text } from '@chakra-ui/react';
 import { CustomSkeletonLoader } from '_components/custom';
 import { NoDataAnimation } from '_components/custom/data-table/NoDataAnimation';

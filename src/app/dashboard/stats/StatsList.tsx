@@ -19,9 +19,8 @@ export function StatsList() {
     queryOptions: { enabled: !!user?.agencyId },
   });
 
-   const stats = [
-     
-       {
+  const stats = [
+    {
       label: 'Biens',
       value: data?.properties?.total ?? 0,
       description: 'Total des biens',
@@ -48,10 +47,9 @@ export function StatsList() {
       description: 'Demandes en cours',
       color: 'red.600',
       icon: <Icons.Ticket />,
-      
     },
-    ];
-  const kpis = [ 
+  ];
+  const kpis = [
     {
       title: 'Biens',
       value: data?.properties?.total ?? 0,
@@ -115,21 +113,28 @@ export function StatsList() {
   ];
 
   return (
-   
-      <BaseContainer title="Statistiques de l'agence" description="Vue d'ensemble des indicateurs clés de performance de votre agence immobilière"isFilterActive={isFilterOpen}onToggleFilter={()=>setIsFilterOpen(!isFilterOpen)} filterComponent={<DateRangePicker
+    <BaseContainer
+      title="Statistiques de l'agence"
+      description="Vue d'ensemble des indicateurs clés de performance de votre agence immobilière"
+      isFilterActive={isFilterOpen}
+      onToggleFilter={() => setIsFilterOpen(!isFilterOpen)}
+      filterComponent={
+        <DateRangePicker
           onChange={({ startDate, endDate }) => {
-            console.log('Période sélectionnée', startDate, endDate); 
+            console.log('Période sélectionnée', startDate, endDate);
           }}
-        />}  withActionButtons actionsButtonProps={{onToggleFilter(){}}}>
-      
-
+        />
+      }
+      withActionButtons
+      actionsButtonProps={{ onToggleFilter() {} }}
+    >
       {isLoading ? (
         <Box py={20} textAlign="center">
           <Spinner size="xl" />
         </Box>
       ) : (
         <>
-          <SimpleGrid width={'full'} columns={{ base: 1, sm: 4, }} gap={4}>
+          <SimpleGrid width={'full'} columns={{ base: 1, sm: 4 }} gap={4}>
             {stats.map((kpi) => (
               <BaseStats
                 key={kpi.label}
@@ -137,7 +142,7 @@ export function StatsList() {
                 value={kpi.value}
                 icon={kpi.icon}
                 iconBgColor={kpi.color}
-                isLoading ={isLoading}
+                isLoading={isLoading}
               />
             ))}
           </SimpleGrid>
@@ -155,6 +160,6 @@ export function StatsList() {
           />
         </>
       )}
-      </BaseContainer>
+    </BaseContainer>
   );
 }

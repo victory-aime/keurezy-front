@@ -19,6 +19,7 @@ export const TimeGridView = <TMeta = Record<string, any>,>({
   onMoveEvent,
   onResizeEvent,
   renderEventSubtitle,
+  loading,
 }: TimeGridViewProps<TMeta>) => {
   const days = useMemo(() => {
     if (view === 'day') return [current];
@@ -137,7 +138,7 @@ export const TimeGridView = <TMeta = Record<string, any>,>({
 
         {/* Day columns */}
         {days?.map((day, dayIdx) => {
-          const dayEvents = events?.filter((a) => isSameDay(new Date(a.start), day));
+          const dayEvents = events.filter((event) => isSameDay(new Date(event.date), day));
           return (
             <Box
               key={dayIdx}

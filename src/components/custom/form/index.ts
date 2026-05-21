@@ -8,6 +8,7 @@ import { FormColorPicker } from './FormColorPicker';
 import { FormTimePicker } from './FormTimePicker';
 import { FormOtpInput } from './FormOtpInput';
 import { FormPhonePicker } from './FormPhonePicker';
+import { FormDatePicker } from './FormDatePicker';
 export {
   FormTextArea,
   FormTextInput,
@@ -19,4 +20,6 @@ export {
   FormTimePicker,
   FormOtpInput,
   FormPhonePicker,
+  FormDatePicker,
 };
+export * from './utils';

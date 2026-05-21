@@ -9,11 +9,7 @@ import {
   BaseText,
   Icons,
 } from '_components/custom';
-import {
-  NotificationsModule,
-  PropertyModule,
-  RentalAgreementModule,
-} from '_store/state-management';
+import { NotificationsModule, PropertyModule } from '_store/state-management';
 import { ENUM } from '_types/*';
 import { OccupationRateByType } from './OccupationRateByType';
 import { MonthlyRevenueAreaChart } from './MonthlyRevenueAreaChart';
@@ -25,6 +21,7 @@ import { useAppTheme } from '_context/theme-context';
 import { RenderNotifications } from '../notifications/components/RenderNotifications';
 import { MODELS } from '_types/*';
 import { Months } from '_utils/generate';
+import { authClient } from '../../lib/auth-client';
 
 export const DashboardStats = () => {
   const { push } = useRouter();
@@ -57,11 +54,6 @@ export const DashboardStats = () => {
       queryOptions: { enabled: false },
     });
 
-  const { data: allRentalAgreement, isLoading: rentalAgreementLoad } =
-    RentalAgreementModule.getRentalAgreementListByAgencyQueries({
-      queryOptions: { enabled: false },
-    });
-
   const {
     data: allActivities,
     refetch: refetchNotificationList,
@@ -86,15 +78,6 @@ export const DashboardStats = () => {
       title: 'Total Propriétes',
       value: allProperties?.content?.length ?? 0,
       icon: <Icons.RiBuildingLine />,
-    },
-    {
-      title: 'Locataires Actifs',
-      value:
-        allRentalAgreement?.content?.filter(
-          (rental) => rental?.status === ENUM.COMMON.Status.ACTIVE,
-        ).length ?? 0,
-      icon: <Icons.FaUsers />,
-      iconBgColor: 'secondary.500',
     },
     {
       title: 'Revenues Mensuels',
@@ -128,6 +111,24 @@ export const DashboardStats = () => {
   //   const data = await response.json();
   //   console.log(data);
   // };
+
+  const emailOtp = async () => {
+    const { data, error } = await authClient.emailOtp.sendVerificationOtp({
+      email: 'victoydarnelmbenze@gmail.com',
+      type: 'email-verification',
+    });
+    console.log('values', data);
+    console.log('error', error);
+  };
+
+  const emailOtpVerify = async () => {
+    const { data, error } = await authClient.emailOtp.verifyEmail({
+      email: 'victoydarnelmbenze@gmail.com', // required
+      otp: '056519', // required
+    });
+    console.log('values', data);
+    console.log('error', error);
+  };
 
   const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -164,19 +165,22 @@ export const DashboardStats = () => {
         </BaseText>
       }
       border={'none'}
-      // withActionButtons
-      // actionsButtonProps={{
-      //   validateTitle: 'Payer aminata',
-      //   onClick: async () => {
-      //     await cashout();
-      //   },
-      // }}
+      withActionButtons
+      actionsButtonProps={{
+        validateTitle: 'OTP',
+        onClick: async () => {
+          await emailOtp();
+        },
+        onReload: async () => {
+          await emailOtpVerify();
+        },
+      }}
     >
       <SimpleGrid data-tour="kpis" columns={3} mt={10} width={'full'} gap={3}>
         <For each={stats}>
           {(stat, i) => (
             <Flex key={i}>
-              <BaseStats key={i} {...stat} isLoading={propertiesLoad || rentalAgreementLoad} />
+              <BaseStats key={i} {...stat} isLoading={propertiesLoad} />
             </Flex>
           )}
         </For>

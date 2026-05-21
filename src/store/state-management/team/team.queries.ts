@@ -14,16 +14,18 @@ const getAllTeamByAgency = (args: QUERIES.QueryPayload<{ agencyId: string; userI
 };
 
 const changeStatusTeamMutation = (
-  args: QUERIES.MutationPayload<{
-    id?: string;
-    userId?: string;
-    status: boolean;
-  }>,
+  args: QUERIES.MutationPayload<
+    {
+      status: boolean;
+    },
+    any,
+    { id?: string; userId?: string }
+  >,
 ) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.TEAM_KEYS.CHANGE_STATUS],
     mutationFn: ({ params, payload }) =>
-      teamServiceInstance().changeStatus(params?.id, params?.userId, payload!.status),
+      teamServiceInstance().changeStatus(params?.id!, params?.userId!, payload!.status),
     options: args.mutationOptions,
   });
 };

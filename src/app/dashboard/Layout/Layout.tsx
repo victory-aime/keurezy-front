@@ -74,7 +74,7 @@ export const Layout: FunctionComponent<{
 
     const state = resolveState(token);
 
-    if (state === 'token_expired') {
+    if (state === 'TOKEN_EXPIRED') {
       BaseToast({
         title: 'Lien expiré',
         description: 'Ce lien a expiré. Demandez-en un nouveau.',
@@ -82,7 +82,7 @@ export const Layout: FunctionComponent<{
       });
     }
 
-    if (state === 'invalid_token') {
+    if (state === 'INVALID_TOKEN') {
       BaseToast({
         title: 'Lien invalide',
         description: 'Ce lien est invalide.',
@@ -132,7 +132,6 @@ export const Layout: FunctionComponent<{
     await sendVerificationEmail({
       payload: {
         email: user.email,
-        callbackURL: process.env.NEXT_PUBLIC_DASHBOARD_URL!,
       },
     });
   };

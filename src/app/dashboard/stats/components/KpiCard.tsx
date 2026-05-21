@@ -28,13 +28,7 @@ export default function KpiCard({
   }
 
   return (
-    <Box
-      bg="white"
-      p={5}
-      borderRadius="2xl"
-      shadow="sm"
-      width="full"
-    >
+    <Box bg="white" p={5} borderRadius="2xl" shadow="sm" width="full">
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
         <Text fontSize="sm" fontWeight="medium" color="gray.500">
           {title}

@@ -1,7 +1,6 @@
 'use client';
 import React, { ReactNode, useEffect } from 'react';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider, ReactQueryDevtools } from 'rise-core-frontend';
 import { applicationContext } from '_context/global-state';
 import { AppContext } from '_context/app.context';
 import { queryClient } from '../../lib/query-client';

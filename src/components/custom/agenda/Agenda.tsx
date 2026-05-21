@@ -1,25 +1,11 @@
 'use client';
 
-import { ReactNode, useCallback, useMemo, useState } from 'react';
-
-import {
-  addDays,
-  addMonths,
-  endOfWeek,
-  format,
-  Locale,
-  startOfWeek,
-  subDays,
-  subMonths,
-} from 'date-fns';
-
+import { useCallback, useMemo, useState } from 'react';
 import { fr } from 'date-fns/locale';
-
-import { Box, Flex, HStack, SegmentGroup, VStack } from '@chakra-ui/react';
+import { Box, HStack, SegmentGroup, VStack } from '@chakra-ui/react';
 
 import {
   BaseButton,
-  BaseContainer,
   BaseIcon,
   BaseText,
   Icons,
@@ -34,6 +20,7 @@ import { Status } from '_components/ui/status';
 import { DEFAULT_VIEW_DEFS } from './constants/agenda';
 import { buildCurrentLabel, navigate } from './functions/agenda';
 import { t } from 'i18next';
+import { StatusValue } from '_components/ui/status';
 
 export const BaseAgenda = <TMeta = Record<string, unknown>,>({
   // Data
@@ -60,6 +47,7 @@ export const BaseAgenda = <TMeta = Record<string, unknown>,>({
   // Status
   showStatuses = true,
   statuses,
+  loading,
 }: BaseAgendaProps<TMeta>) => {
   // -------------------------------------------------------------------------
   // State — stable initial values to avoid re-renders on parent re-mount
@@ -71,12 +59,6 @@ export const BaseAgenda = <TMeta = Record<string, unknown>,>({
   // -------------------------------------------------------------------------
   // Derived — all memoized so descendants never re-render for free
   // -------------------------------------------------------------------------
-
-  /** Number of events scheduled for today (shown in the container description). */
-  const todayCount = useMemo(() => {
-    const todayKey = format(new Date(), 'yyyy-MM-dd');
-    return events.filter((e) => format(new Date(e.start), 'yyyy-MM-dd') === todayKey).length;
-  }, [events]);
 
   /** Human-readable period label shown in the toolbar center. */
   const currentLabel = useMemo(
@@ -226,8 +208,10 @@ export const BaseAgenda = <TMeta = Record<string, unknown>,>({
       {/* ---------------------------------------------------------------- */}
       {showStatuses && availableStatuses?.length > 0 && (
         <HStack gap={5} flexWrap="wrap" role="list" aria-label="Légende des statuts">
-          {availableStatuses.map((status: any, i) => {
-            const variant = STATUS_META[status];
+          {availableStatuses.map((status: string, i) => {
+            const variant = STATUS_META[status as keyof typeof STATUS_META] as unknown as
+              | StatusValue
+              | undefined;
             if (!variant) return null;
             return (
               <Status key={i} value={variant} size="lg" role="listitem">
@@ -242,6 +226,7 @@ export const BaseAgenda = <TMeta = Record<string, unknown>,>({
       {/* ------------------------------------------------------------------ */}
       <Box width="full" minW={0}>
         <CalendarGrid<TMeta>
+          loading={loading}
           view={view}
           current={current}
           events={events}
@@ -251,7 +236,7 @@ export const BaseAgenda = <TMeta = Record<string, unknown>,>({
           onResizeEvent={handleResizeEvent}
           renderEventSubtitle={renderEventSubtitle}
         />
-      </Box>{' '}
+      </Box>
     </VStack>
   );
 };

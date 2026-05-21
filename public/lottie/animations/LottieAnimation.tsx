@@ -13,7 +13,7 @@ import {
 
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
-const LottieAnimation = () => {
+const CheckConfirmLottieAnimation = () => {
   return <Lottie animationData={ConfirmCommand} />;
 };
 
@@ -42,7 +42,7 @@ const ThinkingLottieAnimation = () => {
 };
 
 export {
-  LottieAnimation,
+  CheckConfirmLottieAnimation,
   NoDataFoundLottieAnimation,
   LoaderLottie,
   DeleteLottie,

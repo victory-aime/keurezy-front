@@ -23,8 +23,8 @@ export const InvitationsList = () => {
   const [open, setOpen] = useState(false);
   const [selectedInvitation, setSelectedInvitation] = useState<string | null>(null);
 
-  const agencyId = user?.agencyId;
-  const userId = user?.ownerId ?? user?.staffId;
+  const agencyId = user?.agencyId!;
+  const userId = user?.ownerId! ?? user?.staffId!;
 
   const {
     data: allInvitations,

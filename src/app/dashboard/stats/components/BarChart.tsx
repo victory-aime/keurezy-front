@@ -1,7 +1,15 @@
 'use client';
 
 import { Chart, useChart } from '@chakra-ui/charts';
-import { Bar, BarChart as RechartsBarChart, CartesianGrid, Rectangle, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart as RechartsBarChart,
+  CartesianGrid,
+  Rectangle,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import { Box, Text } from '@chakra-ui/react';
 
 type ChartDataItem = {
@@ -30,11 +38,7 @@ export default function BarChart({ data }: Props) {
           <RechartsBarChart data={chart.data}>
             <CartesianGrid vertical={false} stroke={chart.color('border.muted')} />
 
-            <XAxis
-              axisLine={false}
-              tickLine={false}
-              dataKey={chart.key('type')}
-            />
+            <XAxis axisLine={false} tickLine={false} dataKey={chart.key('type')} />
 
             <YAxis axisLine={false} tickLine={false} />
 

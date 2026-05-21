@@ -18,7 +18,7 @@ export class AuthService extends BaseApi {
   reset_password(data: MODELS.IResetPassword) {
     return this.apiService.invoke(this.applicationContext.getApiConfig().AUTH.RESET_PASSWORD, data);
   }
-  send_verification_email(data: { email: string; callbackURL: string }) {
+  send_verification_email(data: { email: string }) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().AUTH.SEND_EMAIL_VERIFICATION,
       data,

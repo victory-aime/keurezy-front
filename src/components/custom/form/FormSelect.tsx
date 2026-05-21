@@ -108,14 +108,23 @@ const FormSelect: FC<FullSelectProps> = ({
               isError={isError}
             >
               {customRenderSelected ? (
-                customRenderSelected(
-                  listItems?.items.filter((i: any) => i.value === extractSingleValue(field.value)),
-                )
+                <>
+                  {customRenderSelected(
+                    listItems?.items.filter(
+                      (i: any) => i.value === extractSingleValue(field.value),
+                    ),
+                  )}
+                  {field.value?.[0] ? null : (
+                    <BaseText fontSize={'14px'} color={isError ? 'red.500' : 'inherit'}>
+                      {placeholder}
+                    </BaseText>
+                  )}
+                </>
               ) : (
                 <SelectValueText
                   placeholder={t(placeholder)}
                   color={isError ? 'red.500' : 'inherit'}
-                  fontSize={{ base: '16px', sm: '14px' }}
+                  fontSize={'14px'}
                 />
               )}
             </SelectTrigger>

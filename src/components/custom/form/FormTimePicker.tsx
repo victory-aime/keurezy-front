@@ -1,8 +1,8 @@
 import React from 'react';
 import { useField, useFormikContext } from 'formik';
-import { Field, Flex } from '@chakra-ui/react';
+import { Box, Field, Flex } from '@chakra-ui/react';
 import { HiOutlineInformationCircle } from 'react-icons/hi';
-import { BaseText, BaseTooltip } from '_components/custom';
+import { BaseText, BaseTooltip, CustomSkeletonLoader, Icons } from '_components/custom';
 import { useTranslation } from 'react-i18next';
 import { NativeSelect } from '_components/ui/select-native';
 import { TimeInputProps } from './interface/input';
@@ -15,13 +15,14 @@ export const FormTimePicker = ({
   required = false,
   toolTipInfo,
   isDisabled = false,
-  variant = 'subtle',
+  variant = 'outline',
   placeholder = 'Select an option',
   infoMessage,
   isReadOnly = false,
+  isLoading = false,
 }: TimeInputProps) => {
   const { t, i18n } = useTranslation();
-  const [field, { touched, error }] = useField(name);
+  const [field, { touched, error }, { setValue }] = useField(name);
   const { submitCount } = useFormikContext();
   const isError = isReadOnly ? !!error : !!(error && (touched || submitCount > 0));
 
@@ -30,45 +31,50 @@ export const FormTimePicker = ({
   return (
     <Field.Root id={name} invalid={isError}>
       {label && (
-        <Field.Label display={'flex'} gap={'6px'} fontSize={{ base: '14px', md: '16px' }}>
-          {t(label)}
-          {required && <BaseText color={'red'}>*</BaseText>}
-          {toolTipInfo && (
-            <BaseTooltip message={toolTipInfo}>
-              <HiOutlineInformationCircle size={18} />
-            </BaseTooltip>
+        <Field.Label display={'flex'} gap={'6px'} fontSize={'14px'}>
+          {isLoading ? (
+            <CustomSkeletonLoader type="TEXT" numberOfLines={1} />
+          ) : (
+            <>
+              {t(label)}
+              {required && <BaseText color={'red'}> * </BaseText>}
+              {toolTipInfo && (
+                <BaseTooltip message={toolTipInfo}>
+                  <HiOutlineInformationCircle size={18} />
+                </BaseTooltip>
+              )}
+            </>
           )}
         </Field.Label>
       )}
 
-      <NativeSelect
-        {...field}
-        name={field.name}
-        value={field.value}
-        items={timeOptions}
-        placeholder={t(placeholder)}
-        icon={<CiTimer />}
-        size={'lg'}
-        bg={'bg.muted'}
-        variant={variant}
-        borderRadius={'7px'}
-        disabled={isDisabled}
-        borderColor={isError ? 'red.500' : 'bg.muted'}
-        _focus={{ borderColor: 'primary.500' }}
-        _placeholder={{ color: isError ? 'red.500' : 'gray.400' }}
-        width={'full'}
-      />
-
+      {isLoading ? (
+        <CustomSkeletonLoader type="FORM" height={'45px'} width={'100%'} />
+      ) : (
+        <NativeSelect
+          {...field}
+          name={field.name}
+          value={field.value}
+          items={timeOptions}
+          placeholder={t(placeholder)}
+          icon={<CiTimer />}
+          size={'md'}
+          variant={variant}
+          disabled={true}
+          _placeholder={{ color: isError ? 'red.500' : 'gray.400' }}
+          width={'full'}
+        />
+      )}
       {isError && (
         <Flex gap={1} mt={1} alignItems={'center'}>
-          <Field.ErrorIcon width={4} height={4} color={'red.500'} />
+          <Field.ErrorIcon width={2.5} height={2.5} color={'red.500'} />
           <Field.ErrorText>{error}</Field.ErrorText>
         </Flex>
       )}
       {infoMessage && (
         <Flex gap={1} mt={1} alignItems={'center'}>
-          <Field.ErrorIcon width={4} height={4} color={'info.500'} />
-          <Field.HelperText p={1}>{t(infoMessage)}</Field.HelperText>
+          <Field.ErrorIcon width={2} height={2} color={'info.500'} />
+          <Field.HelperText fontSize={'x-small'}>{t(infoMessage)}</Field.HelperText>
         </Flex>
       )}
     </Field.Root>

@@ -32,9 +32,7 @@ const resetPasswordMutation = (args: QUERIES.MutationPayload<MODELS.IResetPasswo
   });
 };
 
-const sendEmailVerificationMutation = (
-  args: QUERIES.MutationPayload<{ email: string; callbackURL: string }>,
-) => {
+const sendEmailVerificationMutation = (args: QUERIES.MutationPayload<{ email: string }>) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.AUTH_KEYS.SEND_EMAIL_VERIFICATION],
     mutationFn: ({ payload }) => authServiceInstance().send_verification_email(payload!),

@@ -7,7 +7,6 @@ import { VariablesColors } from '_theme/variables';
 import { MODELS } from '_types/*';
 import { useRouter } from 'next/navigation';
 import { formatCreatedAt } from 'rise-core-frontend';
-import { DASHBOARD_ROUTES } from '../../routes';
 import { notificationUIConfig } from '../constant/notification-config';
 import { useColorMode } from '_components/ui/color-mode';
 
@@ -39,7 +38,7 @@ export const NotificationsDisplay = ({
   });
 
   const onReadNotification = async (notificationId: string, userId: string) => {
-    await readNotification({ params: { notificationId, userId } });
+    await readNotification({ params: { data: { notificationId, userId } } });
   };
 
   return (
@@ -78,7 +77,6 @@ export const NotificationsDisplay = ({
             if (!request.isRead) {
               onReadNotification(request?.notificationId, request?.userId);
             }
-            //router.push(DASHBOARD_ROUTES.RENTAL_REQUEST);
           }}
         >
           <BaseIcon color={hexToRGB(config?.color as keyof Colors, 0.4)}>

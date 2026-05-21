@@ -31,7 +31,7 @@ export const FormDatePicker = memo(
   }: FormDatePickerFieldProps) => {
     const { t } = useTranslation();
 
-    const [field, { touched, error }, { setValue, setTouched }] = useField(name);
+    const [field, { touched, error }, { setValue, setTouched }] = useField(name!);
     const { submitCount } = useFormikContext();
 
     const isError = isReadOnly ? !!error : !!(error && (touched || submitCount > 0));
@@ -39,8 +39,12 @@ export const FormDatePicker = memo(
     const handleChange = useCallback(
       (date: DatePicker.ValueChangeDetails) => {
         if (mode === 'single') {
-          setValue(date?.valueAsString?.[0]);
-          return;
+          const selectedDate = date?.value?.[0];
+          if (!selectedDate) {
+            setValue(null);
+            return;
+          }
+          setValue(selectedDate.toDate('UTC').toISOString());
         }
 
         if (mode === 'range' || mode === 'multiple') {
@@ -81,6 +85,15 @@ export const FormDatePicker = memo(
                   ? disabledWeekends
                   : undefined
             }
+            value={
+              field.value
+                ? [
+                    typeof field.value === 'string'
+                      ? parseDate(field.value.split('T')[0])
+                      : field.value,
+                  ]
+                : undefined
+            }
             outsideDaySelectable
             onOpenChange={(e) => setTouched(!e.open)}
             positioning={{ strategy: 'fixed', placement: 'bottom' }}
@@ -93,6 +106,7 @@ export const FormDatePicker = memo(
             onValueChange={handleChange}
             selectionMode={mode}
             locale="fr-FR"
+            autoFocus={false}
             {...rest}
           >
             {label && (

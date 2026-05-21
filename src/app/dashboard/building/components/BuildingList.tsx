@@ -11,7 +11,7 @@ import {
 } from '_components/custom';
 import { useMemo, useState } from 'react';
 import { BuildingFilter } from './BuildingFilter';
-import { LandModule, BuildingModule } from '_store/state-management';
+import { BuildingModule } from '_store/state-management';
 import { useRouter } from 'next/navigation';
 import { DASHBOARD_ROUTES } from '../../routes';
 import { CONSTANTS, MODELS } from '_types/*';
@@ -27,7 +27,6 @@ export const BuildingList = () => {
   const { t } = useTranslation();
   const { user: currentUser } = useUserContext();
   const [currentPage, setCurrentPage] = useState(1);
-  
   const [exportLoading, setExportLoading] = useState(false);
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -156,19 +155,14 @@ export const BuildingList = () => {
   };
 
   const handleExportPdf = async () => {
-    if (allBuildings?.content?.length === 0) {
+    if (allBuildings?.content) {
       return BaseToast({
         title: 'Export impossible',
-        description: "Vous ne pouvez pas exporter la liste car vous ne disposer d'aucun bâtiment",
+        description:
+          'Vous ne pouvez pas exporter la liste des bâtiments cette fonctionnalités est en cours de developpement',
         type: ToastStatus.INFO,
       });
     }
-    setExportLoading(true);
-    const translatedColumns = buildingColumns.map((col) => ({
-      ...col,
-      header: t(col.header),
-    }));
-   
   };
 
   return (

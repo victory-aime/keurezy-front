@@ -38,12 +38,15 @@ export function SessionRefreshProvider({
       asPromise: {
         promise: retrySessionRequest()
           .then(async () => {
-            await refetchSession();
             BaseToast({
               id: `${toastId}-final`,
               title: 'Connexion rétablie',
               description: 'Votre session est active.',
               type: ToastStatus.SUCCESS,
+            });
+            await refetchSession().then(() => {
+              console.log('session refreshed');
+              window.location.reload();
             });
           })
           .catch(() =>

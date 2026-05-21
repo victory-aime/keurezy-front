@@ -27,23 +27,29 @@ const getAllUnreadNotificationsQueries = (
   });
 };
 
-const readAllNotificationsMutation = (args: QUERIES.MutationPayload<{ userId: string }>) => {
+const readAllNotificationsMutation = (
+  args: QUERIES.MutationPayload<any, any, { userId: string }>,
+) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.NOTIFICATIONS_KEYS.READ_ALL_NOTIFICATION],
-    mutationFn: ({ params }) => notificationsServiceInstance().readAllNotifications(params!),
+    mutationFn: ({ params }) =>
+      notificationsServiceInstance().readAllNotifications(params?.userId!),
     options: args.mutationOptions,
   });
 };
 
 const readNotificationMutation = (
-  args: QUERIES.MutationPayload<{
-    notificationId: string;
-    userId: string;
-  }>,
+  args: QUERIES.MutationPayload<
+    any,
+    any,
+    {
+      data: { notificationId: string; userId: string };
+    }
+  >,
 ) => {
-  return QUERIES.useCustomMutation<{ notificationId: string; userId: string }, any>({
+  return QUERIES.useCustomMutation<any, any, { data: { notificationId: string; userId: string } }>({
     mutationKey: [Constants.NOTIFICATIONS_KEYS.READ_ONE_NOTIFICATION],
-    mutationFn: ({ params }) => notificationsServiceInstance().readNotification(params),
+    mutationFn: ({ params }) => notificationsServiceInstance().readNotification(params?.data!),
     options: args.mutationOptions,
   });
 };

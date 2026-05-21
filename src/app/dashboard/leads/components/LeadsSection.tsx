@@ -1,5 +1,6 @@
 import { VStack, Flex, HStack, Span } from '@chakra-ui/react';
 import { BaseText } from '_components/custom';
+import React from 'react';
 
 export const LeadsModalSection = ({
   icon,

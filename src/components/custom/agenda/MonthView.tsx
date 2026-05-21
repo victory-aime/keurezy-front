@@ -15,6 +15,7 @@ import { MonthViewProps } from './interface/agenda';
 import { getStatusColor } from '../utils';
 import { Weeks } from '_utils/generate';
 import { t } from 'i18next';
+import { CustomSkeletonLoader } from '_components/custom';
 
 export const MonthView = <TMeta = Record<string, any>,>({
   current,
@@ -23,6 +24,7 @@ export const MonthView = <TMeta = Record<string, any>,>({
   onSelectEvent,
   renderEventSubtitle,
   maxVisibleEvents = 3,
+  loading,
 }: MonthViewProps<TMeta>) => {
   // --------------------------------------------------------------------
   // Calendar days
@@ -69,8 +71,7 @@ export const MonthView = <TMeta = Record<string, any>,>({
       >
         {days?.map((day) => {
           const inMonth = isSameMonth(day, current);
-          const dayEvents = events.filter((event) => isSameDay(new Date(event.start), day));
-
+          const dayEvents = events.filter((event) => isSameDay(new Date(event.date), day));
           return (
             <Box
               key={day?.toISOString()}
@@ -106,7 +107,7 @@ export const MonthView = <TMeta = Record<string, any>,>({
                   borderRadius="full"
                   fontSize="xs"
                   fontWeight="medium"
-                  bg={isToday(day) ? 'blue.500' : 'transparent'}
+                  bg={isToday(day) ? 'primary.500' : 'transparent'}
                   color={isToday(day) ? 'white' : inMonth ? 'fg' : 'fg.muted'}
                 >
                   {format(day, 'd')}
@@ -114,79 +115,81 @@ export const MonthView = <TMeta = Record<string, any>,>({
               </Flex>
 
               {/* Events */}
-              <Flex flexDir="column" gap="2px" overflow="hidden">
-                {dayEvents.slice(0, maxVisibleEvents).map((event) => {
-                  const colorPalette = getStatusColor(event?.status);
-                  return (
-                    <Box
-                      key={event.id}
-                      as="button"
-                      textAlign="left"
-                      overflow="hidden"
-                      borderRadius="md"
-                      px={1.5}
-                      py="2px"
-                      border="1px solid"
-                      borderColor={`${colorPalette}.50`}
-                      bg={`${colorPalette}.50`}
-                      color={`${colorPalette}.700`}
-                      cursor="pointer"
-                      transition="all 0.15s ease"
-                      _hover={{
-                        filter: 'brightness(0.97)',
-                      }}
-                      onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
+              {loading ? (
+                <CustomSkeletonLoader type={'TEXT'} numberOfLines={1} />
+              ) : (
+                <Flex flexDir="column" gap="2px" overflow="hidden">
+                  {dayEvents.slice(0, maxVisibleEvents).map((event) => {
+                    const colorPalette = getStatusColor(event?.status);
+                    return (
+                      <Box
+                        key={event.id}
+                        as="button"
+                        textAlign="left"
+                        overflow="hidden"
+                        borderRadius="md"
+                        px={1.5}
+                        py="2px"
+                        border="1px solid"
+                        borderColor={`${colorPalette}.50`}
+                        bg={`${colorPalette}.50`}
+                        color={`${colorPalette}.700`}
+                        cursor="pointer"
+                        transition="all 0.15s ease"
+                        _hover={{
+                          filter: 'brightness(0.97)',
+                        }}
+                        onClick={(e: React.MouseEvent) => {
+                          e.stopPropagation();
+                          onSelectEvent(event);
+                        }}
+                      >
+                        <Flex alignItems="center" gap={1} minW={0}>
+                          {/* Status dot */}
+                          <Box
+                            h="6px"
+                            w="6px"
+                            borderRadius="full"
+                            bg={`${colorPalette}.500`}
+                            flexShrink={0}
+                          />
 
-                        onSelectEvent(event);
-                      }}
-                    >
-                      <Flex alignItems="center" gap={1} minW={0}>
-                        {/* Status dot */}
-                        <Box
-                          h="6px"
-                          w="6px"
-                          borderRadius="full"
-                          bg={`${colorPalette}.500`}
-                          flexShrink={0}
-                        />
-
-                        {/* Content */}
-                        <Box flex={1} minW={0}>
-                          <Text
-                            fontSize="10px"
-                            fontWeight="medium"
-                            overflow="hidden"
-                            textOverflow="ellipsis"
-                            whiteSpace="nowrap"
-                          >
-                            {format(new Date(event.start), 'HH:mm')} {event.title}
-                          </Text>
-
-                          {renderEventSubtitle && (
+                          {/* Content */}
+                          <Box flex={1} minW={0}>
                             <Text
-                              fontSize="9px"
-                              opacity={0.8}
+                              fontSize="10px"
+                              fontWeight="medium"
                               overflow="hidden"
                               textOverflow="ellipsis"
                               whiteSpace="nowrap"
                             >
-                              {renderEventSubtitle(event)}
+                              {format(new Date(event.start), 'HH:mm')} {event.title}
                             </Text>
-                          )}
-                        </Box>
-                      </Flex>
-                    </Box>
-                  );
-                })}
 
-                {/* More events */}
-                {dayEvents?.length > maxVisibleEvents && (
-                  <Text fontSize="10px" color="fg.muted" pl={1}>
-                    +{dayEvents.length - maxVisibleEvents} de plus
-                  </Text>
-                )}
-              </Flex>
+                            {renderEventSubtitle && (
+                              <Text
+                                fontSize="9px"
+                                opacity={0.8}
+                                overflow="hidden"
+                                textOverflow="ellipsis"
+                                whiteSpace="nowrap"
+                              >
+                                {renderEventSubtitle(event)}
+                              </Text>
+                            )}
+                          </Box>
+                        </Flex>
+                      </Box>
+                    );
+                  })}
+
+                  {dayEvents?.length > maxVisibleEvents && (
+                    <Text fontSize="10px" color="fg.muted" pl={1}>
+                      +{dayEvents.length - maxVisibleEvents} de plus
+                    </Text>
+                  )}
+                </Flex>
+              )}
             </Box>
           );
         })}

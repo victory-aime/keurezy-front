@@ -15,7 +15,7 @@ export const PlaningView = <TMeta = Record<string, any>,>({
 }: PlaningViewProps<TMeta>) => {
   const sorted = [...events].sort((a, b) => +new Date(a.start) - +new Date(b.start));
   const grouped = sorted.reduce<Record<string, any[]>>((acc, a) => {
-    const key = format(new Date(a.start), 'yyyy-MM-dd');
+    const key = format(new Date(a.date), 'yyyy-MM-dd');
     (acc[key] ||= []).push(a);
     return acc;
   }, {});

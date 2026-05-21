@@ -1,22 +1,26 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { BaseModal, BaseText, Loader, TextVariant } from '_components/custom';
+import { BaseButton, BaseText, Icons, Loader } from '_components/custom';
 import { VerificationState } from '../auth.types';
 import { resolveState } from '../resolve-state';
 import { TokenExpired } from './TokenExpired';
 import { TokenInvalid } from './TokenInvalid';
 import { UnknownError } from './UnknownError';
-import { CiMail } from 'react-icons/ci';
-import { Center } from '@chakra-ui/react';
+import { Box, Center, VStack } from '@chakra-ui/react';
 import { authClient } from '../../lib/auth-client';
 import { handleApiError } from '_utils/handleApiError';
 import { APP_ROUTES } from '_config/routes';
+import Confetti from 'react-confetti';
+import { confettiColors } from '../onboarding/components/FinalStep';
+import { AnimatedCheckmark } from '../onboarding/components/AnimatedCheck';
+import { MotionBox } from '_constants/motion';
+import { useWindowSize } from 'react-use';
 
 export const EmailVerified = ({ params }: { params: string }) => {
   const router = useRouter();
-  const [openSuccess, setOpenSuccess] = useState(false);
+  const { width, height } = useWindowSize();
   const [state, setState] = useState<VerificationState>('loading');
 
   const handleVerifyEmail = async (token: string) => {
@@ -26,14 +30,10 @@ export const EmailVerified = ({ params }: { params: string }) => {
 
     if (error) {
       handleApiError({ status: error.status, message: error?.message! });
-      setState(error?.message as VerificationState);
+      setState(error?.code as VerificationState);
     }
     if (data?.status) {
-      setOpenSuccess(true);
       setState('success');
-      setTimeout(() => {
-        router.replace(APP_ROUTES.REDIRECT);
-      }, 3000);
     }
   };
 
@@ -53,26 +53,59 @@ export const EmailVerified = ({ params }: { params: string }) => {
         </Center>
       )}
       {state === 'success' && (
-        <BaseModal
-          title={'Email Confirmé'}
-          icon={<CiMail />}
-          iconBackgroundColor={'tertiary.500'}
-          isOpen={openSuccess}
-          onChange={() => setOpenSuccess(false)}
-          closeOnEscape={false}
-          closeOnInteractOutside={false}
-          showCloseButton={false}
-          ignoreFooter
-          animateConfetti
-        >
-          <BaseText variant={TextVariant.L}>
-            🎉 Email confirmé avec succès. Préparation de votre espace…
-          </BaseText>
-        </BaseModal>
+        <Center h={'100vh'}>
+          <VStack maxW={'5xl'} mx={'auto'} spaceY={8} position={'relative'} overflow={'hidden'}>
+            <Box
+              position={'fixed'}
+              inset={0}
+              pointerEvents={'none'}
+              zIndex={50}
+              overflow={'hidden'}
+            >
+              {Array.from({ length: 40 }).map((_, i) => (
+                <Confetti
+                  key={i}
+                  width={width}
+                  height={height}
+                  numberOfPieces={4}
+                  recycle={false}
+                  colors={confettiColors}
+                />
+              ))}
+            </Box>
+
+            {/* Checkmark */}
+            <AnimatedCheckmark />
+
+            {/* Title */}
+            <MotionBox
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              spaceY={3}
+              textAlign={'center'}
+            >
+              <BaseText fontSize={{ base: '2xl', sm: '3xl' }} fontWeight={'bold'}>
+                🎉 Adresse e-mail vérifiée avec succès !
+              </BaseText>
+              <BaseText fontSize={'lg'} maxW={'lg'} mx={'auto'}>
+                Votre adresse e-mail a bien été confirmée. Vous pouvez désormais accéder à votre
+                espace de gestion locative en toute sécurité. Cliquez sur le bouton ci-dessous pour
+                être redirigé vers votre tableau de bord.
+              </BaseText>
+            </MotionBox>
+            <BaseButton
+              onClick={() => router.push(APP_ROUTES.REDIRECT)}
+              rightIcon={<Icons.Rocket />}
+            >
+              Accéder à mon tableau de bord
+            </BaseButton>
+          </VStack>
+        </Center>
       )}
-      {state === 'token_expired' && <TokenExpired />}
-      {state === 'invalid_token' && <TokenInvalid />}
-      {state === 'unknown_error' && <UnknownError />}
+      {state === 'TOKEN_EXPIRED' && <TokenExpired />}
+      {state === 'INVALID_TOKEN' && <TokenInvalid />}
+      {state === 'UNKNOWN_ERROR' && <UnknownError />}
     </main>
   );
 };

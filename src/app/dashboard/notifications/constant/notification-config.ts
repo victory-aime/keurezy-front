@@ -18,17 +18,17 @@ export const notificationUIConfig: Record<
   LEAD: {
     title: 'Nouvelle demande',
     icon: 'Home',
-    color: 'purple',
+    color: 'blue',
   },
   MESSAGE: {
     title: 'Nouveau message',
     icon: 'Chat',
-    color: 'green',
+    color: 'teal',
   },
   PAYMENT: {
     title: 'Paiement reçu',
     icon: 'CreditCard',
-    color: 'blue',
+    color: 'green',
   },
   MAINTENANCE: {
     title: 'Maintenance',
@@ -43,6 +43,6 @@ export const notificationUIConfig: Record<
   SYSTEM: {
     title: 'Notification système',
     icon: 'BellOff',
-    color: 'gray',
+    color: 'cyan',
   },
 };

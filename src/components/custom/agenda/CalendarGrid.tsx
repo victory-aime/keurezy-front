@@ -13,6 +13,7 @@ export const CalendarGrid = <TMeta = Record<string, any>,>({
   onResizeEvent,
   renderEventSubtitle,
   maxVisibleMonthEvents,
+  loading,
 }: CalendarGridProps<TMeta>) => {
   // --------------------------------------------------------------------
   // MONTH VIEW
@@ -21,6 +22,7 @@ export const CalendarGrid = <TMeta = Record<string, any>,>({
   if (view === 'month') {
     return (
       <MonthView<TMeta>
+        loading={loading}
         current={current}
         events={events}
         onSelectSlot={onSelectSlot}
@@ -53,6 +55,7 @@ export const CalendarGrid = <TMeta = Record<string, any>,>({
   return (
     <TimeGridView<TMeta>
       view={view}
+      loading={loading}
       current={current}
       events={events}
       onSelectSlot={onSelectSlot}

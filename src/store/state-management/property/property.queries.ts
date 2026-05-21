@@ -43,11 +43,13 @@ const createPropertyMutation = (args: QUERIES.MutationPayload<MODELS.ICreateProp
   });
 };
 
-const updatePropertyMutation = (args: QUERIES.MutationPayload<MODELS.ICreateProperty>) => {
+const updatePropertyMutation = (
+  args: QUERIES.MutationPayload<MODELS.ICreateProperty, any, { appartId: string }>,
+) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.PROPERTIES_KEYS.UPDATE_PROPERTY],
     mutationFn: ({ payload, params }) =>
-      propertyServiceInstance().update_property(payload!, params),
+      propertyServiceInstance().update_property(payload!, params!),
     options: args.mutationOptions,
   });
 };

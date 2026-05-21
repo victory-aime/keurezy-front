@@ -25,6 +25,9 @@ export const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProp
           defaultValue={defaultValue}
           onChange={onChange}
           placeholder={placeholder}
+          borderRadius={'12px'}
+          _focus={{ borderColor: 'primary.500' }}
+          _placeholder={{ color: 'gray.400' }}
         >
           {children}
           {items?.map((item) => (
