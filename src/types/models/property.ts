@@ -12,6 +12,7 @@ interface ICreateProperty {
   bathrooms?: number;
   area?: number;
   status?: COMMON.Status;
+  features?: ENUM.PropertyFeature;
   documents?: string[];
   agencyId?: string;
   userId?: string;
@@ -34,6 +35,7 @@ interface IPropertyResponse {
   caution: number;
   area: number;
   status: COMMON.Status;
+  features: COMMON.Status;
   documents: [];
   agencyId: string;
   batimentId: string;

@@ -22,7 +22,8 @@ const getTagContent = (
   }
 
   const variant = STATUS_META[status as keyof typeof STATUS_META];
-  const { colorPalette } = VARIANT_CONFIG[variant] ?? {
+  const variantConfig = variant ? VARIANT_CONFIG[variant] : undefined;
+  const { colorPalette } = variantConfig ?? {
     colorPalette: fallbackColor,
   };
   const Icon = STATUS_ICONS[status];

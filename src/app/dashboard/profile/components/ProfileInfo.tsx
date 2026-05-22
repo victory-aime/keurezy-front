@@ -68,31 +68,31 @@ export const ProfileInfo = () => {
   };
 
   const handleSubmitWithCheck = (values: MODELS.IUser) => {
-    const emailChanged = values?.email !== currentUser?.email;
+    // const emailChanged = values?.email !== currentUser?.email;
 
-    if (emailChanged) {
-      setPendingValues(values);
-      setEmailHasChanged(true);
-      return;
-    }
+    // if (emailChanged) {
+    //   setPendingValues(values);
+    //   setEmailHasChanged(true);
+    //   return;
+    // }
     handleUpdateUser(values);
   };
 
-  const handleConfirmEmailChange = async () => {
-    if (!pendingValues) return;
+  // const handleConfirmEmailChange = async () => {
+  //   if (!pendingValues) return;
 
-    try {
-      // 🔥 appel Better Auth
-      await authClient.changeEmail({
-        newEmail: pendingValues.email!,
-      });
-      await handleUpdateUser(pendingValues);
-      setEmailHasChanged(false);
-      setPendingValues(null);
-    } catch (error) {
-      console.error('Erreur changeEmail', error);
-    }
-  };
+  //   try {
+  //     // 🔥 appel Better Auth
+  //     await authClient.changeEmail({
+  //       newEmail: pendingValues.email!,
+  //     });
+  //     await handleUpdateUser(pendingValues);
+  //     setEmailHasChanged(false);
+  //     setPendingValues(null);
+  //   } catch (error) {
+  //     console.error('Erreur changeEmail', error);
+  //   }
+  // };
 
   useEffect(() => {
     if (currentUser) {
@@ -139,9 +139,11 @@ export const ProfileInfo = () => {
                     type="email"
                     leftAccessory={<HiOutlineMail />}
                     isLoading={userDataLoading}
-                    isDisabled={!!extractorProviderId}
+                    isDisabled
                     infoMessage={
-                      !!extractorProviderId ? 'Données gérer par votre compte Google' : null
+                      !!extractorProviderId
+                        ? 'Données gérer par votre compte Google'
+                        : "le changement d'email est en cours de developpement"
                     }
                   />
                 </VStack>
@@ -182,11 +184,11 @@ export const ProfileInfo = () => {
           );
         }}
       </Formik>
-      <UpdateEmailModal
+      {/* <UpdateEmailModal
         isOpen={emailHasChanged}
         onChange={() => setEmailHasChanged(!emailHasChanged)}
         callback={handleConfirmEmailChange}
-      />
+      /> */}
     </main>
   );
 };

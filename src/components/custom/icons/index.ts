@@ -37,6 +37,7 @@ import {
   IoIosGitPullRequest,
   IoIosHelpCircle,
   IoIosTrendingUp,
+  IoMdFingerPrint,
 } from 'react-icons/io';
 import {
   IoBarChartOutline,
@@ -163,4 +164,5 @@ export const Icons = {
   Ticket: IoTicket,
   QueryStats: MdOutlineQueryStats,
   StatsChart: IoStatsChartSharp,
+  FingerPrint: IoMdFingerPrint,
 };

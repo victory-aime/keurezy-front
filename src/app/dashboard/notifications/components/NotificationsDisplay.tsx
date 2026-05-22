@@ -24,7 +24,6 @@ export const NotificationsDisplay = ({
   isLast?: boolean;
 }) => {
   const { colorMode } = useColorMode();
-  const router = useRouter();
   const config = notificationUIConfig[request?.notification?.type];
   const IconComponent = Icons[config?.icon];
 

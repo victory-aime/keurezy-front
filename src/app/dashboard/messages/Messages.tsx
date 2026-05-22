@@ -3,89 +3,86 @@
 import { ScrollArea, Box, Flex, VStack, Text, Center } from '@chakra-ui/react';
 import { BaseContainer, BaseIcon, FormTextInput, Icons } from '_components/custom';
 import { Avatar } from '_components/ui/avatar';
-import { ChatModule, UserModule } from '_store/state-management';
-import { MODELS } from '_types/*';
-import { Formik, FormikValues } from 'formik';
-import { useState } from 'react';
+import { Formik } from 'formik';
 import { formatCreatedAt } from 'rise-core-frontend';
 
 export const Messages = () => {
-  const [selectedConv, setSelectedConv] = useState<{
-    rentalAgreementId: string;
-    conversationId: string;
-    tenantName?: string;
-    tenantImg?: string;
-    propertyTitle?: string;
-    tenantId: string;
-  } | null>(null);
+  //const [selectedConv, setSelectedConv] = useState<{
+  // rentalAgreementId: string;
+  //   conversationId: string;
+  //   tenantName?: string;
+  //   tenantImg?: string;
+  //   propertyTitle?: string;
+  //   tenantId: string;
+  // } | null>(null);
 
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
 
-  const { data: user } = UserModule.getUserInfo({
-    queryOptions: { enabled: false },
-  });
+  // const { data: user } = UserModule.getUserInfo({
+  //   queryOptions: { enabled: false },
+  // });
 
-  const { data: getConversations, refetch: reloadConversation } = ChatModule.getConversationQueries(
-    {
-      params: {
-        //userId: user?.propertyOwner?.id,
-      },
-      queryOptions: {
-        enabled: false,
-      },
-    },
-  );
+  // const { data: getConversations, refetch: reloadConversation } = ChatModule.getConversationQueries(
+  //   {
+  //     params: {
+  //       //userId: user?.propertyOwner?.id,
+  //     },
+  //     queryOptions: {
+  //       enabled: false,
+  //     },
+  //   },
+  // );
 
-  const { mutateAsync: createConv } = ChatModule.createConversationtMutation({
-    mutationOptions: {
-      onSuccess: async (data) => {
-        setSelectedConv((prev) =>
-          prev
-            ? {
-                ...prev,
-                conversationId: data.id,
-              }
-            : null,
-        );
-        await reloadConversation();
-      },
-    },
-  });
+  // const { mutateAsync: createConv } = ChatModule.createConversationtMutation({
+  //   mutationOptions: {
+  //     onSuccess: async (data) => {
+  //       setSelectedConv((prev) =>
+  //         prev
+  //           ? {
+  //               ...prev,
+  //               conversationId: data.id,
+  //             }
+  //           : null,
+  //       );
+  //       await reloadConversation();
+  //     },
+  //   },
+  // });
 
-  const { mutateAsync: sendMessage } = ChatModule.sendMessageMutation({
-    mutationOptions: {
-      onSuccess: async () => {
-        await reloadConversation();
-      },
-    },
-  });
+  // const { mutateAsync: sendMessage } = ChatModule.sendMessageMutation({
+  //   mutationOptions: {
+  //     onSuccess: async () => {
+  //       await reloadConversation();
+  //     },
+  //   },
+  // });
 
-  const { mutateAsync: readMessage } = ChatModule.readMessageMutation({});
+  // const { mutateAsync: readMessage } = ChatModule.readMessageMutation({});
 
-  // ✅ Récupère uniquement les messages de la conversation sélectionnée
-  const extractMessage = () => {
-    const conv = getConversations?.find(
-      (c) => c.rentalAgreementId === selectedConv?.rentalAgreementId,
-    );
-    return conv?.messages ?? [];
-  };
+  // // ✅ Récupère uniquement les messages de la conversation sélectionnée
+  // const extractMessage = () => {
+  //   const conv = getConversations?.find(
+  //     (c) => c.rentalAgreementId === selectedConv?.rentalAgreementId,
+  //   );
+  //   return conv?.messages ?? [];
+  // };
 
-  const handleSelect = (
-    conversation: MODELS.IConversationResponse,
-    data: {
-      tenants: { id: string; name: string; image: string } | undefined;
-      property: { title: string } | undefined;
-    },
-  ) => {
-    setSelectedConv({
-      conversationId: conversation.id,
-      rentalAgreementId: conversation.rentalAgreementId,
-      tenantName: data?.tenants?.name,
-      propertyTitle: data?.property?.title,
-      tenantId: data?.tenants?.id!,
-      tenantImg: data?.tenants?.image,
-    });
-  };
+  // const handleSelect = (
+  //   conversation: MODELS.IConversationResponse,
+  //   data: {
+  //     tenants: { id: string; name: string; image: string } | undefined;
+  //     property: { title: string } | undefined;
+  //   },
+  // ) => {
+  //   setSelectedConv({
+  //     conversationId: conversation.id,
+  //     rentalAgreementId: conversation.rentalAgreementId,
+  //     tenantName: data?.tenants?.name,
+  //     propertyTitle: data?.property?.title,
+  //     tenantId: data?.tenants?.id!,
+  //     tenantImg: data?.tenants?.image,
+  //   });
+  // };
 
   // const handleSend = async (values: FormikValues) => {
   //   if (!values?.message?.trim() || !selectedConv?.conversationId) return;
@@ -109,7 +106,7 @@ export const Messages = () => {
 
   return (
     <BaseContainer title="Messages" description="Communiquez avec vos locataires" border={'none'}>
-      <Formik
+      {/* <Formik
         initialValues={{ message: '' }}
         onSubmit={(values, actions) => {
           //handleSend(values);
@@ -118,7 +115,7 @@ export const Messages = () => {
       >
         {({ handleSubmit }) => (
           <Flex overflow="hidden" width="full" mt="30px" flexDir={{ base: 'column', sm: 'row' }}>
-            {/* LEFT PANEL - Locataires actifs */}
+          
             <Flex
               flexDir="column"
               w={{ base: 'full', sm: '33%' }}
@@ -138,12 +135,12 @@ export const Messages = () => {
               <Flex flex={1} flexDir="column" overflowY="auto" mt={5}>
                 {getConversations?.map((data) => {
                   const isActive = selectedConv?.rentalAgreementId === data?.rentalAgreementId;
-                  //const { tenants, property } = extractUser(data.rentalAgreementId);
+                  const { tenants, property } = extractUser(data.rentalAgreementId);
 
                   return (
                     <Flex
                       key={data.id}
-                      //onClick={() => handleSelect(data, { tenants, property })}
+                      onClick={() => handleSelect(data, { tenants, property })}
                       align="center"
                       p={3}
                       gap={3}
@@ -153,7 +150,7 @@ export const Messages = () => {
                       borderLeftColor={isActive ? 'primary.500' : 'transparent'}
                       _hover={{ bgColor: 'bg.subtle' }}
                     >
-                      {/* <Avatar name={tenants?.name} src={tenants?.image} size="sm" />
+                      <Avatar name={tenants?.name} src={tenants?.image} size="sm" />
                       <VStack flex={1} align="stretch" gap={0}>
                         <Text fontWeight="medium" fontSize="sm">
                           {tenants?.name}
@@ -161,18 +158,18 @@ export const Messages = () => {
                         <Text fontSize="xs" color="fg.muted">
                           {property?.title}
                         </Text>
-                      </VStack> */}
+                      </VStack>
                     </Flex>
                   );
                 })}
               </Flex>
             </Flex>
 
-            {/* RIGHT PANEL - Chat */}
+           
             <Flex flex={1} flexDir="column" minH={0} mt={{ base: '30px' }}>
               {selectedConv ? (
                 <>
-                  {/* Header */}
+     
                   <Flex align="center" p={4} borderBottom="1px solid" borderColor="border">
                     <Avatar name={selectedConv.tenantName} src={selectedConv?.tenantImg} />
                     <Box ml={3}>
@@ -185,7 +182,7 @@ export const Messages = () => {
                     </Box>
                   </Flex>
 
-                  {/* Messages */}
+               
 
                   <ScrollArea.Root height={{ base: '30rem', sm: '15rem' }} size="xs">
                     <ScrollArea.Viewport>
@@ -235,7 +232,7 @@ export const Messages = () => {
                     </ScrollArea.Scrollbar>
                   </ScrollArea.Root>
 
-                  {/* Input */}
+             
                   <Flex align="center" gap={3} p={4} borderTop="1px solid" borderColor="border">
                     <FormTextInput name="message" placeholder="Écrire un message..." />
                     <BaseIcon boxSize={'40px'} cursor={'pointer'} onClick={() => handleSubmit()}>
@@ -251,7 +248,7 @@ export const Messages = () => {
             </Flex>
           </Flex>
         )}
-      </Formik>
+      </Formik> */}
     </BaseContainer>
   );
 };

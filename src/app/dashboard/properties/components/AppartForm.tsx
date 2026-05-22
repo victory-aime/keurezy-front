@@ -7,6 +7,8 @@ import {
   FormSelect,
   FormTextInput,
   Icons,
+  FormCheckbox,
+  BaseAccordion,
 } from '_components/custom';
 import { Flex, HStack, VStack } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
@@ -20,6 +22,7 @@ import { cityList } from '_constants/city';
 import { DASHBOARD_ROUTES } from '../../routes';
 import { getBuildingsList, propertyStatusList, propertyTypes } from '../constants/properties';
 import { useUserContext } from '_context/user-context';
+import { PROPERTY_FEATURES_BY_CATEGORY } from '../../../../types/constants';
 
 export const PropertyForm = ({ appartId }: { appartId: string }) => {
   const { user } = useUserContext();
@@ -120,6 +123,29 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
     }
   };
 
+  const getSelectedCountByCategory = (
+    category: (typeof PROPERTY_FEATURES_BY_CATEGORY)[number],
+    selectedValues: string[] = [],
+  ) => {
+    return category.features.filter((feature) => selectedValues.includes(feature.value)).length;
+  };
+
+  const featuresAccordions = (values: FormikValues) => {
+    return PROPERTY_FEATURES_BY_CATEGORY.map((categories) => {
+      const selectedCount = getSelectedCountByCategory(categories, values?.features);
+
+      return {
+        label: categories.category,
+        selectedLength: selectedCount,
+        content: (
+          <VStack width={'full'} alignItems={'flex-start'}>
+            <FormCheckbox name="features" items={categories?.features} />
+          </VStack>
+        ),
+      };
+    });
+  };
+
   return (
     <Formik
       enableReinitialize
@@ -211,7 +237,13 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
                   </HStack>
                 </VStack>
               </FormCard>
+              {/* ==================== CARACTÉRISTIQUES ==================== */}
             </Flex>
+            <FormCard title="Caractéristiques & équipements">
+              <VStack gap={6} mt={4} width="full" alignItems="flex-start">
+                <BaseAccordion items={featuresAccordions(values) ?? []} />
+              </VStack>
+            </FormCard>
           </VStack>
           {/* 🔥 QUESTION */}
           <BaseText mb={3}>Cette propriété est-elle dans un bâtiment ?</BaseText>

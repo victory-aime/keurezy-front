@@ -5,6 +5,8 @@ import React, { FC } from 'react';
 import { CheckBoxProps } from './interface/input';
 import { NoDataFound } from '../no-data-found';
 import { BaseText, TextVariant } from '../base-text';
+import { Icons } from '../icons';
+import { IoInformationCircle } from 'react-icons/io5';
 
 export const FormCheckbox: FC<CheckBoxProps> = ({
   name,
@@ -21,7 +23,7 @@ export const FormCheckbox: FC<CheckBoxProps> = ({
   const isError = isReadOnly ? !!error : !!(error && (touched || submitCount > 0));
 
   return (
-    <Field.Root id={name} invalid={isError}>
+    <Fieldset.Root id={name} invalid={isError}>
       {items && (
         <CheckboxGroup
           invalid={isError}
@@ -36,16 +38,16 @@ export const FormCheckbox: FC<CheckBoxProps> = ({
             {itemsPerRow ? (
               <SimpleGrid columns={{ base: 1, sm: 2, lgOnly: itemsPerRow }} gap={8} width={'full'}>
                 {items?.map((item, index) => (
-                  <Checkbox key={index} value={item.name} size={size}>
-                    {item.name}
+                  <Checkbox key={index} value={item.value} size={size}>
+                    {item.name ?? item.label}
                   </Checkbox>
                 ))}
               </SimpleGrid>
             ) : (
               <>
                 {items?.map((item, index) => (
-                  <Checkbox key={index} value={item.name} size={size}>
-                    {item.name}
+                  <Checkbox key={index} value={item.value} size={size}>
+                    {item.name ?? item.label}
                   </Checkbox>
                 ))}
               </>
@@ -83,10 +85,10 @@ export const FormCheckbox: FC<CheckBoxProps> = ({
       )}
       {isError && (
         <Flex gap={1} mt={1} alignItems={'center'}>
-          <Field.ErrorIcon width={2.5} height={2.5} color={'red.500'} />
-          <Field.ErrorText>{error}</Field.ErrorText>
+          <IoInformationCircle width={2.5} height={2.5} color={'red'} />
+          <Fieldset.ErrorText>{'error'}</Fieldset.ErrorText>
         </Flex>
       )}
-    </Field.Root>
+    </Fieldset.Root>
   );
 };

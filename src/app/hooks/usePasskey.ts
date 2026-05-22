@@ -17,6 +17,7 @@ export const usePasskey = () => {
         handleApiError({ status: 400, message: error.statusText! });
         return null;
       }
+      console.log('data', data);
       return data;
     } catch (e) {
       handleApiError({ status: 500, message: 'Erreur inattendue' });

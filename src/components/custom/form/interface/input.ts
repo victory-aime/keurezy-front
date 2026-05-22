@@ -83,6 +83,7 @@ interface CheckBoxProps extends HTMLChakraProps<'label'> {
   isReadOnly?: boolean;
   items?: {
     name?: string;
+    label?: string;
     value?: string;
   }[];
 }

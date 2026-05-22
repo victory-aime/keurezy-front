@@ -14,19 +14,21 @@ import { ENUM } from '_types/*';
 import { OccupationRateByType } from './OccupationRateByType';
 import { MonthlyRevenueAreaChart } from './MonthlyRevenueAreaChart';
 import { useUserContext } from '_context/user-context';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { DASHBOARD_ROUTES } from '../routes';
 import { useRouter } from 'next/navigation';
 import { useAppTheme } from '_context/theme-context';
 import { RenderNotifications } from '../notifications/components/RenderNotifications';
 import { MODELS } from '_types/*';
 import { Months } from '_utils/generate';
-import { authClient } from '../../lib/auth-client';
+import { useGlobalLoader } from '_context/loaderContext';
 
 export const DashboardStats = () => {
   const { push } = useRouter();
   const { vars } = useAppTheme();
   const { user } = useUserContext();
+  const router = useRouter();
+  const { showLoader } = useGlobalLoader();
   const agencyId = user?.agencyId;
   const userId = user?.ownerId ?? user?.staffId;
 
@@ -89,47 +91,6 @@ export const DashboardStats = () => {
     },
   ];
 
-  // const cashout = async () => {
-  //   const response = await fetch('https://api.naboopay.com/api/v2/payouts', {
-  //     method: 'POST',
-  //     headers: {
-  //       Authorization: `Bearer ${process.env.NEXT_PUBLIC_NABOO_PAY_API_KEY}`,
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       selected_payment_method: 'wave',
-  //       amount: 100,
-  //       recipient: {
-  //         first_name: 'Aminata',
-  //         last_name: 'Diba',
-  //         phone: '+221786068122',
-  //       },
-  //       reason: 'Invoice payment',
-  //     }),
-  //   });
-
-  //   const data = await response.json();
-  //   console.log(data);
-  // };
-
-  const emailOtp = async () => {
-    const { data, error } = await authClient.emailOtp.sendVerificationOtp({
-      email: 'victoydarnelmbenze@gmail.com',
-      type: 'email-verification',
-    });
-    console.log('values', data);
-    console.log('error', error);
-  };
-
-  const emailOtpVerify = async () => {
-    const { data, error } = await authClient.emailOtp.verifyEmail({
-      email: 'victoydarnelmbenze@gmail.com', // required
-      otp: '056519', // required
-    });
-    console.log('values', data);
-    console.log('error', error);
-  };
-
   const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
   const generateMonthlyRevenueStats = (): MODELS.IMonthlyRevenueStats[] => {
@@ -165,18 +126,8 @@ export const DashboardStats = () => {
         </BaseText>
       }
       border={'none'}
-      withActionButtons
-      actionsButtonProps={{
-        validateTitle: 'OTP',
-        onClick: async () => {
-          await emailOtp();
-        },
-        onReload: async () => {
-          await emailOtpVerify();
-        },
-      }}
     >
-      <SimpleGrid data-tour="kpis" columns={3} mt={10} width={'full'} gap={3}>
+      <SimpleGrid data-tour="kpis" columns={2} mt={10} width={'full'} gap={3}>
         <For each={stats}>
           {(stat, i) => (
             <Flex key={i}>
@@ -193,12 +144,22 @@ export const DashboardStats = () => {
         />
         <OccupationRateByType data={generateOccupationRateStats()} isLoading={occupationRateLoad} />
       </Flex>
-      <BaseContainer title="Activite recente" data-tour="activity">
+      <BaseContainer
+        title="Activite recente"
+        data-tour="activity"
+        withActionButtons
+        actionsButtonProps={{
+          validateTitle: `Voir plus ${allActivities?.length}`,
+          onClick: () => router.push(DASHBOARD_ROUTES.NOTIFICATION),
+        }}
+      >
         <Stack mt={{ base: '0', sm: '30px' }} width={'full'}>
           <RenderNotifications
             refetchNotificationList={refetchNotificationList}
             list={allActivities ?? []}
             isLoading={notificationLoad}
+            isSlice
+            displayLenght={4}
           />
         </Stack>
       </BaseContainer>
@@ -233,7 +194,7 @@ export const DashboardStats = () => {
               borderColor: 'orange.500',
             },
             {
-              title: 'Envoyer une invitation',
+              title: 'Ajouter un membre de votre équipe',
               link: DASHBOARD_ROUTES.INVITATIONS.ADD,
               icon: Icons.SendMail,
               color: 'success.100',

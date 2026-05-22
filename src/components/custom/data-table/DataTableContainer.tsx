@@ -31,7 +31,7 @@ export const DataTableContainer: FC<TableProps> = ({
   initialPage = 1,
   paginationData = {
     lazy: false,
-    totalDataPerPage: 5,
+    totalDataPerPage: 1000,
   },
   animationType = 'folder',
 }) => {

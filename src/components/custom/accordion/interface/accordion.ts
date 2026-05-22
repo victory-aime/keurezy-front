@@ -4,8 +4,9 @@ import { ReactNode } from 'react';
 interface AccordionProps extends AccordionRootProps {
   items: {
     label: string;
-    icon: ReactNode;
+    icon?: ReactNode;
     content: ReactNode | string | any;
+    selectedLength?: number;
   }[];
   isLoading?: boolean;
   activeBg?: boolean;

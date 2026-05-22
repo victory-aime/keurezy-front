@@ -4,6 +4,7 @@ import {
   inferAdditionalFields,
   twoFactorClient,
   emailOTPClient,
+  lastLoginMethodClient,
 } from 'better-auth/client/plugins';
 import { APP_ROUTES } from '_config/routes';
 import { passkeyClient } from '@better-auth/passkey/client';
@@ -14,6 +15,7 @@ export const authClient = createAuthClient({
     credentials: 'include',
   },
   plugins: [
+    lastLoginMethodClient(),
     customSessionClient(),
     emailOTPClient(),
     twoFactorClient({

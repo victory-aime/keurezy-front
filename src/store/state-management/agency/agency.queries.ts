@@ -44,7 +44,7 @@ const updateAgencyMutation = (args: QUERIES.MutationPayload<MODELS.IUpdateAgency
   });
 };
 
-const closeAgencyMutation = (args: QUERIES.MutationPayload<MODELS.ICloseAgency>) => {
+const closeAgencyMutation = (args: QUERIES.MutationPayload<any, any, MODELS.ICloseAgency>) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.AGENCY_KEYS.CLOSE_AGENCY],
     mutationFn: ({ params }) => agencyServiceInstance().close_agency(params!),

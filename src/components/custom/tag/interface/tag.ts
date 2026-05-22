@@ -6,7 +6,7 @@ type TagType = 'icon' | 'default';
 type StatusType = ENUM.COMMON.Status;
 
 interface BaseTagProps extends TagRootProps {
-  label?: string;
+  label?: string | number;
   color?: ColorPalette;
   icon?: ReactNode;
   status?: StatusType;

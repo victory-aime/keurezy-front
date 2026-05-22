@@ -22,7 +22,7 @@ export const LeadsList = () => {
   const { user } = useUserContext();
   const [open, setOpen] = useState<boolean>(false);
   const [openAssign, setOpenAssign] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage] = useState(1);
   const [selectedValues, setSelectedValues] = useState<MODELS.ILeadsAgency>(
     {} as MODELS.ILeadsAgency,
   );
@@ -133,10 +133,6 @@ export const LeadsList = () => {
       ],
     },
   ];
-
-  const paginationAction = async (page: number) => {
-    setCurrentPage(page);
-  };
 
   const handleAssignment = async (values: MODELS.IAssignAgentLeads) => {
     if (!agencyId || !userId) return;

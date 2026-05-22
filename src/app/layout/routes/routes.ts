@@ -2,14 +2,7 @@
 import { APP_ROUTES } from '_config/routes';
 import { CiFacebook, CiInstagram, CiMail, CiPhone } from 'react-icons/ci';
 import { FaTiktok } from 'react-icons/fa';
-import { UserRole } from '../../../types/enum';
 import { Icons } from '_components/custom';
-
-export const USERS_ROUTES = {
-  PROFILE: `/profile`,
-  FAVORITE: `/favorite`,
-  REQUEST: `/my-requests`,
-};
 
 export const HEADER_LINKS = [
   {
@@ -30,19 +23,11 @@ export const FOOTER_ROUTES: Array<{
         name: 'accueil',
         url: APP_ROUTES.ROOT,
       },
-      {
-        name: 'Propriétes',
-        url: APP_ROUTES.APPARTEMENTS,
-      },
     ],
   },
   {
     name: 'support',
     links: [
-      {
-        name: 'accueil',
-        url: USERS_ROUTES.PROFILE,
-      },
       {
         name: 'accueil',
         url: '/acceuil',

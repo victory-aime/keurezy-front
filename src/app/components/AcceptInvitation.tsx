@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { BaseButton, BaseText, Icons, Loader } from '_components/custom';
+import { BaseButton, BaseText, Icons, KeurezyLogoAnimation } from '_components/custom';
 import { Box, Center, VStack } from '@chakra-ui/react';
 import { APP_ROUTES } from '_config/routes';
 import { MotionBox } from '_constants/motion';
@@ -63,9 +63,7 @@ export const AcceptInvitation = ({ params }: { params: string }) => {
   return (
     <main>
       {state === 'loading' && (
-        <Center h={'100vh'}>
-          <Loader loader showText />
-        </Center>
+        <KeurezyLogoAnimation isExiting={state !== 'loading'} onAnimationComplete={() => {}} />
       )}
       {state === 'success' && (
         <Center h={'100vh'}>

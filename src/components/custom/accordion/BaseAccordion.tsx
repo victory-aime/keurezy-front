@@ -1,6 +1,6 @@
 'use client';
 
-import { Icon } from '@chakra-ui/react';
+import { Flex, Icon, Stack } from '@chakra-ui/react';
 import {
   AccordionItem,
   AccordionItemContent,
@@ -8,7 +8,7 @@ import {
   AccordionRoot,
 } from '_components/ui/accordion';
 import React, { FC, useState } from 'react';
-import { BaseText, CustomSkeletonLoader } from '_components/custom';
+import { BaseTag, BaseText, CustomSkeletonLoader } from '_components/custom';
 import { NoDataAnimation } from '_components/custom/data-table/NoDataAnimation';
 import { BaseAccordionProps } from './interface/accordion';
 import { useThemeColors } from '_theme/useThemeColors';
@@ -55,14 +55,19 @@ export const BaseAccordion: FC<BaseAccordionProps> = ({
                   {isLoading ? (
                     <CustomSkeletonLoader type="TEXT" numberOfLines={1} width="full" />
                   ) : (
-                    <>
-                      {item.icon && (
-                        <Icon fontSize="lg" color="fg.subtle">
-                          {item.icon}
-                        </Icon>
+                    <Flex width={'full'} justifyContent={'space-between'}>
+                      <Stack>
+                        {item.icon && (
+                          <Icon fontSize="lg" color="fg.subtle">
+                            {item.icon}
+                          </Icon>
+                        )}
+                        <BaseText>{item.label}</BaseText>
+                      </Stack>
+                      {item?.selectedLength! > 0 && (
+                        <BaseTag color={'blue'} label={item?.selectedLength} />
                       )}
-                      <BaseText>{item.label}</BaseText>
-                    </>
+                    </Flex>
                   )}
                 </AccordionItemTrigger>
                 {isLoading ? (

@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Loader } from '_components/custom';
+import { KeurezyLogoAnimation } from '_components/custom';
 import { APP_ROUTES } from '_config/routes';
 import { roleToDashboardMap } from '_constants/role';
-import { Center } from '@chakra-ui/react';
 import { authClient } from '../lib/auth-client';
 
 export default function RedirectAfterLogin() {
@@ -22,9 +21,5 @@ export default function RedirectAfterLogin() {
     window.location.href = dashboardUrl ?? APP_ROUTES.ROOT;
   }, [session, isPending]);
 
-  return (
-    <Center h={'100vh'}>
-      <Loader loader showText />
-    </Center>
-  );
+  return <KeurezyLogoAnimation isExiting={!isPending} onAnimationComplete={() => {}} />;
 }
