@@ -1,18 +1,14 @@
 'use client';
 
-import { Box, SimpleGrid, Stack, Text, Spinner } from '@chakra-ui/react';
+import { Box, SimpleGrid, Spinner } from '@chakra-ui/react';
 import { StatsModule } from '_store/state-management';
 import { useUserContext } from '_context/user-context';
 import BarChart from './components/BarChart';
 import LineChart from './components/LineChart';
 import DonutChart, { DonutDataItem } from './components/DonutChart';
-import KpiCard from './components/KpiCard';
-import DateRangePicker from './components/DateRangePicker';
 import { BaseContainer, BaseStats, Icons } from '_components/custom';
-import { useState } from 'react';
 
 export function StatsList() {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const { user } = useUserContext();
   const { data, isLoading } = StatsModule.getAgencyStats({
     params: { agencyId: user?.agencyId ?? '' },
@@ -47,32 +43,6 @@ export function StatsList() {
       description: 'Demandes en cours',
       color: 'red.600',
       icon: <Icons.Ticket />,
-    },
-  ];
-  const kpis = [
-    {
-      title: 'Biens',
-      value: data?.properties?.total ?? 0,
-      description: 'Total des biens',
-      color: 'green.600',
-    },
-    {
-      title: 'personne intéressées',
-      value: data?.leads?.total ?? 0,
-      description: 'Nouveaux prospects',
-      color: 'blue.600',
-    },
-    {
-      title: 'Visites',
-      value: data?.visits?.total ?? 0,
-      description: 'Visites planifiées',
-      color: 'purple.600',
-    },
-    {
-      title: 'Tickets',
-      value: data?.tickets?.total ?? 0,
-      description: 'Demandes en cours',
-      color: 'red.600',
     },
   ];
 
@@ -116,15 +86,6 @@ export function StatsList() {
     <BaseContainer
       title="Statistiques de l'agence"
       description="Vue d'ensemble des indicateurs clés de performance de votre agence immobilière"
-      isFilterActive={isFilterOpen}
-      onToggleFilter={() => setIsFilterOpen(!isFilterOpen)}
-      filterComponent={
-        <DateRangePicker
-          onChange={({ startDate, endDate }) => {
-            console.log('Période sélectionnée', startDate, endDate);
-          }}
-        />
-      }
       withActionButtons
       actionsButtonProps={{ onToggleFilter() {} }}
     >
