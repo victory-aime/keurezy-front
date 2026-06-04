@@ -13,12 +13,12 @@ import {
   TextVariant,
 } from '_components/custom';
 import { useRouter } from 'next/navigation';
-import { StepUserAccount } from '../components/StepUserAccount';
-import { StepBusiness } from '../components/StepBusiness';
+import { StepUserAccount } from './StepUserAccount';
+import { StepBusiness } from './StepBusiness';
 import { ASSETS } from '_assets/images';
 import { APP_ROUTES } from '_config/routes';
 import { ENUM, MODELS } from '_types/*';
-import { OnboardFinish } from '../components/FinalStep';
+import { OnboardFinish } from './FinalStep';
 import { Formik } from 'formik';
 import { useAuth } from '_hooks/useAuth';
 import { AgencyModule, CommonModule } from '_store/state-management';
@@ -38,6 +38,7 @@ import { StepPlanSelection } from './StepPlanSelection';
 import { useAgencyCheck } from '_context/agency-context';
 import Image from 'next/image';
 import Link from 'next/link';
+import { clientRedirect } from '_utils/client-navigate';
 
 export const MainOnboarding = ({
   planId,
@@ -69,7 +70,7 @@ export const MainOnboarding = ({
       onSuccess: async (data) => {
         // cas subscription → redirection paiement
         if (data?.checkout_url) {
-          window.location.href = data.checkout_url;
+          clientRedirect(data.checkout_url);
           localStorage.setItem(StorageKey.ONBOARD_PENDING_FORM, data?.order_id);
           setOrderId(data?.order_id);
           return;

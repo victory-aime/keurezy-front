@@ -3,7 +3,7 @@
 import { Box, VStack } from '@chakra-ui/react';
 import { BaseText, Icons } from '_components/custom';
 import Confetti from 'react-confetti';
-import { useWindowSize } from 'react-use';
+import { useWindowSize } from '_hooks/useWindowSize';
 import { VariablesColors } from '_theme/variables';
 import { AnimatedCheckmark } from './AnimatedCheck';
 import { MotionBox } from '_constants/motion';

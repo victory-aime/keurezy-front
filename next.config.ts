@@ -16,6 +16,10 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
+  webpack: (config) => {
+    config.resolve.alias['@tanstack/react-query'] = require.resolve('@tanstack/react-query');
+    return config;
+  },
   turbopack: {},
   /* use redirect proxy for api calls
    * every request to /api/* will be redirected to the backend server

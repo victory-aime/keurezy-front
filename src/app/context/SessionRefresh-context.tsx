@@ -5,6 +5,7 @@ import { BaseToast, ToastStatus } from '_components/custom';
 import { toaster } from '_components/ui/toaster';
 import { retrySessionRequest } from '_utils/retrySessionRequest';
 import { authClient } from '../lib/auth-client';
+import { clientReload } from '_utils/client-navigate';
 
 const SessionContext = createContext<
   | {
@@ -45,8 +46,7 @@ export function SessionRefreshProvider({
               type: ToastStatus.SUCCESS,
             });
             await refetchSession().then(() => {
-              console.log('session refreshed');
-              window.location.reload();
+              clientReload();
             });
           })
           .catch(() =>

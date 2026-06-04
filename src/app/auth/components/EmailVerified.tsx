@@ -16,7 +16,7 @@ import Confetti from 'react-confetti';
 import { confettiColors } from '../onboarding/components/FinalStep';
 import { AnimatedCheckmark } from '../onboarding/components/AnimatedCheck';
 import { MotionBox } from '_constants/motion';
-import { useWindowSize } from 'react-use';
+import { useWindowSize } from '_hooks/useWindowSize';
 
 export const EmailVerified = ({ params }: { params: string }) => {
   const router = useRouter();

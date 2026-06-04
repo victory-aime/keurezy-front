@@ -6,7 +6,7 @@ import { MotionBox } from '_constants/motion';
 import { CommonModule } from '_store/state-management';
 import { useRouter } from 'next/navigation';
 import { useState, useMemo } from 'react';
-import { ENUM } from '_types/*';
+import { ENUM, MODELS } from '_types/*';
 import { BillingCycleToggle } from './pricing/BillingCycleToggle';
 import { PlanSelectorMode } from './pricing/PlanSelectMode';
 import { PlanCard } from './pricing/PlanCard';
@@ -33,7 +33,7 @@ export const PricingSection = () => {
     planId: string;
     billingCycle?: ENUM.BillingCycle;
   }) => {
-    const plan = allPacks?.find((p) => p.id === planId);
+    const plan = allPacks?.find((p: MODELS.COMMON.ISubscriptionPlan) => p.id === planId);
     if (!plan) return;
     const safeCycle: ENUM.BillingCycle | undefined =
       plan.pricingType === 'SUBSCRIPTION' ? (cycle ?? 'MONTHLY') : undefined;

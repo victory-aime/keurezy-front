@@ -5,6 +5,7 @@ import { SessionRefreshProvider } from '_context/SessionRefresh-context';
 import { UserProvider } from '_context/user-context';
 import { safeGetServerSession } from '_hooks/get-server-session';
 import { DynamicThemeProvider } from '_context/theme-context';
+import React from 'react';
 
 export default async function DashboardLayout({
   children,
@@ -16,8 +17,6 @@ export default async function DashboardLayout({
       headers: await headers(),
     },
   });
-
-  console.log('DashboardLayout', session);
 
   return (
     <AuthContextProvider session={session?.data as any}>

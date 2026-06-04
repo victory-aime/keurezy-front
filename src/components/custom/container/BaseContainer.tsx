@@ -88,7 +88,7 @@ export const BaseContainer = React.memo(
                   <>
                     {icon ? (
                       <Flex gap={3} alignItems={'center'}>
-                        <BaseIcon color={hexToRGB(500, 0.8)}>{icon}</BaseIcon>
+                        <BaseIcon color={`${iconColor}.500`}>{icon}</BaseIcon>
                         <BaseText variant={textVariant ?? TextVariant.H3}>{t(title)}</BaseText>
                       </Flex>
                     ) : (

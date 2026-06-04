@@ -5,7 +5,7 @@ import React from 'react';
 import { AnimatedCheckmark } from '../../../auth/onboarding/components/AnimatedCheck';
 import { confettiColors } from '../../../auth/onboarding/components/FinalStep';
 import Confetti from 'react-confetti';
-import { useWindowSize } from 'react-use';
+import { useWindowSize } from '_hooks/useWindowSize';
 import { useFormikContext } from 'formik';
 import { IInviteTeamUserInfo } from '../constants/team';
 

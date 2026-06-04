@@ -19,7 +19,7 @@ const APIS_ROUTES_MODULES_PATH = {
   },
   INVITATION: '/invitation',
   TEAM: '/team',
-  ANNONCES: '/annonces',
+  ANNONCES: '/announces',
   VISITS: '/visits',
   STATS: '/stats',
 };

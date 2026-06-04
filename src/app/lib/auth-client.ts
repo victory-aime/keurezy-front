@@ -8,6 +8,7 @@ import {
 } from 'better-auth/client/plugins';
 import { APP_ROUTES } from '_config/routes';
 import { passkeyClient } from '@better-auth/passkey/client';
+import { clientRedirect } from '_utils/client-navigate';
 
 export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -20,7 +21,7 @@ export const authClient = createAuthClient({
     emailOTPClient(),
     twoFactorClient({
       onTwoFactorRedirect() {
-        window.location.href = APP_ROUTES.AUTH._2FA;
+        clientRedirect(APP_ROUTES.AUTH._2FA);
       },
     }),
     passkeyClient(),

@@ -12,12 +12,8 @@ import { useBreakpointValue } from '@chakra-ui/react';
 import { tourSteps } from '_constants/tourStep';
 import { StorageKey } from '_constants/StorageKeys';
 import { EmailNotVerifiedBanner } from './email-banner/EmailNotVerified';
-import { authClient } from '../../lib/auth-client';
-import { BaseModal, BaseText, BaseToast, Icons, ToastStatus } from '_components/custom';
-import { resolveState } from '../../auth/resolve-state';
-import { useSearchParams } from 'next/navigation';
+import { BaseModal, BaseText, Icons } from '_components/custom';
 import { EmailVerifiedSuccessBanner } from './email-banner/EmailVerifiedSuccessBanner';
-import { handleApiError } from '_utils/handleApiError';
 import { AuthModule } from '_store/state-management';
 import { useUserContext } from '_context/user-context';
 import { useAuth } from '_hooks/useAuth';
@@ -26,7 +22,6 @@ import { ENUM } from '_types/*';
 export const Layout: FunctionComponent<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const token = useSearchParams().get('token');
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { logout } = useAuth();
@@ -44,52 +39,6 @@ export const Layout: FunctionComponent<{
 
   const { mutateAsync: sendVerificationEmail, isPending } =
     AuthModule.sendEmailVerificationMutation({});
-
-  // 🔹 Verify email via token
-  useEffect(() => {
-    if (!token || !emailVerifiedStorageKey) return;
-
-    const verify = async () => {
-      const { data, error } = await authClient.verifyEmail({
-        query: { token },
-      });
-
-      if (error) {
-        handleApiError({ status: error.status, message: error.message! });
-        return;
-      }
-
-      if (data?.status) {
-        setShowVerifiedBanner(true);
-        localStorage.setItem(emailVerifiedStorageKey, 'true');
-      }
-    };
-
-    verify();
-  }, [token, emailVerifiedStorageKey]);
-
-  // 🔹 Handle token state (expired / invalid)
-  useEffect(() => {
-    if (!token) return;
-
-    const state = resolveState(token);
-
-    if (state === 'TOKEN_EXPIRED') {
-      BaseToast({
-        title: 'Lien expiré',
-        description: 'Ce lien a expiré. Demandez-en un nouveau.',
-        type: ToastStatus.WARNING,
-      });
-    }
-
-    if (state === 'INVALID_TOKEN') {
-      BaseToast({
-        title: 'Lien invalide',
-        description: 'Ce lien est invalide.',
-        type: ToastStatus.INFO,
-      });
-    }
-  }, [token]);
 
   // 🔹 Detect email verification change
   useEffect(() => {

@@ -14,21 +14,19 @@ import { ENUM } from '_types/*';
 import { OccupationRateByType } from './OccupationRateByType';
 import { MonthlyRevenueAreaChart } from './MonthlyRevenueAreaChart';
 import { useUserContext } from '_context/user-context';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { DASHBOARD_ROUTES } from '../routes';
 import { useRouter } from 'next/navigation';
 import { useAppTheme } from '_context/theme-context';
 import { RenderNotifications } from '../notifications/components/RenderNotifications';
 import { MODELS } from '_types/*';
 import { Months } from '_utils/generate';
-import { useGlobalLoader } from '_context/loaderContext';
 
 export const DashboardStats = () => {
   const { push } = useRouter();
   const { vars } = useAppTheme();
   const { user } = useUserContext();
   const router = useRouter();
-  const { showLoader } = useGlobalLoader();
   const agencyId = user?.agencyId;
   const userId = user?.ownerId ?? user?.staffId;
 
@@ -48,14 +46,6 @@ export const DashboardStats = () => {
   const { data: allProperties, isLoading: propertiesLoad } =
     PropertyModule.getAllPropertiesByAgency(queryPayload);
 
-  const { data: occupationRateData, isLoading: occupationRateLoad } =
-    PropertyModule.getOccupationRateByTypeQueries(queryPayload);
-
-  const { data: monthlyRevenueData, isLoading: monthlyRevenueLoad } =
-    PropertyModule.getMonthlyRevenueQueries({
-      queryOptions: { enabled: false },
-    });
-
   const {
     data: allActivities,
     refetch: refetchNotificationList,
@@ -66,7 +56,7 @@ export const DashboardStats = () => {
   });
 
   const revenues = allProperties?.content?.reduce(
-    (acc, p) => {
+    (acc: { revenue: number }, p: { status: ENUM.COMMON.Status; price: number }) => {
       if (p.status !== ENUM.COMMON.Status.AVAILABLE) {
         acc.revenue += Number(p.price ?? 0);
       }
@@ -113,6 +103,7 @@ export const DashboardStats = () => {
       occupationRate: random(20, 100),
     }));
   };
+
   return (
     <BaseContainer
       title="Tableau de bord"
@@ -138,11 +129,8 @@ export const DashboardStats = () => {
       </SimpleGrid>
 
       <Flex width={'full'} gap={3} flexDir={{ base: 'column', sm: 'row' }} data-tour="charts">
-        <MonthlyRevenueAreaChart
-          data={generateMonthlyRevenueStats()}
-          isLoading={occupationRateLoad}
-        />
-        <OccupationRateByType data={generateOccupationRateStats()} isLoading={occupationRateLoad} />
+        <MonthlyRevenueAreaChart data={generateMonthlyRevenueStats()} isLoading={propertiesLoad} />
+        <OccupationRateByType data={generateOccupationRateStats()} isLoading={propertiesLoad} />
       </Flex>
       <BaseContainer
         title="Activite recente"
@@ -159,7 +147,7 @@ export const DashboardStats = () => {
             list={allActivities ?? []}
             isLoading={notificationLoad}
             isSlice
-            displayLenght={4}
+            displayLength={4}
           />
         </Stack>
       </BaseContainer>

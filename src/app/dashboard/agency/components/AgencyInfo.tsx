@@ -15,7 +15,7 @@ import {
 import { Formik, FormikValues } from 'formik';
 import { t } from 'i18next';
 import { ProfileForm } from '../../profile/components/ProfileForm';
-import { AgencyModule, UserModule } from '_store/state-management';
+import { AgencyModule } from '_store/state-management';
 import { ENUM, MODELS, VALIDATION } from '_types/';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';

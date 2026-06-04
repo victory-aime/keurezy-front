@@ -8,11 +8,11 @@ import { APP_ROUTES } from '_config/routes';
 import { MotionBox } from '_constants/motion';
 import { AnimatedCheckmark } from '../auth/onboarding/components/AnimatedCheck';
 import { confettiColors } from '../auth/onboarding/components/FinalStep';
-import { useWindowSize } from 'react-use';
 import Confetti from 'react-confetti';
 import { MODELS } from '_types/*';
 import { InvitationModule } from '_store/state-management';
 import { authClient } from '../lib/auth-client';
+import { useWindowSize } from '_hooks/useWindowSize';
 
 export const AcceptInvitation = ({ params }: { params: string }) => {
   const router = useRouter();

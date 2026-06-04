@@ -13,7 +13,7 @@ import { BaseIcon } from '../base-icon';
 import { useTranslation } from 'react-i18next';
 import { BaseTag, BaseText, Icons, TextVariant } from '_components/custom';
 import Confetti from 'react-confetti';
-import { useWindowSize } from 'react-use';
+import { useWindowSize } from '_hooks/useWindowSize';
 import { VariablesColors } from '_theme/variables';
 
 const BaseModal = ({

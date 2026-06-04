@@ -32,7 +32,7 @@ export const SignIn = () => {
       autoFill: true,
       fetchOptions: {
         onSuccess() {
-          window.location.href = APP_ROUTES.REDIRECT;
+          router.push(APP_ROUTES.REDIRECT);
         },
         onError(context) {
           if (context.error.message?.includes('AbortError')) return;
@@ -62,7 +62,7 @@ export const SignIn = () => {
               router.replace(APP_ROUTES.AUTH._2FA);
               return;
             }
-            window.location.href = APP_ROUTES.REDIRECT;
+            router.replace(APP_ROUTES.REDIRECT);
           },
           onError(context) {
             if (context.error.message?.includes('AbortError')) return;

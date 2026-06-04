@@ -9,12 +9,12 @@ export const RenderNotifications = ({
   isLoading,
   refetchNotificationList,
   isSlice = false,
-  displayLenght = 3,
+  displayLength = 3,
 }: {
   list: MODELS.INotificationListResponse[];
   isLoading?: boolean;
   refetchNotificationList?: () => void;
-  displayLenght?: number;
+  displayLength?: number;
   isSlice?: boolean;
 }) => {
   if (isLoading) {
@@ -36,14 +36,14 @@ export const RenderNotifications = ({
 
   if (isSlice) {
     return list
-      ?.slice(0, displayLenght ?? 3)
+      ?.slice(0, displayLength ?? 3)
       .map((item, i) => (
         <NotificationsDisplay
           key={item.id}
           request={item}
           index={i}
           refetchNotificationList={refetchNotificationList}
-          isLast={i === list?.slice(0, displayLenght ?? 3).length - 1}
+          isLast={i === list?.slice(0, displayLength ?? 3).length - 1}
         />
       ));
   }

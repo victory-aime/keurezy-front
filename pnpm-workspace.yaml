@@ -1,6 +1,6 @@
 allowBuilds:
-  '@prisma/engines': false
-  '@swc/core': false
-  esbuild: false
-  prisma: false
-  sharp: false
+  '@swc/core': true
+  esbuild: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - rise-core-frontend@4.4.11

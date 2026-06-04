@@ -5,6 +5,7 @@ import { handleApiError } from '_utils/handleApiError';
 import { handleApiSuccess } from '_utils/handleApiSuccess';
 import { authClient } from '../lib/auth-client';
 import { queryClient } from '../lib/query-client';
+import { clientRedirect } from '_utils/client-navigate';
 
 interface AuthTypes {
   name?: string;
@@ -24,7 +25,7 @@ export const useAuth = () => {
       showLoader();
       await authClient.signOut();
       queryClient.clear();
-      window.location.href = APP_ROUTES.ROOT;
+      clientRedirect(APP_ROUTES.ROOT);
     } catch (error) {
       handleApiError({
         status: 500,
@@ -59,7 +60,7 @@ export const useAuth = () => {
       }
       if (result?.data?.token) {
         handleApiSuccess({ status: 200, message: 'Connexion réussie' });
-        window.location.href = APP_ROUTES.REDIRECT;
+        clientRedirect(APP_ROUTES.REDIRECT);
       }
     } catch (error) {
       handleApiError({
