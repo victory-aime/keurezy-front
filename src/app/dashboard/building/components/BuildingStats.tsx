@@ -35,7 +35,7 @@ export const BuildingStatsCard = ({
     {
       label: 'Indisponible',
       value: values?.count,
-      color: 'orange.500',
+      color: 'danger.500',
       icon: <Icons.Close />,
     },
   ];

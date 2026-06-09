@@ -23,13 +23,31 @@ export const FEATURE_LABELS: Record<
   MANAGE_USERS: {
     singular: 'collaborateur',
     plural: 'collaborateurs',
-    unlimited: 'collaborateurs illimités',
+    unlimited: 'Collaborateurs illimités',
   },
 
   BOOST_ANNONCES: {
-    singular: 'boost d’annonce',
-    plural: 'boosts d’annonces',
-    unlimited: 'Boosts d’annonces illimités',
+    singular: 'mise en avant',
+    plural: 'mises en avant',
+    unlimited: 'Mises en avant illimitées',
+  },
+
+  MANAGE_LEADS: {
+    singular: 'prospect',
+    plural: 'prospects',
+    unlimited: 'Prospects illimités',
+  },
+
+  VIEW_REPORTS: {
+    unlimited: 'Rapports et statistiques avancés',
+  },
+
+  MANAGE_ACCOUNTING: {
+    unlimited: 'Module de comptabilité',
+  },
+
+  ANNONCE_STATS: {
+    unlimited: 'Statistiques des annonces',
   },
 
   PREMIUM_SUPPORT: {
@@ -46,6 +64,12 @@ export const getPricing = (
     plan.pricings.find((p) => p.billingCycle === cycle) ??
     plan.pricings.find((p) => p.billingCycle === 'MONTHLY')
   );
+};
+
+export const getCommercialFeatures = (
+  plan: MODELS.COMMON.ISubscriptionPlan,
+): MODELS.COMMON.IPlanFeature[] => {
+  return plan.planFeatures.filter((f) => f.feature?.isCommercial);
 };
 
 export const formatLimit = (feature: MODELS.COMMON.IPlanFeature): string => {

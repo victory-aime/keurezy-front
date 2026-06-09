@@ -29,7 +29,7 @@ export const LandStatsCard = ({
     {
       label: 'Disponibles',
       value: lands?.filter((p) => p.status === ENUM.COMMON.Status.AVAILABLE).length,
-      color: 'tertiary.500',
+      color: 'danger.500',
       icon: <Icons.Check />,
     },
     {
@@ -41,7 +41,7 @@ export const LandStatsCard = ({
     {
       label: 'Vendu',
       value: values?.count,
-      color: 'orange.500',
+      color: 'success.500',
       icon: <Icons.Payment />,
     },
   ];

@@ -14,7 +14,7 @@ const STATUS_META: Partial<Record<ENUM.COMMON.Status, variantColorType>> = {
   CANCELLED: 'danger',
   PENDING: 'warning',
   UNAVAILABLE: 'warning',
-  MAINTENANCE: 'info',
+  MAINTENANCE: 'warning',
   CURRENTLY_ON_SALE: 'info',
   SOLD: 'warning',
   EXPIRED: 'info',

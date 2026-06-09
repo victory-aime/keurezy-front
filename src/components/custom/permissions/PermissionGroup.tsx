@@ -6,7 +6,6 @@ import { boxStyle } from '_components/custom/container/style';
 import { NoDataAnimation } from '_components/custom/data-table/NoDataAnimation';
 import {
   BaseContainer,
-  BaseText,
   CollapsePermissionCheckBox,
   ICollapseCheckBoxGroup,
   ISelectedCheckboxElement,
@@ -22,8 +21,7 @@ export const PermissionListGroup: FC<ICollapseCheckBoxGroup> = memo(
     errorMessage,
     isTouched = false,
   }) => {
-    // ✅ useState au lieu de let pour déclencher les re-renders
-    const [selectedGroups, setSelectedGroups] = useState<ISelectedCheckboxElement[]>(defaultValues);
+    const [, setSelectedGroups] = useState<ISelectedCheckboxElement[]>(defaultValues);
 
     const handleGroupElementSelection = useCallback(
       (incoming: ISelectedCheckboxElement) => {
@@ -34,14 +32,11 @@ export const PermissionListGroup: FC<ICollapseCheckBoxGroup> = memo(
 
           if (index !== -1) {
             if (incoming.permissions.length === 0) {
-              // Plus aucune permission sélectionnée → retirer le groupe
               updated = prev.filter((_, i) => i !== index);
             } else {
-              // Mettre à jour le groupe existant
               updated = prev.map((g, i) => (i === index ? incoming : g));
             }
           } else {
-            // Nouveau groupe avec au moins une permission
             updated = incoming.permissions.length > 0 ? [...prev, incoming] : prev;
           }
 

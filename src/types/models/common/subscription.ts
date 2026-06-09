@@ -10,6 +10,7 @@ export interface IPlanFeature {
     name: string;
     description: string;
     category: string;
+    isCommercial: boolean;
   };
 }
 

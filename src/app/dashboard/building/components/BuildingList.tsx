@@ -4,10 +4,8 @@ import {
   BaseContainer,
   BaseTag,
   BaseText,
-  BaseToast,
   ColumnsDataTable,
   DataTableContainer,
-  ToastStatus,
 } from '_components/custom';
 import { useMemo, useState } from 'react';
 import { BuildingFilter } from './BuildingFilter';
@@ -18,16 +16,13 @@ import { CONSTANTS, MODELS } from '_types/*';
 import { BuildingDelete } from './BuildingDelete';
 import { BuildingDetails } from './BuildingDetail';
 import { FormikValues } from 'formik';
-import { useTranslation } from 'react-i18next';
 import { BuildingStatsCard } from './BuildingStats';
 import { useUserContext } from '_context/user-context';
 
 export const BuildingList = () => {
   const router = useRouter();
-  const { t } = useTranslation();
   const { user: currentUser } = useUserContext();
   const [currentPage, setCurrentPage] = useState(1);
-  const [exportLoading, setExportLoading] = useState(false);
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
@@ -154,17 +149,6 @@ export const BuildingList = () => {
     setCurrentPage(page);
   };
 
-  const handleExportPdf = async () => {
-    if (allBuildings?.content) {
-      return BaseToast({
-        title: 'Export impossible',
-        description:
-          'Vous ne pouvez pas exporter la liste des bâtiments cette fonctionnalités est en cours de developpement',
-        type: ToastStatus.INFO,
-      });
-    }
-  };
-
   return (
     <BaseContainer
       title="Gestion des Bâtiments"
@@ -182,6 +166,7 @@ export const BuildingList = () => {
           }}
           data={filterValues}
           callback={handleFilter}
+          isLoading={isBuildingLoad}
         />
       }
       actionsButtonProps={{
@@ -189,9 +174,6 @@ export const BuildingList = () => {
         downloadTitle: `Exporter PDF (${allBuildings?.content?.length ?? 0})`,
         onClick() {
           router.push(DASHBOARD_ROUTES.BUILDING.ADD);
-        },
-        onDownload: async () => {
-          await handleExportPdf().then(() => !exportLoading);
         },
         onReload: async () => {
           await reloadBuildingList();
@@ -228,7 +210,7 @@ export const BuildingList = () => {
         callback={() =>
           handleDeleteBuilding({
             agencyId: agencyId!,
-
+            userId: userId!,
             id: selectedValues?.id!,
           })
         }

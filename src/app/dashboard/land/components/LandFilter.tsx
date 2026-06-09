@@ -10,6 +10,7 @@ import { Formik } from 'formik';
 import { MODELS } from '_types/*';
 import { useEffect, useState } from 'react';
 import { cityList } from '_constants/city';
+import { landStatusList } from '../constants/land-status';
 
 export const LandFilter = ({ onChange, isLoading, callback = () => {}, data }: ModalOpenProps) => {
   const [show, setShow] = useState(false);
@@ -38,8 +39,12 @@ export const LandFilter = ({ onChange, isLoading, callback = () => {}, data }: M
               listItems={cityList}
               setFieldValue={setFieldValue}
             />
-            <FormTextInput name="district" label="Quartier" placeholder="rechercher par quartier" />
-            <FormSelect name="status" label="Statut" listItems={[]} setFieldValue={setFieldValue} />
+            <FormSelect
+              name="status"
+              label="Statut"
+              listItems={landStatusList}
+              setFieldValue={setFieldValue}
+            />
           </HStack>
           <ActionsButton
             onClick={() => handleSubmit()}

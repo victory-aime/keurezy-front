@@ -130,7 +130,8 @@
       "NEW": "Nouvelle",
       "PLANNED": "Planifiée",
       "DONE": "Terminée",
-      "CONFIRMED": "Confirmée"
+      "CONFIRMED": "Confirmée",
+      "MAINTENANCE": "Maintenance"
     },
     "TODAY": "Aujourd'hui",
     "MONTH": "Mois",
@@ -247,24 +248,43 @@
 
   "PERMISSIONS": {
     "MODULES": {
-      "KPI": "Vue 360°",
-      "USERS": "Gestion des utilisateurs",
-      "PAYMENTS": "Gestion des paiements",
       "PROPERTIES": "Gestion des biens",
-      "ANNONCES": "Gestion des annonces"
+      "PROPERTY_TYPES": "Types de biens",
+      "ANNONCES": "Gestion des annonces",
+      "BOOST_ANNOUNCES": "Mise en avant des annonces",
+      "LEADS": "Gestion des prospects",
+      "USERS": "Gestion des collaborateurs",
+      "ROLES_PERMISSIONS": "Rôles et permissions",
+      "INVITATIONS": "Invitations",
+      "VISITS": "Gestion des visites",
+      "CONTRACTS": "Gestion des contrats",
+      "ACCOUNTING": "Comptabilité",
+      "SUBSCRIPTIONS": "Abonnements",
+      "REPORTS": "Rapports et statistiques",
+      "NOTIFICATIONS": "Notifications",
+      "TICKETS": "Support client",
+      "SUPPORT": "Support prioritaire",
+      "MARKETING": "Marketing"
     },
+
     "FEATURE_LIST": {
       "MANAGE_PROPERTIES": "Gérer les biens immobiliers",
+      "MANAGE_PROPERTY_TYPES": "Gérer les types de biens",
       "PUBLISH_PROPERTIES": "Publier des annonces immobilières",
-      "MANAGE_USERS": "Gérer les utilisateurs et collaborateurs",
-      "PREMIUM_SUPPORT": "Support premium prioritaire",
-      "BOOST_ANNONCES": "Booster les annonces immobilières",
-
-      "VIEW_PAYMENT": "Voir les paiements",
-      "ADD_PAYMENT": "Ajouter un paiement",
-      "DOWNLOAD_PAYMENT": "Télécharger un reçu de paiement",
-      "EDIT_PAYMENT": "Modifier un paiement",
-      "DELETE_PAYMENT": "Supprimer un paiement"
+      "BOOST_ANNONCES": "Mettre en avant les annonces",
+      "ANNONCE_STATS": "Consulter les statistiques des annonces",
+      "MANAGE_LEADS": "Gérer les prospects",
+      "MANAGE_USERS": "Gérer les collaborateurs",
+      "MANAGE_ROLES_PERMISSIONS": "Gérer les rôles et permissions",
+      "MANAGE_VISITS": "Planifier et gérer les visites",
+      "MANAGE_CONTRACTS": "Gérer les contrats",
+      "MANAGE_ACCOUNTING": "Gérer la comptabilité",
+      "VIEW_REPORTS": "Consulter les rapports",
+      "MANAGE_SUBSCRIPTION": "Gérer les abonnements",
+      "MANAGE_NOTIFICATIONS": "Gérer les notifications",
+      "MANAGE_TICKETS": "Gérer les tickets de support",
+      "PREMIUM_SUPPORT": "Bénéficier d'un support prioritaire",
+      "MANAGE_INVITATIONS": "Gérer les invitations"
     }
   },
 

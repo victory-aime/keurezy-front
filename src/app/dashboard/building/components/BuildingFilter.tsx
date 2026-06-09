@@ -44,7 +44,6 @@ export const BuildingFilter = ({
               listItems={cityList}
               setFieldValue={setFieldValue}
             />
-            <FormTextInput name="district" label="Quartier" placeholder="rechercher par quartier" />
             <FormSelect
               name="status"
               label="Statut"

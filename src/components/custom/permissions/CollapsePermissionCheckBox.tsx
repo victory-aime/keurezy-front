@@ -15,10 +15,8 @@ export const CollapsePermissionCheckBox: React.FC<ICheckboxGroup> = memo(
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
 
-    // Map de id → granted (true/false)
     const [selectedMap, setSelectedMap] = useState<Record<string, boolean>>({});
 
-    // Initialiser depuis defaultValue
     useEffect(() => {
       if (defaultValue?.permissions?.length) {
         const initial = defaultValue.permissions.reduce<Record<string, boolean>>((acc, p) => {
@@ -35,7 +33,6 @@ export const CollapsePermissionCheckBox: React.FC<ICheckboxGroup> = memo(
     const isNoneSelected = selectedCount === 0;
     const isIndeterminate = !isAllSelected && !isNoneSelected;
 
-    // Émet le résultat structuré avec granted
     const emit = (map: Record<string, boolean>) => {
       const permissions: ISelectedPermission[] = Object.entries(map)
         .filter(([, granted]) => granted)
@@ -47,7 +44,6 @@ export const CollapsePermissionCheckBox: React.FC<ICheckboxGroup> = memo(
       });
     };
 
-    // Sélectionner / désélectionner tout
     const handleGroupCheck = (checked: boolean) => {
       const newMap: Record<string, boolean> = {};
       if (checked) {
@@ -59,7 +55,6 @@ export const CollapsePermissionCheckBox: React.FC<ICheckboxGroup> = memo(
       emit(newMap);
     };
 
-    // Toggler une permission individuelle
     const handleTogglePermission = (id: string) => {
       const newMap = { ...selectedMap, [id]: !selectedMap[id] };
       if (!newMap[id]) delete newMap[id];

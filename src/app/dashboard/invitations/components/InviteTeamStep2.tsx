@@ -47,6 +47,8 @@ export const InviteTeamStep2 = ({
     }));
   }, [values.permissions, allPermissions]);
 
+  console.log('permissions', allPermissions);
+
   return (
     <MotionBox
       initial="enter"

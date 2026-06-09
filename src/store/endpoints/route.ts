@@ -314,7 +314,7 @@ export const APIS = (baseUrl?: string) => {
       DELETE_BUILDING: api({
         path: `${APIS_ROUTES_MODULES_PATH.BUILDING}/delete-building`,
         method: 'DELETE',
-
+        showResponse: false,
         pathBase: 'SECURED_API',
       }),
     },

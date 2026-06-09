@@ -49,5 +49,5 @@ export const DASHBOARD_ROUTES = {
     LIST: `${APP_ROUTES.DASHBOARD}/tenants`,
     ADD: `${APP_ROUTES.DASHBOARD}/tenants/add`,
   },
-  STATS: `${APP_ROUTES.DASHBOARD}/stats'`,
+  STATS: `${APP_ROUTES.DASHBOARD}/stats`,
 };

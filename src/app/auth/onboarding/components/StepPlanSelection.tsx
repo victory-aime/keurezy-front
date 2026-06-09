@@ -29,6 +29,7 @@ import { BaseCheckBoxCard } from '_components/custom/checkbox-card/BaseCheckBoxC
 import {
   formatLimit,
   getBestYearlySavings,
+  getCommercialFeatures,
   getFilteredPlans,
   getPricing,
 } from '_component/pricing/functions/pricing';
@@ -213,14 +214,14 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
                 </VStack>
 
                 {/* Features */}
-                <For each={plan.planFeatures}>
+                <For each={getCommercialFeatures(plan)}>
                   {(features, i) => (
                     <List.Root key={i} gap="2" variant="plain" align="center" mt={4} spaceY={1}>
                       <List.Item key={features.label} alignItems={'center'} gap={0} fontSize={'sm'}>
                         <List.Indicator asChild color="tertiary.500">
                           <Icons.Check size={20} />
                         </List.Indicator>
-                        {formatLimit(features, t)}
+                        {formatLimit(features)}
                       </List.Item>
                     </List.Root>
                   )}

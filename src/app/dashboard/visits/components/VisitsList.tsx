@@ -18,6 +18,7 @@ import { mergeDateAndTime, normalizeToDate } from '_components/custom/form/utils
 import { format } from 'date-fns';
 import { VisitForm } from './VisitForm';
 import { VisitDetails } from './VisiteDetails';
+import { CalendarEvent } from '_components/custom/agenda/interface/agenda';
 
 export const VisitsList = () => {
   const { user } = useUserContext();
@@ -83,7 +84,7 @@ export const VisitsList = () => {
     },
   );
 
-  const agendaEvents = (visitsList ?? []).map((visit) => ({
+  const agendaEvents = (visitsList ?? []).map((visit: MODELS.IVisitResponse) => ({
     id: visit?.id!,
     title: visit?.title!,
     date: visit?.scheduledAt ? visit?.scheduledAt : new Date(),
@@ -96,7 +97,7 @@ export const VisitsList = () => {
 
   const leadList = createListCollection({
     items:
-      leadsRequestList?.map((item) => ({
+      leadsRequestList?.map((item: MODELS.ILeadsAgency) => ({
         label: `Demande ${item?.property?.title} - faite par ${item?.client?.user?.name}`,
         value: item.id,
       })) || [],
@@ -107,7 +108,7 @@ export const VisitsList = () => {
       return null;
     }
 
-    return leadsRequestList.find((item) => item.id === leadId) ?? null;
+    return leadsRequestList.find((item: MODELS.ILeadsAgency) => item.id === leadId) ?? null;
   };
 
   const handleSubmitValues = async (values: FormikValues) => {
@@ -174,7 +175,7 @@ export const VisitsList = () => {
           setSelectedValues(event.meta as MODELS.IVisitResponse);
           setOpenModal(true);
         }}
-        renderEventSubtitle={(event) => (
+        renderEventSubtitle={(event: CalendarEvent<any>) => (
           <BaseText fontSize={'xs'}>{event.meta?.lead?.property?.title}</BaseText>
         )}
         statuses={[
