@@ -237,6 +237,7 @@
       "ADD_PASS_KEY_INFO": "Vous allez être redirigé vers une interface sécurisée pour ajouter une nouvelle clé d'accès (passkey). Cette opération vous permettra de vous connecter sans mot de passe à l'avenir, à l'aide d'un appareil compatible (empreinte digitale, reconnaissance faciale ou code PIN).",
       "UNKNOW_DEVICE": "Appareil inconnu",
       "PASS_KEY_NO_FOUND": "Aucune clé détectée.",
+      "NO_SESSIONS_FOUND": "Aucune session détectée.",
       "ACTIVE_SESSIONS": "Sessions actives",
       "ACTIVE_SESSIONS_DESC": "Voici les connexions actuellement actives sur votre compte. Si vous voyez une activité inconnue, vous pouvez fermer une session à distance.",
       "CURRENT_SESSION": "Session actuelle",

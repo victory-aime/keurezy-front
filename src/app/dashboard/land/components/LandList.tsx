@@ -49,6 +49,7 @@ export const LandList = () => {
   const {
     data: allLands,
     isLoading: isLandLoad,
+    isFetching,
     refetch: reloadLandsList,
   } = LandModule.getAllLandsByAgencyQueries(queryPayload);
 
@@ -135,6 +136,7 @@ export const LandList = () => {
           }}
           data={filterValues}
           callback={handleFilter}
+          isLoading={isLandLoad || isFetching}
         />
       }
       actionsButtonProps={{
@@ -151,10 +153,10 @@ export const LandList = () => {
         },
       }}
     >
-      <LandStatsCard lands={allLands?.content ?? []} isLoading={isLandLoad} />
+      <LandStatsCard lands={allLands?.content ?? []} isLoading={isLandLoad || isFetching} />
 
       <DataTableContainer
-        isLoading={isLandLoad}
+        isLoading={isLandLoad || isFetching}
         data={allLands?.content ?? []}
         paginationData={{
           lazy: true,
@@ -174,7 +176,7 @@ export const LandList = () => {
         onChange={setOpenDetails}
         isOpen={openDetails}
         data={selectedValues}
-        isLoading={isLandLoad}
+        isLoading={isLandLoad || isFetching}
         callback={() => {
           setOpenDetails(false);
         }}

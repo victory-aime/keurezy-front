@@ -66,18 +66,16 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
               cursor={'pointer'}
             />
           )}
-
+          {/*
           <Separator orientation="vertical" height={6} />
-
-          {/* Search */}
-          <Flex flex={1} maxW={'md'}>
+                 <Flex flex={1} maxW={'md'}>
             <FormTextInput
               leftAccessory={<Icons.Search />}
               name="search"
               placeholder="Rechercher propriétés, locataires, paiements..."
               isLoading={isLoading}
             />
-          </Flex>
+          </Flex>*/}
 
           <Flex ml={'auto'} alignItems={'center'} gap={3} position={'relative'}>
             {isLoading ? (

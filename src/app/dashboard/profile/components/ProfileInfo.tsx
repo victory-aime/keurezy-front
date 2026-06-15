@@ -34,7 +34,7 @@ export const ProfileInfo = () => {
 
   const {
     data: currentUser,
-    isLoading: userDataLoading,
+    isFetching: userDataLoading,
     refetch: reloadUserInfo,
   } = UserModule.getUserInfo({
     params: { userId: session?.userId },
@@ -52,7 +52,7 @@ export const ProfileInfo = () => {
   });
 
   const extractorProviderId = currentUser?.accounts?.find(
-    (item) => item?.providerId === ProviderKeys.GOOGLE,
+    (item: MODELS.IAccountUsers) => item?.providerId === ProviderKeys.GOOGLE,
   );
 
   const handleUpdateUser = async (values: MODELS.IUser) => {

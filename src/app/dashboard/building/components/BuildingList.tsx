@@ -51,6 +51,7 @@ export const BuildingList = () => {
   const {
     data: allBuildings,
     isLoading: isBuildingLoad,
+    isFetching,
     refetch: reloadBuildingList,
   } = BuildingModule.getAllBuildingByAgencyQueries(queryPayload);
 
@@ -166,7 +167,7 @@ export const BuildingList = () => {
           }}
           data={filterValues}
           callback={handleFilter}
-          isLoading={isBuildingLoad}
+          isLoading={isBuildingLoad || isFetching}
         />
       }
       actionsButtonProps={{
@@ -183,10 +184,13 @@ export const BuildingList = () => {
         },
       }}
     >
-      <BuildingStatsCard buildings={allBuildings?.content ?? []} isLoading={isBuildingLoad} />
+      <BuildingStatsCard
+        buildings={allBuildings?.content ?? []}
+        isLoading={isBuildingLoad || isFetching}
+      />
 
       <DataTableContainer
-        isLoading={isBuildingLoad}
+        isLoading={isBuildingLoad || isFetching}
         data={allBuildings?.content ?? []}
         paginationData={{
           lazy: true,
@@ -219,7 +223,7 @@ export const BuildingList = () => {
         onChange={setOpenDetails}
         isOpen={openDetails}
         data={selectedValues}
-        isLoading={isBuildingLoad}
+        isLoading={isBuildingLoad || isFetching}
         callback={() => {
           setOpenDetails(false);
           setOpenDelete(true);
