@@ -216,8 +216,8 @@ export const Settings = () => {
                   )}
 
                   {(listPasskey?.length ?? 0) > 0 ? (
-                    <For each={listPasskey}>
-                      {(cred) => (
+                    <>
+                      {listPasskey?.map((cred) => (
                         <HStack
                           key={cred.id}
                           width={'full'}
@@ -253,8 +253,8 @@ export const Settings = () => {
                             </>
                           )}
                         </HStack>
-                      )}
-                    </For>
+                      ))}
+                    </>
                   ) : (
                     <BaseText mt={8}>{t('PROFILE.SECURITY.PASS_KEY_NO_FOUND')}</BaseText>
                   )}
@@ -292,8 +292,7 @@ export const Settings = () => {
                   description="PROFILE.SECURITY.ACTIVE_SESSIONS_DESC"
                   isLoading={userDataLoading}
                 >
-                  <For each={userSessionList}>
-                    {(session, idx) => (
+                  {userSessionList?.map((session, idx) => (
                       <HStack
                         key={idx}
                         width="full"
@@ -301,59 +300,53 @@ export const Settings = () => {
                         alignItems="center"
                         py={2}
                       >
-                        <VStack gap={1} width="full" align="stretch">
+                      <VStack gap={1} width="full" align="stretch">
+                        <HStack>
+                          <BaseText fontWeight="bold">
+                            {parseUserAgent(session?.userAgent!)}
+                          </BaseText>
+                          {session?.id === currentSessionId && (
+                            <BaseTag color="purple" label={t('PROFILE.SECURITY.CURRENT_SESSION')} />
+                          )}
+                        </HStack>
+                        <Flex wrap="wrap" gap={3} color="gray.500" fontSize="sm">
                           <HStack>
-                            <BaseText fontWeight="bold">
-                              {parseUserAgent(session?.userAgent!)}
-                            </BaseText>
-                            {session?.id === currentSessionId && (
-                              <BaseTag
-                                color="purple"
-                                label={t('PROFILE.SECURITY.CURRENT_SESSION')}
-                              />
-                            )}
+                            <Icons.World />
+                            <BaseText>{session?.ipAddress || 'N/A'}</BaseText>
                           </HStack>
-                          <Flex wrap="wrap" gap={3} color="gray.500" fontSize="sm">
-                            <HStack>
-                              <Icons.World />
-                              <BaseText>{session?.ipAddress || 'N/A'}</BaseText>
-                            </HStack>
 
-                            <HStack>
-                              <Icons.Timer />
-                              <BaseText>
-                                {t('PROFILE.SECURITY.SESSION_START')} :{' '}
-                                {formatCreatedAt(session?.createdAt as unknown as string)}
-                              </BaseText>
-                            </HStack>
+                          <HStack>
+                            <Icons.Timer />
+                            <BaseText>
+                              {t('PROFILE.SECURITY.SESSION_START')} :{' '}
+                              {formatCreatedAt(session?.createdAt as unknown as string)}
+                            </BaseText>
+                          </HStack>
 
-                            <HStack>
-                              <Icons.Timer />
-                              <BaseText>
-                                Expires le: {formatDisplayDate(session?.expiresAt)}
-                              </BaseText>
-                            </HStack>
-                          </Flex>
-                        </VStack>
-                        {userSessionList?.length > 1 && (
-                          <BaseIcon
-                            bgColor={'red'}
-                            boxSize={'30px'}
-                            borderRadius={'7px'}
-                            cursor="pointer"
-                            onClick={() => session.id}
-                          >
-                            <Icons.Trash
-                              onClick={() => {
-                                setOpenCloseSessionModal(true);
-                                setSelectedData(session.id);
-                              }}
-                            />
-                          </BaseIcon>
-                        )}
-                      </HStack>
-                    )}
-                  </For>
+                          <HStack>
+                            <Icons.Timer />
+                            <BaseText>Expires le: {formatDisplayDate(session?.expiresAt)}</BaseText>
+                          </HStack>
+                        </Flex>
+                      </VStack>
+                      {userSessionList?.length > 1 && (
+                        <BaseIcon
+                          bgColor={'red'}
+                          boxSize={'30px'}
+                          borderRadius={'7px'}
+                          cursor="pointer"
+                          onClick={() => session.id}
+                        >
+                          <Icons.Trash
+                            onClick={() => {
+                              setOpenCloseSessionModal(true);
+                              setSelectedData(session.id);
+                            }}
+                          />
+                        </BaseIcon>
+                      )}
+                    </HStack>
+                    ))}
                 </ProfileForm>
               ) : (
                 <BaseText mt={8}>{t('PROFILE.SECURITY.NO_SESSIONS_FOUND')}</BaseText>
