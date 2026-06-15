@@ -15,6 +15,7 @@ jobs:
 
     env:
       API_BACKEND_URL: ${{ secrets.API_BACKEND_URL }}
+      NEXT_PUBLIC_BACKEND_PATH: ${{ secrets.NEXT_PUBLIC_BACKEND_PATH }}
 
     steps:
       - name: Checkout repository
