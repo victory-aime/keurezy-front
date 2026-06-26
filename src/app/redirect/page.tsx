@@ -17,7 +17,7 @@ export default function RedirectAfterLogin() {
     if (!session?.user) {
       const timer = setTimeout(() => {
         router.replace(APP_ROUTES.AUTH.SIGN_IN);
-      }, 1000);
+      }, 1500);
       return () => clearTimeout(timer);
     }
     const dashboardUrl = roleToDashboardMap[session.user.role];

@@ -52,6 +52,7 @@ export const useAuth = () => {
           },
         },
       );
+
       if (result.error) {
         handleApiError({
           status: result.error.status,
@@ -61,7 +62,7 @@ export const useAuth = () => {
       }
       if (result?.data?.token) {
         handleApiSuccess({ status: 200, message: 'Connexion réussie' });
-        clientRedirect(APP_ROUTES.REDIRECT);
+        router.push(APP_ROUTES.REDIRECT);
       }
     } catch (error) {
       handleApiError({

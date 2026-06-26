@@ -28,9 +28,11 @@ async function handler(req: NextRequest): Promise<NextResponse> {
 
   const responseHeaders = new Headers();
   backendRes.headers.forEach((value, key) => {
-    if (!['transfer-encoding', 'connection'].includes(key.toLowerCase())) {
-      responseHeaders.set(key, value);
+    const k = key.toLowerCase();
+    if (['transfer-encoding', 'connection', 'content-encoding', 'content-length'].includes(k)) {
+      return;
     }
+    responseHeaders.set(key, value);
   });
 
   // ✅ Supprime Domain= pour que le cookie soit set sur le domaine frontend

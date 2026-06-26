@@ -5,7 +5,7 @@ import path from 'path';
 const apiUrl = process.env.API_BACKEND_URL;
 
 if (!apiUrl) {
-  throw new Error('API_BACKEND_URL and NEXT_PUBLIC_BACKEND_PATH are missing');
+  throw new Error('API_BACKEND_URL is missing');
 }
 
 const withSerwist = withSerwistInit({

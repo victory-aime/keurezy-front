@@ -11,7 +11,7 @@ import { passkeyClient } from '@better-auth/passkey/client';
 import { clientRedirect } from '_utils/client-navigate';
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  baseURL: process.env.NEXT_PUBLIC_URL,
   fetchOptions: {
     credentials: 'include',
   },
