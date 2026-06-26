@@ -1,7 +1,7 @@
 'use client';
 import { Formik } from 'formik';
 import { FormContainer } from '../../components/FormContainer';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CONSTANTS, MODELS, VALIDATION } from '_types/*';
 import { useRouter } from 'next/navigation';
 import { DASHBOARD_ROUTES } from '../../routes';
@@ -21,26 +21,24 @@ export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
   const agencyId = user?.agencyId;
   const userId = user?.ownerId ?? user?.staffId;
 
-  const { data: allBuildings, isLoading: isAllBuildingLoad } =
-    BuildingModule.getAllBuildingByAgencyQueries({
+  const queryPayload = useMemo(
+    () => ({
       params: {
-        agencyId,
-        userId,
+        agencyId: agencyId!,
+        userId: userId!,
         initialPage: CONSTANTS.PAGINATION.INIT,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
       queryOptions: { enabled: !!agencyId && !!userId },
-    });
+    }),
+    [userId, agencyId],
+  );
 
-  const { data: allLands, isLoading: isAllLandLoad } = LandModule.getAllLandsByAgencyQueries({
-    params: {
-      agencyId,
-      userId,
-      initialPage: CONSTANTS.PAGINATION.INIT,
-      limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
-    },
-    queryOptions: { enabled: !!agencyId && !!userId },
-  });
+  const { data: allBuildings, isLoading: isAllBuildingLoad } =
+    BuildingModule.getAllBuildingByAgencyQueries(queryPayload);
+
+  const { data: allLands, isLoading: isAllLandLoad } =
+    LandModule.getAllLandsByAgencyQueries(queryPayload);
 
   const { mutateAsync: createBuilding, isPending: isCreateBuilding } =
     BuildingModule.createBuildingMutation({

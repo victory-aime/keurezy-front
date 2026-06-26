@@ -46,9 +46,7 @@ interface IAgencyFilters extends IPagination {
 
 interface IAgencyCommonParams {
   agencyId: string;
-  ownerId: string;
-  requestId?: string;
-  propertyId?: string;
+  userId: string;
 }
 
 interface IAgencySubscriptionInfo {
@@ -62,6 +60,46 @@ interface IAgencySubscriptionInfo {
   expiresAt: string;
 }
 
+interface IAgencyStats {
+  properties: {
+    total: number;
+    available: number;
+    rented: number;
+    occupancyRate: number;
+  };
+  leads: {
+    total: number;
+    new: number;
+    contacted: number;
+    visitPlanned: number;
+    converted: number;
+    conversionRate: number;
+  };
+  visits: {
+    total: number;
+    planned: number;
+    confirmed: number;
+    done: number;
+    cancelled: number;
+  };
+  tenants: {
+    total: number;
+    active: number;
+    inactive: number;
+  };
+  staff: {
+    total: number;
+    active: number;
+    inactive: number;
+  };
+  tickets: {
+    total: number;
+    open: number;
+    inProgress: number;
+    resolved: number;
+  };
+}
+
 export type {
   ICreateAgency,
   IUpdateAgency,
@@ -70,4 +108,5 @@ export type {
   IAgencyFilters,
   IAgencyCommonParams,
   IAgencySubscriptionInfo,
+  IAgencyStats,
 };

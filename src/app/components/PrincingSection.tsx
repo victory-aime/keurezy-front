@@ -12,17 +12,14 @@ import { PlanSelectorMode } from './pricing/PlanSelectMode';
 import { PlanCard } from './pricing/PlanCard';
 import { APP_ROUTES } from '_config/routes';
 import { getBestYearlySavings, getFilteredPlans } from '_component/pricing/functions/pricing';
+import { t } from 'i18next';
 
 export const PricingSection = () => {
   const navigate = useRouter();
   const [mode, setMode] = useState<ENUM.PricingType>('SUBSCRIPTION');
   const [billingCycle, setBillingCycle] = useState<ENUM.BillingCycle>('MONTHLY');
 
-  const { data: allPacks } = CommonModule.getAllPacksQueries({
-    queryOptions: {
-      enabled: true,
-    },
-  });
+  const { data: allPacks } = CommonModule.getAllPacksQueries({});
 
   const filteredPlans = getFilteredPlans(allPacks, mode);
 
@@ -38,7 +35,7 @@ export const PricingSection = () => {
     const safeCycle: ENUM.BillingCycle | undefined =
       plan.pricingType === 'SUBSCRIPTION' ? (cycle ?? 'MONTHLY') : undefined;
     BaseToast({
-      title: `Plan ${plan.name} sélectionné`,
+      title: `Plan ${t(`SUBSCRIPTION.PLANS.${plan.name}`)} sélectionné`,
       description:
         plan.pricingType === 'SUBSCRIPTION'
           ? `Facturation ${safeCycle === 'YEARLY' ? 'annuelle' : 'mensuelle'}`
@@ -63,15 +60,14 @@ export const PricingSection = () => {
           </BaseText>
 
           <BaseText fontWeight={'bold'} variant={TextVariant.H2} lineHeight={1.2}>
-            Choisissez votre modèle de tarification
+            Modèle de tarification
           </BaseText>
           <BaseText variant={TextVariant.L} mb={2} mt={1} color={'gray.400'}>
-            Payez à la commission ou souscrivez à un abonnement. Vous restez libre.
+            Souscrivez à un abonnement. Vous restez libre.
           </BaseText>
         </MotionBox>
 
         <VStack textAlign={'center'}>
-          <PlanSelectorMode value={mode} onChange={setMode} />
           {mode === 'SUBSCRIPTION' && (
             <BillingCycleToggle
               value={billingCycle}

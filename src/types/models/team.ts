@@ -1,11 +1,11 @@
-import { UserRole } from '../enum';
+import { UserRole, COMMON } from '../enum';
 
 export interface ITeam {
   id?: string;
   name?: string;
   email?: string;
   role?: UserRole;
-  status?: boolean;
+  status?: COMMON.Status;
   userId?: string;
   createdAt?: string;
   permissions: {

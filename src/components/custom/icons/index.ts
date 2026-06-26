@@ -18,7 +18,7 @@ import {
 } from 'react-icons/ci';
 import { FaBook, FaUsers } from 'react-icons/fa6';
 import { FaCog, FaUserAlt, FaUserPlus } from 'react-icons/fa';
-import { HiOutlineMail } from 'react-icons/hi';
+import { HiOutlineInformationCircle, HiOutlineMail } from 'react-icons/hi';
 import {
   HiHeart,
   HiHome,
@@ -69,7 +69,7 @@ import { BsCalendar3, BsSliders } from 'react-icons/bs';
 import { CiGrid31 } from 'react-icons/ci';
 import { ImOffice } from 'react-icons/im';
 import { GoZap } from 'react-icons/go';
-import { BiWorld } from 'react-icons/bi';
+import { BiChevronDown, BiWorld } from 'react-icons/bi';
 import { FiMinus, FiTarget } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { IoTicket } from 'react-icons/io5';
@@ -165,4 +165,6 @@ export const Icons = {
   QueryStats: MdOutlineQueryStats,
   StatsChart: IoStatsChartSharp,
   FingerPrint: IoMdFingerPrint,
+  InfoIcon: HiOutlineInformationCircle,
+  ChevronDown: BiChevronDown,
 };

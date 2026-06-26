@@ -6,7 +6,7 @@ import { MODELS } from '_types/index';
  * such as fetching all users and creating a new user through API endpoints.
  */
 export class UserService extends BaseApi {
-  user_info(userId: MODELS.IUser) {
+  user_info(userId: string) {
     return this.apiService.invoke(this.applicationContext.getApiConfig().USER.INFO, { userId });
   }
   update_user_info(data: MODELS.IUser) {

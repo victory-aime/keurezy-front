@@ -87,7 +87,7 @@ export const MainOnboarding = ({
     },
   });
   const { data: paymentStatus } = CommonModule.getPaymentStatusQueries({
-    params: { orderId },
+    params: { orderId: orderId! },
     queryOptions: {
       enabled: !!orderId && enabledPolling,
       refetchInterval: (data: any) => {

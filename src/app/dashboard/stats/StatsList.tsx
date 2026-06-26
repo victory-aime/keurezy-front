@@ -1,11 +1,11 @@
 'use client';
 
-import { Box, SimpleGrid, Spinner } from '@chakra-ui/react';
+import { SimpleGrid, VStack } from '@chakra-ui/react';
 import { StatsModule } from '_store/state-management';
 import { useUserContext } from '_context/user-context';
-import BarChart from './components/BarChart';
+import { StatsChart } from './components/BarChart';
 import LineChart from './components/LineChart';
-import DonutChart, { DonutDataItem } from './components/DonutChart';
+import { DonutDataItem } from './components/DonutChart';
 import { BaseContainer, BaseStats, Icons } from '_components/custom';
 
 export function StatsList() {
@@ -63,22 +63,14 @@ export function StatsList() {
     {
       type: 'Biens',
       allocation: data?.properties?.total || 0,
-      color: 'green.solid',
     },
     {
       type: 'Leads',
       allocation: data?.leads?.total || 0,
-      color: 'blue.solid',
     },
     {
       type: 'Visites',
       allocation: data?.visits?.total || 0,
-      color: 'purple.solid',
-    },
-    {
-      type: 'Tickets',
-      allocation: data?.tickets?.total || 0,
-      color: 'red.solid',
     },
   ];
 
@@ -86,41 +78,31 @@ export function StatsList() {
     <BaseContainer
       title="Statistiques de l'agence"
       description="Vue d'ensemble des indicateurs clés de performance de votre agence immobilière"
-      withActionButtons
-      actionsButtonProps={{ onToggleFilter() {} }}
+      border={'none'}
+      loader={isLoading}
+      numberOfLines={2}
     >
-      {isLoading ? (
-        <Box py={20} textAlign="center">
-          <Spinner size="xl" />
-        </Box>
-      ) : (
-        <>
-          <SimpleGrid width={'full'} columns={{ base: 1, sm: 4 }} gap={4}>
-            {stats.map((kpi) => (
-              <BaseStats
-                key={kpi.label}
-                title={kpi.label}
-                value={kpi.value}
-                icon={kpi.icon}
-                iconBgColor={kpi.color}
-                isLoading={isLoading}
-              />
-            ))}
-          </SimpleGrid>
-
-          <SimpleGrid width={'full'} columns={{ base: 1, lg: 2 }} gap={4}>
-            <BarChart data={chartData} />
-            <DonutChart title="Tickets par statut" data={donutData} />
-          </SimpleGrid>
-
-          <LineChart
-            title="Évolution des indicateurs"
-            data={lineChartData}
-            xKey="category"
-            series={[{ name: 'value', label: 'Total', color: 'blue.solid' }]}
+      <SimpleGrid width={'full'} columns={{ base: 1, sm: 4 }} gap={4} mt={10}>
+        {stats.map((kpi) => (
+          <BaseStats
+            key={kpi.label}
+            title={kpi.label}
+            value={kpi.value}
+            icon={kpi.icon}
+            iconBgColor={kpi.color}
+            isLoading={isLoading}
           />
-        </>
-      )}
+        ))}
+      </SimpleGrid>
+      <VStack gap={8} alignItems={'flex-start'} width={'full'}>
+        <StatsChart data={chartData} />
+        <LineChart
+          title="Évolution des indicateurs"
+          data={lineChartData}
+          xKey="category"
+          series={[{ name: 'value', label: 'Total', color: 'blue.solid' }]}
+        />
+      </VStack>
     </BaseContainer>
   );
 }

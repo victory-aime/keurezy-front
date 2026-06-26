@@ -9,7 +9,5 @@ import { GlobalApplicationContext } from './applicationContext';
  * to be used by the underlying layers (StateManagement, Business and Core)
  */
 
-export const applicationContext = new GlobalApplicationContext(
-  process.env.NEXT_PUBLIC_BACKEND_PATH!,
-);
+export const applicationContext = new GlobalApplicationContext('/api/v1');
 applicationInstance.setContext(applicationContext);

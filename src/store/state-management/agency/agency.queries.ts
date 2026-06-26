@@ -3,22 +3,26 @@ import { agencyServiceInstance } from './agency.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
-const getAgencyInfo = (args: QUERIES.QueryPayload<{ agencyId: string; userId: string }>) => {
+const getAgencyInfo = (
+  args: QUERIES.QueryPayload<MODELS.IAgency, undefined, MODELS.IAgencyCommonParams>,
+) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<MODELS.IAgency>({
+  return QUERIES.useCustomQuery<MODELS.IAgencyCommonParams, undefined, MODELS.IAgency>({
     queryKey: [Constants.AGENCY_KEYS.AGENCY_INFO],
-    queryFn: () => agencyServiceInstance().agency_info(params?.agencyId, params?.userId),
+    queryFn: () => agencyServiceInstance().agency_info(params?.agencyId!, params?.userId!),
     options: queryOptions,
   });
 };
 
-const getAgencySubscriptionInfo = (args: QUERIES.QueryPayload<{ agencyId: string }>) => {
+const getAgencySubscriptionInfo = (
+  args: QUERIES.QueryPayload<MODELS.IAgencySubscriptionInfo, undefined, { agencyId: string }>,
+) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<MODELS.IAgencySubscriptionInfo>({
+  return QUERIES.useCustomQuery<{ agencyId: string }, undefined, MODELS.IAgencySubscriptionInfo>({
     queryKey: [Constants.AGENCY_KEYS.AGENCY_SUBSCRIPTION_INFO],
-    queryFn: () => agencyServiceInstance().agency_subscription_info(params?.agencyId),
+    queryFn: () => agencyServiceInstance().agency_subscription_info(params?.agencyId!),
     options: queryOptions,
   });
 };

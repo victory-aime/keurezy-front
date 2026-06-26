@@ -66,6 +66,7 @@ export function useThemeColors(colorType: string = 'primary') {
     getColor,
     hexToRGB,
     getGradient,
+    hexToRGBA,
     getHoverGradient,
   };
 }

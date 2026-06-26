@@ -4,14 +4,14 @@ import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
 const getAllInvitationByAgency = (
-  args: QUERIES.QueryPayload<{ agencyId: string; userId: string }>,
+  args: QUERIES.QueryPayload<any[], undefined, MODELS.IAgencyCommonParams>,
 ) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<any[]>({
+  return QUERIES.useCustomQuery<undefined, MODELS.IAgencyCommonParams, any[]>({
     queryKey: [Constants.INVITE_KEYS.INVITATION_AGENCY_LIST],
     queryFn: () =>
-      invitationServiceInstance().getAllInvitationsByAgency(params?.agencyId, params?.userId),
+      invitationServiceInstance().getAllInvitationsByAgency(params?.agencyId!, params?.userId!),
     options: queryOptions,
   });
 };

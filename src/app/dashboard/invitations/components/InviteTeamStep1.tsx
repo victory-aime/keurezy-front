@@ -46,6 +46,8 @@ export const InviteStep1 = () => {
           <FormSelect
             name={'account.role'}
             label="Rôle"
+            isClearable={false}
+            isDisabled
             listItems={roleList}
             setFieldValue={setFieldValue}
           />

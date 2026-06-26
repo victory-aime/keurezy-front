@@ -1,7 +1,6 @@
 import { SidebarNavGroupProps } from '../types';
 import { DASHBOARD_ROUTES } from '../../../routes';
 import { Icons } from '_components/custom';
-import { title } from 'process';
 
 export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
   {
@@ -34,6 +33,11 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         feature: 'manage_properties',
         permission: 'view_properties',
       },
+      {
+        label: 'Demandes',
+        path: DASHBOARD_ROUTES.LEADS,
+        icon: Icons.Clipboard,
+      },
     ],
     title: 'Gestion Immobiliers',
     icon: Icons.GridHome,
@@ -54,25 +58,12 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     title: 'Gestion',
     icon: Icons.FolderOpen,
     links: [
-      // {
-      //   label: 'Agenda',
-      //   path: DASHBOARD_ROUTES.AGENGA,
-      //   icon: Icons.Agenda,
-      //   badge: 5,
-      // },
       {
         label: 'Rendez-vous',
         path: DASHBOARD_ROUTES.VISITS,
         icon: Icons.Calendar,
         badge: 5,
       },
-      {
-        label: 'Demandes',
-        path: DASHBOARD_ROUTES.LEADS,
-        icon: Icons.Clipboard,
-        badge: 5,
-      },
-
       {
         label: 'Invitations',
         path: DASHBOARD_ROUTES.INVITATIONS.LIST,
@@ -86,12 +77,16 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         icon: Icons.FaUsers,
         badge: 5,
       },
+      /*      {
+        label: 'Messages',
+        path: DASHBOARD_ROUTES.CHAT,
+        icon: Icons.Chat,
+      },*/
       {
         label: 'Notifications',
         path: DASHBOARD_ROUTES.NOTIFICATION,
         icon: Icons.Bell,
       },
-
       {
         label: 'SIDE_BAR.AGENCY',
         path: DASHBOARD_ROUTES.AGENCY,

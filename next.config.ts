@@ -3,9 +3,8 @@ import withSerwistInit from '@serwist/next';
 import path from 'path';
 
 const apiUrl = process.env.API_BACKEND_URL;
-const backend_path = process.env.NEXT_PUBLIC_BACKEND_PATH;
 
-if (!apiUrl || !backend_path) {
+if (!apiUrl) {
   throw new Error('API_BACKEND_URL and NEXT_PUBLIC_BACKEND_PATH are missing');
 }
 
@@ -17,6 +16,10 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
+  webpack: (config) => {
+    config.resolve.alias['@tanstack/react-query'] = require.resolve('@tanstack/react-query');
+    return config;
+  },
   turbopack: {},
   /* use redirect proxy for api calls
    * every request to /api/* will be redirected to the backend server
@@ -58,7 +61,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   env: {
-    NEXT_PUBLIC_BACKEND_PATH: process.env.NEXT_PUBLIC_BACKEND_PATH,
     API_BACKEND_URL: process.env.API_BACKEND_URL,
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
   },

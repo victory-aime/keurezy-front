@@ -3,7 +3,7 @@ import { IRadioProps } from './interface/radio';
 
 export const BaseRadio = ({
   items,
-  colorPalette,
+  colorPalette = 'purple',
   onValueChange,
   value,
   ...rest

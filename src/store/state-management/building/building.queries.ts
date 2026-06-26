@@ -3,11 +3,17 @@ import { buildingServiceInstance } from './building.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
-const getAllBuildingByAgencyQueries = (args: QUERIES.QueryPayload<MODELS.IBuildingFilter>) => {
-  const { params, queryOptions } = args;
-
-  return QUERIES.useCustomQuery<
+const getAllBuildingByAgencyQueries = (
+  args: QUERIES.QueryPayload<
     MODELS.IPaginatedResponse<MODELS.IBuilding>,
+    undefined,
+    MODELS.IBuildingFilter
+  >,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<
+    MODELS.IBuildingFilter,
+    undefined,
     MODELS.IPaginatedResponse<MODELS.IBuilding>
   >({
     queryKey: [Constants.BUILDING_KEYS.ALL_BUILDING_BY_AGENCY, params],

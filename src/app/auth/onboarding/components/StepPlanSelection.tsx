@@ -12,12 +12,10 @@ import {
   FieldErrorIcon,
 } from '@chakra-ui/react';
 import { BillingCycleToggle } from '_component/pricing/BillingCycleToggle';
-import { PlanSelectorMode } from '_component/pricing/PlanSelectMode';
 import { ENUM, MODELS } from '_types/*';
 import { useState, useEffect } from 'react';
 import { PricingType, BillingCycle } from '../../../../types/enum';
 import {
-  BaseButton,
   BaseFormatNumber,
   BaseText,
   CustomSkeletonLoader,
@@ -130,8 +128,6 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
         </BaseText>
 
         <HStack flexDir={'column'} gap={2} mt={2}>
-          <PlanSelectorMode value={mode} onChange={handleModeChange} />
-
           {mode === 'SUBSCRIPTION' && (
             <BillingCycleToggle
               value={billingCycle}
@@ -167,7 +163,7 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
                   billingCycle,
                 })
               }
-              label={plan.name}
+              label={t(`SUBSCRIPTION.PLANS.${plan.name}`)}
             >
               <MotionBox
                 key={index}
@@ -180,7 +176,7 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
               >
                 <VStack gap={2}>
                   <BaseText variant={TextVariant.L} weight={TextWeight.SemiBold}>
-                    {plan.name}
+                    {t(`SUBSCRIPTION.PLANS.${plan.name}`)}
                   </BaseText>
 
                   {/* 💰 PRIX */}

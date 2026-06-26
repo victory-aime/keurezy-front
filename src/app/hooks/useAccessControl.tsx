@@ -15,7 +15,7 @@ export const useAccessControl = () => {
   const { hasPermission } = usePermissions();
   const { data, isLoading } = AgencyModule.getAgencySubscriptionInfo({
     params: {
-      agencyId: user?.agencyId,
+      agencyId: user?.agencyId!,
     },
     queryOptions: {
       enabled: !!user?.agencyId,
@@ -26,7 +26,7 @@ export const useAccessControl = () => {
    * 🔥 Set pour perf O(1)
    */
   const featureSet = useMemo(() => {
-    return new Set(data?.features?.map((f) => f.name) ?? []);
+    return new Set(data?.features?.map((f: { name: string }) => f.name) ?? []);
   }, [data]);
 
   function hasFeature(feature?: string) {

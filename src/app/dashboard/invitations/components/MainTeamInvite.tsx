@@ -33,7 +33,7 @@ export const MainTeamInvite = () => {
   const formikRef = useRef<any>(null);
 
   const { data: allPermissions, isLoading } = CommonModule.getAllPermissionsByAgencyQueries({
-    params: { agencyId: user?.agencyId },
+    params: { agencyId: user?.agencyId! },
     queryOptions: {
       enabled: !!user?.agencyId,
     },

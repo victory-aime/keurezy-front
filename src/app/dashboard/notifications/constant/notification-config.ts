@@ -12,12 +12,12 @@ export const notificationUIConfig: Record<
 > = {
   VISIT: {
     title: 'Nouvelle visite',
-    icon: 'Home',
+    icon: 'Calendar',
     color: 'purple',
   },
   LEAD: {
     title: 'Nouvelle demande',
-    icon: 'Home',
+    icon: 'Request',
     color: 'blue',
   },
   MESSAGE: {

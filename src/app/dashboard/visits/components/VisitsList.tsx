@@ -32,26 +32,21 @@ export const VisitsList = () => {
   const queryPayload = useMemo(
     () => ({
       params: {
-        agencyId,
-        userId,
+        agencyId: agencyId!,
+        userId: userId!,
       },
       queryOptions: {
         enabled: !!agencyId && !!userId,
       },
     }),
-    [agencyId],
+    [agencyId, userId],
   );
 
   const {
     data: visitsList,
     refetch,
     isLoading,
-  } = VisitsModule.getAllVisitByAgencyQueries({
-    params: {
-      data: { agencyId, userId },
-    },
-    queryOptions: { enabled: !!userId && !!agencyId },
-  });
+  } = VisitsModule.getAllVisitByAgencyQueries(queryPayload);
 
   const { data: leadsRequestList } = LeadsModule.agencyLeadsListQueries(queryPayload);
 
@@ -171,7 +166,6 @@ export const VisitsList = () => {
           });
         }}
         onSelectEvent={(event) => {
-          console.log(event.meta);
           setSelectedValues(event.meta as MODELS.IVisitResponse);
           setOpenModal(true);
         }}

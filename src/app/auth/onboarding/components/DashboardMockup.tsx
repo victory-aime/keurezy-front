@@ -4,6 +4,7 @@ import { useColorModeValue } from '_components/ui/color-mode';
 import { ENUM } from '_types/*';
 import { MotionBox } from '_constants/motion';
 import { FiBarChart2 } from 'react-icons/fi';
+import { useStyles } from '../constants/style';
 
 interface DashboardMockupProps {
   userName?: string;
@@ -30,10 +31,7 @@ export const DashboardMockup = ({
   activeTab = 0,
   animated = true,
 }: DashboardMockupProps) => {
-  const bg = useColorModeValue('white', 'gray.900');
-  const muted = useColorModeValue('gray.100', 'gray.800');
-  const border = useColorModeValue('gray.200', 'gray.700');
-  const textMuted = useColorModeValue('gray.500', 'gray.400');
+  const { bg, border, muted, textMuted } = useStyles();
 
   const kpis = [
     {

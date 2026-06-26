@@ -2,11 +2,11 @@ import type { Metadata, Viewport } from 'next';
 import { Lato } from 'next/font/google';
 import React from 'react';
 import 'react-international-phone/style.css';
-import GlobalApplicationProvider from '_context/provider/GlobalApplicationProvider';
+import GlobalApplicationProvider from './provider/GlobalApplicationProvider';
 import { ThemeProvider } from '_components/ui/provider';
 import { LoaderProvider } from '_context/loaderContext';
 import { Toaster } from '_components/ui/toaster';
-import { I18nProvider } from '_context/provider/i18n-provider';
+import { I18nProvider } from './provider/i18n-provider';
 import { AgencyCheckProvider } from '_context/agency-context';
 
 const lato = Lato({

@@ -4,13 +4,13 @@ import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
 const getAllVisitByAgencyQueries = (
-  args: QUERIES.QueryPayload<{ data: { agencyId: string; userId: string } }>,
+  args: QUERIES.QueryPayload<MODELS.IVisitResponse[], undefined, MODELS.IAgencyCommonParams>,
 ) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<MODELS.IVisitResponse[]>({
+  return QUERIES.useCustomQuery<undefined, MODELS.IAgencyCommonParams, MODELS.IVisitResponse[]>({
     queryKey: [Constants.VISITS_KEYS.ALL_AGENCY_VISITS],
-    queryFn: () => visitsServiceInstance().getAllVisits(params?.data),
+    queryFn: () => visitsServiceInstance().getAllVisits(params as MODELS.IAgencyCommonParams),
     options: queryOptions,
   });
 };

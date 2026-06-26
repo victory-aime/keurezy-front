@@ -21,14 +21,14 @@ export const AnnonceForm = ({ annonceId }: { annonceId: string }) => {
   const userId = user?.ownerId ?? user?.staffId;
 
   const { data: allProperties } = PropertyModule.getAllPropertiesByAgency({
-    params: { agencyId, userId },
+    params: { agencyId: agencyId!, userId: userId! },
     queryOptions: {
       enabled: !!agencyId && !!userId && hasPermission(AppPermissions.PROPERTIES.VIEW),
     },
   });
 
   const { data: allAnnonces } = AnnonceModule.getAllAnnoncesByAgency({
-    params: { agencyId, userId },
+    params: { agencyId: agencyId!, userId: userId! },
     queryOptions: { enabled: !!agencyId && !!userId },
   });
 

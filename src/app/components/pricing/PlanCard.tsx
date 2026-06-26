@@ -81,7 +81,7 @@ export const PlanCard = ({
             </Span>
           </Box>
         ) : pricing ? (
-          <Flex alignItems={'baseline'} gap={1}>
+          <Flex justifyContent={'center'} alignItems={'center'} gap={1}>
             <Span fontSize={'xl'} fontWeight={'bold'}>
               <BaseFormatNumber
                 value={pricing.price}
@@ -115,7 +115,7 @@ export const PlanCard = ({
 
       <For each={getCommercialFeatures(plan)}>
         {(features, index) => (
-          <List.Root key={index} gap="2" variant="plain" align="start" mt={4} spaceY={1}>
+          <List.Root key={index} variant="plain" align="start" mt={4}>
             <List.Item key={features.label} alignItems={'flex-start'} gap={0} fontSize={'sm'}>
               <List.Indicator asChild color="tertiary.500">
                 <Icons.Check size={20} />

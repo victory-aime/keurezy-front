@@ -37,8 +37,8 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
   const queryPayload = useMemo(
     () => ({
       params: {
-        agencyId,
-        userId,
+        agencyId: agencyId!,
+        userId: userId!,
         initialPage: CONSTANTS.PAGINATION.INIT,
         limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
       },

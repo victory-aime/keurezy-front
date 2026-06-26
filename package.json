@@ -34,6 +34,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "dotenv-cli": "^11.0.0",
+    "firebase": "^12.13.0",
     "formik": "^2.4.9",
     "framer-motion": "^12.34.0",
     "google-libphonenumber": "^3.2.44",
@@ -50,7 +51,8 @@
     "react-international-phone": "^4.7.0",
     "react-pdf": "^10.4.1",
     "recharts": "^3.8.0",
-    "rise-core-frontend": "4.4.11",
+    "rise-core-frontend": "4.4.19",
+    "socket.io-client": "^4.8.3",
     "yup": "^1.7.1"
   },
   "devDependencies": {

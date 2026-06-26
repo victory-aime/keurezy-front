@@ -132,9 +132,9 @@ export const BaseContainer = React.memo(
             {filterComponent}
           </Box>
         )}
-        <VStack gap={flexProps?.gap} width={flexProps?.width}>
+        <Flex flexDirection={'column'} gap={flexProps?.gap} width={flexProps?.width} {...flexProps}>
           {children}
-        </VStack>
+        </Flex>
       </Box>
     );
   },

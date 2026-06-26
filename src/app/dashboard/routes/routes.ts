@@ -41,7 +41,7 @@ export const DASHBOARD_ROUTES = {
   },
   CONTACT_REQUEST: `${APP_ROUTES.DASHBOARD}/contact`,
   LEADS: `${APP_ROUTES.DASHBOARD}/leads`,
-  AGENGA: `${APP_ROUTES.DASHBOARD}/agenda`,
+  AGENDA: `${APP_ROUTES.DASHBOARD}/agenda`,
   VISITS: `${APP_ROUTES.DASHBOARD}/visits`,
   MESSAGES: `${APP_ROUTES.DASHBOARD}/messages`,
   NOTIFICATION: `${APP_ROUTES.DASHBOARD}/notifications`,
@@ -50,4 +50,5 @@ export const DASHBOARD_ROUTES = {
     ADD: `${APP_ROUTES.DASHBOARD}/tenants/add`,
   },
   STATS: `${APP_ROUTES.DASHBOARD}/stats`,
+  CHAT: `${APP_ROUTES.DASHBOARD}/chat`,
 };

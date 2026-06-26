@@ -34,7 +34,7 @@ export const NotificationHeaderMenu = ({
       </Menu.Trigger>
       <Portal>
         <Menu.Positioner>
-          <Menu.Content p={3} minWidth={{ base: 'xs', sm: 'lg' }} h={'200px'}>
+          <Menu.Content p={3} minWidth={{ base: 'xs', sm: 'lg' }} h={'xs'}>
             <Flex
               justifyContent={'flex-end'}
               mb={2}

@@ -192,29 +192,6 @@ const hexToRGB = (color: keyof Colors, alpha: number = 1, shade: number = 500): 
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-const getGradient = (
-  colorKey: keyof Colors,
-  start: number = 400,
-  mid: number = 500,
-  end?: number,
-): string => {
-  const startColor = getColor(colorKey, start);
-  const midColor = getColor(colorKey, mid);
-  const endColor = end ? getColor(colorKey, end) : midColor;
-  return `linear-gradient(135deg, ${startColor}, ${midColor}, ${endColor})`;
-};
-
-const getHoverGradient = (
-  colorKey: keyof Colors,
-  end: number = 800,
-  darker: number = 900,
-  alpha: number = 1,
-): string => {
-  const endColor = hexToRGB(colorKey, alpha, end);
-  const darkerColor = hexToRGB(colorKey, alpha, darker);
-  return `linear-gradient(135deg, ${endColor}, ${darkerColor})`;
-};
-
 // ✅ Fonction qui retourne les couleurs finales avec le primary overridé
 export function buildColors(customPrimaryShades?: Record<number, { value: string }>): Colors {
   return {

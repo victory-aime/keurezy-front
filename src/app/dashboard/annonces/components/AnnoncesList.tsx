@@ -33,7 +33,7 @@ export const AnnoncesList = () => {
     isLoading: isAnnonceLoad,
     refetch: reloadAnnonceList,
   } = AnnonceModule.getAllAnnoncesByAgency({
-    params: { agencyId, userId },
+    params: { agencyId: agencyId!, userId: userId! },
     queryOptions: { enabled: !!agencyId && !!userId },
   });
 

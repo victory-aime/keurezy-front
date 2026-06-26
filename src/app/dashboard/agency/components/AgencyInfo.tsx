@@ -46,8 +46,8 @@ export const AgencyInfo = () => {
     refetch: refetchAgencyInfo,
   } = AgencyModule.getAgencyInfo({
     params: {
-      agencyId,
-      userId,
+      agencyId: agencyId!,
+      userId: userId!,
     },
     queryOptions: {
       enabled: !!agencyId && !!userId,

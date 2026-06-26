@@ -53,7 +53,17 @@ export const BuildingList = () => {
     isLoading: isBuildingLoad,
     isFetching,
     refetch: reloadBuildingList,
-  } = BuildingModule.getAllBuildingByAgencyQueries(queryPayload);
+  } = BuildingModule.getAllBuildingByAgencyQueries({
+    params: {
+      agencyId: agencyId!,
+      userId: userId!,
+      initialPage: currentPage,
+      limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
+    },
+    queryOptions: {
+      enabled: !!agencyId && !!userId,
+    },
+  });
 
   const { mutateAsync: deleteBuilding, isPending: isDeletePending } =
     BuildingModule.deleteBuildingMutation({

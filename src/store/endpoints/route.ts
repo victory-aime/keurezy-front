@@ -10,6 +10,7 @@ const APIS_ROUTES_MODULES_PATH = {
   RENTAL_AGREEMENT: '/rental-agreement',
   CHAT: '/chat',
   NOTIFICATION: '/notif',
+  PUSH_NOTIFICATIONS: '/push-notification',
   BUILDING: '/building',
   LAND: '/land',
   COMMON: {
@@ -235,19 +236,19 @@ export const APIS = (baseUrl?: string) => {
     },
     CHAT: {
       CREATE_CONV: api({
-        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/create-conversation`,
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/conversations`,
         method: 'POST',
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
       GET_CONV: api({
-        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/get-conversation`,
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/conversations`,
         method: 'GET',
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
       GET_MESSAGE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/get-message`,
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/conversations/messages`,
         method: 'GET',
         pathBase: 'SECURED_API',
         showResponse: false,
@@ -288,6 +289,18 @@ export const APIS = (baseUrl?: string) => {
       READ_ONE: api({
         path: `${APIS_ROUTES_MODULES_PATH.NOTIFICATION}/read`,
         method: 'POST',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      REGISTER_TOKEN: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PUSH_NOTIFICATIONS}/register-token`,
+        method: 'POST',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      REMOVE_TOKEN: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PUSH_NOTIFICATIONS}/remove-token`,
+        method: 'DELETE',
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
@@ -463,6 +476,7 @@ export const APIS = (baseUrl?: string) => {
         path: `${APIS_ROUTES_MODULES_PATH.STATS}/agency`,
         pathBase: 'SECURED_API',
         method: 'GET',
+        showResponse: false,
       }),
     },
   };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { KeurezyLogoAnimation } from '_components/custom';
 import { APP_ROUTES } from '_config/routes';
 import { roleToDashboardMap } from '_constants/role';
@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 
 export default function RedirectAfterLogin() {
   const { data: session, isPending } = authClient.useSession();
+  const [url, setUrl] = useState<string>('');
   const router = useRouter();
 
   useEffect(() => {
@@ -20,8 +21,10 @@ export default function RedirectAfterLogin() {
       return () => clearTimeout(timer);
     }
     const dashboardUrl = roleToDashboardMap[session.user.role];
-    router.replace(dashboardUrl ?? APP_ROUTES.ROOT);
+    setUrl(dashboardUrl ?? APP_ROUTES.ROOT);
   }, [session, isPending]);
 
-  return <KeurezyLogoAnimation isExiting={!isPending} onAnimationComplete={() => {}} />;
+  return (
+    <KeurezyLogoAnimation isExiting={!isPending} onAnimationComplete={() => router.replace(url)} />
+  );
 }

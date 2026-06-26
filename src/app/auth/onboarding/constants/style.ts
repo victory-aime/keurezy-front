@@ -1,9 +1,10 @@
-import { useColorModeValue } from '_components/ui/color-mode';
+import { useColorMode } from '_components/ui/color-mode';
 
 export const useStyles = () => {
-  const bg = useColorModeValue('white', 'inherit');
-  const muted = useColorModeValue('gray.50', 'gray.800');
-  const border = useColorModeValue('gray.200', 'gray.700');
-  const textMuted = useColorModeValue('gray.500', 'gray.400');
+  const { colorMode } = useColorMode();
+  const bg = colorMode !== 'light' ? 'inherit' : 'white';
+  const muted = colorMode !== 'light' ? 'gray.800' : 'gray.50';
+  const border = colorMode !== 'light' ? 'gray.700' : 'gray.200';
+  const textMuted = colorMode !== 'light' ? 'gray.400' : 'gray.500';
   return { bg, muted, border, textMuted };
 };

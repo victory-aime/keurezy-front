@@ -36,8 +36,8 @@ export const LeadsList = () => {
     refetch: refetchAgencyLeads,
   } = LeadsModule.agencyLeadsListQueries({
     params: {
-      agencyId,
-      userId,
+      agencyId: agencyId!,
+      userId: userId!,
       initialPage: currentPage,
       limitPerPage: CONSTANTS.PAGINATION.FIVE_ITEMS_PER_PAGE,
     },
@@ -46,8 +46,8 @@ export const LeadsList = () => {
 
   const { data: allTeams, isLoading: isTeamLoad } = TeamModule.getAllTeamByAgency({
     params: {
-      agencyId,
-      userId,
+      agencyId: agencyId!,
+      userId: userId!,
     },
     queryOptions: { enabled: !!agencyId && !!userId },
   });

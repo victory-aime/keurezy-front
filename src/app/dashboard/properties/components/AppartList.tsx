@@ -35,8 +35,8 @@ export const PropertyList = () => {
     () => ({
       params: {
         ...filterValues,
-        agencyId,
-        userId,
+        agencyId: agencyId!,
+        userId: userId!,
         initialPage: currentPage,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
@@ -55,8 +55,8 @@ export const PropertyList = () => {
 
   const { data: allBuildings } = BuildingModule.getAllBuildingByAgencyQueries({
     params: {
-      agencyId,
-      userId,
+      agencyId: agencyId!,
+      userId: userId!,
       limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
     },
     queryOptions: {
@@ -109,7 +109,7 @@ export const PropertyList = () => {
     {
       header: 'Numéro',
       accessor: 'propertyNumber',
-      cell: (propertyNumber) => <BaseText>{propertyNumber ?? 'Aucun'}</BaseText>,
+      cell: (propertyNumber) => <BaseText>{propertyNumber ?? '-'}</BaseText>,
     },
     {
       header: 'Type',
@@ -152,8 +152,8 @@ export const PropertyList = () => {
   return (
     <BaseContainer
       border={'none'}
-      title={'Propriétes'}
-      description={"Gérez l'ensemble de vos propriétes locative avec efficacité"}
+      title={'Propriétés'}
+      description={"Gérez l'ensemble de vos propriétés locative avec efficacité"}
       loader={isLoading}
       numberOfLines={2}
       withActionButtons

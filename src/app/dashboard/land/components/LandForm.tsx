@@ -23,8 +23,8 @@ export const LandForm = ({ landId }: { landId: string }) => {
 
   const { data: allLands, isLoading: isAllLandsLoad } = LandModule.getAllLandsByAgencyQueries({
     params: {
-      agencyId,
-      userId,
+      agencyId: agencyId!,
+      userId: userId!,
       initialPage: CONSTANTS.PAGINATION.INIT,
       limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
     },

@@ -11,17 +11,27 @@ import { GuidedTour } from './guide-tour/GuidedTour';
 import { useBreakpointValue } from '@chakra-ui/react';
 import { tourSteps } from '_constants/tourStep';
 import { StorageKey } from '_constants/StorageKeys';
-import { EmailNotVerifiedBanner } from './email-banner/EmailNotVerified';
-import { BaseModal, BaseText, Icons } from '_components/custom';
-import { EmailVerifiedSuccessBanner } from './email-banner/EmailVerifiedSuccessBanner';
+import { EmailNotVerifiedBanner } from './banner/EmailNotVerified';
+import { BaseModal, BaseText, BaseToast, Icons, ToastStatus } from '_components/custom';
+import { EmailVerifiedSuccessBanner } from './banner/EmailVerifiedSuccessBanner';
 import { AuthModule } from '_store/state-management';
 import { useUserContext } from '_context/user-context';
 import { useAuth } from '_hooks/useAuth';
 import { ENUM } from '_types/*';
+import { usePushNotificationsContext } from '../../provider/push-notifications';
+import { RequestUserPushNotifPermission } from './banner/request-notif-perm';
+import { useRouter } from 'next/navigation';
+import { DASHBOARD_ROUTES } from '../routes';
+import {
+  getAppNotifPreference,
+  isPushEnabled,
+  shouldShowPushBanner,
+} from '../../helpers/push-notif';
 
 export const Layout: FunctionComponent<{
   children: React.ReactNode;
 }> = ({ children }) => {
+  const router = useRouter();
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { logout } = useAuth();
@@ -29,7 +39,12 @@ export const Layout: FunctionComponent<{
   const { user: currentUser, isLoading: currentUserLoad } = useUserContext();
   const [showTour, setShowTour] = useState(false);
   const [showVerifiedBanner, setShowVerifiedBanner] = useState(false);
+  const [showPermissionLoad, setPermissionLoad] = useState(false);
+  const [showEnabledPushNotification, setShowEnabledPushNotification] = useState(() => {
+    return shouldShowPushBanner();
+  });
   const isInactiveUser = !currentUserLoad && currentUser?.status === ENUM.COMMON.Status.INACTIVE;
+  const { enableNotifications } = usePushNotificationsContext();
   const isShowEmailNotVerifiedBanner = !currentUserLoad && !currentUser?.emailVerified;
   const emailVerifiedStorageKey = user?.id
     ? `${StorageKey.DASHBOARD_OWNER_EMAIL_VERIFIED}_${user.id.slice(0, 8)}`
@@ -85,6 +100,51 @@ export const Layout: FunctionComponent<{
     });
   };
 
+  useEffect(() => {
+    if (!user?.id) return;
+
+    if (Notification.permission === 'denied') {
+      setShowEnabledPushNotification(false);
+      BaseToast({
+        title: 'Notifications bloquées',
+        description:
+          'Autorisez les notifications dans les paramètres de votre navigateur pour les réactiver.',
+        type: ToastStatus.WARNING,
+      });
+      return;
+    }
+
+    if (isPushEnabled()) {
+      setShowEnabledPushNotification(false);
+      return;
+    }
+
+    if (getAppNotifPreference() === 'disabled') {
+      localStorage.removeItem(StorageKey.PUSH_NOTIFICATION_BANNER_DISMISS_DATE);
+      setShowEnabledPushNotification(true);
+      return;
+    }
+
+    setShowEnabledPushNotification(shouldShowPushBanner());
+  }, [user?.id]);
+
+  navigator.serviceWorker.addEventListener('message', (event) => {
+    console.log('Received message', event);
+    if (event.data?.type === 'NOTIFICATION_CLICK') {
+      switch (event.data.notificationType as ENUM.NotificationType) {
+        case 'LEAD':
+          router.push(`${DASHBOARD_ROUTES.CHAT}?=${event.data.conversationId}`);
+          break;
+        case 'SYSTEM':
+          router.push(DASHBOARD_ROUTES.NOTIFICATION);
+          break;
+        case 'VISIT':
+          router.push(DASHBOARD_ROUTES.VISITS);
+          break;
+      }
+    }
+  });
+
   if (currentUserLoad) return null;
 
   return (
@@ -119,6 +179,26 @@ export const Layout: FunctionComponent<{
           <SidebarInset variant="inset" collapsed={!isSidebarOpen} data-tour="finish">
             {isShowEmailNotVerifiedBanner && (
               <EmailNotVerifiedBanner onResend={resendEmailLink} isLoading={isPending} />
+            )}
+
+            {showEnabledPushNotification && (
+              <RequestUserPushNotifPermission
+                enablePermission={() => {
+                  setPermissionLoad(true);
+                  enableNotifications().then(() => {
+                    setShowEnabledPushNotification(false);
+                    localStorage.removeItem(StorageKey.PUSH_NOTIFICATION_BANNER_DISMISS_DATE);
+                  });
+                }}
+                dismiss={() => {
+                  localStorage.setItem(
+                    StorageKey.PUSH_NOTIFICATION_BANNER_DISMISS_DATE,
+                    String(Date.now()),
+                  );
+                  setShowEnabledPushNotification(false);
+                }}
+                isLoading={showPermissionLoad}
+              />
             )}
 
             {showVerifiedBanner && <EmailVerifiedSuccessBanner />}

@@ -2,13 +2,12 @@ import { Box, Flex, VStack, Span, Text, HStack } from '@chakra-ui/react';
 import { BaseIcon, Icons, BaseText, CustomSkeletonLoader } from '_components/custom';
 import { Tag } from '_components/ui/tag';
 import { NotificationsModule } from '_store/state-management';
-import { Colors, hexToRGB } from '_theme/colors';
 import { VariablesColors } from '_theme/variables';
 import { MODELS } from '_types/*';
-import { useRouter } from 'next/navigation';
 import { formatCreatedAt } from 'rise-core-frontend';
 import { notificationUIConfig } from '../constant/notification-config';
 import { useColorMode } from '_components/ui/color-mode';
+import { useThemeColors } from '_theme/useThemeColors';
 
 export const NotificationsDisplay = ({
   request,
@@ -25,6 +24,7 @@ export const NotificationsDisplay = ({
 }) => {
   const { colorMode } = useColorMode();
   const config = notificationUIConfig[request?.notification?.type];
+  const { hexToRGB } = useThemeColors(config?.color);
   const IconComponent = Icons[config?.icon];
 
   const { mutateAsync: readNotification } = NotificationsModule.readNotificationMutation({
@@ -46,7 +46,8 @@ export const NotificationsDisplay = ({
       width={'full'}
       border={'1px solid'}
       p={4}
-      borderRadius={index === 0 ? '12px 12px 0 0' : isLast ? '0 0 12px 12px' : '0'}
+      mb={2}
+      borderRadius={'12px'}
       borderColor={request.isRead ? 'inherit' : `${config?.color}.400`}
       bg={
         request.isRead
@@ -56,7 +57,7 @@ export const NotificationsDisplay = ({
             : `${config?.color}.800`
       }
       transition="all 0.2s ease"
-      _hover={{ transform: 'translateY(-2px)', shadow: 'md' }}
+      _hover={{ transform: 'translateY(-2px)' }}
     >
       {isLoading ? (
         <VStack gap={4}>
@@ -72,13 +73,13 @@ export const NotificationsDisplay = ({
           gap={3}
           alignItems={'flex-start'}
           cursor={'pointer'}
-          onClick={() => {
+          onClick={async () => {
             if (!request.isRead) {
-              onReadNotification(request?.notificationId, request?.userId);
+              await onReadNotification(request?.notificationId, request?.userId);
             }
           }}
         >
-          <BaseIcon color={hexToRGB(config?.color as keyof Colors, 0.4)}>
+          <BaseIcon color={hexToRGB(600, 50)}>
             <IconComponent color={VariablesColors[config?.color as keyof typeof VariablesColors]} />
           </BaseIcon>
 

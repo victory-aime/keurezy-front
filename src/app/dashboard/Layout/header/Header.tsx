@@ -29,7 +29,7 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
   const { data: unreadNotificationsList, isLoading: unreadListLoad } =
     NotificationsModule.getAllUnreadNotificationsQueries({
       params: {
-        userId: user?.id,
+        userId: user?.id!,
       },
       queryOptions: { enabled: !!user?.id },
     });
@@ -85,14 +85,14 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
                   direction={'row'}
                   width={'20px'}
                   colorButton="neutral"
-                  raduis={'full'}
+                  radius={'full'}
                 />
                 <CustomSkeletonLoader
                   type="BUTTON"
                   direction={'row'}
                   width={'20px'}
                   colorButton="neutral"
-                  raduis={'full'}
+                  radius={'full'}
                 />
                 <Separator orientation="vertical" height={6} mx={1} />
                 <CustomSkeletonLoader
@@ -104,6 +104,13 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
               </>
             ) : (
               <>
+                {/*<Icons.Chat
+                  size={'30px'}
+                  onClick={() => router.push(DASHBOARD_ROUTES.CHAT)}
+                  cursor={'pointer'}
+                />*/}
+                <Separator orientation="vertical" height={6} mx={1} />
+
                 <NotificationHeaderMenu
                   notifications={unreadNotificationsList ?? []}
                   isLoading={unreadListLoad}

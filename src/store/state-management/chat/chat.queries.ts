@@ -1,66 +1,46 @@
-// import * as Constants from './constants';
-// import { chatServiceInstance } from './chat.service-instance';
-// import { MODELS } from '_types/index';
-// import { QUERIES } from 'rise-core-frontend';
+import * as Constants from './constants';
+import { chatServiceInstance } from './chat.service-instance';
+import { MODELS } from '_types/index';
+import { QUERIES } from 'rise-core-frontend';
 
-// const getConversationQueries = (args: QUERIES.QueryPayload<{ userId: string }>) => {
-//   return QUERIES.useCustomQuery<MODELS.IConversationResponse[]>({
-//     queryKey: [Constants.CHAT_KEYS.GET_CONV],
-//     queryFn: () => chatServiceInstance().getConversation(args?.params?.userId!),
-//     options: args.queryOptions,
-//   });
-// };
+const getConversationQueries = (
+  args: QUERIES.QueryPayload<MODELS.Conversation[], undefined, { userId: string }>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, { userId: string }, MODELS.Conversation[]>({
+    queryKey: [Constants.CHAT_KEYS.GET_ALL_CONVERSATIONS],
+    queryFn: () => chatServiceInstance().getConversation(params?.userId!),
+    options: queryOptions,
+  });
+};
 
-// const createConversationtMutation = (
-//   args: QUERIES.MutationPayload<{ rentalAgreementId: string }>,
-// ) => {
-//   return QUERIES.useCustomMutation<{ rentalAgreementId: string }, any>({
-//     mutationKey: [Constants.CHAT_KEYS.CREATE_CONV],
-//     mutationFn: ({ params }) => chatServiceInstance().createConversation(params!),
-//     options: args.mutationOptions,
-//   });
-// };
+const getMessagesQueries = (
+  args: QUERIES.InfiniteQueryPayload<MODELS.IGetMessagesParams, MODELS.IGetMessageResponse>,
+) => {
+  const { queryOptions, params } = args;
 
-// const getMessagesQueries = (
-//   args: QUERIES.QueryPayload<{ userId: string; conversationId: string }>,
-// ) => {
-//   const { params } = args;
-//   return QUERIES.useCustomQuery<MODELS.IMessageResponse[]>({
-//     queryKey: [Constants.CHAT_KEYS.GET_MESSAGE],
-//     queryFn: () =>
-//       chatServiceInstance().getMessages({
-//         conversationId: params?.conversationId,
-//         userId: params?.userId,
-//       }),
-//     options: args.queryOptions,
-//   });
-// };
-// const sendMessageMutation = (args: QUERIES.MutationPayload<MODELS.ISendMessage>) => {
-//   return QUERIES.useCustomMutation({
-//     mutationKey: [Constants.CHAT_KEYS.SEND_MESSAGE],
-//     mutationFn: ({ payload, params }) =>
-//       chatServiceInstance().sendMessage(payload?.message),
-//     options: args.mutationOptions,
-//   });
-// };
+  return QUERIES.useCustomInfiniteQuery<MODELS.IGetMessageResponse>({
+    queryKey: [Constants.CHAT_KEYS.GET_MESSAGES, params?.conversationId],
+    queryFn: ({ pageParam }) =>
+      chatServiceInstance().getMessages({ ...params!, cursor: pageParam }),
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    initialPageParam: undefined,
+    options: {
+      ...queryOptions,
+      enabled: !!params?.userId && !!params.conversationId && (queryOptions?.enabled ?? true),
+    },
+  });
+};
 
-// const readMessageMutation = (
-//   args: QUERIES.MutationPayload<{
-//     messageId: string;
-//     userId: string;
-//   }>,
-// ) => {
-//   return QUERIES.useCustomMutation<{ messageId: string; userId: string }, any>({
-//     mutationKey: [Constants.CHAT_KEYS.SEND_MESSAGE],
-//     mutationFn: ({ params }) => chatServiceInstance().readMessage(params),
-//     options: args.mutationOptions,
-//   });
-// };
+const createConversationMutation = (
+  args: QUERIES.MutationPayload<MODELS.ICreateConversation, any, MODELS.ICreateConversation>,
+) => {
+  return QUERIES.useCustomMutation<MODELS.ICreateConversation, any, MODELS.ICreateConversation>({
+    mutationKey: [Constants.CHAT_KEYS.CONVERSATION],
+    mutationFn: ({ payload, params }) =>
+      chatServiceInstance().createConversation(params?.userId!, payload!),
+    options: args.mutationOptions,
+  });
+};
 
-// export {
-//   createConversationtMutation,
-//   getConversationQueries,
-//   getMessagesQueries,
-//   sendMessageMutation,
-//   readMessageMutation,
-// };
+export { createConversationMutation, getConversationQueries, getMessagesQueries };

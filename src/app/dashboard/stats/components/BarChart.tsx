@@ -1,57 +1,45 @@
 'use client';
 
 import { Chart, useChart } from '@chakra-ui/charts';
-import {
-  Bar,
-  BarChart as RechartsBarChart,
-  CartesianGrid,
-  Rectangle,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from 'recharts';
-import { Box, Text } from '@chakra-ui/react';
+import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 
-type ChartDataItem = {
-  type: string;
-  allocation: number;
-  color: string;
-};
+import { BaseContainer } from '_components/custom';
 
-type Props = {
-  data: ChartDataItem[];
-};
+export function StatsChart({ data }: { data: { type: string; allocation: number }[] }) {
+  const chartData = data?.map((d) => ({
+    type: d.type,
+    allocation: d.allocation,
+  }));
 
-export default function BarChart({ data }: Props) {
   const chart = useChart({
-    data,
+    data: chartData,
+    series: [{ name: 'allocation', color: 'purple' }],
   });
 
   return (
-    <Box p={5} borderRadius="xl" shadow="md">
-      <Text mb={4} fontWeight="bold" fontSize="lg">
-        Statistiques Agence
-      </Text>
+    <BaseContainer>
+      <Chart.Root maxH="md" chart={chart} mt={'30px'}>
+        <BarChart data={chart.data} barCategoryGap={'25%'} responsive>
+          <CartesianGrid stroke={chart.color('border.muted')} vertical={false} />
+          <XAxis dataKey={chart.key('type')} axisLine={false} tickLine={false} tickMargin={6} />
+          <YAxis axisLine={false} tickLine={false} />
 
-      <Chart.Root chart={chart} maxH="400px">
-        <ResponsiveContainer width="100%" height={300}>
-          <RechartsBarChart data={chart.data}>
-            <CartesianGrid vertical={false} stroke={chart.color('border.muted')} />
+          <Tooltip cursor={false} animationDuration={100} content={<Chart.Tooltip />} />
 
-            <XAxis axisLine={false} tickLine={false} dataKey={chart.key('type')} />
+          <Legend content={<Chart.Legend />} />
 
-            <YAxis axisLine={false} tickLine={false} />
-
+          {chart.series.map((item) => (
             <Bar
+              key={item.name}
               dataKey={chart.key('allocation')}
-              radius={[10, 10, 0, 0]}
-              shape={(props: any) => (
-                <Rectangle {...props} fill={chart.color(props.payload.color)} />
-              )}
+              fill={chart.color(item.color)}
+              stroke={chart.color(item.color)}
+              radius={[6, 6, 0, 0]}
+              isAnimationActive
             />
-          </RechartsBarChart>
-        </ResponsiveContainer>
+          ))}
+        </BarChart>
       </Chart.Root>
-    </Box>
+    </BaseContainer>
   );
 }

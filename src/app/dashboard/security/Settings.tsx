@@ -52,16 +52,15 @@ export const Settings = () => {
   const [checked, setChecked] = useState(false);
   const [openCloseSessionModal, setOpenCloseSessionModal] = useState<boolean>(false);
   const [isRevoke, setIsRevoke] = useState<boolean>(false);
-  const [listPasskey, setListPasskey] = useState<MODELS.IUserPasskeyList[] | undefined>([]);
-
-  const [userSessionList, setUserSessionList] = useState<Session[]>([]);
+  //const [listPasskey, setListPasskey] = useState<MODELS.IUserPasskeyList[] | undefined>([]);
+  //const [userSessionList, setUserSessionList] = useState<Session[]>([]);
   const [openPassKeyModal, setOpenPasskeyModal] = useState<boolean>(false);
   const [selectedData, setSelectedData] = useState<string | null>(null);
   const currentSessionId = session?.id;
   const [validateDisabledAccount, setValidateDisabledAccount] = useState<boolean>(false);
 
   const { data: currentUser, isLoading: userDataLoading } = UserModule.getUserInfo({
-    params: { userId: session?.userId },
+    params: { userId: session?.userId! },
     queryOptions: { enabled: refetchUserInfo },
   });
 
@@ -69,14 +68,14 @@ export const Settings = () => {
     (item: MODELS.IAccountUsers) => item?.providerId === ProviderKeys.GOOGLE,
   );
 
-  const fetchPasskeys = async () => {
-    const data = await passkeyList();
-    setListPasskey(data ?? []);
-  };
-  const fetchUserSessions = async () => {
-    const sessions = await authClient.listSessions();
-    setUserSessionList(sessions.data ?? []);
-  };
+  // const fetchPasskeys = async () => {
+  //   const data = await passkeyList();
+  //   setListPasskey(data ?? []);
+  // };
+  // const fetchUserSessions = async () => {
+  //   const sessions = await authClient.listSessions();
+  //   setUserSessionList(sessions.data ?? []);
+  // };
 
   const onSubmit2FA = async (value: { password: string }) => {
     if (currentUser?.twoFactorEnabled) {
@@ -94,23 +93,23 @@ export const Settings = () => {
     }
   };
 
-  const handleRegisterNewKey = async (values: { passkeyName: string }) => {
-    await registerPassKey(values?.passkeyName).then((data) => {
-      if (!data) return;
-      setOpenPasskeyModal(false);
-    });
-  };
-
-  const handleRemoveKey = async () => {
-    await removePassKey(selectedData!)
-      .then((data) => {
-        if (!data) return;
-        setIsRevoke(false);
-      })
-      .then(() => {
-        fetchPasskeys();
-      });
-  };
+  // const handleRegisterNewKey = async (values: { passkeyName: string }) => {
+  //   await registerPassKey(values?.passkeyName).then((data) => {
+  //     if (!data) return;
+  //     setOpenPasskeyModal(false);
+  //   });
+  // };
+  //
+  // const handleRemoveKey = async () => {
+  //   await removePassKey(selectedData!)
+  //     .then((data) => {
+  //       if (!data) return;
+  //       setIsRevoke(false);
+  //     })
+  //     .then(() => {
+  //       fetchPasskeys();
+  //     });
+  // };
 
   const clearOtherSessions = async () => {
     try {
@@ -131,28 +130,27 @@ export const Settings = () => {
     }
   };
 
-  const handleClearSession = async () => {
-    try {
-      console.log('selectedData', selectedData);
-      const { data, error } = await authClient.revokeSession({
-        token: selectedData!,
-      });
-      if (error) {
-        handleApiError({ status: 400, message: error.statusText! });
-        return;
-      }
-      if (data.status) {
-        handleApiSuccess({
-          message: t('PROFILE.SECURITY.SESSION_CLEARED'),
-          status: 200,
-        });
-        setOpenCloseSessionModal(false);
-        fetchUserSessions();
-      }
-    } catch (error) {
-      handleApiError({ status: 500, message: 'Erreur inattendue' });
-    }
-  };
+  // const handleClearSession = async () => {
+  //   try {
+  //     const { data, error } = await authClient.revokeSession({
+  //       token: selectedData!,
+  //     });
+  //     if (error) {
+  //       handleApiError({ status: 400, message: error.statusText! });
+  //       return;
+  //     }
+  //     if (data.status) {
+  //       handleApiSuccess({
+  //         message: t('PROFILE.SECURITY.SESSION_CLEARED'),
+  //         status: 200,
+  //       });
+  //       setOpenCloseSessionModal(false);
+  //       fetchUserSessions();
+  //     }
+  //   } catch (error) {
+  //     handleApiError({ status: 500, message: 'Erreur inattendue' });
+  //   }
+  // };
 
   const handleDeactivateAccount = async () => {};
 
@@ -162,11 +160,11 @@ export const Settings = () => {
         twoFactorEnabled: currentUser?.twoFactorEnabled,
       });
     }
-    fetchPasskeys();
-    fetchUserSessions();
+    //fetchPasskeys();
+    //fetchUserSessions();
   }, []);
 
-  if (!currentUser || (!userSessionList && !listPasskey)) return <GlobalLoader loader />;
+  //if (!currentUser || (!userSessionList && !listPasskey)) return <GlobalLoader loader />;
 
   return (
     <>
@@ -201,65 +199,65 @@ export const Settings = () => {
                 )}
               </ProfileForm>
 
-              {!extractorProviderId && (
-                <ProfileForm
-                  title="PROFILE.SECURITY.PASS_KEY"
-                  description="PROFILE.SECURITY.PASS_KEY_DESC"
-                  isLoading={userDataLoading}
-                >
-                  {passkeyLoading ? (
-                    <CustomSkeletonLoader type="BUTTON" width={'80px'} colorButton="primary" />
-                  ) : (
-                    <BaseButton withGradient onClick={() => setOpenPasskeyModal(true)}>
-                      {t('PROFILE.SECURITY.ADD_PASS_KEY')}
-                    </BaseButton>
-                  )}
+              {/*{!extractorProviderId && (*/}
+              {/*  <ProfileForm*/}
+              {/*    title="PROFILE.SECURITY.PASS_KEY"*/}
+              {/*    description="PROFILE.SECURITY.PASS_KEY_DESC"*/}
+              {/*    isLoading={userDataLoading}*/}
+              {/*  >*/}
+              {/*    {passkeyLoading ? (*/}
+              {/*      <CustomSkeletonLoader type="BUTTON" width={'80px'} colorButton="primary" />*/}
+              {/*    ) : (*/}
+              {/*      <BaseButton withGradient onClick={() => setOpenPasskeyModal(true)}>*/}
+              {/*        {t('PROFILE.SECURITY.ADD_PASS_KEY')}*/}
+              {/*      </BaseButton>*/}
+              {/*    )}*/}
 
-                  {(listPasskey?.length ?? 0) > 0 ? (
-                    <>
-                      {listPasskey?.map((cred) => (
-                        <HStack
-                          key={cred.id}
-                          width={'full'}
-                          mt={5}
-                          justifyContent={'space-between'}
-                          py={2}
-                          borderBottom="1px solid"
-                          borderColor={'inherit'}
-                        >
-                          {passkeyLoading ? (
-                            <CustomSkeletonLoader type="TEXT" numberOfLines={2} />
-                          ) : (
-                            <>
-                              <VStack alignItems="flex-start" gap={1}>
-                                <BaseText fontWeight="bold">
-                                  {cred.name || t('PROFILE.SECURITY.UNKNOW_DEVICE')}
-                                </BaseText>
-                                <BaseText variant={TextVariant.S}>
-                                  Créé {formatCreatedAt(cred.createdAt)}
-                                </BaseText>
-                              </VStack>
-                              <BaseIcon
-                                bgColor={'red'}
-                                boxSize={'30px'}
-                                cursor="pointer"
-                                onClick={() => {
-                                  setIsRevoke(true);
-                                  setSelectedData(cred?.id!);
-                                }}
-                              >
-                                <Icons.Trash />
-                              </BaseIcon>
-                            </>
-                          )}
-                        </HStack>
-                      ))}
-                    </>
-                  ) : (
-                    <BaseText mt={8}>{t('PROFILE.SECURITY.PASS_KEY_NO_FOUND')}</BaseText>
-                  )}
-                </ProfileForm>
-              )}
+              {/*    {(listPasskey?.length ?? 0) > 0 ? (*/}
+              {/*      <>*/}
+              {/*        {listPasskey?.map((cred) => (*/}
+              {/*          <HStack*/}
+              {/*            key={cred.id}*/}
+              {/*            width={'full'}*/}
+              {/*            mt={5}*/}
+              {/*            justifyContent={'space-between'}*/}
+              {/*            py={2}*/}
+              {/*            borderBottom="1px solid"*/}
+              {/*            borderColor={'inherit'}*/}
+              {/*          >*/}
+              {/*            {passkeyLoading ? (*/}
+              {/*              <CustomSkeletonLoader type="TEXT" numberOfLines={2} />*/}
+              {/*            ) : (*/}
+              {/*              <>*/}
+              {/*                <VStack alignItems="flex-start" gap={1}>*/}
+              {/*                  <BaseText fontWeight="bold">*/}
+              {/*                    {cred.name || t('PROFILE.SECURITY.UNKNOW_DEVICE')}*/}
+              {/*                  </BaseText>*/}
+              {/*                  <BaseText variant={TextVariant.S}>*/}
+              {/*                    Créé {formatCreatedAt(cred.createdAt)}*/}
+              {/*                  </BaseText>*/}
+              {/*                </VStack>*/}
+              {/*                <BaseIcon*/}
+              {/*                  bgColor={'red'}*/}
+              {/*                  boxSize={'30px'}*/}
+              {/*                  cursor="pointer"*/}
+              {/*                  onClick={() => {*/}
+              {/*                    setIsRevoke(true);*/}
+              {/*                    setSelectedData(cred?.id!);*/}
+              {/*                  }}*/}
+              {/*                >*/}
+              {/*                  <Icons.Trash />*/}
+              {/*                </BaseIcon>*/}
+              {/*              </>*/}
+              {/*            )}*/}
+              {/*          </HStack>*/}
+              {/*        ))}*/}
+              {/*      </>*/}
+              {/*    ) : (*/}
+              {/*      <BaseText mt={8}>{t('PROFILE.SECURITY.PASS_KEY_NO_FOUND')}</BaseText>*/}
+              {/*    )}*/}
+              {/*  </ProfileForm>*/}
+              {/*)}*/}
 
               {!extractorProviderId && (
                 <ProfileForm
@@ -286,71 +284,71 @@ export const Settings = () => {
                 </ProfileForm>
               )}
 
-              {(userSessionList?.length ?? 0) > 0 ? (
-                <ProfileForm
-                  title="PROFILE.SECURITY.ACTIVE_SESSIONS"
-                  description="PROFILE.SECURITY.ACTIVE_SESSIONS_DESC"
-                  isLoading={userDataLoading}
-                >
-                  {userSessionList?.map((session, idx) => (
-                      <HStack
-                        key={idx}
-                        width="full"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        py={2}
-                      >
-                      <VStack gap={1} width="full" align="stretch">
-                        <HStack>
-                          <BaseText fontWeight="bold">
-                            {parseUserAgent(session?.userAgent!)}
-                          </BaseText>
-                          {session?.id === currentSessionId && (
-                            <BaseTag color="purple" label={t('PROFILE.SECURITY.CURRENT_SESSION')} />
-                          )}
-                        </HStack>
-                        <Flex wrap="wrap" gap={3} color="gray.500" fontSize="sm">
-                          <HStack>
-                            <Icons.World />
-                            <BaseText>{session?.ipAddress || 'N/A'}</BaseText>
-                          </HStack>
+              {/*{(userSessionList?.length ?? 0) > 0 ? (*/}
+              {/*  <ProfileForm*/}
+              {/*    title="PROFILE.SECURITY.ACTIVE_SESSIONS"*/}
+              {/*    description="PROFILE.SECURITY.ACTIVE_SESSIONS_DESC"*/}
+              {/*    isLoading={userDataLoading}*/}
+              {/*  >*/}
+              {/*    {userSessionList?.map((session, idx) => (*/}
+              {/*      <HStack*/}
+              {/*        key={idx}*/}
+              {/*        width="full"*/}
+              {/*        justifyContent="space-between"*/}
+              {/*        alignItems="center"*/}
+              {/*        py={2}*/}
+              {/*      >*/}
+              {/*        <VStack gap={1} width="full" align="stretch">*/}
+              {/*          <HStack>*/}
+              {/*            <BaseText fontWeight="bold">*/}
+              {/*              {parseUserAgent(session?.userAgent!)}*/}
+              {/*            </BaseText>*/}
+              {/*            {session?.id === currentSessionId && (*/}
+              {/*              <BaseTag color="purple" label={t('PROFILE.SECURITY.CURRENT_SESSION')} />*/}
+              {/*            )}*/}
+              {/*          </HStack>*/}
+              {/*          <Flex wrap="wrap" gap={3} color="gray.500" fontSize="sm">*/}
+              {/*            <HStack>*/}
+              {/*              <Icons.World />*/}
+              {/*              <BaseText>{session?.ipAddress || 'N/A'}</BaseText>*/}
+              {/*            </HStack>*/}
 
-                          <HStack>
-                            <Icons.Timer />
-                            <BaseText>
-                              {t('PROFILE.SECURITY.SESSION_START')} :{' '}
-                              {formatCreatedAt(session?.createdAt as unknown as string)}
-                            </BaseText>
-                          </HStack>
+              {/*            <HStack>*/}
+              {/*              <Icons.Timer />*/}
+              {/*              <BaseText>*/}
+              {/*                {t('PROFILE.SECURITY.SESSION_START')} :{' '}*/}
+              {/*                {formatCreatedAt(session?.createdAt as unknown as string)}*/}
+              {/*              </BaseText>*/}
+              {/*            </HStack>*/}
 
-                          <HStack>
-                            <Icons.Timer />
-                            <BaseText>Expires le: {formatDisplayDate(session?.expiresAt)}</BaseText>
-                          </HStack>
-                        </Flex>
-                      </VStack>
-                      {userSessionList?.length > 1 && (
-                        <BaseIcon
-                          bgColor={'red'}
-                          boxSize={'30px'}
-                          borderRadius={'7px'}
-                          cursor="pointer"
-                          onClick={() => session.id}
-                        >
-                          <Icons.Trash
-                            onClick={() => {
-                              setOpenCloseSessionModal(true);
-                              setSelectedData(session.id);
-                            }}
-                          />
-                        </BaseIcon>
-                      )}
-                    </HStack>
-                    ))}
-                </ProfileForm>
-              ) : (
-                <BaseText mt={8}>{t('PROFILE.SECURITY.NO_SESSIONS_FOUND')}</BaseText>
-              )}
+              {/*            <HStack>*/}
+              {/*              <Icons.Timer />*/}
+              {/*              <BaseText>Expires le: {formatDisplayDate(session?.expiresAt)}</BaseText>*/}
+              {/*            </HStack>*/}
+              {/*          </Flex>*/}
+              {/*        </VStack>*/}
+              {/*        {userSessionList?.length > 1 && (*/}
+              {/*          <BaseIcon*/}
+              {/*            bgColor={'red'}*/}
+              {/*            boxSize={'30px'}*/}
+              {/*            borderRadius={'7px'}*/}
+              {/*            cursor="pointer"*/}
+              {/*            onClick={() => session.id}*/}
+              {/*          >*/}
+              {/*            <Icons.Trash*/}
+              {/*              onClick={() => {*/}
+              {/*                setOpenCloseSessionModal(true);*/}
+              {/*                setSelectedData(session.id);*/}
+              {/*              }}*/}
+              {/*            />*/}
+              {/*          </BaseIcon>*/}
+              {/*        )}*/}
+              {/*      </HStack>*/}
+              {/*    ))}*/}
+              {/*  </ProfileForm>*/}
+              {/*) : (*/}
+              {/*  <BaseText mt={8}>{t('PROFILE.SECURITY.NO_SESSIONS_FOUND')}</BaseText>*/}
+              {/*)}*/}
 
               <ProfileForm
                 title="PROFILE.DANGER_ZONE.TITLE"
@@ -408,7 +406,7 @@ export const Settings = () => {
       <PassKeyModal
         isOpen={openPassKeyModal}
         onChange={() => setOpenPasskeyModal(!openPassKeyModal)}
-        callback={handleRegisterNewKey}
+        //callback={handleRegisterNewKey}
         isLoading={passkeyLoading}
       />
       <DisabledAccount
@@ -432,7 +430,7 @@ export const Settings = () => {
         title={'PROFILE.REMOVE_KEY_TITLE'}
         isOpen={isRevoke}
         onChange={() => setIsRevoke(false)}
-        callback={handleRemoveKey}
+        //callback={handleRemoveKey}
         ignoreFooter={false}
       >
         <BaseText>{t('PROFILE.REMOVE_KEY_TITLE_DESC')}</BaseText>
@@ -441,7 +439,7 @@ export const Settings = () => {
         title={'PROFILE.CLOSE_SESSION'}
         isOpen={openCloseSessionModal}
         onChange={() => setOpenCloseSessionModal(false)}
-        callback={handleClearSession}
+        //callback={handleClearSession}
         ignoreFooter={false}
       >
         <BaseText>{t('PROFILE.CLOSE_SESSION_DESC')}</BaseText>

@@ -3,10 +3,20 @@ import { landServiceInstance } from './land.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
-const getAllLandsByAgencyQueries = (args: QUERIES.QueryPayload<MODELS.ILandFilter>) => {
+const getAllLandsByAgencyQueries = (
+  args: QUERIES.QueryPayload<
+    MODELS.IPaginatedResponse<MODELS.LandResponseDto>,
+    undefined,
+    MODELS.ILandFilter
+  >,
+) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<MODELS.IPaginatedResponse<MODELS.LandResponseDto>>({
+  return QUERIES.useCustomQuery<
+    undefined,
+    MODELS.ILandFilter,
+    MODELS.IPaginatedResponse<MODELS.LandResponseDto>
+  >({
     queryKey: [Constants.LAND_KEYS.ALL_LAND_BY_AGENCY, params],
     queryFn: () => landServiceInstance().land_list(params as MODELS.ILandFilter),
     options: queryOptions,

@@ -46,8 +46,8 @@ export const Sidebar = ({
   const queryPayload = useMemo(
     () => ({
       params: {
-        agencyId,
-        userId,
+        agencyId: agencyId!,
+        userId: userId!,
       },
       queryOptions: {
         enabled: !!agencyId && !!userId,
@@ -57,7 +57,7 @@ export const Sidebar = ({
   );
 
   const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
-    params: { agencyId, userId },
+    params: { agencyId: agencyId!, userId: userId! },
     queryOptions: {
       enabled: !!agencyId && !!userId && hasPermission(AppPermissions.PROPERTIES.VIEW),
     },
@@ -75,7 +75,7 @@ export const Sidebar = ({
 
   const { data: unreadNotificationsList } = NotificationsModule.getAllUnreadNotificationsQueries({
     params: {
-      userId: user?.id,
+      userId: user?.id!,
     },
     queryOptions: { enabled: !!user?.id },
   });

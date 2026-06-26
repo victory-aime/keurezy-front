@@ -3,10 +3,20 @@ import { propertyServiceInstance } from './property.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
-const getAllPropertiesByAgency = (args: QUERIES.QueryPayload<MODELS.IAgencyFilters>) => {
+const getAllPropertiesByAgency = (
+  args: QUERIES.QueryPayload<
+    MODELS.IPaginatedResponse<MODELS.IPropertyResponse>,
+    undefined,
+    MODELS.IAgencyFilters
+  >,
+) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<MODELS.IPaginatedResponse<MODELS.IPropertyResponse>>({
+  return QUERIES.useCustomQuery<
+    undefined,
+    MODELS.IAgencyFilters,
+    MODELS.IPaginatedResponse<MODELS.IPropertyResponse>
+  >({
     queryKey: [Constants.PROPERTIES_KEYS.ALL_PROPERTIES_BY_AGENCY, params],
     queryFn: () =>
       propertyServiceInstance().getAllPropertyByAgency(params as MODELS.IAgencyFilters),
@@ -14,20 +24,24 @@ const getAllPropertiesByAgency = (args: QUERIES.QueryPayload<MODELS.IAgencyFilte
   });
 };
 
-const getOccupationRateByTypeQueries = (args: QUERIES.QueryPayload<MODELS.IAgencyFilters>) => {
+const getOccupationRateByTypeQueries = (
+  args: QUERIES.QueryPayload<MODELS.IOccupationRateStats[], undefined, MODELS.IAgencyFilters>,
+) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<MODELS.IOccupationRateStats[]>({
+  return QUERIES.useCustomQuery<undefined, MODELS.IAgencyFilters, MODELS.IOccupationRateStats[]>({
     queryKey: [Constants.PROPERTIES_KEYS.OCCUPATION_RATE_BY_PROPERTY_TYPE, params],
     queryFn: () =>
       propertyServiceInstance().getOccupationRateByType(params as MODELS.IAgencyCommonParams),
     options: queryOptions,
   });
 };
-const getMonthlyRevenueQueries = (args: QUERIES.QueryPayload<MODELS.IAgencyFilters>) => {
+const getMonthlyRevenueQueries = (
+  args: QUERIES.QueryPayload<MODELS.IMonthlyRevenueStats[], undefined, MODELS.IAgencyFilters>,
+) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<MODELS.IMonthlyRevenueStats[]>({
+  return QUERIES.useCustomQuery<undefined, MODELS.IAgencyFilters, MODELS.IMonthlyRevenueStats[]>({
     queryKey: [Constants.PROPERTIES_KEYS.MONTHLY_REVENUE, params],
     queryFn: () =>
       propertyServiceInstance().getMonthlyRevenue(params as MODELS.IAgencyCommonParams),

@@ -15,7 +15,7 @@ export const CustomSkeletonLoader: FunctionComponent<CustomSkeletonLoaderProps> 
   statisticBars = 4,
   colorButton = 'info',
   count = 4,
-  raduis = '7px',
+  radius = '7px',
 }) => {
   const DefaultBlockLoader = <Skeleton height={height} variant={variant} />;
 
@@ -115,11 +115,11 @@ export const CustomSkeletonLoader: FunctionComponent<CustomSkeletonLoaderProps> 
   const SkeletonImage = <Skeleton height={height} />;
 
   const SkeletonTextImage = (
-    <Flex gap={direction === 'column' ? 4 : 1} flexDir={direction} width={width}>
-      <Skeleton height={height} />
-      <Flex width={width}>
-        <SkeletonText noOfLines={numberOfLines} variant={variant} gap={3} />
-      </Flex>
+    <Flex align={'center'} gap={direction === 'column' ? 4 : 1} flexDir={direction} width={width}>
+      <Skeleton height={height} width={height} rounded={radius} />
+      <Box flex={1}>
+        <SkeletonText noOfLines={numberOfLines} gap={3} />
+      </Box>
     </Flex>
   );
 
@@ -132,7 +132,7 @@ export const CustomSkeletonLoader: FunctionComponent<CustomSkeletonLoaderProps> 
 
   const SkeletonButton = (
     <Skeleton asChild loading={true} width={width}>
-      <BaseButton width={width} colorType={colorButton} borderRadius={raduis} />
+      <BaseButton width={width} colorType={colorButton} borderRadius={radius} />
     </Skeleton>
   );
 

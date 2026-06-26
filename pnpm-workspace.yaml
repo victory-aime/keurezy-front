@@ -1,6 +1,9 @@
 allowBuilds:
-  '@swc/core': true
-  esbuild: true
-  sharp: true
+  '@firebase/util': set this to true or false
+  '@swc/core': set this to true or false
+  esbuild: set this to true or false
+  protobufjs: set this to true or false
+  sharp: set this to true or false
 minimumReleaseAgeExclude:
-  - rise-core-frontend@4.4.11
+  - rise-core-frontend@4.4.18
+  - rise-core-frontend@4.4.19

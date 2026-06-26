@@ -7,12 +7,10 @@ import { MODELS } from '_types/index';
  *
  */
 export class ChatService extends BaseApi {
-  createConversation(rentalAgreementId: string) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().CHAT.CREATE_CONV,
-      {},
-      { params: { rentalAgreementId } },
-    );
+  createConversation(userId: string, data: MODELS.ICreateConversation) {
+    return this.apiService.invoke(this.applicationContext.getApiConfig().CHAT.CREATE_CONV, data, {
+      params: { userId },
+    });
   }
 
   getConversation(userId: string) {
@@ -23,7 +21,7 @@ export class ChatService extends BaseApi {
     );
   }
 
-  getMessages(data: { userId: string; conversationId: string }) {
+  getMessages(data: MODELS.IGetMessagesParams) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().CHAT.GET_MESSAGE,
       {},

@@ -2,17 +2,16 @@ import * as Constants from './constants';
 import { annoncesServiceInstance } from './annonce.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
-import { IAnnonceResponse } from '../../../types/models';
 
 const getAllAnnoncesByAgency = (
-  args: QUERIES.QueryPayload<{ agencyId: string; userId: string }>,
+  args: QUERIES.QueryPayload<MODELS.IAnnonceResponse[], undefined, MODELS.IAgencyCommonParams>,
 ) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<IAnnonceResponse[]>({
+  return QUERIES.useCustomQuery<undefined, MODELS.IAgencyCommonParams, MODELS.IAnnonceResponse[]>({
     queryKey: [Constants.ANNONCES_KEY.ANNONCES_LIST_BY_AGENCY],
     queryFn: () =>
-      annoncesServiceInstance().get_annonces_by_agency(params?.agencyId, params?.userId),
+      annoncesServiceInstance().get_annonces_by_agency(params?.agencyId!, params?.userId!),
     options: queryOptions,
   });
 };

@@ -27,7 +27,7 @@ interface CustomSkeletonLoaderProps {
   direction?: any;
   numberOfLines?: number;
   colorButton?: variantColorType;
-  raduis?: number | string;
+  radius?: number | string;
 }
 
 export type { LoaderType, CustomSkeletonLoaderProps };

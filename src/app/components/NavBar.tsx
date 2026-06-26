@@ -1,21 +1,17 @@
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { BaseButton, BaseText, Icons, TextVariant } from '_components/custom';
-import { Box, Flex, HStack, Stack, Container, useBreakpointValue } from '@chakra-ui/react';
+import { BaseButton, Icons } from '_components/custom';
+import { Box, Flex, Stack, Container, useBreakpointValue } from '@chakra-ui/react';
 import Image from 'next/image';
 import { ASSETS } from '_assets/images';
-import { hexToRGB } from '_theme/colors';
-import { HEADER_LINKS } from '../layout/routes';
 import { useRouter } from 'next/navigation';
 import { APP_ROUTES } from '_config/routes';
-import { useIsActive } from '_hooks/useActive';
 import { MotionBox } from '_constants/motion';
 import { useColorMode } from '_components/ui/color-mode';
 
 export const Navbar = () => {
   const { colorMode } = useColorMode();
-  const { isActiveLink } = useIsActive();
   const router = useRouter();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +31,6 @@ export const Navbar = () => {
       <Container
         mx={'auto'}
         px={{ base: 6, sm: 8 }}
-        py={2}
         alignItems="center"
         justifyContent="space-between"
       >
@@ -44,46 +39,10 @@ export const Navbar = () => {
             <Image
               src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
               alt="logo"
-              width={220}
+              width={200}
               height={200}
             />
           </Link>
-
-          {/* Desktop nav */}
-          <Flex
-            display={{ base: 'none', sm: 'flex' }}
-            gap={2}
-            alignItems={'center'}
-            justifyContent={'center'}
-            width={'full'}
-          >
-            {HEADER_LINKS.map((link, i) => {
-              const isActive = isActiveLink(link.url);
-              return (
-                <Link key={link.url} href={link.url}>
-                  <HStack
-                    key={i}
-                    px={4}
-                    py={2}
-                    rounded={'lg'}
-                    fontSize={'sm'}
-                    fontWeight={'medium'}
-                    cursor={'pointer'}
-                    color={isActive ? 'primary.500' : 'gray.600'}
-                    bgColor={isActive ? hexToRGB('primary', 0.1) : 'none'}
-                    _hover={{
-                      bgColor: !isActive ? hexToRGB('primary', 0.3) : 'bg.muted',
-                      color: isActive ? 'primary.500' : 'gray.600',
-                    }}
-                  >
-                    <link.icon />
-
-                    {link.name}
-                  </HStack>
-                </Link>
-              );
-            })}
-          </Flex>
 
           <Flex gap={3} alignItems={'center'} ml={'auto'} display={{ base: 'none', sm: 'flex' }}>
             <BaseButton variant="outline" onClick={() => router.push(APP_ROUTES.AUTH.SIGN_IN)}>
@@ -109,31 +68,6 @@ export const Navbar = () => {
             overflow={'hidden'}
           >
             <Box px={4} py={4} spaceY={2}>
-              {HEADER_LINKS.map((link) => {
-                const isActive = isActiveLink(link.url);
-                return (
-                  <Link key={link.url} href={link.url} onClick={() => setIsOpen(false)}>
-                    <HStack
-                      width={'full'}
-                      px={2}
-                      py={2}
-                      key={link.url}
-                      rounded={'lg'}
-                      fontSize={'sm'}
-                      fontWeight={'medium'}
-                      color={isActive ? 'primary.500' : 'gray.600'}
-                      bgColor={isActive ? hexToRGB('primary', 0.1) : 'none'}
-                      _hover={{
-                        bgColor: !isActive ? hexToRGB('primary', 0.3) : 'bg.muted',
-                        color: isActive ? 'primary.500' : 'inherit',
-                      }}
-                    >
-                      <link.icon />
-                      {link.name}
-                    </HStack>
-                  </Link>
-                );
-              })}
               <Stack alignItems={'center'} pt={2} gap={2} width={'full'}>
                 <BaseButton
                   variant="outline"

@@ -86,7 +86,7 @@ export const FormCheckbox: FC<CheckBoxProps> = ({
       {isError && (
         <Flex gap={1} mt={1} alignItems={'center'}>
           <IoInformationCircle width={2.5} height={2.5} color={'red'} />
-          <Fieldset.ErrorText>{'error'}</Fieldset.ErrorText>
+          <Fieldset.ErrorText>{error}</Fieldset.ErrorText>
         </Flex>
       )}
     </Fieldset.Root>
