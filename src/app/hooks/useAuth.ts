@@ -42,6 +42,7 @@ export const useAuth = () => {
         {
           email: email!,
           password: password!,
+          rememberMe: true,
         },
         {
           async onSuccess(context) {

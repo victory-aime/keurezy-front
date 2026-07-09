@@ -13,3 +13,4 @@ export * as TeamModule from './team';
 export * as AnnonceModule from './annonces';
 export * as VisitsModule from './visits';
 export * as StatsModule from './stats';
+export * as IntegrationsProviderModule from './integrations';

@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 interface TabsProps extends TabsRootProps {
   items: {
     label: string;
-    tabIndex: number;
+    tabIndex?: number;
     icon?: ReactNode;
     content?: ReactNode | string | any;
   }[];

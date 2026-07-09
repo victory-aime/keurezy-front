@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFileUploadContext } from '@chakra-ui/react';
 import { ACCEPTED_TYPES, MAX_FILE_SIZE, MAX_FILES } from './constant/constants';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ export const useFileUploadErrors = ({
   const fileUpload = useFileUploadContext();
   const [error, setError] = useState<string | null>(null);
   const [errorType, setErrorType] = useState<ErrorType>(null);
+  const processedKeys = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     if (fileUpload.acceptedFiles.length > MAX_FILES) {
@@ -49,10 +50,26 @@ export const useFileUploadErrors = ({
         setError(null);
         setErrorType(null);
       }
-    } else {
-      setError(null);
-      setErrorType(null);
-      onValidFiles(fileUpload.acceptedFiles);
+      return;
+    }
+
+    setError(null);
+    setErrorType(null);
+
+    const newFiles = fileUpload.acceptedFiles.filter((file) => {
+      const key = `${file.name}-${file.size}-${file.lastModified}`;
+      return !processedKeys.current.has(key);
+    });
+
+    if (newFiles.length > 0) {
+      newFiles.forEach((file) => {
+        const key = `${file.name}-${file.size}-${file.lastModified}`;
+        processedKeys.current.add(key);
+      });
+      onValidFiles(newFiles);
+    }
+    if (fileUpload.acceptedFiles.length === 0) {
+      processedKeys.current.clear();
     }
   }, [fileUpload.acceptedFiles.length, fileUpload.rejectedFiles.length]);
 

@@ -23,6 +23,7 @@ const APIS_ROUTES_MODULES_PATH = {
   ANNONCES: '/announces',
   VISITS: '/visits',
   STATS: '/stats',
+  INTEGRATIONS_PROVIDER: '/integrations/providers',
 };
 
 export const APIS = (baseUrl?: string) => {
@@ -477,6 +478,53 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         method: 'GET',
         showResponse: false,
+      }),
+    },
+    INTEGRATIONS_PROVIDER: {
+      CONNECT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INTEGRATIONS_PROVIDER}/connect-url`,
+        pathBase: 'SECURED_API',
+        method: 'GET',
+        showResponse: false,
+      }),
+      DISCONNECT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INTEGRATIONS_PROVIDER}/disconnect`,
+        pathBase: 'SECURED_API',
+        method: 'POST',
+      }),
+      GET_STATUS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INTEGRATIONS_PROVIDER}/status`,
+        pathBase: 'SECURED_API',
+        method: 'GET',
+        showResponse: false,
+      }),
+      UPLOAD_FILE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INTEGRATIONS_PROVIDER}/upload`,
+        pathBase: 'SECURED_API',
+        method: 'POST',
+        showResponse: false,
+      }),
+      FILES_LIST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INTEGRATIONS_PROVIDER}/files-list`,
+        pathBase: 'SECURED_API',
+        method: 'GET',
+        showResponse: false,
+      }),
+      TRASHED_FILES_LIST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INTEGRATIONS_PROVIDER}/trashed-list`,
+        pathBase: 'SECURED_API',
+        method: 'GET',
+        showResponse: false,
+      }),
+      TRASHED: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INTEGRATIONS_PROVIDER}/trashed-file`,
+        pathBase: 'SECURED_API',
+        method: 'POST',
+      }),
+      DELETE_FILE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INTEGRATIONS_PROVIDER}/delete-file`,
+        pathBase: 'SECURED_API',
+        method: 'POST',
       }),
     },
   };

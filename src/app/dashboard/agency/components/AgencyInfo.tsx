@@ -1,16 +1,17 @@
 'use client';
 
-import { VStack, HStack, Flex } from '@chakra-ui/react';
+import { VStack, HStack, Flex, FileUploadRootProvider } from '@chakra-ui/react';
 import {
   FormTextInput,
   BaseButton,
-  UploadAvatar,
+  BaseUploadImageFile,
   BaseContainer,
   FormTextArea,
   FormPhonePicker,
   Icons,
   BaseModal,
   BaseText,
+  useBaseFileUpload,
 } from '_components/custom';
 import { Formik, FormikValues } from 'formik';
 import { t } from 'i18next';
@@ -24,12 +25,16 @@ import { authClient } from '../../../lib/auth-client';
 import { useGlobalLoader } from '_context/loaderContext';
 import { DocumentPreviewModal } from './DocumentPreviewModal';
 import { useUserContext } from '_context/user-context';
+import { ACCEPTED_TYPES } from '_components/custom/drag-drop/constant/constants';
 
 export const AgencyInfo = () => {
   const { user } = useUserContext();
   const { showLoader, hideLoader } = useGlobalLoader();
   const router = useRouter();
-
+  const fileUpload = useBaseFileUpload({
+    accept: ACCEPTED_TYPES,
+    maxFiles: 1,
+  });
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [closeAgencyOpen, setCloseAgencyOpen] = useState(false);
@@ -125,7 +130,7 @@ export const AgencyInfo = () => {
     >
       {({ values, handleSubmit, setFieldValue, errors }) => {
         return (
-          <>
+          <FileUploadRootProvider value={fileUpload}>
             <BaseContainer
               gap={8}
               title="Informations de l'agence"
@@ -135,7 +140,7 @@ export const AgencyInfo = () => {
             >
               <Flex width={'full'} gap={5} mt={5} flexDirection={{ base: 'column', md: 'row' }}>
                 <Flex width={{ base: 'full', md: '1/4' }}>
-                  <UploadAvatar
+                  <BaseUploadImageFile
                     getFileUploaded={(files) => setFieldValue('agencyLogo', files)}
                     handleDeleteAvatar={() => {}}
                     avatarImage={undefined}
@@ -248,7 +253,7 @@ export const AgencyInfo = () => {
               poursuivre ?
             </BaseModal>
             <DocumentPreviewModal onChange={setIsOpen} isOpen={isOpen} data={selectedDoc} />
-          </>
+          </FileUploadRootProvider>
         );
       }}
     </Formik>

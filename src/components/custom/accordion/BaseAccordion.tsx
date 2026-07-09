@@ -1,6 +1,6 @@
 'use client';
 
-import { Flex, Icon, Stack } from '@chakra-ui/react';
+import { Flex, HStack, Icon } from '@chakra-ui/react';
 import {
   AccordionItem,
   AccordionItemContent,
@@ -56,14 +56,14 @@ export const BaseAccordion: FC<BaseAccordionProps> = ({
                     <CustomSkeletonLoader type="TEXT" numberOfLines={1} width="full" />
                   ) : (
                     <Flex width={'full'} justifyContent={'space-between'}>
-                      <Stack>
+                      <HStack>
                         {item.icon && (
-                          <Icon fontSize="lg" color="fg.subtle">
+                          <Icon fontSize="md" color="fg.subtle">
                             {item.icon}
                           </Icon>
                         )}
                         <BaseText>{item.label}</BaseText>
-                      </Stack>
+                      </HStack>
                       {item?.selectedLength! > 0 && (
                         <BaseTag color={'blue'} label={item?.selectedLength} />
                       )}

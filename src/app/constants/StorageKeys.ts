@@ -12,4 +12,5 @@ export enum StorageKey {
 
 export enum ProviderKeys {
   GOOGLE = 'google',
+  GOOGLE_DRIVE = 'GOOGLE_DRIVE',
 }

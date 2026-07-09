@@ -1,16 +1,14 @@
-// Extrait — LandForm.tsx (partie modifiée uniquement)
-// Remplace le onClick de ActionsButton par validateAndSubmit
-
-import { VStack, Flex, HStack } from '@chakra-ui/react';
+import { VStack, Flex, FileUploadRootProvider, useFileUpload } from '@chakra-ui/react';
 import {
   FormTextInput,
   FormSelect,
-  BaseUploadMultipleFiles,
   Icons,
   BaseText,
   ActionsButton,
   FormTextArea,
+  useBaseFileUpload,
 } from '_components/custom';
+import { BaseUploadMultipleFiles } from '_components/custom/drag-drop/base/BaseUploadMultipleFiles';
 import { cityList } from '_constants/city';
 import { useFormikValidationToast } from '_hooks/useFormikValidationToast';
 import { useRouter } from 'next/navigation';
@@ -18,8 +16,6 @@ import { FormCard } from '../../components/FormCard';
 import { DASHBOARD_ROUTES } from '../../routes';
 import { buildingStatusList, getLandsList } from '../constants/building';
 import { MODELS } from '_types/*';
-
-// ─── Inner form (accède au contexte Formik) ──────────────────────────────────
 export const BuildingFormInner = ({
   buildingId,
   isCreateBuilding,
@@ -38,9 +34,10 @@ export const BuildingFormInner = ({
   const router = useRouter();
   const { validateAndSubmit } = useFormikValidationToast();
   const { handleSubmit, setFieldValue } = require('formik').useFormikContext();
+  const fileUpload = useBaseFileUpload();
 
   return (
-    <>
+    <FileUploadRootProvider value={fileUpload}>
       <VStack gap={3} alignItems={'flex-end'} width={'full'}>
         <Flex width={'full'} gap={4} flexDir={{ base: 'column', sm: 'row' }}>
           <FormCard title="Informations principales">
@@ -122,6 +119,6 @@ export const BuildingFormInner = ({
           icon={buildingId ? <Icons.Edit /> : <Icons.PlusMinus />}
         />
       </VStack>
-    </>
+    </FileUploadRootProvider>
   );
 };

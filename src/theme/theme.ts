@@ -18,6 +18,9 @@ export function buildTheme(primaryHex?: string) {
       tokens: {
         animations,
         colors: dynamicColors, // ← injection ici
+        borders: {
+          borderRadius: { value: '24px' },
+        },
         fonts: {
           heading: { value: 'var(--font-lato)' },
           body: { value: 'var(--font-lato)' },

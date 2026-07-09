@@ -47,11 +47,11 @@ export const SidebarGroup = ({
           >
             {isCollapsed ? (
               <Flex gap={2} alignItems={'center'}>
-                <Icon as={icon} size={'md'} />
+                <Icon as={icon} size={'sm'} />
                 {t(title)}
               </Flex>
             ) : (
-              <Icon as={icon} size={'xs'} />
+              <Icon as={icon} size={'sm'} />
             )}
 
             <Accordion.ItemIndicator />
@@ -131,7 +131,7 @@ export const SidebarGroup = ({
                             bg={'primary.500'}
                           />
                         )}
-                        <Icon as={item.icon} size={'sm'} />
+                        <Icon as={item.icon} size={'xs'} />
 
                         <AnimatePresence initial={false}>
                           {isCollapsed && (
