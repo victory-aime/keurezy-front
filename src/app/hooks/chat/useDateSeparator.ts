@@ -1,7 +1,7 @@
-// hooks/chat/useDateSeparators.ts
-// Insère des séparateurs de date entre les messages selon WhatsApp :
-// "Aujourd'hui", "Hier", "Lundi 18 juin", etc.
-
+/** hooks/chat/useDateSeparators.ts
+ Insère des séparateurs de date entre les messages selon WhatsApp :
+ "Aujourd'hui", "Hier", "Lundi 18 juin", etc.
+*/
 import { useMemo } from 'react';
 import { MODELS } from '_types/*';
 import { format, isToday, isYesterday, isSameDay } from 'date-fns';
@@ -14,7 +14,6 @@ export type ChatItem =
 function formatDateLabel(date: Date): string {
   if (isToday(date)) return "Aujourd'hui";
   if (isYesterday(date)) return 'Hier';
-  // "lundi 18 juin" pour les messages de la semaine passée et au-delà
   return format(date, 'EEEE d MMMM', { locale: fr });
 }
 
@@ -26,7 +25,6 @@ export function useDateSeparators(messages: MODELS.MessagePayload[]): ChatItem[]
     for (const message of messages) {
       const messageDate = new Date(message.createdAt);
 
-      // Insère un séparateur si le jour change
       if (!lastDate || !isSameDay(lastDate, messageDate)) {
         items.push({
           type: 'date-separator',

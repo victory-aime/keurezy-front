@@ -1,18 +1,6 @@
 import { ManageGoogleDrivePanel } from './ManageGoogleDrivePanel';
-import {
-  useFileUpload,
-  FileUploadRootProvider,
-  FileUpload,
-  FileUploadDropzoneContent,
-  Box,
-} from '@chakra-ui/react';
-import {
-  ACCEPTED_TYPES,
-  MAX_FILE_SIZE,
-  MAX_FILE_SIZE_MB,
-  TYPES_FILES,
-} from '_components/custom/drag-drop/constant/constants';
-import { BaseText, TextVariant } from '_components/custom';
+import { useFileUpload, FileUploadRootProvider, FileUpload } from '@chakra-ui/react';
+import { ACCEPTED_TYPES, MAX_FILE_SIZE } from '_components/custom/drag-drop/constant/constants';
 import React from 'react';
 import { useThemeColors } from '_theme/useThemeColors';
 
@@ -29,7 +17,7 @@ export const GoogleDriveUpload = ({ status }: { status: boolean }) => {
       <FileUpload.HiddenInput />
       <FileUpload.Dropzone
         width={'full'}
-        p={'3'}
+        p={'0'}
         border={'none'}
         _hover={{ bg: 'none' }}
         _dragging={{

@@ -117,10 +117,11 @@ export const ManageGoogleDrivePanel = ({
           <BaseUploadMultipleFiles getFilesUploaded={handleFilesUploaded} />
 
           <VStack
-            align="flex-start"
+            align="stretch"
+            gap={0}
             borderWidth="1px"
             borderRadius="l2"
-            overflow="hidden"
+            overflowY="hidden"
             width={'full'}
           >
             {uploadingFiles.map((u) => (
@@ -163,54 +164,49 @@ export const ManageGoogleDrivePanel = ({
                   py={3}
                   gap={3}
                   borderBottomWidth={index === filesData?.length - 1 ? '0' : '1px'}
-                  width={'full'}
-                  justifyContent={'space-between'}
                 >
-                  <HStack>
-                    <Circle size="8" bg={config.bg} color={config.color} flexShrink={0}>
-                      <Icon
-                        as={FileIcon}
-                        boxSize={3.5}
-                        color={config.color}
-                        _dark={{ color: config.color }}
-                      />
-                    </Circle>
-                    <Stack alignItems={'flex-start'} gap={0}>
-                      <BaseText variant={TextVariant.S} truncate>
-                        {file.name}
-                      </BaseText>
-                      <BaseText variant={TextVariant.XS} color="fg.muted" fontFamily="mono">
-                        {file?.size} · {formatDisplayDate(file.modifiedTime)} ·{' '}
-                        {getTimeValue(file.modifiedTime!)}
-                      </BaseText>
-                    </Stack>
-                  </HStack>
-                  <HStack gap={2}>
-                    <BaseTooltip message={'Ouvrir dans Google Drive'} show>
+                  <Circle size="8" bg={config.bg} color={config.color} flexShrink={0}>
+                    <Icon
+                      as={FileIcon}
+                      boxSize={3.5}
+                      color={config.color}
+                      _dark={{ color: config.color }}
+                    />
+                  </Circle>
+                  <Box flex={1} minW={0}>
+                    <BaseText variant={TextVariant.S} truncate>
+                      {file.name}
+                    </BaseText>
+                    <BaseText variant={TextVariant.XS} color="fg.muted" fontFamily="mono">
+                      {file?.size} · {formatDisplayDate(file.modifiedTime)} ·{' '}
+                      {getTimeValue(file.modifiedTime!)}
+                    </BaseText>
+                  </Box>
+
+                  <BaseTooltip message={'Ouvrir dans Google Drive'} show>
+                    <IconButton
+                      aria-label="Ouvrir dans Google Drive"
+                      size="xs"
+                      colorPalette={'purple'}
+                      onClick={() => window.open(file.webViewLink, '_blank')}
+                    >
+                      <HiOutlineExternalLink size={16} />
+                    </IconButton>
+                  </BaseTooltip>
+                  {isPending ? (
+                    <Loader loader />
+                  ) : (
+                    <BaseTooltip message={'Mettre dans la corbeille'} show>
                       <IconButton
-                        aria-label="Ouvrir dans Google Drive"
+                        aria-label="Supprimer"
                         size="xs"
-                        colorPalette={'purple'}
-                        onClick={() => window.open(file.webViewLink, '_blank')}
+                        colorPalette={'red'}
+                        onClick={() => handleTrashFile(file.fileId)}
                       >
-                        <HiOutlineExternalLink size={16} />
+                        <HiOutlineTrash size={16} />
                       </IconButton>
                     </BaseTooltip>
-                    {isPending ? (
-                      <Loader loader />
-                    ) : (
-                      <BaseTooltip message={'Mettre dans la corbeille'} show>
-                        <IconButton
-                          aria-label="Supprimer"
-                          size="xs"
-                          colorPalette={'red'}
-                          onClick={() => handleTrashFile(file.fileId)}
-                        >
-                          <HiOutlineTrash size={16} />
-                        </IconButton>
-                      </BaseTooltip>
-                    )}
-                  </HStack>
+                  )}
                 </HStack>
               );
             })}

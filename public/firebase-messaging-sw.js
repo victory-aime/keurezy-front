@@ -26,7 +26,7 @@ messaging.onBackgroundMessage((payload) => {
 });
 
 self.addEventListener('notificationclick', (event) => {
-  const { type, notificationId } = event.notification.data || {};
+  const { type, notificationId } = event?.notification?.data || {};
   let url = '/dashboard';
 
   switch (type) {

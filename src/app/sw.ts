@@ -1,5 +1,3 @@
-/// <reference lib="webworker" />
-
 import { Serwist, NetworkFirst, CacheFirst, ExpirationPlugin } from 'serwist';
 
 declare const self: ServiceWorkerGlobalScope & {
@@ -13,7 +11,6 @@ const serwist = new Serwist({
   navigationPreload: true,
 
   runtimeCaching: [
-    // Cache pour toutes les requêtes API proxyées
     {
       matcher: ({ url }) => url.pathname.startsWith('/api/') || url.pathname.startsWith('/api/v1/'),
       handler: new NetworkFirst({
@@ -26,8 +23,6 @@ const serwist = new Serwist({
         ],
       }),
     },
-
-    // Cache pour les images / avatars
     {
       matcher: ({ request }) => request.destination === 'image',
       handler: new CacheFirst({
@@ -35,7 +30,7 @@ const serwist = new Serwist({
         plugins: [
           new ExpirationPlugin({
             maxEntries: 200,
-            maxAgeSeconds: 60 * 60 * 24 * 7, // 1 semaine
+            maxAgeSeconds: 60 * 60 * 24 * 7,
           }),
         ],
       }),

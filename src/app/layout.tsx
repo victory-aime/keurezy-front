@@ -16,16 +16,16 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://app.Keurezy-platform.com'),
+  metadataBase: new URL('https://keurezy.onrender.com'),
   title: {
-    default: 'Keurezy Platform',
-    template: '%s | Keurezy Platform',
+    default: 'Keurezy',
+    template: '%s | Keurezy',
   },
   description:
     'Plateforme moderne de gestion immobilière. Gérez vos biens, locataires et demandes de location facilement depuis un tableau de bord centralisé.',
   icons: {
-    icon: [{ url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' }],
-    apple: [{ url: '/apple-touch-icon.png' }],
+    icon: [{ url: '/assets/favicon-96x96.png', sizes: '96x96', type: 'image/png' }],
+    apple: [{ url: '/assets/apple-touch-icon.png' }],
   },
   appleWebApp: {
     capable: true,
@@ -39,19 +39,19 @@ export const metadata: Metadata = {
     'immobilier SaaS',
     'Keurezy management',
   ],
-  authors: [{ name: 'Keurezy Platform Team' }],
+  authors: [{ name: 'Keurezy Team' }],
   openGraph: {
-    title: 'Keurezy Platform',
+    title: 'Keurezy',
     description:
       'Gérez vos biens immobiliers, locataires et demandes de location depuis une plateforme moderne.',
-    url: 'https://app.Keurezy-platform.com',
-    siteName: 'Keurezy Platform',
+    url: 'https://keurezy.onrender.com',
+    siteName: 'Keurezy',
     locale: 'fr_FR',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Keurezy Platform',
+    title: 'Keurezy',
     description: 'Plateforme moderne pour gérer vos biens immobiliers et vos locataires.',
   },
   robots: {

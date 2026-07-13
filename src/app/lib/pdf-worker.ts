@@ -1,4 +1,3 @@
-// app/lib/pdf-worker.ts
 'use client';
 
 import { pdfjs } from 'react-pdf';

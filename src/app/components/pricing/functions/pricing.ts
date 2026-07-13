@@ -110,7 +110,7 @@ export const getFilteredPlans = (
   const others = filtered.filter((p) => !p.popular);
 
   if (popularPlan && others.length >= 2) {
-    return [others[0], popularPlan, others[1]];
+    return [others[1], popularPlan, others[0]];
   }
 
   return filtered;

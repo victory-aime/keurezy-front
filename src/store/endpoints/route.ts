@@ -5,9 +5,7 @@ const APIS_ROUTES_MODULES_PATH = {
   USER: '/users',
   AGENCY: '/agency',
   PROPERTY: '/property',
-  CONTACT: '/contact',
   LEADS: '/leads',
-  RENTAL_AGREEMENT: '/rental-agreement',
   CHAT: '/chat',
   NOTIFICATION: '/notif',
   PUSH_NOTIFICATIONS: '/push-notification',
@@ -156,31 +154,6 @@ export const APIS = (baseUrl?: string) => {
         showResponse: false,
       }),
     },
-    CONTACT: {
-      PUBLIC_CONTACT: api({
-        path: `${APIS_ROUTES_MODULES_PATH.CONTACT}/public`,
-        method: 'POST',
-        pathBase: 'UNSECURED_API',
-      }),
-      AGENCY_CONTACT_LIST: api({
-        path: `${APIS_ROUTES_MODULES_PATH.CONTACT}/agency-contact-list`,
-        method: 'GET',
-        pathBase: 'SECURED_API',
-        showResponse: false,
-      }),
-      AGENCY_CONTACT_UPDATE_STATUS: api({
-        path: `${APIS_ROUTES_MODULES_PATH.CONTACT}/agency-update-status`,
-        method: 'POST',
-        pathBase: 'SECURED_API',
-        showResponse: false,
-      }),
-      AGENCY_CONTACT_READ_ALL: api({
-        path: `${APIS_ROUTES_MODULES_PATH.CONTACT}/agency-update-status`,
-        method: 'POST',
-        pathBase: 'SECURED_API',
-        showResponse: false,
-      }),
-    },
     LEADS: {
       CREATE: api({
         path: `${APIS_ROUTES_MODULES_PATH.LEADS}/create`,
@@ -206,31 +179,6 @@ export const APIS = (baseUrl?: string) => {
       USER_LEADS_LIST: api({
         path: `${APIS_ROUTES_MODULES_PATH.LEADS}/user-leads-list`,
         method: 'GET',
-        pathBase: 'SECURED_API',
-        showResponse: false,
-      }),
-    },
-    RENTAL_AGREEMENT: {
-      GET_AGENCY_LIST: api({
-        path: `${APIS_ROUTES_MODULES_PATH.RENTAL_AGREEMENT}/rental-agreement-agency-list`,
-        method: 'GET',
-        pathBase: 'SECURED_API',
-        showResponse: false,
-      }),
-      APPROVE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.RENTAL_AGREEMENT}/approve`,
-        method: 'POST',
-        pathBase: 'SECURED_API',
-      }),
-      REJECT: api({
-        path: `${APIS_ROUTES_MODULES_PATH.RENTAL_AGREEMENT}/reject`,
-        method: 'POST',
-        pathBase: 'SECURED_API',
-        showResponse: false,
-      }),
-      TERMINATE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.RENTAL_AGREEMENT}/terminate`,
-        method: 'POST',
         pathBase: 'SECURED_API',
         showResponse: false,
       }),

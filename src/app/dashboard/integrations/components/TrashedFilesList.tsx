@@ -45,7 +45,7 @@ export function TrashedFilesList({
       {isLoadingTrashedFiles ? (
         <CustomSkeletonLoader type={'DATA_TABLE'} />
       ) : (
-        <VStack align="stretch" gap={0} borderWidth="1px" borderRadius="l2" overflow="hidden">
+        <VStack align="stretch" gap={0} borderWidth="1px" borderRadius="l2" overflowY="hidden">
           {trashedFiles?.map((file, index) => {
             const config = getFileIconColor(file.name);
             const FileIcon = getFileIcon(file?.name);

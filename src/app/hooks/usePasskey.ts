@@ -1,6 +1,5 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { authClient } from '../lib/auth-client';
-import { handleApiSuccess } from '_utils/handleApiSuccess';
 import { handleApiError } from '_utils/handleApiError';
 
 export const usePasskey = () => {

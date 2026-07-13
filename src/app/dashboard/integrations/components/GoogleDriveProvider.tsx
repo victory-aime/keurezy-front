@@ -6,7 +6,6 @@ import {
   BaseButton,
   BaseContainer,
   BaseText,
-  FloatSwitchColorMode,
   Icons,
   TextVariant,
 } from '_components/custom';
@@ -115,7 +114,6 @@ export function GoogleDriveProvider() {
           },
         ]}
       />
-      <FloatSwitchColorMode />
       <DisconnectDrive
         isOpen={openConsent}
         callback={async () => await disconnect({ params: { provider: ProviderKeys.GOOGLE_DRIVE } })}
