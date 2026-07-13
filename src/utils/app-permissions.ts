@@ -7,7 +7,6 @@ export const AppPermissions = {
     PUBLISH: 'publish_property',
     UNPUBLISH: 'unpublish_property',
   },
-
   LEADS: {
     VIEW: 'view_leads',
     CREATE: 'create_lead',
@@ -15,19 +14,16 @@ export const AppPermissions = {
     DELETE: 'delete_lead',
     ASSIGN: 'assign_lead',
   },
-
   USERS: {
     VIEW: 'view_users',
     INVITE: 'invite_users',
     UPDATE: 'update_users',
     DELETE: 'delete_users',
   },
-
   REPORTS: {
     VIEW: 'view_reports',
     EXPORT: 'export_reports',
   },
-
   ACCOUNTING: {
     VIEW: 'view_accounting',
     CREATE_TRANSACTION: 'create_transaction',

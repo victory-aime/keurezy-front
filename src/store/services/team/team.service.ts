@@ -10,11 +10,13 @@ export class TeamService extends BaseApi {
     );
   }
 
-  changeStatus(id: string, userId: string, status: boolean) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().TEAM.CHANGE_STATUS,
-      { status },
-      { params: { id, userId } },
-    );
+  changeStatus(
+    data: { id: string; userId: string; status: boolean },
+    agencyId: string,
+    agentId: string,
+  ) {
+    return this.apiService.invoke(this.applicationContext.getApiConfig().TEAM.CHANGE_STATUS, data, {
+      params: { agencyId, agentId },
+    });
   }
 }

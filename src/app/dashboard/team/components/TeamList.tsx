@@ -42,10 +42,10 @@ export const TeamList = () => {
       },
     });
 
-  const handleStatus = async (status: boolean, id: string, userId: string) => {
+  const handleStatus = async (status: boolean, id: string, user: string) => {
     await changeStatusTeam({
-      payload: { status },
-      params: { id, userId },
+      payload: { status, id, userId: user },
+      params: { agencyId: agencyId!, agentId: userId! },
     });
   };
 

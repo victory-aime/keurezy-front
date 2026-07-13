@@ -1,7 +1,7 @@
 'use client';
 
 import { SimpleGrid, VStack } from '@chakra-ui/react';
-import { StatsModule } from '_store/state-management';
+import { AgencyModule } from '_store/state-management';
 import { useUserContext } from '_context/user-context';
 import { StatsChart } from './components/BarChart';
 import LineChart from './components/LineChart';
@@ -10,8 +10,8 @@ import { BaseContainer, BaseStats, Icons } from '_components/custom';
 
 export function StatsList() {
   const { user } = useUserContext();
-  const { data, isLoading } = StatsModule.getAgencyStats({
-    params: { agencyId: user?.agencyId ?? '' },
+  const { data, isLoading } = AgencyModule.getAgencyStats({
+    params: { agencyId: user?.agencyId!, userId: user?.ownerId! ?? user?.staffId },
     queryOptions: { enabled: !!user?.agencyId },
   });
 

@@ -46,4 +46,14 @@ export class AgencyService extends BaseApi {
       name,
     });
   }
+
+  stats_agency(agencyId: string, userId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.STATS,
+      {},
+      {
+        params: { agencyId, userId },
+      },
+    );
+  }
 }

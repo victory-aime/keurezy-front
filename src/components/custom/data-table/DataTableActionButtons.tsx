@@ -204,13 +204,7 @@ export const DataTableActionButtons = <T,>({ actions, item }: ActionButtonsProps
               const Icon = config.icon;
 
               return (
-                <Menu.Item
-                  key={label}
-                  value={label}
-                  asChild
-                  disabled={isDisabled || isLoading}
-                  onClick={handleClick}
-                >
+                <Menu.Item key={label} value={label} asChild onClick={handleClick}>
                   <HStack
                     color={isDisabled ? VariablesColors.grayScale : 'inherit'}
                     justifyContent={isLoading ? 'center' : 'flex-start'}
@@ -225,6 +219,7 @@ export const DataTableActionButtons = <T,>({ actions, item }: ActionButtonsProps
                         width={'full'}
                         variant={'surface'}
                         size={'xs'}
+                        disabled={isDisabled || isLoading}
                       >
                         <Icon />
                         {t(config.tooltip)}

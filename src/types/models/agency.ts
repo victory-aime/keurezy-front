@@ -22,7 +22,7 @@ interface IUpdateAgency extends ICreateAgency {
   agencyId?: string;
 }
 interface ICloseAgency extends IUpdateAgency {
-  ownerId: string;
+  userId: string;
 }
 
 interface IAgency {

@@ -42,17 +42,17 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     title: 'Gestion Immobiliers',
     icon: Icons.GridHome,
   },
-  {
-    title: 'Analytique',
-    icon: Icons.QueryStats,
-    links: [
-      {
-        label: 'Statistiques',
-        path: DASHBOARD_ROUTES.STATS,
-        icon: Icons.StatsChart,
-      },
-    ],
-  },
+  // {
+  //   title: 'Analytique',
+  //   icon: Icons.QueryStats,
+  //   links: [
+  //     {
+  //       label: 'Statistiques',
+  //       path: DASHBOARD_ROUTES.STATS,
+  //       icon: Icons.StatsChart,
+  //     },
+  //   ],
+  // },
 
   {
     title: 'Gestion',

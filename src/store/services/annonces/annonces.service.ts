@@ -18,11 +18,11 @@ export class AnnoncesService extends BaseApi {
     return this.apiService.invoke(this.applicationContext.getApiConfig().ANNONCES.UPDATE, data);
   }
 
-  delete_annonce(id: string) {
+  delete_annonce(id: string, agencyId: string, userId: string) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().ANNONCES.DELETE,
       {},
-      { params: { id } },
+      { params: { id, agencyId, userId } },
     );
   }
 }

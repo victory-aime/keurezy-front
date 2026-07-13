@@ -32,10 +32,13 @@ const updateAnnonceMutation = (args: QUERIES.MutationPayload<MODELS.IUpdateAnnon
   });
 };
 
-const deleteAnnonceMutation = (args: QUERIES.MutationPayload<any, any, { id: string }>) => {
+const deleteAnnonceMutation = (
+  args: QUERIES.MutationPayload<any, any, { id: string; agencyId: string; userId: string }>,
+) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.ANNONCES_KEY.UPDATE_ANNONCE],
-    mutationFn: ({ params }) => annoncesServiceInstance().delete_annonce(params?.id!),
+    mutationFn: ({ params }) =>
+      annoncesServiceInstance().delete_annonce(params?.userId!, params?.agencyId!, params?.id!),
     options: args.mutationOptions,
   });
 };

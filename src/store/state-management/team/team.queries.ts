@@ -23,15 +23,17 @@ const changeStatusTeamMutation = (
   args: QUERIES.MutationPayload<
     {
       status: boolean;
+      id: string;
+      userId: string;
     },
     any,
-    { id?: string; userId?: string }
+    { agencyId: string; agentId: string }
   >,
 ) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.TEAM_KEYS.CHANGE_STATUS],
     mutationFn: ({ params, payload }) =>
-      teamServiceInstance().changeStatus(params?.id!, params?.userId!, payload!.status),
+      teamServiceInstance().changeStatus(payload!, params?.agencyId!, params?.agencyId!),
     options: args.mutationOptions,
   });
 };

@@ -20,7 +20,6 @@ const APIS_ROUTES_MODULES_PATH = {
   TEAM: '/team',
   ANNONCES: '/announces',
   VISITS: '/visits',
-  STATS: '/stats',
   INTEGRATIONS_PROVIDER: '/integrations/providers',
 };
 
@@ -108,6 +107,12 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'UNSECURED_API',
         showResponse: false,
         handleErrorManually: false,
+      }),
+      STATS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/stats`,
+        pathBase: 'SECURED_API',
+        method: 'GET',
+        showResponse: false,
       }),
     },
     PROPERTY: {
@@ -417,14 +422,6 @@ export const APIS = (baseUrl?: string) => {
         path: `${APIS_ROUTES_MODULES_PATH.VISITS}/assign-agent`,
         pathBase: 'SECURED_API',
         method: 'PATCH',
-        showResponse: false,
-      }),
-    },
-    STATS: {
-      AGENCY: api({
-        path: `${APIS_ROUTES_MODULES_PATH.STATS}/agency`,
-        pathBase: 'SECURED_API',
-        method: 'GET',
         showResponse: false,
       }),
     },

@@ -88,13 +88,14 @@ export const AgencyInfo = () => {
     formData.append('phone', String(values?.phone));
     formData.append('acceptTerms', values?.acceptTerms);
     formData.append('agencyId', String(agency?.id));
+    formData.append('userId', String(user?.ownerId));
     if (values?.agencyLogo) {
       formData.append('agencyLogo', values.agencyLogo);
     }
     await updateAgency({ payload: formData as MODELS.IUpdateAgency });
   };
 
-  const handleCloseAgency = async (values: { agencyId: string; ownerId: string }) => {
+  const handleCloseAgency = async (values: { agencyId: string; userId: string }) => {
     showLoader();
     await closeAgency({ params: values });
   };
@@ -242,7 +243,7 @@ export const AgencyInfo = () => {
               onClick={() => {
                 handleCloseAgency({
                   agencyId: agency?.id!,
-                  ownerId: agency?.ownerId!,
+                  userId: user?.ownerId!,
                 });
                 setCloseAgencyOpen(!closeAgencyOpen);
               }}

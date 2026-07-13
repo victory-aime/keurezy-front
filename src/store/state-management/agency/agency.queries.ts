@@ -64,6 +64,21 @@ const checkNameMutation = (args: QUERIES.MutationPayload<{ name: string }>) => {
   });
 };
 
+const getAgencyStats = (
+  args: QUERIES.QueryPayload<MODELS.IAgencyStats, undefined, { agencyId: string; userId: string }>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<
+    undefined,
+    { agencyId: string; userId: string },
+    MODELS.IAgencyStats
+  >({
+    queryKey: [Constants.AGENCY_KEYS.GET_STATS, params],
+    queryFn: () => agencyServiceInstance().stats_agency(params?.agencyId!, params?.userId!),
+    options: queryOptions,
+  });
+};
+
 export {
   createAgencyMutation,
   checkNameMutation,
@@ -71,4 +86,5 @@ export {
   updateAgencyMutation,
   closeAgencyMutation,
   getAgencySubscriptionInfo,
+  getAgencyStats,
 };
