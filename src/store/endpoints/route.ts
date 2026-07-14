@@ -65,6 +65,12 @@ export const APIS = (baseUrl?: string) => {
         showResponse: false,
         handleErrorManually: false,
       }),
+      PASSKEY_SESSION: api({
+        path: `${APIS_ROUTES_MODULES_PATH.USER}/passkey-session`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
       UPDATE_USER: api({
         path: `${APIS_ROUTES_MODULES_PATH.USER}/update-user`,
         method: 'PATCH',

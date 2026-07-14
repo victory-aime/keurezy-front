@@ -235,7 +235,7 @@
       "PASS_KEY_DESC": "Ajoutez une ou plusieurs clés d'accès pour vous connecter sans mot de passe. Utilisez la reconnaissance faciale, une empreinte ou un appareil sécurisé compatible.",
       "ADD_PASS_KEY": "Ajouter une clé",
       "PASS_KEY_NAME": "Nom de la clé",
-      "ADD_PASS_KEY_INFO": "Vous allez être redirigé vers une interface sécurisée pour ajouter une nouvelle clé d'accès (passkey). Cette opération vous permettra de vous connecter sans mot de passe à l'avenir, à l'aide d'un appareil compatible (empreinte digitale, reconnaissance faciale ou code PIN).",
+      "ADD_PASS_KEY_INFO": "Cette opération vous permettra de vous connecter sans mot de passe à l'avenir, à l'aide d'un appareil compatible (empreinte digitale, reconnaissance faciale ou code PIN).",
       "UNKNOW_DEVICE": "Appareil inconnu",
       "PASS_KEY_NO_FOUND": "Aucune clé détectée.",
       "NO_SESSIONS_FOUND": "Aucune session détectée.",

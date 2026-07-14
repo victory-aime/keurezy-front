@@ -43,26 +43,9 @@ export const usePasskey = () => {
     }
   };
 
-  const passkeyList = async () => {
-    setIsLoading(true);
-    try {
-      const { data: passkeys, error } = await authClient.passkey.listUserPasskeys();
-      if (error) {
-        handleApiError({ status: 400, message: error.statusText! });
-        return null;
-      }
-      return passkeys;
-    } catch (e) {
-      handleApiError({ status: 500, message: 'Erreur inattendue' });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return {
     registerPassKey: addPasskey,
-    removePassKey: deletePasskey,
-    passkeyList,
+    removePasskey: deletePasskey,
     isLoading,
   };
 };

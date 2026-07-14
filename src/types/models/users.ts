@@ -50,7 +50,16 @@ export interface IAccountUsers {
   userId?: string;
 }
 
-export interface IPermission {
-  features: string;
-  modules: string;
+export interface IUserPasskeyAndSessionsResponse {
+  sessions: {
+    userId: string;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    expiresAt: Date;
+    token: string;
+    ipAddress: string | null;
+    userAgent: string | null;
+  }[];
+  passkeys: IUserPasskeyList[];
 }

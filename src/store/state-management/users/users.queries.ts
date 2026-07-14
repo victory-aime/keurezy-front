@@ -13,6 +13,22 @@ const getUserInfo = (args: QUERIES.QueryPayload<MODELS.IUser, undefined, { userI
   });
 };
 
+const getPasskeySessions = (
+  args: QUERIES.QueryPayload<MODELS.IUserPasskeyAndSessionsResponse, undefined, { userId: string }>,
+) => {
+  const { params, queryOptions } = args;
+
+  return QUERIES.useCustomQuery<
+    undefined,
+    { userId: string },
+    MODELS.IUserPasskeyAndSessionsResponse
+  >({
+    queryKey: [Constants.USERS_KEYS.PASSKEY_SESSIONS],
+    queryFn: () => usersServiceInstance().passkey_session_list(params?.userId!),
+    options: queryOptions,
+  });
+};
+
 const updateUserMutation = (args: QUERIES.MutationPayload<MODELS.IUser>) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.USERS_KEYS.UPDATE_USER_INFO],
@@ -21,4 +37,4 @@ const updateUserMutation = (args: QUERIES.MutationPayload<MODELS.IUser>) => {
   });
 };
 
-export { getUserInfo, updateUserMutation };
+export { getUserInfo, updateUserMutation, getPasskeySessions };

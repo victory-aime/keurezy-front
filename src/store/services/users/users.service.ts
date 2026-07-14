@@ -13,16 +13,14 @@ export class UserService extends BaseApi {
     return this.apiService.invoke(this.applicationContext.getApiConfig().USER.UPDATE_USER, data);
   }
 
-  register_user(data: MODELS.ICreateUser) {
-    return this.apiService.invoke(this.applicationContext.getApiConfig().USER.REGISTER, data);
-  }
-
-  resend_email_verification(data: { email: string }) {
+  passkey_session_list(userId: string) {
     return this.apiService.invoke(
-      this.applicationContext.getApiConfig().AUTH.RESEND_EMAIL_VERIFICATION,
-      data,
+      this.applicationContext.getApiConfig().USER.PASSKEY_SESSION,
+      {},
+      { params: { userId } },
     );
   }
+
   check_email(email: string) {
     return this.apiService.invoke(this.applicationContext.getApiConfig().USER.CHECK_EMAIL, {
       email,

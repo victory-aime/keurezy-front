@@ -27,6 +27,7 @@ export const PassKeyModal: FC<ModalOpenProps> = ({
         <BaseModal
           title={'PROFILE.SECURITY.ADD_PASS_KEY'}
           isOpen={isOpen}
+          size={'md'}
           isLoading={isLoading}
           onClick={() => handleSubmit()}
           onChange={() => {
@@ -37,7 +38,9 @@ export const PassKeyModal: FC<ModalOpenProps> = ({
           ignoreFooter={false}
           icon={<Icons.Key />}
         >
-          <BaseText mb={3}>{t('PROFILE.SECURITY.ADD_PASS_KEY_INFO')}</BaseText>
+          <BaseText textAlign={'center'} mb={5}>
+            {t('PROFILE.SECURITY.ADD_PASS_KEY_INFO')}
+          </BaseText>
           <FormTextInput
             name="passkeyName"
             label="PROFILE.SECURITY.PASS_KEY_NAME"
