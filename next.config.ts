@@ -54,7 +54,8 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: true,
   typescript: {
-    ignoreBuildErrors: true,
+    // Les erreurs de typage doivent bloquer le build de production
+    ignoreBuildErrors: false,
   },
   env: {
     API_BACKEND_URL: process.env.API_BACKEND_URL,

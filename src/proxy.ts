@@ -5,10 +5,7 @@ import { DASHBOARD_ROUTES } from './app/dashboard/routes';
 
 const PROTECTED_ROUTES: Record<string, string[]> = {
   ...Object.fromEntries(
-    Object.values(DASHBOARD_ROUTES).map((route) => [
-      route,
-      [UserRole.OWNER, UserRole.AGENCY_ADMIN, UserRole.AGENT],
-    ]),
+    Object.values(DASHBOARD_ROUTES).map((route) => [route, [UserRole.OWNER, UserRole.AGENT]]),
   ),
 };
 
@@ -112,16 +109,12 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
 
   // Pas de token → pas la peine d'appeler le backend
   if (!token) {
-    console.log('[proxy] Aucun session token trouvé dans les cookies');
     return null;
   }
 
   const cookieHeader = buildCookieHeader(request);
   const backendUrl = resolveBackendUrl();
   const endpoint = `${backendUrl}/api/auth/get-session`;
-
-  console.log('[proxy] token:', token.substring(0, 20) + '...');
-  console.log('[proxy] endpoint:', endpoint);
 
   try {
     const res = await fetch(endpoint, {
@@ -133,15 +126,12 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
       cache: 'no-store',
     });
 
-    console.log('[proxy] status:', res.status);
-
     if (!res.ok) {
       console.error('[proxy] Réponse non-ok:', res.status, res.statusText);
       return null;
     }
 
     const json = await res.json();
-    console.log('[proxy] session user:', json?.user?.email ?? 'null');
 
     if (!json || !json.user) return null;
 
@@ -157,8 +147,6 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
 // ─────────────────────────────────────────
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
-  console.log('[env] BACKEND_URL:', process.env.API_BACKEND_URL);
-  console.log('[env] NODE_ENV:', process.env.NODE_ENV);
 
   // 🔐 Reset password sans token → signin
   if (pathname === RESET_PASSWORD_ROUTE && !searchParams.get('token')) {
@@ -184,14 +172,12 @@ export async function proxy(request: NextRequest) {
     const session = await getSession(request);
 
     if (!session?.user) {
-      console.log('[proxy] Session invalide → redirection not-authenticated');
       return redirectTo(request, APP_ROUTES.PROTECTED);
     }
 
     const userRole = session.user.role as UserRole;
 
     if (!PROTECTED_ROUTES[matchedRoute].includes(userRole)) {
-      console.log('[proxy] Rôle non autorisé:', userRole);
       return redirectTo(request, APP_ROUTES.PROTECTED);
     }
   }

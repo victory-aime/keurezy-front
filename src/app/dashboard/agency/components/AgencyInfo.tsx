@@ -82,13 +82,13 @@ export const AgencyInfo = () => {
 
   const handleUpdateAgency = async (values: FormikValues) => {
     const formData = new FormData();
-    formData.append('name', String(values?.name));
-    formData.append('description', String(values?.description));
-    formData.append('address', String(values?.address));
-    formData.append('phone', String(values?.phone));
-    formData.append('acceptTerms', values?.acceptTerms);
+    // N'envoie que les champs renseignés (évite d'enregistrer la chaîne "undefined")
+    (['name', 'description', 'address', 'phone'] as const).forEach((field) => {
+      if (values?.[field] !== undefined && values?.[field] !== null) {
+        formData.append(field, String(values[field]));
+      }
+    });
     formData.append('agencyId', String(agency?.id));
-    formData.append('userId', String(user?.ownerId));
     if (values?.agencyLogo) {
       formData.append('agencyLogo', values.agencyLogo);
     }

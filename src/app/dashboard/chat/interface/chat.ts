@@ -3,7 +3,8 @@ import { MODELS } from '_types/';
 interface ChatHeaderProps {
   conversationId: string;
   onBack?: () => void;
-  conversations: MODELS.Conversation[];
+  // Liste en cache, absente tant que la requête n'a pas abouti
+  conversations?: MODELS.Conversation[];
 }
 interface ChatInputProps {
   onSend: (content: string) => void;
