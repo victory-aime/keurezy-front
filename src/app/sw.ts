@@ -1,4 +1,4 @@
-import { Serwist, NetworkFirst, CacheFirst, ExpirationPlugin } from 'serwist';
+import { Serwist, CacheFirst, ExpirationPlugin } from 'serwist';
 
 declare const self: ServiceWorkerGlobalScope & {
   __SW_MANIFEST: any;
@@ -10,19 +10,9 @@ const serwist = new Serwist({
   clientsClaim: true,
   navigationPreload: true,
 
+  // Les réponses /api/ (données authentifiées) ne sont jamais mises en cache :
+  // elles pourraient être servies à un autre utilisateur du même navigateur.
   runtimeCaching: [
-    {
-      matcher: ({ url }) => url.pathname.startsWith('/api/') || url.pathname.startsWith('/api/v1/'),
-      handler: new NetworkFirst({
-        cacheName: 'api-cache',
-        plugins: [
-          new ExpirationPlugin({
-            maxEntries: 200,
-            maxAgeSeconds: 60 * 5, // 5 minutes
-          }),
-        ],
-      }),
-    },
     {
       matcher: ({ request }) => request.destination === 'image',
       handler: new CacheFirst({

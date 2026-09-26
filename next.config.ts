@@ -9,10 +9,11 @@ if (!apiUrl) {
 }
 
 const withSerwist = withSerwistInit({
-  swSrc: path.join(process.cwd(), 'app/sw.ts'),
+  swSrc: path.join(process.cwd(), 'src/app/sw.ts'),
   swDest: path.join(process.cwd(), 'public/sw.js'),
   cacheOnNavigation: true,
-  disable: process.env.NODE_ENV !== 'production',
+  // Désactivé : incompatible avec le build Turbopack (voir GlobalApplicationProvider)
+  disable: true,
 });
 
 const nextConfig: NextConfig = {
