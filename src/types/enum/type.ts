@@ -85,3 +85,11 @@ export enum PropertyFeature {
   TV = 'TV',
   BBQGRILL = 'BBQGRILL',
 }
+
+// Aligné sur l'enum Prisma RentalType du backend
+export enum RentalType {
+  DAILY = 'DAILY',
+  NIGHTLY = 'NIGHTLY',
+  MONTHLY = 'MONTHLY',
+  YEARLY = 'YEARLY',
+}

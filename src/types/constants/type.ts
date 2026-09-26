@@ -1,5 +1,5 @@
 import { Icons } from '_components/custom';
-import { LandPaymentType } from '../enum';
+import { LandPaymentType, RentalType } from '../enum';
 
 export const landPaymentTypes = [
   { label: 'Cash', value: LandPaymentType.CASH },
@@ -14,6 +14,56 @@ export const propertyTypes = [
   // { label: "Chambre", value: "CHAMBRE" },
   // { label: "Bureau", value: "BUREAU" },
 ];
+
+/**
+ * Modalités de location proposées pour un bien.
+ * `unit` / `unitPlural` : unité du prix et des durées ; `description` : explication affichée à l'agent.
+ */
+export const rentalTypes = [
+  {
+    value: RentalType.DAILY,
+    label: 'Journalière',
+    unit: 'jour',
+    unitPlural: 'jours',
+    minAvailability: '2 jours (le second peut être le jour de départ)',
+    description:
+      'Location à la journée, sans nuitée (bureau, salle, espace événementiel). Le prix est fixé par jour et les durées se comptent en jours.',
+  },
+  {
+    value: RentalType.NIGHTLY,
+    label: 'Nocturne',
+    unit: 'nuit',
+    unitPlural: 'nuits',
+    minAvailability: '2 jours, soit au moins une nuit',
+    description:
+      'Séjour court avec nuitées (location saisonnière ou meublé touristique). Le prix est fixé par nuit et les durées se comptent en nuits.',
+  },
+  {
+    value: RentalType.MONTHLY,
+    label: 'Mensuelle',
+    unit: 'mois',
+    unitPlural: 'mois',
+    minAvailability: '1 mois',
+    description:
+      'Bail au mois pour une occupation de moyenne ou longue durée. Le loyer est mensuel et les durées se comptent en mois.',
+  },
+  {
+    value: RentalType.YEARLY,
+    label: 'Annuelle',
+    unit: 'an',
+    unitPlural: 'ans',
+    minAvailability: '1 an',
+    description:
+      'Bail à l’année pour une location longue durée. Le loyer est annuel et les durées se comptent en années.',
+  },
+];
+
+export const rentalFieldHelp = {
+  minDuration: 'Durée minimale d’une réservation pour cette modalité.',
+  maxDuration: 'Durée maximale d’une réservation. Laissez vide pour ne pas la limiter.',
+  availabilities:
+    'Sans période, la modalité est réservable à tout moment. Ajoutez des périodes pour limiter les dates réservables ; les réservations confirmées sont automatiquement déduites.',
+};
 export const PROPERTY_FEATURES_BY_CATEGORY = [
   {
     category: 'Pièces & Espaces',

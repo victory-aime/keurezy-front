@@ -17,6 +17,42 @@ interface ICreateProperty {
   agencyId?: string;
   batimentId?: string;
   hasBatiment?: boolean;
+  rentalConfigs?: IRentalConfig[];
+}
+
+/** Fenêtre de disponibilité, bornes incluses, au format AAAA-MM-JJ. */
+interface IRentalAvailability {
+  startDate: string;
+  endDate: string;
+}
+
+/** Modalité de location d'un bien (contrat du backend : RentalConfigDto). */
+interface IRentalConfig {
+  rentalType: ENUM.RentalType;
+  price: number;
+  deposit?: number;
+  minDuration?: number | null;
+  maxDuration?: number | null;
+  isActive?: boolean;
+  availabilities?: IRentalAvailability[];
+}
+
+interface IRentalConfigResponse {
+  id: string;
+  rentalType: ENUM.RentalType;
+  price: string | number;
+  deposit: string | number;
+  minDuration: number | null;
+  maxDuration: number | null;
+  isActive: boolean;
+}
+
+interface IAvailabilityResponse {
+  id: string;
+  rentalType: ENUM.RentalType | null;
+  startDate: string;
+  endDate: string;
+  isAvailable: boolean;
 }
 
 interface IPropertyResponse {
@@ -36,6 +72,8 @@ interface IPropertyResponse {
   status: COMMON.Status;
   features: COMMON.Status;
   documents: [];
+  rentalConfigs?: IRentalConfigResponse[];
+  availabilities?: IAvailabilityResponse[];
   agencyId: string;
   batimentId: string;
   batiment: {
@@ -57,4 +95,13 @@ interface IOccupationRateStats {
   occupationRate: number;
 }
 
-export type { IPropertyResponse, ICreateProperty, IMonthlyRevenueStats, IOccupationRateStats };
+export type {
+  IPropertyResponse,
+  ICreateProperty,
+  IMonthlyRevenueStats,
+  IOccupationRateStats,
+  IRentalAvailability,
+  IRentalConfig,
+  IRentalConfigResponse,
+  IAvailabilityResponse,
+};
