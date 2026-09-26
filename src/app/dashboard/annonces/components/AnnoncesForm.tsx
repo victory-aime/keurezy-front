@@ -21,14 +21,14 @@ export const AnnonceForm = ({ annonceId }: { annonceId: string }) => {
   const userId = user?.ownerId ?? user?.staffId;
 
   const { data: allProperties } = PropertyModule.getAllPropertiesByAgency({
-    params: { agencyId: agencyId!, userId: userId! },
+    params: { agencyId: agencyId! },
     queryOptions: {
       enabled: !!agencyId && !!userId && hasPermission(AppPermissions.PROPERTIES.VIEW),
     },
   });
 
   const { data: allAnnonces } = AnnonceModule.getAllAnnoncesByAgency({
-    params: { agencyId: agencyId!, userId: userId! },
+    params: { agencyId: agencyId! },
     queryOptions: { enabled: !!agencyId && !!userId },
   });
 
@@ -63,7 +63,6 @@ export const AnnonceForm = ({ annonceId }: { annonceId: string }) => {
       status: data.status?.[0],
       propertyId: data.propertyId?.[0],
       agencyId,
-      userId,
     };
 
     formData.append('data', JSON.stringify(payload));

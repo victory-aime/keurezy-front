@@ -15,7 +15,6 @@ interface ICreateProperty {
   features?: ENUM.PropertyFeature;
   documents?: string[];
   agencyId?: string;
-  userId?: string;
   batimentId?: string;
   hasBatiment?: boolean;
 }

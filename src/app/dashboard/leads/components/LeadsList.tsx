@@ -37,7 +37,6 @@ export const LeadsList = () => {
   } = LeadsModule.agencyLeadsListQueries({
     params: {
       agencyId: agencyId!,
-      userId: userId!,
       initialPage: currentPage,
       limitPerPage: CONSTANTS.PAGINATION.FIVE_ITEMS_PER_PAGE,
     },
@@ -47,7 +46,6 @@ export const LeadsList = () => {
   const { data: allTeams, isLoading: isTeamLoad } = TeamModule.getAllTeamByAgency({
     params: {
       agencyId: agencyId!,
-      userId: userId!,
     },
     queryOptions: { enabled: !!agencyId && !!userId },
   });
@@ -138,10 +136,8 @@ export const LeadsList = () => {
     if (!agencyId || !userId) return;
     await assignAgentLeads({
       payload: {
-        agencyId,
         leadId: selectedValues?.id,
         staffId: values?.staffId?.[0],
-        userId,
       },
     });
   };

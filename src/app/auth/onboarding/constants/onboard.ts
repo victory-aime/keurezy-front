@@ -25,7 +25,6 @@ const onboardInitialValues: {
     documents: [],
     name: '',
     phone: '',
-    userId: '',
   },
   plan: {
     planId: '',

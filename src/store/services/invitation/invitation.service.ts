@@ -2,11 +2,11 @@ import { MODELS } from '_types/*';
 import { BaseApi } from 'rise-core-frontend';
 
 export class InvitationService extends BaseApi {
-  getAllInvitationsByAgency(agencyId: string, userId: string) {
+  getAllInvitationsByAgency(agencyId: string) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().INVITATION.ALL_INVITATIONS_AGENCY,
       {},
-      { params: { agencyId, userId } },
+      { params: { agencyId } },
     );
   }
 
@@ -25,11 +25,11 @@ export class InvitationService extends BaseApi {
     );
   }
 
-  cancelInvitation(inviteId: string, agencyId: string, userId: string) {
+  cancelInvitation(inviteId: string) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().INVITATION.CANCEL_INVITATION,
       {},
-      { params: { inviteId, agencyId, userId } },
+      { params: { inviteId } },
     );
   }
 }

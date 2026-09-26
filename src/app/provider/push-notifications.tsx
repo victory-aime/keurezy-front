@@ -42,7 +42,6 @@ export function PushNotificationsProvider({ children }: { children: React.ReactN
 
       await registerPushToken({
         payload: { token: fcmToken, deviceKey },
-        params: { userId: user.id },
       });
     },
     [user?.id, registerPushToken],

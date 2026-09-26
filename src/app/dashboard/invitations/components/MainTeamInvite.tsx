@@ -80,8 +80,6 @@ export const MainTeamInvite = () => {
     try {
       await createInvitation({
         payload: {
-          adminId: user?.id!,
-          userId: user?.ownerId! ?? user?.staffId!,
           agencyId: user?.agencyId!,
           payload: {
             name: formikRef.current.values.account.name,

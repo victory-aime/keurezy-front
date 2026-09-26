@@ -9,9 +9,8 @@ const getAllInvitationByAgency = (
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<undefined, MODELS.IAgencyCommonParams, any[]>({
-    queryKey: [Constants.INVITE_KEYS.INVITATION_AGENCY_LIST],
-    queryFn: () =>
-      invitationServiceInstance().getAllInvitationsByAgency(params?.agencyId!, params?.userId!),
+    queryKey: [Constants.INVITE_KEYS.INVITATION_AGENCY_LIST, params],
+    queryFn: () => invitationServiceInstance().getAllInvitationsByAgency(params?.agencyId!),
     options: queryOptions,
   });
 };
@@ -33,16 +32,11 @@ const acceptInvitationMutation = (args: QUERIES.MutationPayload<any, any, { toke
 };
 
 const cancelInvitationMutation = (
-  args: QUERIES.MutationPayload<any, any, { inviteId: string; agencyId: string; userId: string }>,
+  args: QUERIES.MutationPayload<any, any, { inviteId: string }>,
 ) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.INVITE_KEYS.CANCEL_INVITATION],
-    mutationFn: ({ params }) =>
-      invitationServiceInstance().cancelInvitation(
-        params?.inviteId!,
-        params?.agencyId!,
-        params?.userId!,
-      ),
+    mutationFn: ({ params }) => invitationServiceInstance().cancelInvitation(params?.inviteId!),
     options: args.mutationOptions,
   });
 };

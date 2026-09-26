@@ -20,7 +20,6 @@ export function ConversationList({ activeConversationId, onSelect }: Conversatio
   const [isModalOpen, setModalOpen] = useState(false);
 
   const { data: conversations, isLoading } = ChatModule.getConversationQueries({
-    params: { userId: user?.id! },
     queryOptions: { enabled: !!user?.id },
   });
 

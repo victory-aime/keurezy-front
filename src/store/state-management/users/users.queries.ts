@@ -3,28 +3,23 @@ import { usersServiceInstance } from './users.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
-const getUserInfo = (args: QUERIES.QueryPayload<MODELS.IUser, undefined, { userId: string }>) => {
-  const { params, queryOptions } = args;
+// Profil de l'utilisateur connecté (identité déduite de la session côté serveur)
+const getUserInfo = (args: QUERIES.QueryPayload<MODELS.IUser>) => {
+  const { queryOptions } = args;
 
-  return QUERIES.useCustomQuery<undefined, { userId: string }, MODELS.IUser>({
+  return QUERIES.useCustomQuery<undefined, undefined, MODELS.IUser>({
     queryKey: [Constants.USERS_KEYS.GET_USER_INFO],
-    queryFn: () => usersServiceInstance().user_info(params?.userId!),
+    queryFn: () => usersServiceInstance().user_info(),
     options: queryOptions,
   });
 };
 
-const getPasskeySessions = (
-  args: QUERIES.QueryPayload<MODELS.IUserPasskeyAndSessionsResponse, undefined, { userId: string }>,
-) => {
-  const { params, queryOptions } = args;
+const getPasskeySessions = (args: QUERIES.QueryPayload<MODELS.IUserPasskeyAndSessionsResponse>) => {
+  const { queryOptions } = args;
 
-  return QUERIES.useCustomQuery<
-    undefined,
-    { userId: string },
-    MODELS.IUserPasskeyAndSessionsResponse
-  >({
+  return QUERIES.useCustomQuery<undefined, undefined, MODELS.IUserPasskeyAndSessionsResponse>({
     queryKey: [Constants.USERS_KEYS.PASSKEY_SESSIONS],
-    queryFn: () => usersServiceInstance().passkey_session_list(params?.userId!),
+    queryFn: () => usersServiceInstance().passkey_session_list(),
     options: queryOptions,
   });
 };

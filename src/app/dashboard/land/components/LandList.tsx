@@ -35,7 +35,6 @@ export const LandList = () => {
       params: {
         ...filterValues,
         agencyId: agencyId!,
-        userId: userId!,
         initialPage: currentPage,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },

@@ -9,8 +9,8 @@ const getAgencyInfo = (
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<MODELS.IAgencyCommonParams, undefined, MODELS.IAgency>({
-    queryKey: [Constants.AGENCY_KEYS.AGENCY_INFO],
-    queryFn: () => agencyServiceInstance().agency_info(params?.agencyId!, params?.userId!),
+    queryKey: [Constants.AGENCY_KEYS.AGENCY_INFO, params],
+    queryFn: () => agencyServiceInstance().agency_info(params?.agencyId!),
     options: queryOptions,
   });
 };
@@ -21,7 +21,7 @@ const getAgencySubscriptionInfo = (
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<{ agencyId: string }, undefined, MODELS.IAgencySubscriptionInfo>({
-    queryKey: [Constants.AGENCY_KEYS.AGENCY_SUBSCRIPTION_INFO],
+    queryKey: [Constants.AGENCY_KEYS.AGENCY_SUBSCRIPTION_INFO, params],
     queryFn: () => agencyServiceInstance().agency_subscription_info(params?.agencyId!),
     options: queryOptions,
   });
@@ -65,16 +65,12 @@ const checkNameMutation = (args: QUERIES.MutationPayload<{ name: string }>) => {
 };
 
 const getAgencyStats = (
-  args: QUERIES.QueryPayload<MODELS.IAgencyStats, undefined, { agencyId: string; userId: string }>,
+  args: QUERIES.QueryPayload<MODELS.IAgencyStats, undefined, MODELS.IAgencyCommonParams>,
 ) => {
   const { params, queryOptions } = args;
-  return QUERIES.useCustomQuery<
-    undefined,
-    { agencyId: string; userId: string },
-    MODELS.IAgencyStats
-  >({
+  return QUERIES.useCustomQuery<undefined, MODELS.IAgencyCommonParams, MODELS.IAgencyStats>({
     queryKey: [Constants.AGENCY_KEYS.GET_STATS, params],
-    queryFn: () => agencyServiceInstance().stats_agency(params?.agencyId!, params?.userId!),
+    queryFn: () => agencyServiceInstance().stats_agency(params?.agencyId!),
     options: queryOptions,
   });
 };

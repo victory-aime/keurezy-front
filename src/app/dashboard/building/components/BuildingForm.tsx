@@ -25,7 +25,6 @@ export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
     () => ({
       params: {
         agencyId: agencyId!,
-        userId: userId!,
         initialPage: CONSTANTS.PAGINATION.INIT,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
@@ -73,7 +72,6 @@ export const BuildingForm = ({ buildingId }: { buildingId: string }) => {
       status: data.status?.[0],
       floors: data.floors,
       agencyId,
-      userId,
       landId: data.landId?.[0] ?? null,
     };
 

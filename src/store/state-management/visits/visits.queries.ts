@@ -9,58 +9,37 @@ const getAllVisitByAgencyQueries = (
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<undefined, MODELS.IAgencyCommonParams, MODELS.IVisitResponse[]>({
-    queryKey: [Constants.VISITS_KEYS.ALL_AGENCY_VISITS],
+    queryKey: [Constants.VISITS_KEYS.ALL_AGENCY_VISITS, params],
     queryFn: () => visitsServiceInstance().getAllVisits(params as MODELS.IAgencyCommonParams),
     options: queryOptions,
   });
 };
 
 const createNewVisitsMutation = (
-  args: QUERIES.MutationPayload<
-    MODELS.IVisitPayload,
-    any,
-    { data: { agencyId: string; userId: string } }
-  >,
+  args: QUERIES.MutationPayload<MODELS.IVisitPayload, any, { data: MODELS.IAgencyCommonParams }>,
 ) => {
-  return QUERIES.useCustomMutation<
-    MODELS.IVisitPayload,
-    any,
-    { data: { agencyId: string; userId: string } }
-  >({
-    mutationKey: [Constants.VISITS_KEYS.CREATE_VISITS],
-    mutationFn: ({ payload, params }) =>
-      visitsServiceInstance().create_visit(payload!, params?.data!),
-    options: args.mutationOptions,
-  });
+  return QUERIES.useCustomMutation<MODELS.IVisitPayload, any, { data: MODELS.IAgencyCommonParams }>(
+    {
+      mutationKey: [Constants.VISITS_KEYS.CREATE_VISITS],
+      mutationFn: ({ payload, params }) =>
+        visitsServiceInstance().create_visit(payload!, params?.data!),
+      options: args.mutationOptions,
+    },
+  );
 };
 
-const updateVisitMutation = (
-  args: QUERIES.MutationPayload<
-    MODELS.IVisitPayload,
-    any,
-    { data: { agencyId: string; userId: string } }
-  >,
-) => {
-  return QUERIES.useCustomMutation<
-    MODELS.IVisitPayload,
-    any,
-    { data: { agencyId: string; userId: string } }
-  >({
+const updateVisitMutation = (args: QUERIES.MutationPayload<MODELS.IVisitPayload>) => {
+  return QUERIES.useCustomMutation<MODELS.IVisitPayload, unknown>({
     mutationKey: [Constants.VISITS_KEYS.UPDATE_VISIT],
-    mutationFn: ({ payload, params }) =>
-      visitsServiceInstance().update_visit(payload!, params?.data!),
+    mutationFn: ({ payload }) => visitsServiceInstance().update_visit(payload!),
     options: args.mutationOptions,
   });
 };
 
 const cancelVisitMutation = (
-  args: QUERIES.MutationPayload<any, any, { data: { agencyId: string; userId: string } }>,
+  args: QUERIES.MutationPayload<any, any, { data: { visitId: string } }>,
 ) => {
-  return QUERIES.useCustomMutation<
-    any,
-    any,
-    { data: { agencyId: string; userId: string; visitId: string } }
-  >({
+  return QUERIES.useCustomMutation<any, any, { data: { visitId: string } }>({
     mutationKey: [Constants.VISITS_KEYS.CANCEL_VISIT],
     mutationFn: ({ params }) => visitsServiceInstance().cancel_visit(params?.data!),
     options: args.mutationOptions,

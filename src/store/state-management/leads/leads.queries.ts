@@ -8,7 +8,7 @@ const agencyLeadsListQueries = (
 ) => {
   const { params } = args;
   return QUERIES.useCustomQuery<MODELS.IAgencyFilters, undefined, MODELS.ILeadsAgency[]>({
-    queryKey: [Constants.LEAD_KEYS.AGENCY_LEADS_LIST],
+    queryKey: [Constants.LEAD_KEYS.AGENCY_LEADS_LIST, params],
     queryFn: () => leadsServiceInstance().agencyLeadsList(params as MODELS.IAgencyFilters),
     options: args.queryOptions,
   });

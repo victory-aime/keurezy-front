@@ -43,8 +43,6 @@ export interface ILeadsAgency {
 
 export interface IAssignAgentLeads {
   leadId: string;
-  agencyId: string;
-  userId: string;
   staffId: string;
 }
 

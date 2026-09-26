@@ -1,7 +1,6 @@
 interface ICreateConversation {
   recipientId?: string;
   leadId?: string;
-  userId?: string;
 }
 type MessageStatus = 'sending' | 'failed' | 'SENT' | 'DELIVERED' | 'READ';
 
@@ -26,7 +25,6 @@ interface IGetMessageResponse {
 }
 
 interface IGetMessagesParams {
-  userId: string;
   conversationId: string;
   cursor?: string;
   limit?: number;

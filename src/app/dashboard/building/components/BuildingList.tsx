@@ -37,7 +37,6 @@ export const BuildingList = () => {
       params: {
         ...filterValues,
         agencyId,
-        userId,
         initialPage: currentPage,
         limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
       },
@@ -56,7 +55,6 @@ export const BuildingList = () => {
   } = BuildingModule.getAllBuildingByAgencyQueries({
     params: {
       agencyId: agencyId!,
-      userId: userId!,
       initialPage: currentPage,
       limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
     },
@@ -223,8 +221,6 @@ export const BuildingList = () => {
         data={selectedValues}
         callback={() =>
           handleDeleteBuilding({
-            agencyId: agencyId!,
-            userId: userId!,
             id: selectedValues?.id!,
           })
         }

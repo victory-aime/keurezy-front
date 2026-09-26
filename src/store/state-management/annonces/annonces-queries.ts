@@ -9,9 +9,8 @@ const getAllAnnoncesByAgency = (
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<undefined, MODELS.IAgencyCommonParams, MODELS.IAnnonceResponse[]>({
-    queryKey: [Constants.ANNONCES_KEY.ANNONCES_LIST_BY_AGENCY],
-    queryFn: () =>
-      annoncesServiceInstance().get_annonces_by_agency(params?.agencyId!, params?.userId!),
+    queryKey: [Constants.ANNONCES_KEY.ANNONCES_LIST_BY_AGENCY, params],
+    queryFn: () => annoncesServiceInstance().get_annonces_by_agency(params?.agencyId!),
     options: queryOptions,
   });
 };
@@ -32,13 +31,10 @@ const updateAnnonceMutation = (args: QUERIES.MutationPayload<MODELS.IUpdateAnnon
   });
 };
 
-const deleteAnnonceMutation = (
-  args: QUERIES.MutationPayload<any, any, { id: string; agencyId: string; userId: string }>,
-) => {
+const deleteAnnonceMutation = (args: QUERIES.MutationPayload<any, any, { id: string }>) => {
   return QUERIES.useCustomMutation({
-    mutationKey: [Constants.ANNONCES_KEY.UPDATE_ANNONCE],
-    mutationFn: ({ params }) =>
-      annoncesServiceInstance().delete_annonce(params?.userId!, params?.agencyId!, params?.id!),
+    mutationKey: [Constants.ANNONCES_KEY.DELETE_ANNONCE],
+    mutationFn: ({ params }) => annoncesServiceInstance().delete_annonce(params?.id!),
     options: args.mutationOptions,
   });
 };

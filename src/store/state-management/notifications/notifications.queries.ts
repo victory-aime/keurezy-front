@@ -3,77 +3,50 @@ import { notificationsServiceInstance } from './notifications.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
+// Notifications de l'utilisateur connecté (identité déduite de la session côté serveur)
 const getAllNotificationsQueries = (
-  args: QUERIES.QueryPayload<
-    MODELS.INotificationListResponse[],
-    undefined,
-    {
-      userId: string;
-    }
-  >,
+  args: QUERIES.QueryPayload<MODELS.INotificationListResponse[]>,
 ) => {
-  return QUERIES.useCustomQuery<undefined, { userId: string }, MODELS.INotificationListResponse[]>({
+  return QUERIES.useCustomQuery<undefined, undefined, MODELS.INotificationListResponse[]>({
     queryKey: [Constants.NOTIFICATIONS_KEYS.GET_ALL_NOTIFICATIONS],
-    queryFn: () => notificationsServiceInstance().getAllNotifications(args?.params?.userId!),
+    queryFn: () => notificationsServiceInstance().getAllNotifications(),
     options: args.queryOptions,
   });
 };
 
 const getAllUnreadNotificationsQueries = (
-  args: QUERIES.QueryPayload<
-    MODELS.INotificationListResponse[],
-    undefined,
-    {
-      userId: string;
-    }
-  >,
+  args: QUERIES.QueryPayload<MODELS.INotificationListResponse[]>,
 ) => {
-  return QUERIES.useCustomQuery<undefined, { userId: string }, MODELS.INotificationListResponse[]>({
+  return QUERIES.useCustomQuery<undefined, undefined, MODELS.INotificationListResponse[]>({
     queryKey: [Constants.NOTIFICATIONS_KEYS.GET_ALL_UNREAD_NOTIFICATION],
-    queryFn: () => notificationsServiceInstance().getAllUnreadNotifications(args?.params?.userId!),
+    queryFn: () => notificationsServiceInstance().getAllUnreadNotifications(),
     options: args.queryOptions,
   });
 };
 
-const readAllNotificationsMutation = (
-  args: QUERIES.MutationPayload<any, any, { userId: string }>,
-) => {
+const readAllNotificationsMutation = (args: QUERIES.MutationPayload) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.NOTIFICATIONS_KEYS.READ_ALL_NOTIFICATION],
-    mutationFn: ({ params }) =>
-      notificationsServiceInstance().readAllNotifications(params?.userId!),
+    mutationFn: () => notificationsServiceInstance().readAllNotifications(),
     options: args.mutationOptions,
   });
 };
 
 const readNotificationMutation = (
-  args: QUERIES.MutationPayload<
-    any,
-    any,
-    {
-      data: { notificationId: string; userId: string };
-    }
-  >,
+  args: QUERIES.MutationPayload<any, any, { data: { notificationId: string } }>,
 ) => {
-  return QUERIES.useCustomMutation<any, any, { data: { notificationId: string; userId: string } }>({
+  return QUERIES.useCustomMutation<any, any, { data: { notificationId: string } }>({
     mutationKey: [Constants.NOTIFICATIONS_KEYS.READ_ONE_NOTIFICATION],
     mutationFn: ({ params }) => notificationsServiceInstance().readNotification(params?.data!),
     options: args.mutationOptions,
   });
 };
 const registerFcmTokenMutation = (
-  args: QUERIES.MutationPayload<
-    { token: string },
-    any,
-    {
-      userId: string;
-    }
-  >,
+  args: QUERIES.MutationPayload<{ token: string; deviceKey: string }>,
 ) => {
-  return QUERIES.useCustomMutation<{ token: string; deviceKey: string }, any, { userId: string }>({
+  return QUERIES.useCustomMutation<{ token: string; deviceKey: string }, unknown>({
     mutationKey: [Constants.NOTIFICATIONS_KEYS.REGISTER_TOKEN],
-    mutationFn: ({ params, payload }) =>
-      notificationsServiceInstance().register_fcm_token(params?.userId!, payload!),
+    mutationFn: ({ payload }) => notificationsServiceInstance().register_fcm_token(payload!),
     options: args.mutationOptions,
   });
 };

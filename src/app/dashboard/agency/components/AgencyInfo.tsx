@@ -52,7 +52,6 @@ export const AgencyInfo = () => {
   } = AgencyModule.getAgencyInfo({
     params: {
       agencyId: agencyId!,
-      userId: userId!,
     },
     queryOptions: {
       enabled: !!agencyId && !!userId,

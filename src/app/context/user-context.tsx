@@ -18,7 +18,6 @@ export const UserProvider = ({ children, userId }: { children: ReactNode; userId
     isLoading,
     refetch,
   } = UserModule.getUserInfo({
-    params: { userId: userId! },
     queryOptions: {
       enabled: !!userId,
     },

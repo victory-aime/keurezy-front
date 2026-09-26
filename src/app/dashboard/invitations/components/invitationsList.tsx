@@ -33,7 +33,6 @@ export const InvitationsList = () => {
   } = InvitationModule.getAllInvitationByAgency({
     params: {
       agencyId: agencyId!,
-      userId: userId!,
     },
     queryOptions: { enabled: !!agencyId && !!userId },
   });
@@ -126,7 +125,7 @@ export const InvitationsList = () => {
         isOpen={open}
         isLoading={cancelLoading}
         callback={async () => {
-          await cancelInvitation({ params: { inviteId: selectedInvitation!, agencyId, userId } });
+          await cancelInvitation({ params: { inviteId: selectedInvitation! } });
         }}
         ignoreFooter={false}
       >

@@ -33,7 +33,7 @@ export const AnnoncesList = () => {
     isLoading: isAnnonceLoad,
     refetch: reloadAnnonceList,
   } = AnnonceModule.getAllAnnoncesByAgency({
-    params: { agencyId: agencyId!, userId: userId! },
+    params: { agencyId: agencyId! },
     queryOptions: { enabled: !!agencyId && !!userId },
   });
 
@@ -150,7 +150,7 @@ export const AnnoncesList = () => {
         isLoading={isDeletePending}
         callback={async () =>
           await deleteAnnonce({
-            params: { id: selectedValues?.id!, userId: userId!, agencyId: agencyId! },
+            params: { id: selectedValues?.id! },
           })
         }
         ignoreFooter={false}

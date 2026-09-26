@@ -9,7 +9,7 @@ const getProviderUrlQueries = (
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<{ provider: string }, undefined, { url: string }>({
-    queryKey: [Constants.INTEGRATIONS_KEYS.GET_URL],
+    queryKey: [Constants.INTEGRATIONS_KEYS.GET_URL, params],
     queryFn: () => integrationsServiceInstance().connect(params?.provider!),
     options: queryOptions,
   });
@@ -21,7 +21,7 @@ const getProviderFilesQueries = (
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<{ provider: string }, undefined, MODELS.ListedFileResult[]>({
-    queryKey: [Constants.INTEGRATIONS_KEYS.GET_FILES],
+    queryKey: [Constants.INTEGRATIONS_KEYS.GET_FILES, params],
     queryFn: () => integrationsServiceInstance().list_files(params?.provider!),
     options: queryOptions,
   });
@@ -33,7 +33,7 @@ const getTrashedFilesQueries = (
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<{ provider: string }, undefined, MODELS.ListedFileResult[]>({
-    queryKey: [Constants.INTEGRATIONS_KEYS.GET_TRASHED_FILES],
+    queryKey: [Constants.INTEGRATIONS_KEYS.GET_TRASHED_FILES, params],
     queryFn: () => integrationsServiceInstance().trashed_list_files(params?.provider!),
     options: queryOptions,
   });
@@ -88,7 +88,7 @@ const getProviderStatusQueries = (
   const { params, queryOptions } = args;
 
   return QUERIES.useCustomQuery<undefined, { provider: string }, { connected: boolean }>({
-    queryKey: [Constants.INTEGRATIONS_KEYS.GET_PROVIDER_STATUS],
+    queryKey: [Constants.INTEGRATIONS_KEYS.GET_PROVIDER_STATUS, params],
     queryFn: () => integrationsServiceInstance().status(params?.provider!),
     options: queryOptions,
   });

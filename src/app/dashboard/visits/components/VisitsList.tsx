@@ -33,7 +33,6 @@ export const VisitsList = () => {
     () => ({
       params: {
         agencyId: agencyId!,
-        userId: userId!,
       },
       queryOptions: {
         enabled: !!agencyId && !!userId,
@@ -133,12 +132,11 @@ export const VisitsList = () => {
     if (selectedValues?.id) {
       updateVisit({
         payload: { ...request, visitId: selectedValues?.id },
-        params: { data: { agencyId, userId } },
       });
     } else {
       await createVisit({
         payload: request,
-        params: { data: { agencyId, userId } },
+        params: { data: { agencyId } },
       });
     }
   };
@@ -215,8 +213,6 @@ export const VisitsList = () => {
           await deleteVisit({
             params: {
               data: {
-                agencyId,
-                userId,
                 visitId: selectedValues?.id!,
               },
             },

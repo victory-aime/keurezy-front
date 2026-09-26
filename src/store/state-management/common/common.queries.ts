@@ -17,7 +17,7 @@ const getPaymentStatusQueries = (
 ) => {
   const { params } = args;
   return QUERIES.useCustomQuery<undefined, { orderId: string }, MODELS.COMMON.IPaymentStatus>({
-    queryKey: [Constants.COMMON_KEYS.GET_PAYMENT_STATUS],
+    queryKey: [Constants.COMMON_KEYS.GET_PAYMENT_STATUS, params],
     queryFn: () => commonServiceInstance().getPaymentPollingStatus(params?.orderId!),
     options: args.queryOptions,
   });

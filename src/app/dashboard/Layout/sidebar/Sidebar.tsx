@@ -47,7 +47,6 @@ export const Sidebar = ({
     () => ({
       params: {
         agencyId: agencyId!,
-        userId: userId!,
       },
       queryOptions: {
         enabled: !!agencyId && !!userId,
@@ -57,7 +56,7 @@ export const Sidebar = ({
   );
 
   const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
-    params: { agencyId: agencyId!, userId: userId! },
+    params: { agencyId: agencyId! },
     queryOptions: {
       enabled: !!agencyId && !!userId && hasPermission(AppPermissions.PROPERTIES.VIEW),
     },
@@ -74,9 +73,6 @@ export const Sidebar = ({
   const { data: leadsList } = LeadsModule.agencyLeadsListQueries(queryPayload);
 
   const { data: unreadNotificationsList } = NotificationsModule.getAllUnreadNotificationsQueries({
-    params: {
-      userId: user?.id!,
-    },
     queryOptions: { enabled: !!user?.id },
   });
 

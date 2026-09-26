@@ -30,14 +30,14 @@ export function NewConversationModal({
   const userId = user?.ownerId || user?.staffId;
 
   const { data: users, isLoading: isLoadingUsers } = TeamModule.getAllTeamByAgency({
-    params: { agencyId: agencyId!, userId: userId! },
+    params: { agencyId: agencyId! },
     queryOptions: {
       enabled: mode === 'team' && !!agencyId && !!userId,
     },
   });
 
   const { data: leads, isLoading: isLoadingLeads } = LeadsModule.agencyLeadsListQueries({
-    params: { agencyId: agencyId!, userId: userId! },
+    params: { agencyId: agencyId! },
     queryOptions: { enabled: mode === 'lead' && !!agencyId && !!userId },
   });
 
@@ -56,12 +56,9 @@ export function NewConversationModal({
     data: MODELS.ICreateConversation,
   ) => {
     if (mode === 'team') {
-      await createConversation({
-        payload: { recipientId: data.recipientId },
-        params: { userId: user?.id },
-      });
+      await createConversation({ payload: { recipientId: data.recipientId } });
     } else {
-      await createConversation({ payload: { leadId: data?.leadId }, params: { userId: user?.id } });
+      await createConversation({ payload: { leadId: data?.leadId } });
     }
   };
 

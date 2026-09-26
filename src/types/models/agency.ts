@@ -9,7 +9,6 @@ interface ICreateAgency {
   password?: string;
   email?: string;
   phone?: string;
-  userId?: string;
   acceptTerms?: boolean;
   documents?: File[];
   plan?: {
@@ -21,8 +20,8 @@ interface ICreateAgency {
 interface IUpdateAgency extends ICreateAgency {
   agencyId?: string;
 }
-interface ICloseAgency extends IUpdateAgency {
-  userId: string;
+interface ICloseAgency {
+  agencyId: string;
 }
 
 interface IAgency {
@@ -46,7 +45,6 @@ interface IAgencyFilters extends IPagination {
 
 interface IAgencyCommonParams {
   agencyId: string;
-  userId: string;
 }
 
 interface IAgencySubscriptionInfo {

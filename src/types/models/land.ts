@@ -15,13 +15,10 @@ export interface ILandDto {
   agencyId?: string;
 }
 
-export interface CreateLandDto extends ILandDto {
-  ownerId?: string;
-}
+export type CreateLandDto = ILandDto;
 
 export interface UpdateLandDto extends ILandDto {
   id?: string;
-  ownerId?: string;
 }
 
 export interface LandResponseDto extends ILandDto {

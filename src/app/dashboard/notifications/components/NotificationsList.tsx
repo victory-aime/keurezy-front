@@ -13,7 +13,6 @@ export const NotificationsList = () => {
     isLoading,
     refetch: refetchNotificationList,
   } = NotificationsModule.getAllNotificationsQueries({
-    params: { userId: user?.id! },
     queryOptions: { enabled: !!user?.id },
   });
 
@@ -27,7 +26,7 @@ export const NotificationsList = () => {
   });
 
   const onReadAll = async () => {
-    await readAll({ params: { userId: user?.id! } });
+    await readAll({});
   };
 
   const { allRequests, unreadRequests, readRequests } = useMemo(() => {

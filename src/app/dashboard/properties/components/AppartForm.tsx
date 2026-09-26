@@ -38,7 +38,6 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
     () => ({
       params: {
         agencyId: agencyId!,
-        userId: userId!,
         initialPage: CONSTANTS.PAGINATION.INIT,
         limitPerPage: CONSTANTS.PAGINATION.FULL_PAGE_SIZE,
       },
@@ -104,7 +103,6 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
     const request: MODELS.ICreateProperty = {
       ...rest,
       agencyId: agencyId!,
-      userId: userId!,
       batimentId: hasBatiment ? values.batimentId?.[0] : null,
       type: values.type?.[0],
       city: values.city?.[0],

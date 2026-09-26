@@ -6,19 +6,15 @@ import { MODELS } from '_types/index';
  * such as fetching all users and creating a new user through API endpoints.
  */
 export class UserService extends BaseApi {
-  user_info(userId: string) {
-    return this.apiService.invoke(this.applicationContext.getApiConfig().USER.INFO, { userId });
+  user_info() {
+    return this.apiService.invoke(this.applicationContext.getApiConfig().USER.INFO);
   }
   update_user_info(data: MODELS.IUser) {
     return this.apiService.invoke(this.applicationContext.getApiConfig().USER.UPDATE_USER, data);
   }
 
-  passkey_session_list(userId: string) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().USER.PASSKEY_SESSION,
-      {},
-      { params: { userId } },
-    );
+  passkey_session_list() {
+    return this.apiService.invoke(this.applicationContext.getApiConfig().USER.PASSKEY_SESSION);
   }
 
   check_email(email: string) {

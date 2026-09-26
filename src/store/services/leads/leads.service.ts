@@ -23,11 +23,7 @@ export class LeadsService extends BaseApi {
       { params },
     );
   }
-  userLeadsList(userId: string) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().LEADS.USER_LEADS_LIST,
-      {},
-      { params: { userId } },
-    );
+  userLeadsList() {
+    return this.apiService.invoke(this.applicationContext.getApiConfig().LEADS.USER_LEADS_LIST);
   }
 }

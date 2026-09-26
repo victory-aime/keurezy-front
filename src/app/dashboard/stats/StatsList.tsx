@@ -11,7 +11,7 @@ import { BaseContainer, BaseStats, Icons } from '_components/custom';
 export function StatsList() {
   const { user } = useUserContext();
   const { data, isLoading } = AgencyModule.getAgencyStats({
-    params: { agencyId: user?.agencyId!, userId: user?.ownerId! ?? user?.staffId },
+    params: { agencyId: user?.agencyId! },
     queryOptions: { enabled: !!user?.agencyId },
   });
 

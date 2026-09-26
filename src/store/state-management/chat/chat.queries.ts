@@ -3,13 +3,12 @@ import { chatServiceInstance } from './chat.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
-const getConversationQueries = (
-  args: QUERIES.QueryPayload<MODELS.Conversation[], undefined, { userId: string }>,
-) => {
-  const { params, queryOptions } = args;
-  return QUERIES.useCustomQuery<undefined, { userId: string }, MODELS.Conversation[]>({
+// Conversations de l'utilisateur connecté (identité déduite de la session côté serveur)
+const getConversationQueries = (args: QUERIES.QueryPayload<MODELS.Conversation[]>) => {
+  const { queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, undefined, MODELS.Conversation[]>({
     queryKey: [Constants.CHAT_KEYS.GET_ALL_CONVERSATIONS],
-    queryFn: () => chatServiceInstance().getConversation(params?.userId!),
+    queryFn: () => chatServiceInstance().getConversation(),
     options: queryOptions,
   });
 };
@@ -27,7 +26,7 @@ const getMessagesQueries = (
     initialPageParam: undefined,
     options: {
       ...queryOptions,
-      enabled: !!params?.userId && !!params.conversationId && (queryOptions?.enabled ?? true),
+      enabled: !!params?.conversationId && (queryOptions?.enabled ?? true),
     },
   });
 };
@@ -37,8 +36,7 @@ const createConversationMutation = (
 ) => {
   return QUERIES.useCustomMutation<MODELS.ICreateConversation, any, MODELS.ICreateConversation>({
     mutationKey: [Constants.CHAT_KEYS.CONVERSATION],
-    mutationFn: ({ payload, params }) =>
-      chatServiceInstance().createConversation(params?.userId!, payload!),
+    mutationFn: ({ payload }) => chatServiceInstance().createConversation(payload!),
     options: args.mutationOptions,
   });
 };

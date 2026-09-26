@@ -37,7 +37,7 @@ export const NotificationsDisplay = ({
   });
 
   const onReadNotification = async (notificationId: string, userId: string) => {
-    await readNotification({ params: { data: { notificationId, userId } } });
+    await readNotification({ params: { data: { notificationId } } });
   };
 
   return (

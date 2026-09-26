@@ -54,7 +54,6 @@ export const Settings = () => {
   const [validateDisabledAccount, setValidateDisabledAccount] = useState<boolean>(false);
 
   const { data: currentUser, isLoading: userDataLoading } = UserModule.getUserInfo({
-    params: { userId: session?.userId! },
     queryOptions: { enabled: refetchUserInfo },
   });
 
@@ -63,7 +62,6 @@ export const Settings = () => {
     isLoading: passkeySessionLoad,
     refetch: refetchPassKeySessionList,
   } = UserModule.getPasskeySessions({
-    params: { userId: user?.id! },
     queryOptions: { enabled: !!user?.id },
   });
 

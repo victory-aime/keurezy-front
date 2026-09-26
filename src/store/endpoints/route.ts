@@ -213,18 +213,6 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
-      SEND_MESSAGE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/send-message`,
-        method: 'POST',
-        pathBase: 'SECURED_API',
-        showResponse: false,
-      }),
-      READ_MESSAGE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/read`,
-        method: 'PATCH',
-        pathBase: 'SECURED_API',
-        showResponse: false,
-      }),
     },
     NOTIFICATION: {
       GET_ALL: api({

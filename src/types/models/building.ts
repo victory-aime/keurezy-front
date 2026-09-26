@@ -22,8 +22,6 @@ export interface UpdateBuildingDto extends CreateBuildingDto {
 
 export interface IDeleteBuilding {
   id: string;
-  agencyId: string;
-  userId: string;
 }
 
 export interface IBuilding {

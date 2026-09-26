@@ -28,7 +28,6 @@ export const TeamList = () => {
   } = TeamModule.getAllTeamByAgency({
     params: {
       agencyId: agencyId!,
-      userId: userId!,
     },
     queryOptions: {
       enabled: !!agencyId && !!userId,
@@ -44,8 +43,8 @@ export const TeamList = () => {
 
   const handleStatus = async (status: boolean, id: string, user: string) => {
     await changeStatusTeam({
-      payload: { status, id, userId: user },
-      params: { agencyId: agencyId!, agentId: userId! },
+      payload: { status, id },
+      params: { agencyId: agencyId! },
     });
   };
 

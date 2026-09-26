@@ -34,7 +34,6 @@ export const DashboardStats = () => {
     () => ({
       params: {
         agencyId: agencyId!,
-        userId: userId!,
       },
       queryOptions: {
         enabled: !!agencyId && !!userId,
@@ -51,7 +50,6 @@ export const DashboardStats = () => {
     refetch: refetchNotificationList,
     isLoading: notificationLoad,
   } = NotificationsModule.getAllNotificationsQueries({
-    params: { userId: user?.id! },
     queryOptions: { enabled: !!user?.id },
   });
 

@@ -5,30 +5,20 @@ import { BaseApi } from 'rise-core-frontend';
  * such as fetching all rental and creating a new notif through API endpoints.
  */
 export class NotificationsService extends BaseApi {
-  getAllNotifications(userId: string) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().NOTIFICATION.GET_ALL,
-      {},
-      { params: { userId } },
-    );
+  getAllNotifications() {
+    return this.apiService.invoke(this.applicationContext.getApiConfig().NOTIFICATION.GET_ALL);
   }
 
-  getAllUnreadNotifications(userId: string) {
+  getAllUnreadNotifications() {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().NOTIFICATION.GET_ALL_UNREAD,
-      {},
-      { params: { userId } },
     );
   }
 
-  readAllNotifications(userId: string) {
-    return this.apiService.invoke(
-      this.applicationContext.getApiConfig().NOTIFICATION.READ_ALL,
-      {},
-      { params: { userId } },
-    );
+  readAllNotifications() {
+    return this.apiService.invoke(this.applicationContext.getApiConfig().NOTIFICATION.READ_ALL);
   }
-  readNotification(data: { notificationId: string; userId: string }) {
+  readNotification(data: { notificationId: string }) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().NOTIFICATION.READ_ONE,
       {},
@@ -36,11 +26,10 @@ export class NotificationsService extends BaseApi {
     );
   }
 
-  register_fcm_token(userId: string, data: { token: string; deviceKey: string }) {
+  register_fcm_token(data: { token: string; deviceKey: string }) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().NOTIFICATION.REGISTER_TOKEN,
       data,
-      { params: { userId } },
     );
   }
   remove_fcm_token(token: string) {

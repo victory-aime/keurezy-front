@@ -32,10 +32,9 @@ export function ChatWindow({ conversationId, onBack }: ChatWindowProps) {
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     ChatModule.getMessagesQueries({
-      params: { conversationId, userId: user?.id! },
+      params: { conversationId },
     });
   const { data: conversations } = ChatModule.getConversationQueries({
-    params: { userId: user?.id! },
     queryOptions: { enabled: false },
   });
 

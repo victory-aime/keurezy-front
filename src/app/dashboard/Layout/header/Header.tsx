@@ -28,9 +28,6 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
 
   const { data: unreadNotificationsList, isLoading: unreadListLoad } =
     NotificationsModule.getAllUnreadNotificationsQueries({
-      params: {
-        userId: user?.id!,
-      },
       queryOptions: { enabled: !!user?.id },
     });
 

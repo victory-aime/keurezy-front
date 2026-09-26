@@ -24,7 +24,6 @@ export const LandForm = ({ landId }: { landId: string }) => {
   const { data: allLands, isLoading: isAllLandsLoad } = LandModule.getAllLandsByAgencyQueries({
     params: {
       agencyId: agencyId!,
-      userId: userId!,
       initialPage: CONSTANTS.PAGINATION.INIT,
       limitPerPage: CONSTANTS.PAGINATION.TEN_ITEMS_PER_PAGE,
     },
@@ -64,7 +63,6 @@ export const LandForm = ({ landId }: { landId: string }) => {
       landOwner: data.landOwner ?? null,
       status: data.status?.[0],
       agencyId,
-      userId,
     };
 
     formData.append('data', JSON.stringify(payload));
