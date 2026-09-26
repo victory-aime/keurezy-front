@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, memo } from 'react';
+import React, { useCallback, memo, useMemo } from 'react';
 import { Field, Portal, Flex, DatePicker, parseDate, DateValue, HStack } from '@chakra-ui/react';
 import { useField, useFormikContext } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +27,7 @@ export const FormDatePicker = memo(
     mode = 'single',
     isDisabledPassDates,
     isDisabledWeekDates,
+    minDate,
     ...rest
   }: FormDatePickerFieldProps) => {
     const { t } = useTranslation();
@@ -54,6 +55,34 @@ export const FormDatePicker = memo(
       [mode, setValue],
     );
 
+    // Date saisie (AAAA-MM-JJ…) → DateValue, mémoïsée pour ne pas réinitialiser le calendrier à chaque rendu
+    const selectedDate = useMemo(
+      () =>
+        field.value
+          ? typeof field.value === 'string'
+            ? parseDate(field.value.split('T')[0])
+            : field.value
+          : undefined,
+      [field.value],
+    );
+    const minSelectableDate = useMemo(() => (minDate ? parseDate(minDate) : undefined), [minDate]);
+    const bounds = useMemo(
+      () => ({ min: parseDate(startMonth), max: parseDate(endMonth) }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [startMonth.getTime(), endMonth.getTime()],
+    );
+
+    // minDate grise les jours sans borner la navigation (contrairement à `min` de zag)
+    const isDateUnavailable = useCallback(
+      (date: DateValue) =>
+        // Priorité historique : les dates passées l'emportent sur les week-ends
+        (isDisabledPassDates
+          ? disabledPastDates(date)
+          : !!isDisabledWeekDates && disabledWeekends(date)) ||
+        (!!minSelectableDate && date.compare(minSelectableDate) < 0),
+      [isDisabledPassDates, isDisabledWeekDates, minSelectableDate],
+    );
+
     const formatDate = useCallback((date: DateValue) => {
       const day = date.day.toString().padStart(2, '0');
       const month = date.month.toString().padStart(2, '0');
@@ -77,23 +106,12 @@ export const FormDatePicker = memo(
           <CustomSkeletonLoader type="FORM" height="40px" width="100%" />
         ) : (
           <DatePicker.Root
+            // Sans valeur, le calendrier s'ouvre sur le premier jour sélectionnable
+            key={selectedDate ? 'selected' : minDate}
+            defaultFocusedValue={selectedDate ?? minSelectableDate}
             format={formatDate}
-            isDateUnavailable={
-              isDisabledPassDates
-                ? disabledPastDates
-                : isDisabledWeekDates
-                  ? disabledWeekends
-                  : undefined
-            }
-            value={
-              field.value
-                ? [
-                    typeof field.value === 'string'
-                      ? parseDate(field.value.split('T')[0])
-                      : field.value,
-                  ]
-                : undefined
-            }
+            isDateUnavailable={isDateUnavailable}
+            value={selectedDate ? [selectedDate] : undefined}
             outsideDaySelectable
             onOpenChange={(e) => setTouched(!e.open)}
             positioning={{ strategy: 'fixed', placement: 'bottom' }}
@@ -101,8 +119,8 @@ export const FormDatePicker = memo(
             disabled={isDisabled}
             readOnly={isReadOnly}
             onBlur={field.onBlur}
-            min={parseDate(startMonth)}
-            max={parseDate(endMonth)}
+            min={bounds.min}
+            max={bounds.max}
             onValueChange={handleChange}
             selectionMode={mode}
             locale="fr-FR"
