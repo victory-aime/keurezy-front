@@ -31,3 +31,14 @@ export interface ITeam {
 }
 
 interface IPerm {}
+
+/** Mise à jour des permissions d'un membre : liste complète des permissions accordées. */
+export interface IUpdateStaffPermissions {
+  staffId: string;
+  permissionIds: string[];
+}
+
+export interface IUpdateStaffPermissionsResponse {
+  message: string;
+  member: ITeam;
+}

@@ -384,6 +384,11 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         method: 'POST',
       }),
+      UPDATE_PERMISSIONS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.TEAM}/update-permissions`,
+        pathBase: 'SECURED_API',
+        method: 'PATCH',
+      }),
     },
     ANNONCES: {
       CREATE: api({

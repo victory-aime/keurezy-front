@@ -26,4 +26,30 @@ const changeStatusTeamMutation = (
   });
 };
 
-export { changeStatusTeamMutation, getAllTeamByAgency };
+/** Permissions d'un membre : la liste envoyée remplace les précédentes. */
+const updateTeamPermissionsMutation = (
+  args: QUERIES.MutationPayload<
+    MODELS.IUpdateStaffPermissions,
+    MODELS.IUpdateStaffPermissionsResponse,
+    MODELS.IAgencyCommonParams
+  > = {},
+) => {
+  return QUERIES.useCustomMutation<
+    MODELS.IUpdateStaffPermissions,
+    MODELS.IUpdateStaffPermissionsResponse,
+    MODELS.IAgencyCommonParams
+  >({
+    mutationKey: [Constants.TEAM_KEYS.UPDATE_PERMISSIONS],
+    mutationFn: ({ params, payload }) =>
+      teamServiceInstance().updatePermissions(payload!, params?.agencyId!),
+    options: {
+      ...args.mutationOptions,
+      onSuccess: (...result) => {
+        QUERIES.QueryCache.invalidate([Constants.TEAM_KEYS.ALL_TEAMS]);
+        return args.mutationOptions?.onSuccess?.(...result);
+      },
+    },
+  });
+};
+
+export { changeStatusTeamMutation, getAllTeamByAgency, updateTeamPermissionsMutation };

@@ -115,9 +115,11 @@ export const TeamList = () => {
         data={selectedValues}
         onChange={setOpenDetails}
         isOpen={openDetails}
+        onUpdated={setSelectedValues}
         callback={() => {
+          // Bascule : un membre actif est désactivé, et inversement
           handleStatus(
-            selectedValues?.status === ENUM.COMMON.Status.ACTIVE,
+            selectedValues?.status !== ENUM.COMMON.Status.ACTIVE,
             selectedValues?.id!,
             selectedValues?.userId!,
           );

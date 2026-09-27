@@ -15,4 +15,13 @@ export class TeamService extends BaseApi {
       params: { agencyId },
     });
   }
+
+  /** Remplace les permissions d'un membre (propriétaire de l'agence uniquement). */
+  updatePermissions(data: MODELS.IUpdateStaffPermissions, agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().TEAM.UPDATE_PERMISSIONS,
+      data,
+      { params: { agencyId } },
+    );
+  }
 }
