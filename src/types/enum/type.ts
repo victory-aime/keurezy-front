@@ -103,3 +103,18 @@ export enum BookingStatus {
   REJECTED = 'REJECTED',
   COMPLETED = 'COMPLETED',
 }
+
+// Chat : alignés sur les enums Prisma MessageType / AttachmentKind
+export enum MessageType {
+  TEXT = 'TEXT',
+  IMAGE = 'IMAGE',
+  FILE = 'FILE',
+  AUDIO = 'AUDIO',
+  SYSTEM = 'SYSTEM',
+}
+
+export enum AttachmentKind {
+  IMAGE = 'IMAGE',
+  DOCUMENT = 'DOCUMENT',
+  AUDIO = 'AUDIO',
+}

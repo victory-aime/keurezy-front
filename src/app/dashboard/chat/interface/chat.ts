@@ -1,14 +1,15 @@
 import { MODELS } from '_types/';
 
 interface ChatHeaderProps {
-  conversationId: string;
+  conversation?: MODELS.Conversation;
   onBack?: () => void;
-  // Liste en cache, absente tant que la requête n'a pas abouti
-  conversations?: MODELS.Conversation[];
 }
+
 interface ChatInputProps {
-  onSend: (content: string) => void;
+  onSend: (content: string, files: File[]) => void;
   onTyping: () => void;
+  /** Staff sans la permission de répondre : lecture seule */
+  canReply: boolean;
 }
 
 interface ChatWindowProps {
@@ -24,14 +25,10 @@ interface ConversationListProps {
 interface MessageBubbleProps {
   message: MODELS.MessagePayload;
   isOwn: boolean;
-  conversationId: string;
-  retryMessage: (conversationId: string, message: MODELS.MessagePayload) => void;
-}
-
-interface TypingIndicatorProps {
-  conversationId: string;
-  isOtherTyping: boolean;
-  otherUser?: { id: string; name: string };
+  /** Nom affiché au-dessus de la bulle (client, ou collègue de l'agence) */
+  senderLabel?: string;
+  onRetry: (message: MODELS.MessagePayload) => void;
+  onDiscard: (message: MODELS.MessagePayload) => void;
 }
 
 export type {
@@ -40,5 +37,4 @@ export type {
   ChatWindowProps,
   ConversationListProps,
   MessageBubbleProps,
-  TypingIndicatorProps,
 };

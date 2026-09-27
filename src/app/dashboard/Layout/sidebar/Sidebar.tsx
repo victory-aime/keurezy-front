@@ -14,6 +14,7 @@ import {
   LandModule,
   BookingsModule,
   NotificationsModule,
+  ChatModule,
 } from '_store/state-management';
 import { ALL_CSA_ROUTES } from './routes/routes';
 import { RenderGroupedLinks } from './components/RenderGroupedLinks';
@@ -77,6 +78,13 @@ export const Sidebar = ({
     queryOptions: queryPayload.queryOptions,
   });
 
+  // Badge : messages non lus des clients (même requête que la page Messages, cache partagé)
+  const { data: conversationsData } = ChatModule.getConversationsQueries(
+    { agencyId: agencyId ?? '' },
+    { queryOptions: { enabled: !!userId && hasPermission(AppPermissions.CONVERSATIONS.VIEW) } },
+  );
+  const unreadMessages = conversationsData?.pages[0]?.unreadTotal;
+
   const { data: unreadNotificationsList } = NotificationsModule.getAllUnreadNotificationsQueries({
     queryOptions: { enabled: !!user?.id },
   });
@@ -90,6 +98,7 @@ export const Sidebar = ({
       [DASHBOARD_ROUTES.INVITATIONS.LIST]: invitationList?.length,
       [DASHBOARD_ROUTES.BOOKINGS]: pendingBookings?.length,
       [DASHBOARD_ROUTES.NOTIFICATION]: unreadNotificationsList?.length,
+      [DASHBOARD_ROUTES.CHAT]: unreadMessages || undefined,
     };
   }, [
     propertyList?.totalItems,
@@ -99,6 +108,7 @@ export const Sidebar = ({
     invitationList?.length,
     pendingBookings?.length,
     unreadNotificationsList?.length,
+    unreadMessages,
   ]);
 
   const sidebarLinks = useMemo(() => {

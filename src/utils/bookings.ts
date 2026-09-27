@@ -46,3 +46,15 @@ export const countOverlappingPending = (
       other.startDate <= booking.endDate &&
       other.endDate >= booking.startDate,
   ).length;
+
+const BOOKING_STATUS_LABELS: Record<ENUM.BookingStatus, string> = {
+  [ENUM.BookingStatus.PENDING]: 'En attente',
+  [ENUM.BookingStatus.CONFIRMED]: 'Confirmée',
+  [ENUM.BookingStatus.CANCELLED]: 'Annulée',
+  [ENUM.BookingStatus.REJECTED]: 'Refusée',
+  [ENUM.BookingStatus.COMPLETED]: 'Terminée',
+};
+
+/** Libellé court d'un statut de réservation (textes hors pastille). */
+export const getBookingStatusLabel = (status: ENUM.BookingStatus) =>
+  BOOKING_STATUS_LABELS[status] ?? status;

@@ -1,75 +1,158 @@
 'use client';
 
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Link, Text } from '@chakra-ui/react';
 import { getTimeValue } from 'rise-core-frontend';
 import { useColorMode } from '_components/ui/color-mode';
+import { Icons } from '_components/custom';
+import { VariablesColors } from '_theme/variables';
+import { ENUM, MODELS } from '_types/';
 import { MessageBubbleProps } from '../interface/chat';
 import { MessageStatusIcon } from './MessagesStatusIcon';
-import { BaseTooltip, Icons } from '_components/custom';
-import { VariablesColors } from '_theme/variables';
+import { formatDuration, formatFileSize } from '../utils/chat';
+
+const isRemote = (url: string) => url.startsWith('http');
+
+function Attachments({
+  attachments,
+  isOwn,
+}: {
+  attachments: MODELS.IChatAttachment[];
+  isOwn: boolean;
+}) {
+  const images = attachments.filter((item) => item.kind === ENUM.AttachmentKind.IMAGE);
+  const documents = attachments.filter((item) => item.kind === ENUM.AttachmentKind.DOCUMENT);
+  const voice = attachments.find((item) => item.kind === ENUM.AttachmentKind.AUDIO);
+
+  return (
+    <Flex direction="column" gap={1.5} mb={1}>
+      {images.length > 0 && (
+        <Flex gap={1.5} wrap="wrap">
+          {images.map((image) => (
+            <Link key={image.id} href={image.url} target="_blank" rel="noopener noreferrer">
+              <Image
+                src={image.url}
+                alt={image.fileName}
+                w={images.length === 1 ? '260px' : '120px'}
+                h={images.length === 1 ? '190px' : '120px'}
+                objectFit="cover"
+                borderRadius="12px"
+              />
+            </Link>
+          ))}
+        </Flex>
+      )}
+
+      {documents.map((document) => (
+        <Link
+          key={document.id}
+          href={isRemote(document.url) ? document.url : undefined}
+          target="_blank"
+          rel="noopener noreferrer"
+          display="flex"
+          alignItems="center"
+          gap={2}
+          px={3}
+          py={2}
+          borderRadius="10px"
+          bg={isOwn ? 'whiteAlpha.200' : 'blackAlpha.50'}
+          color="inherit"
+          textDecoration="none"
+          maxW="280px"
+        >
+          <Icons.LuFile size={22} />
+          <Box minW={0} flex={1}>
+            <Text fontSize="sm" fontWeight="600" truncate>
+              {document.fileName}
+            </Text>
+            <Text fontSize="xs" opacity={0.75}>
+              PDF{document.fileSize ? ` · ${formatFileSize(document.fileSize)}` : ''}
+            </Text>
+          </Box>
+          <Icons.Download size={16} />
+        </Link>
+      ))}
+
+      {voice && (
+        <Flex direction="column" gap={1}>
+          {/* Le m4a (AAC) enregistré sur mobile est lu nativement par les navigateurs */}
+          <audio controls preload="none" src={voice.url} style={{ height: 36, maxWidth: 260 }}>
+            <track kind="captions" />
+          </audio>
+          <Text fontSize="xs" opacity={0.75}>
+            Note vocale · {formatDuration(voice.durationMs)}
+          </Text>
+        </Flex>
+      )}
+    </Flex>
+  );
+}
 
 export function MessageBubble({
   message,
   isOwn,
-  conversationId,
-  retryMessage,
+  senderLabel,
+  onRetry,
+  onDiscard,
 }: MessageBubbleProps) {
   const { colorMode } = useColorMode();
+  const failed = message.status === 'failed';
 
   return (
     <Flex direction="column" align={isOwn ? 'flex-end' : 'flex-start'} mb={1.5}>
-      <Flex align="center" gap={2} maxW="70%" flexDirection={isOwn ? 'row-reverse' : 'row'}>
-        {isOwn && message?.status === 'failed' && (
-          <Flex align="center" gap={1} mt={0.5}>
-            <Text
-              as="button"
-              fontSize="2xs"
-              color="fg.muted"
-              textDecoration="underline"
-              onClick={() => retryMessage(conversationId, message)}
-            >
-              Réessayer
-            </Text>
-          </Flex>
+      {senderLabel && (
+        <Text fontSize="2xs" color="fg.muted" mb={0.5} px={2}>
+          {senderLabel}
+        </Text>
+      )}
+      <Box
+        maxW="70%"
+        bg={isOwn ? 'primary.500' : colorMode !== 'light' ? 'border' : 'white'}
+        color={isOwn ? 'white' : colorMode !== 'light' ? 'white' : 'black'}
+        px={3}
+        py={1.5}
+        borderRadius="18px"
+        borderBottomRightRadius={isOwn ? '4px' : '18px'}
+        borderBottomLeftRadius={isOwn ? '18px' : '4px'}
+        opacity={failed ? 0.7 : 1}
+      >
+        {message.attachments.length > 0 && (
+          <Attachments attachments={message.attachments} isOwn={isOwn} />
         )}
-        <Box
-          maxW={'xl'}
-          bg={isOwn ? 'primary.500' : colorMode !== 'light' ? 'border' : 'white'}
-          color={isOwn ? 'white' : colorMode !== 'light' ? 'white' : 'black'}
-          px={3}
-          py={1}
-          borderRadius="18px"
-          borderBottomRightRadius={isOwn ? '4px' : '18px'}
-          borderBottomLeftRadius={isOwn ? '18px' : '4px'}
-          position="relative"
-        >
-          <Text fontSize="sm" fontWeight={'medium'} wordBreak="break-word">
+        {message.content && (
+          <Text fontSize="sm" fontWeight={'medium'} wordBreak="break-word" whiteSpace="pre-wrap">
             {message.content}
           </Text>
-          <Flex alignItems={'center'} justifyContent={'flex-end'}>
-            <Text
-              textAlign={'right'}
-              mt={1}
-              fontSize="x-small"
-              fontWeight={'medium'}
-              wordBreak="break-word"
-            >
-              {getTimeValue(message.createdAt)}
-            </Text>
-            {isOwn && (
-              <Flex align="center" gap={1} mt={0.5} px={1}>
-                <MessageStatusIcon status={message.status} />
-              </Flex>
-            )}
-          </Flex>
-        </Box>
-
-        {isOwn && message?.status === 'failed' && (
-          <BaseTooltip show message={"Problème survenu lors de l'envoi du message"} placement="top">
-            <Icons.InfoIcon color={VariablesColors.danger} />
-          </BaseTooltip>
         )}
-      </Flex>
+        <Flex alignItems={'center'} justifyContent={'flex-end'} gap={1}>
+          <Text mt={1} fontSize="x-small" fontWeight={'medium'}>
+            {getTimeValue(message.createdAt)}
+          </Text>
+          {isOwn && !failed && <MessageStatusIcon status={message.status} />}
+        </Flex>
+      </Box>
+
+      {failed && (
+        <Flex align="center" gap={3} mt={1}>
+          <Flex align="center" gap={1}>
+            <Icons.InfoIcon color={VariablesColors.danger} />
+            <Text fontSize="2xs" color="red.500">
+              Non envoyé
+            </Text>
+          </Flex>
+          <Text
+            as="button"
+            fontSize="2xs"
+            fontWeight="600"
+            color="primary.500"
+            onClick={() => onRetry(message)}
+          >
+            Réessayer
+          </Text>
+          <Text as="button" fontSize="2xs" color="fg.muted" onClick={() => onDiscard(message)}>
+            Supprimer
+          </Text>
+        </Flex>
+      )}
     </Flex>
   );
 }

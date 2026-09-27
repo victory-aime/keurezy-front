@@ -266,7 +266,8 @@
       "NOTIFICATIONS": "Notifications",
       "TICKETS": "Support client",
       "SUPPORT": "Support prioritaire",
-      "MARKETING": "Marketing"
+      "MARKETING": "Marketing",
+      "MESSAGING": "Messagerie"
     },
 
     "FEATURE_LIST": {
@@ -286,7 +287,8 @@
       "MANAGE_NOTIFICATIONS": "Gérer les notifications",
       "MANAGE_TICKETS": "Gérer les tickets de support",
       "PREMIUM_SUPPORT": "Bénéficier d'un support prioritaire",
-      "MANAGE_INVITATIONS": "Gérer les invitations"
+      "MANAGE_INVITATIONS": "Gérer les invitations",
+      "MANAGE_CONVERSATIONS": "Échanger avec les clients"
     }
   },
 

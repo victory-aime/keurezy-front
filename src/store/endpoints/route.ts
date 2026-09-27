@@ -196,21 +196,39 @@ export const APIS = (baseUrl?: string) => {
       }),
     },
     CHAT: {
-      CREATE_CONV: api({
-        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/conversations`,
+      OPEN_BOOKING: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/conversations/booking`,
         method: 'POST',
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
-      GET_CONV: api({
+      CONVERSATIONS: api({
         path: `${APIS_ROUTES_MODULES_PATH.CHAT}/conversations`,
         method: 'GET',
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
-      GET_MESSAGE: api({
+      DETAIL: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/conversations/detail`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      MESSAGES: api({
         path: `${APIS_ROUTES_MODULES_PATH.CHAT}/conversations/messages`,
         method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      SEND_MESSAGE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/conversations/messages`,
+        method: 'POST',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      READ: api({
+        path: `${APIS_ROUTES_MODULES_PATH.CHAT}/conversations/read`,
+        method: 'PATCH',
         pathBase: 'SECURED_API',
         showResponse: false,
       }),

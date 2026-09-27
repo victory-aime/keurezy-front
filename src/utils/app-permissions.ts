@@ -14,6 +14,10 @@ export const AppPermissions = {
     DELETE: 'delete_lead',
     ASSIGN: 'assign_lead',
   },
+  CONVERSATIONS: {
+    VIEW: 'view_conversations',
+    REPLY: 'reply_conversations',
+  },
   USERS: {
     VIEW: 'view_users',
     INVITE: 'invite_users',

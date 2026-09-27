@@ -1,3 +1,4 @@
+import { AppPermissions } from '_utils/app-permissions';
 import { SidebarNavGroupProps } from '../types';
 import { DASHBOARD_ROUTES } from '../../../routes';
 import { Icons } from '_components/custom';
@@ -77,11 +78,12 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         icon: Icons.FaUsers,
         badge: 5,
       },
-      /*      {
+      {
         label: 'Messages',
         path: DASHBOARD_ROUTES.CHAT,
         icon: Icons.Chat,
-      },*/
+        permission: AppPermissions.CONVERSATIONS.VIEW,
+      },
       {
         label: 'Notifications',
         path: DASHBOARD_ROUTES.NOTIFICATION,

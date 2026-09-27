@@ -1,52 +1,125 @@
 'use client';
 
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Input, InputGroup, Text } from '@chakra-ui/react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChatModule } from '_store/state-management';
 import { useUserContext } from '_context/user-context';
-import { Icons, BaseText, BaseButton, BaseIcon } from '_components/custom';
+import { Icons, BaseText } from '_components/custom';
 import { Avatar } from '_components/ui/avatar';
-import { useState } from 'react';
-import { NewConversationModal } from './NewConversationModal';
 import { useThemeColors } from '_theme/useThemeColors';
+import { formatConversationDate } from 'rise-core-frontend';
 import { ConversationLoad } from './ConversationLoad';
 import { ConversationListProps } from '../interface/chat';
 import { MessageStatusIcon } from './MessagesStatusIcon';
-import { MODELS } from '_types/';
-import { formatConversationDate } from 'rise-core-frontend';
+import { getLastMessagePreview } from '../utils/chat';
+import { getBookingStatusLabel } from '_utils/bookings';
 
+type Filter = 'ALL' | 'UNREAD';
+
+const SEARCH_DEBOUNCE_MS = 350;
+
+/** Conversations de l'agence : les clients écrivent depuis le mobile, à propos d'un bien. */
 export function ConversationList({ activeConversationId, onSelect }: ConversationListProps) {
   const { user } = useUserContext();
   const { hexToRGB } = useThemeColors();
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [filter, setFilter] = useState<Filter>('ALL');
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
-  const { data: conversations, isLoading } = ChatModule.getConversationQueries({
-    queryOptions: { enabled: !!user?.id },
-  });
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search.trim()), SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    ChatModule.getConversationsQueries({
+      agencyId: user?.agencyId ?? '',
+      ...(filter === 'UNREAD' && { unreadOnly: true }),
+      ...(debouncedSearch && { search: debouncedSearch }),
+    });
+
+  const conversations = useMemo(() => data?.pages.flatMap((page) => page.items) ?? [], [data]);
+  const unreadTotal = data?.pages[0]?.unreadTotal ?? 0;
+
+  const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    const el = event.currentTarget;
+    if (
+      el.scrollHeight - el.scrollTop - el.clientHeight < 120 &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
+      void fetchNextPage();
+    }
+  };
 
   return (
-    <Flex direction="column" h="100%" width="full">
+    <Flex direction="column" h="3xl" width="full">
       <Flex
-        px={5}
-        py={3}
-        mb={4}
+        direction="column"
+        gap={3}
+        px={3}
+        pt={3}
+        pb={3}
         borderBottom="1px solid"
         borderColor="inherit"
-        alignItems="center"
-        justifyContent="space-between"
       >
-        <BaseText fontSize="lg" fontWeight="700">
-          Conversations
-        </BaseText>
-        <BaseIcon boxSize="35px" onClick={() => setModalOpen(true)} cursor="pointer">
-          <Icons.PlusMinus />
-        </BaseIcon>
+        <Flex align="baseline" justify="space-between">
+          <BaseText fontSize="lg" fontWeight="700">
+            Messages
+          </BaseText>
+          <Text fontSize="xs" color="fg.muted">
+            {unreadTotal > 0 ? `${unreadTotal} non lu${unreadTotal > 1 ? 's' : ''}` : 'À jour'}
+          </Text>
+        </Flex>
+
+        <InputGroup startElement={<Icons.Search size={16} />}>
+          <Input
+            size="sm"
+            borderRadius="10px"
+            placeholder="Client ou bien…"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            aria-label="Rechercher une conversation"
+          />
+        </InputGroup>
+
+        <Flex gap={2} role="radiogroup">
+          {(
+            [
+              { value: 'ALL', label: 'Toutes' },
+              { value: 'UNREAD', label: `Non lues${unreadTotal ? ` (${unreadTotal})` : ''}` },
+            ] as const
+          ).map((option) => {
+            const selected = filter === option.value;
+            return (
+              <Box
+                key={option.value}
+                as="button"
+                role="radio"
+                aria-checked={selected}
+                onClick={() => setFilter(option.value)}
+                px={3}
+                py={1}
+                fontSize="xs"
+                fontWeight="600"
+                borderRadius="full"
+                borderWidth="1px"
+                borderColor={selected ? 'primary.500' : 'inherit'}
+                bg={selected ? hexToRGB(500, 0.15) : 'transparent'}
+                color={selected ? 'primary.500' : 'fg.muted'}
+              >
+                {option.label}
+              </Box>
+            );
+          })}
+        </Flex>
       </Flex>
 
-      <Box flex={1} overflowY="auto">
+      <Box flex={1} overflowY="auto" onScroll={onScroll} py={2}>
         {isLoading && <ConversationLoad />}
 
-        {!isLoading && !conversations?.length && (
-          <Flex direction="column" align="center" justify="center" h="60vh" px={8} gap={4}>
+        {!isLoading && !conversations.length && (
+          <Flex direction="column" align="center" justify="center" h="50vh" px={8} gap={3}>
             <Box
               w="56px"
               h="56px"
@@ -60,31 +133,31 @@ export function ConversationList({ activeConversationId, onSelect }: Conversatio
             </Box>
             <Box textAlign="center">
               <Text fontSize="sm" fontWeight="500" mb={1}>
-                Aucune conversation
+                {debouncedSearch || filter === 'UNREAD' ? 'Aucun résultat' : 'Aucune conversation'}
               </Text>
               <Text fontSize="xs" color="fg.muted">
-                Démarrez une discussion avec quelqu'un
+                {debouncedSearch || filter === 'UNREAD'
+                  ? 'Modifiez la recherche ou le filtre.'
+                  : 'Les clients vous écrivent depuis vos annonces. Vous pouvez aussi contacter un client depuis une réservation.'}
               </Text>
             </Box>
-            <BaseButton leftIcon={<Icons.Edit size={14} />} onClick={() => setModalOpen(true)}>
-              Nouveau message
-            </BaseButton>
           </Flex>
         )}
 
-        {conversations?.map((conv: MODELS.Conversation) => {
-          const me = conv.participants.find((p) => p.user.id === user?.id);
-          const other = conv.participants.find((p) => p.user.id !== user?.id);
-          const lastMessage = conv.messages[0];
-          const isActive = conv.id === activeConversationId;
-          const unreadCount = me?.unreadCount ?? 0;
+        {conversations.map((conversation) => {
+          const { lastMessage, client, property, booking } = conversation;
+          const isActive = conversation.id === activeConversationId;
+          const unreadCount = conversation.unreadCount;
           const showUnread = unreadCount > 0 && !isActive;
-          const isLastMessageMine = lastMessage?.senderId === user?.id;
+          const isLastMessageMine = !!lastMessage && lastMessage.senderId !== client.userId;
 
           return (
             <Flex
-              key={conv.id}
-              onClick={() => onSelect(conv.id)}
+              key={conversation.id}
+              as="button"
+              textAlign="left"
+              onClick={() => onSelect(conversation.id)}
+              aria-current={isActive}
               w="full"
               px={3}
               py={3}
@@ -92,43 +165,46 @@ export function ConversationList({ activeConversationId, onSelect }: Conversatio
               align="center"
               cursor="pointer"
               bg={isActive ? hexToRGB(500, 0.2) : 'transparent'}
-              rounded={isActive ? 12 : 'none'}
-              _hover={{ bg: hexToRGB(500, 0.2), rounded: 12 }}
+              rounded={12}
+              _hover={{ bg: hexToRGB(500, 0.12) }}
               transition="background 0.15s"
             >
-              <Avatar name={other?.user?.name} />
+              <Avatar name={client.name} />
 
               <Box flex={1} minW={0}>
                 <Flex justify="space-between" align="baseline" gap={2}>
                   <Text fontSize="sm" fontWeight={showUnread ? '700' : '500'} truncate>
-                    {other?.user?.name ?? 'Utilisateur'}
+                    {client.name}
                   </Text>
-                  {lastMessage && (
-                    <Text
-                      fontSize="xs"
-                      color="fg.subtle"
-                      flexShrink={0}
-                      textTransform={'capitalize'}
-                    >
-                      {formatConversationDate(lastMessage.createdAt)}
-                    </Text>
-                  )}
+                  <Text
+                    fontSize="xs"
+                    color={showUnread ? 'primary.500' : 'fg.subtle'}
+                    flexShrink={0}
+                  >
+                    {formatConversationDate(conversation.lastMessageAt ?? conversation.createdAt)}
+                  </Text>
                 </Flex>
+
+                <Text fontSize="xs" color="fg.muted" truncate>
+                  {property.title}
+                  {booking ? ` · ${getBookingStatusLabel(booking.status)}` : ''}
+                </Text>
 
                 <Flex justify="space-between" align="center" gap={2} mt={0.5}>
                   <Text
                     fontSize="xs"
                     color={showUnread ? 'fg' : 'fg.muted'}
-                    fontWeight={showUnread ? '500' : 'normal'}
+                    fontWeight={showUnread ? '600' : 'normal'}
                     truncate
                     flex={1}
                   >
-                    {lastMessage?.content ?? 'Démarrer la conversation'}
+                    {getLastMessagePreview(
+                      conversation,
+                      isLastMessageMine ? lastMessage?.senderId : undefined,
+                    )}
                   </Text>
 
-                  {isLastMessageMine && lastMessage?.status ? (
-                    <MessageStatusIcon status={lastMessage.status} />
-                  ) : showUnread ? (
+                  {showUnread ? (
                     <Box
                       bg="primary.500"
                       color="white"
@@ -145,6 +221,8 @@ export function ConversationList({ activeConversationId, onSelect }: Conversatio
                     >
                       {unreadCount > 99 ? '99+' : unreadCount}
                     </Box>
+                  ) : isLastMessageMine && lastMessage?.status ? (
+                    <MessageStatusIcon status={lastMessage.status} />
                   ) : null}
                 </Flex>
               </Box>
@@ -152,12 +230,6 @@ export function ConversationList({ activeConversationId, onSelect }: Conversatio
           );
         })}
       </Box>
-
-      <NewConversationModal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        onConversationCreated={(id) => onSelect?.(id)}
-      />
     </Flex>
   );
 }

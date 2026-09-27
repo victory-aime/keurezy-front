@@ -1,5 +1,6 @@
 import { Badge, Box, Flex, HStack, Separator, Stack, VStack } from '@chakra-ui/react';
 import {
+  BaseButton,
   BaseFormatNumber,
   BaseIcon,
   BaseModal,
@@ -12,6 +13,11 @@ import { VariablesColors } from '_theme/variables';
 import { ENUM, MODELS } from '_types/*';
 import { formatDisplayDate } from 'rise-core-frontend';
 import { useColorMode } from '_components/ui/color-mode';
+import { useRouter } from 'next/navigation';
+import { ChatModule } from '_store/state-management';
+import { usePermissions } from '_hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
+import { DASHBOARD_ROUTES } from '../../routes/routes';
 import { DetailsModalSection } from '../../components/DetailsSection';
 import { FormCard } from '../../components/FormCard';
 import {
@@ -46,7 +52,17 @@ export const BookingDetailsModal = ({
   isEmailVerified,
 }: ModalOpenProps & { data: MODELS.IAgencyBooking | null; overlappingPending: number }) => {
   const { colorMode } = useColorMode();
+  const router = useRouter();
+  const { hasPermission } = usePermissions();
   const isPending = data?.status === ENUM.BookingStatus.PENDING;
+
+  // Discussion du bien avec ce client, réservation en contexte (retrouvée ou créée)
+  const { mutate: openConversation, isPending: isOpeningChat } =
+    ChatModule.openBookingConversationMutation({
+      mutationOptions: {
+        onSuccess: (conversation) => router.push(`${DASHBOARD_ROUTES.CHAT}?c=${conversation.id}`),
+      },
+    });
   const closingReason = data?.rejectionReason ?? data?.cancellationReason;
 
   return (
@@ -115,6 +131,18 @@ export const BookingDetailsModal = ({
                 </BaseText>
               )}
             </Stack>
+            {data?.client && hasPermission(AppPermissions.CONVERSATIONS.VIEW) && (
+              <BaseButton
+                ml={'auto'}
+                size={'sm'}
+                variant={'outline'}
+                leftIcon={<Icons.Chat size={14} />}
+                isLoading={isOpeningChat}
+                onClick={() => openConversation({ payload: { bookingId: data.id } })}
+              >
+                Contacter le client
+              </BaseButton>
+            )}
           </HStack>
         </Box>
 

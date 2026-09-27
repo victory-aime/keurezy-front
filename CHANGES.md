@@ -30,3 +30,11 @@ Résumé des évolutions structurantes depuis `main`. `CHANGELOG.md` reste gér�
 ## 4. Notifications
 
 - Nouveau type `BOOKING`. Un type inconnu du front s'affiche comme une notification système au lieu de faire planter le dashboard.
+
+## 5. Messages : chat avec les clients
+
+- **Page Messages** (`/dashboard/chat`, lien réactivé dans la sidebar avec le badge des non-lus) : les conversations de l'agence, une par client et par bien. Recherche (client ou bien), filtre « Non lues », pagination au défilement. La conversation ouverte est dans l'URL (`?c=`).
+- **Conversation** : client (présence, téléphone), bien et réservation en contexte ; photos, PDF et notes vocales envoyées depuis le mobile ; envoi de texte et de 3 pièces jointes (PDF, JPG, PNG, 2 Mo chacune) ; statuts envoyé / distribué / lu, « Réessayer » en cas d'échec. Les messages des collègues sont signés.
+- **Réservations** : « Contacter le client » dans le détail d'une réservation ouvre la discussion du bien, réservation en contexte.
+- **Permissions** : `view_conversations` (voir les messages) et `reply_conversations` (répondre) ; sans la seconde, la conversation est en lecture seule. L'owner a tous les droits.
+- **Temps réel** : `ChatProvider` est monté dans le layout du dashboard ; les messages reçus mettent à jour la liste et le badge sur toutes les pages. L'ancienne création de conversation (équipe / lead) est supprimée.

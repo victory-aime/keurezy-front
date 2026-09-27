@@ -1,10 +1,11 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { createSocket } from '../lib/socket';
+import { createSocket, destroySocket } from '../lib/socket';
 import { ChatModule } from '_store/state-management';
 import { playNotificationSound } from '_utils/play-sound';
 import { useUserContext } from '_context/user-context';
+import { useAuthContext } from '_context/auth-context';
 import { MODELS } from '_types/';
 
 interface ChatContextType {
@@ -15,68 +16,63 @@ interface ChatContextType {
 
 const ChatContext = createContext<ChatContextType | null>(null);
 
+/**
+ * Temps réel du chat pour tout le dashboard : les messages reçus mettent à jour
+ * le cache (liste, conversation ouverte, badge) même hors de la page Messages.
+ */
 export function ChatProvider({ children }: { children: React.ReactNode }) {
   const { user } = useUserContext();
+  const { session } = useAuthContext();
+  const sessionToken = session?.token;
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [isSocketConnected, setSocketConnected] = useState(false);
   const activeConversationIdRef = useRef(activeConversationId);
   activeConversationIdRef.current = activeConversationId;
 
   useEffect(() => {
-    if (!user?.id) return;
+    const userId = user?.id;
+    if (!userId) return;
 
-    const socket = createSocket();
-    socket.connect();
+    const socket = createSocket(sessionToken);
 
     const onConnect = () => {
       setSocketConnected(true);
+      // Messages manqués pendant la coupure
+      ChatModule.ChatCache.invalidateConversations();
+      const active = activeConversationIdRef.current;
+      if (active) {
+        ChatModule.ChatCache.invalidateMessages(active);
+        socket.emit('conversation:join', { conversationId: active });
+      }
     };
-
-    const onDisconnect = () => {
+    const onDisconnect = () => setSocketConnected(false);
+    const onConnectError = (error: Error) => {
       setSocketConnected(false);
-    };
-
-    const onConnectError = () => {
-      setSocketConnected(false);
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('[chat] connexion du socket impossible :', error.message);
+      }
     };
 
     const onMessageReceive = (message: MODELS.MessagePayload) => {
-      ChatModule.ChatCache.prependMessage(message);
-      ChatModule.ChatCache.invalidateConversations();
-
-      if (activeConversationIdRef.current !== message.conversationId) {
-        playNotificationSound();
-      }
+      const isOpen = activeConversationIdRef.current === message.conversationId;
+      ChatModule.ChatCache.upsertMessage(message);
+      ChatModule.ChatCache.applyNewMessage(message, userId, !isOpen);
+      if (!isOpen) playNotificationSound();
     };
 
-    const onMessageSent = (message: MODELS.MessagePayload & { tempId?: string }) => {
-      if (message.tempId) {
-        ChatModule.ChatCache.replaceOptimisticMessage(
-          message.conversationId,
-          message.tempId,
-          message,
-        );
-      } else {
-        ChatModule.ChatCache.prependMessage(message);
-      }
-      ChatModule.ChatCache.invalidateConversations();
+    const onMessageSent = (message: MODELS.MessagePayload) => {
+      ChatModule.ChatCache.upsertMessage(message);
+      ChatModule.ChatCache.applyNewMessage(message, userId, false);
     };
 
-    const onConversationRead = (data: { conversationId: string; messageIds: string[] }) => {
-      ChatModule.ChatCache.updateMessagesReadStatus(data.conversationId, data.messageIds);
-    };
+    const onConversationRead = (data: { conversationId: string; messageIds: string[] }) =>
+      ChatModule.ChatCache.markMessagesRead(data.conversationId, data.messageIds);
 
-    const onPresenceUpdate = (data: { userId: string; online: boolean }) => {
+    const onPresenceUpdate = (data: { userId: string; online: boolean }) =>
       ChatModule.ChatCache.setPresence(data.userId, data.online);
-    };
 
-    const onUnreadReset = (data: { conversationId: string }) => {
-      ChatModule.ChatCache.invalidateConversations();
-    };
-
-    socket.onAny((eventName, ...args) => {
-      console.log('📡 [socket.onAny]', eventName, args);
-    });
+    const onUnreadReset = (data: { conversationId: string }) =>
+      ChatModule.ChatCache.resetUnread(data.conversationId);
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
@@ -86,20 +82,13 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     socket.on('presence:update', onPresenceUpdate);
     socket.on('conversation:read', onConversationRead);
     socket.on('unread:reset', onUnreadReset);
+    socket.connect();
 
     return () => {
-      console.log('[ChatProvider] useEffect cleanup for user:', user.id);
-      socket.offAny();
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
-      socket.off('connect_error', onConnectError);
-      socket.off('message:receive', onMessageReceive);
-      socket.off('message:sent', onMessageSent);
-      socket.off('conversation:read', onConversationRead);
-      socket.off('presence:update', onPresenceUpdate);
-      socket.off('unread:reset', onUnreadReset);
+      destroySocket();
+      setSocketConnected(false);
     };
-  }, [user?.id]);
+  }, [user?.id, sessionToken]);
 
   return (
     <ChatContext.Provider

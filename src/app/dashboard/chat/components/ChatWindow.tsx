@@ -1,16 +1,14 @@
 'use client';
 
 import { Box, Flex, Float, IconButton } from '@chakra-ui/react';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { ChatModule } from '_store/state-management';
 import { useUserContext } from '_context/user-context';
-import {
-  useAutoMarkAsSeen,
-  useConversationRoom,
-  useSendMessage,
-} from '_hooks/chat/useChatMessages';
+import { useConversationRoom, useSendMessage } from '_hooks/chat/useChatMessages';
 import { useTypingIndicator } from '_hooks/chat/useTypings';
-import { useColorMode, useColorModeValue } from '_components/ui/color-mode';
+import { usePermissions } from '_hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
+import { useColorMode } from '_components/ui/color-mode';
 import { MessageBubble } from './MessageBubble';
 import { TypingDots } from './TypingDot';
 import { ChatInput } from './ChatInput';
@@ -19,41 +17,34 @@ import { DateSeparator } from './DateSeparator';
 import { useDateSeparators } from '_hooks/chat/useDateSeparator';
 import { Icons, Loader } from '_components/custom';
 import { ChatWindowProps } from '../interface/chat';
-import { MODELS } from '_types/*';
 
 export function ChatWindow({ conversationId, onBack }: ChatWindowProps) {
   const { user } = useUserContext();
   const { colorMode } = useColorMode();
+  const { hasPermission } = usePermissions();
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [unreadBelowCount, setUnreadBelowCount] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const isAtBottomRef = useRef(true);
-  const shouldAutoScrollRef = useRef(false);
 
+  const { data: conversation } = ChatModule.getConversationQueries(conversationId);
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    ChatModule.getMessagesQueries({
-      params: { conversationId },
-    });
-  const { data: conversations } = ChatModule.getConversationQueries({
-    queryOptions: { enabled: false },
-  });
+    ChatModule.getMessagesQueries(conversationId);
 
-  const { join, leave } = useConversationRoom(conversationId);
-  const { sendMessage, retryMessage } = useSendMessage();
+  useConversationRoom(conversationId);
+  const { sendMessage, retryMessage, discardMessage } = useSendMessage(conversationId);
   const { isOtherTyping, notifyTyping } = useTypingIndicator(conversationId);
 
-  const messages =
-    data?.pages
-      .reduce<MODELS.MessagePayload[]>((acc, page) => [...acc, ...page.items], [])
-      .reverse() ?? [];
-
+  // Du plus ancien au plus récent pour l'affichage
+  const messages = useMemo(
+    () => (data?.pages.flatMap((page) => page.items) ?? []).slice().reverse(),
+    [data],
+  );
   const chatItems = useDateSeparators(messages);
+  const clientUserId = conversation?.client.userId;
 
   const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
-    scrollRef.current?.scrollTo({
-      top: scrollRef.current.scrollHeight,
-      behavior,
-    });
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior });
     setShowScrollButton(false);
     setUnreadBelowCount(0);
   }, []);
@@ -62,14 +53,12 @@ export function ChatWindow({ conversationId, onBack }: ChatWindowProps) {
     const el = scrollRef.current;
     if (!el) return;
 
-    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-    const atBottom = distanceFromBottom < 180;
-
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 180;
     isAtBottomRef.current = atBottom;
     setShowScrollButton(!atBottom);
-
     if (atBottom) setUnreadBelowCount(0);
 
+    // Historique : on conserve la position de lecture après chargement
     if (el.scrollTop < 50 && hasNextPage && !isFetchingNextPage) {
       const prevScrollHeight = el.scrollHeight;
       await fetchNextPage();
@@ -81,45 +70,30 @@ export function ChatWindow({ conversationId, onBack }: ChatWindowProps) {
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  useAutoMarkAsSeen(conversationId, messages, user?.id);
-
   useEffect(() => {
-    join();
-    return () => leave();
-  }, [conversationId]);
+    if (!isLoading) scrollToBottom('instant' as ScrollBehavior);
+  }, [isLoading, scrollToBottom]);
 
+  // Nouveau message : on suit la conversation si l'utilisateur est en bas (ou si c'est le sien)
+  const lastMessage = messages.at(-1);
   useEffect(() => {
-    if (!isLoading && messages.length > 0) {
-      scrollToBottom('instant' as ScrollBehavior);
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (!shouldAutoScrollRef.current) return;
-
-    if (isAtBottomRef.current) {
-      scrollToBottom();
+    if (!lastMessage) return;
+    if (isAtBottomRef.current || lastMessage.senderId === user?.id) {
+      requestAnimationFrame(() => scrollToBottom());
     } else {
-      const lastMessage = messages.at(-1);
-      if (lastMessage?.senderId !== user?.id) {
-        setUnreadBelowCount((c) => c + 1);
-        setShowScrollButton(true);
-      } else {
-        scrollToBottom();
-      }
+      setUnreadBelowCount((count) => count + 1);
+      setShowScrollButton(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastMessage?.id]);
 
-    shouldAutoScrollRef.current = false;
-  }, [messages.length, notifyTyping, isOtherTyping]);
-
-  const handleSend = (content: string) => {
-    shouldAutoScrollRef.current = true;
-    sendMessage(conversationId, content);
-  };
+  useEffect(() => {
+    if (isOtherTyping && isAtBottomRef.current) scrollToBottom();
+  }, [isOtherTyping, scrollToBottom]);
 
   return (
     <Flex direction="column" height={'3xl'} width={'full'}>
-      <ChatHeader conversationId={conversationId} onBack={onBack} conversations={conversations} />
+      <ChatHeader conversation={conversation} onBack={onBack} />
       <Box
         ref={scrollRef}
         flex={1}
@@ -143,24 +117,35 @@ export function ChatWindow({ conversationId, onBack }: ChatWindowProps) {
         ) : (
           <>
             {isFetchingNextPage && (
-              <Flex justify="center" py={2} mt={'10'}>
+              <Flex justify="center" py={2}>
                 <Loader size="sm" loader />
               </Flex>
             )}
 
-            {chatItems.map((item, index) =>
-              item.type === 'date-separator' ? (
-                <DateSeparator key={`sep-${index}`} label={item.label} />
-              ) : (
+            {chatItems.map((item, index) => {
+              if (item.type === 'date-separator') {
+                return <DateSeparator key={`sep-${index}`} label={item.label} />;
+              }
+              const { message } = item;
+              // Côté agence : les messages de l'équipe à droite, ceux du client à gauche
+              const isOwn = !!clientUserId && message.senderId !== clientUserId;
+              const previous = chatItems[index - 1];
+              const startsSeries =
+                previous?.type !== 'message' || previous.message.senderId !== message.senderId;
+              const senderLabel =
+                startsSeries && message.senderId !== user?.id ? message.sender?.name : undefined;
+
+              return (
                 <MessageBubble
-                  key={item.message.id}
-                  message={item.message}
-                  isOwn={item.message.senderId === user?.id}
-                  conversationId={conversationId}
-                  retryMessage={() => retryMessage(conversationId, item.message)}
+                  key={message.id}
+                  message={message}
+                  isOwn={isOwn}
+                  senderLabel={senderLabel}
+                  onRetry={retryMessage}
+                  onDiscard={discardMessage}
                 />
-              ),
-            )}
+              );
+            })}
             {isOtherTyping && <TypingDots />}
           </>
         )}
@@ -200,7 +185,11 @@ export function ChatWindow({ conversationId, onBack }: ChatWindowProps) {
           </Float>
         </Flex>
       )}
-      <ChatInput onSend={handleSend} onTyping={notifyTyping} />
+      <ChatInput
+        onSend={sendMessage}
+        onTyping={notifyTyping}
+        canReply={hasPermission(AppPermissions.CONVERSATIONS.REPLY)}
+      />
     </Flex>
   );
 }

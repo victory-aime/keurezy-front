@@ -1,22 +1,71 @@
-interface ICreateConversation {
-  recipientId?: string;
-  leadId?: string;
-}
+import { AttachmentKind, BookingStatus, MessageType, RentalType } from '../enum/type';
+
+/** Statut vu par l'expéditeur ; `sending` et `failed` n'existent que côté client. */
 type MessageStatus = 'sending' | 'failed' | 'SENT' | 'DELIVERED' | 'READ';
+
+interface IChatAttachment {
+  id: string;
+  kind: AttachmentKind;
+  mimeType: string;
+  fileName: string;
+  fileSize: number;
+  durationMs: number | null;
+  /** URL signée temporaire (1 h), ou aperçu local pendant l'envoi */
+  url: string;
+}
 
 interface MessagePayload {
   id: string;
   conversationId: string;
   senderId: string;
+  sender: { id: string; name: string } | null;
   content: string;
-  type: string;
-  reactions: Record<string, string[]> | null;
-  createdAt: string;
+  type: MessageType;
+  attachments: IChatAttachment[];
   status?: MessageStatus;
-  metadata?: Record<string, string[]> | null;
-  editedAt?: string | null;
-  deletedAt?: string | null;
-  receipts?: { status: MessageStatus; userId: string }[];
+  createdAt: string;
+  tempId?: string;
+  /** Fichiers d'un envoi en cours (nouvel essai) */
+  pendingFiles?: File[];
+}
+
+interface Conversation {
+  id: string;
+  createdAt: string;
+  lastMessageAt: string | null;
+  unreadCount: number;
+  agency: { id: string; name: string; phone: string | null; logo: string | null };
+  client: { id: string; userId: string; name: string; phone: string | null };
+  property: { id: string; title: string; annonceId: string | null; coverImage: string | null };
+  booking: {
+    id: string;
+    status: BookingStatus;
+    rentalType: RentalType;
+    startDate: string;
+    endDate: string;
+  } | null;
+  lastMessage: {
+    id: string;
+    senderId: string;
+    content: string;
+    type: MessageType;
+    attachmentsCount: number;
+    createdAt: string;
+    status: MessageStatus | null;
+  } | null;
+}
+
+interface IConversationsPage {
+  items: Conversation[];
+  nextCursor: string | null;
+  unreadTotal: number;
+}
+
+interface IConversationsQuery {
+  agencyId: string;
+  unreadOnly?: boolean;
+  search?: string;
+  limit?: number;
 }
 
 interface IGetMessageResponse {
@@ -24,10 +73,11 @@ interface IGetMessageResponse {
   nextCursor: string | null;
 }
 
-interface IGetMessagesParams {
+interface ISendMessageRequest {
   conversationId: string;
-  cursor?: string;
-  limit?: number;
+  content?: string;
+  tempId?: string;
+  durationMs?: number;
 }
 
 interface TypingPayload {
@@ -36,25 +86,19 @@ interface TypingPayload {
   isTyping: boolean;
 }
 
-interface IConversationParticipants {
-  user: { id: string; name: string };
-  unreadCount: number;
-}
-
-interface Conversation {
-  id: string;
-  participants: IConversationParticipants[];
-  messages: MessagePayload[];
-  updatedAt: string;
-}
+type SendMessageAck =
+  | { ok: true; message: MessagePayload }
+  | { ok: false; error: string; errorCode?: string };
 
 export type {
-  ICreateConversation,
+  MessageStatus,
+  IChatAttachment,
   MessagePayload,
   Conversation,
-  TypingPayload,
-  IConversationParticipants,
+  IConversationsPage,
+  IConversationsQuery,
   IGetMessageResponse,
-  IGetMessagesParams,
-  MessageStatus,
+  ISendMessageRequest,
+  TypingPayload,
+  SendMessageAck,
 };

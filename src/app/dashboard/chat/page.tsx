@@ -1,5 +1,11 @@
+import { Suspense } from 'react';
 import { MainChat } from './components/MainChat';
 
 export default function ChatPage() {
-  return <MainChat />;
+  // useSearchParams (conversation ouverte) exige une frontière Suspense
+  return (
+    <Suspense>
+      <MainChat />
+    </Suspense>
+  );
 }
