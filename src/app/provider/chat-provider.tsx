@@ -35,6 +35,14 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
     const socket = createSocket(sessionToken);
 
+    // Compteurs locaux immédiats, serveur comme référence : relancer la liste annule aussi
+    // une réponse en cours devenue périmée (lue avant une remise à zéro)
+    let resyncTimer: ReturnType<typeof setTimeout> | null = null;
+    const resyncConversations = (delayMs = 0) => {
+      if (resyncTimer) clearTimeout(resyncTimer);
+      resyncTimer = setTimeout(() => ChatModule.ChatCache.invalidateConversations(), delayMs);
+    };
+
     const onConnect = () => {
       setSocketConnected(true);
       // Messages manqués pendant la coupure
@@ -57,7 +65,10 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       const isOpen = activeConversationIdRef.current === message.conversationId;
       ChatModule.ChatCache.upsertMessage(message);
       ChatModule.ChatCache.applyNewMessage(message, userId, !isOpen);
-      if (!isOpen) playNotificationSound();
+      if (!isOpen) {
+        playNotificationSound();
+        resyncConversations(800);
+      }
     };
 
     const onMessageSent = (message: MODELS.MessagePayload) => {
@@ -71,8 +82,10 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     const onPresenceUpdate = (data: { userId: string; online: boolean }) =>
       ChatModule.ChatCache.setPresence(data.userId, data.online);
 
-    const onUnreadReset = (data: { conversationId: string }) =>
+    const onUnreadReset = (data: { conversationId: string }) => {
       ChatModule.ChatCache.resetUnread(data.conversationId);
+      resyncConversations();
+    };
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
@@ -85,6 +98,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     socket.connect();
 
     return () => {
+      if (resyncTimer) clearTimeout(resyncTimer);
       destroySocket();
       setSocketConnected(false);
     };
