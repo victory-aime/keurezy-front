@@ -12,7 +12,7 @@ import {
   TeamModule,
   InvitationModule,
   LandModule,
-  LeadsModule,
+  BookingsModule,
   NotificationsModule,
 } from '_store/state-management';
 import { ALL_CSA_ROUTES } from './routes/routes';
@@ -27,6 +27,7 @@ import { useUserContext } from '_context/user-context';
 import { useAccessControl } from '_hooks/useAccessControl';
 import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
+import { ENUM } from '_types/*';
 
 export const Sidebar = ({
   onShowSidebar,
@@ -70,7 +71,11 @@ export const Sidebar = ({
 
   const { data: invitationList } = InvitationModule.getAllInvitationByAgency(queryPayload);
 
-  const { data: leadsList } = LeadsModule.agencyLeadsListQueries(queryPayload);
+  // Badge : demandes de réservation à traiter
+  const { data: pendingBookings } = BookingsModule.agencyBookingsQueries({
+    params: { agencyId: agencyId!, status: ENUM.BookingStatus.PENDING },
+    queryOptions: queryPayload.queryOptions,
+  });
 
   const { data: unreadNotificationsList } = NotificationsModule.getAllUnreadNotificationsQueries({
     queryOptions: { enabled: !!user?.id },
@@ -83,7 +88,7 @@ export const Sidebar = ({
       [DASHBOARD_ROUTES.PROPERTIES.LIST]: propertyList?.totalItems,
       [DASHBOARD_ROUTES.TEAM.LIST]: teamList?.length,
       [DASHBOARD_ROUTES.INVITATIONS.LIST]: invitationList?.length,
-      [DASHBOARD_ROUTES.LEADS]: leadsList?.length,
+      [DASHBOARD_ROUTES.BOOKINGS]: pendingBookings?.length,
       [DASHBOARD_ROUTES.NOTIFICATION]: unreadNotificationsList?.length,
     };
   }, [
@@ -92,7 +97,7 @@ export const Sidebar = ({
     allLandsList?.totalItems,
     teamList?.length,
     invitationList?.length,
-    leadsList?.length,
+    pendingBookings?.length,
     unreadNotificationsList?.length,
   ]);
 

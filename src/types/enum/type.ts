@@ -94,3 +94,12 @@ export enum RentalType {
   MONTHLY = 'MONTHLY',
   YEARLY = 'YEARLY',
 }
+
+// Aligné sur l'enum Prisma BookingStatus du backend
+export enum BookingStatus {
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  CANCELLED = 'CANCELLED',
+  REJECTED = 'REJECTED',
+  COMPLETED = 'COMPLETED',
+}

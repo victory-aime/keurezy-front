@@ -2,7 +2,8 @@ import { VStack, Flex, HStack, Span } from '@chakra-ui/react';
 import { BaseText } from '_components/custom';
 import React from 'react';
 
-export const LeadsModalSection = ({
+/** Section titrée d'une modale de détail (réservations, visites). */
+export const DetailsModalSection = ({
   icon,
   title,
   children,
@@ -20,7 +21,7 @@ export const LeadsModalSection = ({
   </VStack>
 );
 
-export const LeadsInfoItem = ({
+export const DetailsInfoItem = ({
   icon,
   label,
   value,

@@ -15,4 +15,5 @@ export * from './invitation';
 export * from './team';
 export * from './annonces';
 export * from './visits';
+export * from './bookings';
 export * from './integrations-provider';

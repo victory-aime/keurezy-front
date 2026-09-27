@@ -10,7 +10,7 @@ import {
 import { ENUM } from '_types/*';
 import { formatDisplayDate, getTimeValue } from 'rise-core-frontend';
 import { FormCard } from '../../components/FormCard';
-import { LeadsModalSection, LeadsInfoItem } from '../../leads/components/LeadsSection';
+import { DetailsModalSection, DetailsInfoItem } from '../../components/DetailsSection';
 import { useColorMode } from '_components/ui/color-mode';
 
 export const VisitDetails = ({
@@ -71,26 +71,26 @@ export const VisitDetails = ({
           </Flex>
           <Separator />
         </VStack>
-        <LeadsModalSection icon={<Icons.User />} title="Informations sur le prospect">
+        <DetailsModalSection icon={<Icons.User />} title="Informations sur le prospect">
           <Flex width="full" alignItems={'flex-start'} gap={4} mt={2} mb={2}>
-            <LeadsInfoItem
+            <DetailsInfoItem
               icon={<Icons.User />}
               label={'Nom'}
               value={data?.lead?.client?.user?.name}
             />
-            <LeadsInfoItem
+            <DetailsInfoItem
               icon={<Icons.Mail />}
               label={'Email'}
               value={data?.lead?.client?.user?.email}
             />
-            <LeadsInfoItem
+            <DetailsInfoItem
               icon={<Icons.Phone />}
               label={'Tel'}
               value={data?.lead?.client?.phone || 'Non renseigné'}
             />
           </Flex>
-        </LeadsModalSection>
-        <LeadsModalSection icon={<Icons.Chat />} title="Message du candidat">
+        </DetailsModalSection>
+        <DetailsModalSection icon={<Icons.Chat />} title="Message du candidat">
           <Box
             width="full"
             p={4}
@@ -101,7 +101,7 @@ export const VisitDetails = ({
           >
             {data?.notes}
           </Box>
-        </LeadsModalSection>
+        </DetailsModalSection>
       </FormCard>
     </BaseModal>
   );

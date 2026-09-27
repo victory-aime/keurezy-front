@@ -34,9 +34,9 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         permission: 'view_properties',
       },
       {
-        label: 'Demandes',
-        path: DASHBOARD_ROUTES.LEADS,
-        icon: Icons.Clipboard,
+        label: 'Réservations',
+        path: DASHBOARD_ROUTES.BOOKINGS,
+        icon: Icons.Calendar,
       },
     ],
     title: 'Gestion Immobiliers',

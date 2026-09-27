@@ -12,4 +12,5 @@ export * as InvitationModule from './invitation';
 export * as TeamModule from './team';
 export * as AnnonceModule from './annonces';
 export * as VisitsModule from './visits';
+export * as BookingsModule from './bookings';
 export * as IntegrationsProviderModule from './integrations';

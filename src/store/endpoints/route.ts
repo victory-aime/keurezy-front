@@ -20,6 +20,7 @@ const APIS_ROUTES_MODULES_PATH = {
   TEAM: '/team',
   ANNONCES: '/announces',
   VISITS: '/visits',
+  BOOKINGS: '/bookings',
   INTEGRATIONS_PROVIDER: '/integrations/providers',
 };
 
@@ -388,6 +389,24 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         method: 'GET',
         showResponse: false,
+      }),
+    },
+    BOOKINGS: {
+      AGENCY_BOOKINGS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.BOOKINGS}/agency`,
+        pathBase: 'SECURED_API',
+        method: 'GET',
+        showResponse: false,
+      }),
+      CONFIRM: api({
+        path: `${APIS_ROUTES_MODULES_PATH.BOOKINGS}/confirm`,
+        pathBase: 'SECURED_API',
+        method: 'PATCH',
+      }),
+      REJECT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.BOOKINGS}/reject`,
+        pathBase: 'SECURED_API',
+        method: 'PATCH',
       }),
     },
     VISITS: {
