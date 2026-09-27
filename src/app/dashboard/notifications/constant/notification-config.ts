@@ -10,6 +10,11 @@ export const notificationUIConfig: Record<
     color: ColorPalette;
   }
 > = {
+  BOOKING: {
+    title: 'Réservation',
+    icon: 'Calendar',
+    color: 'teal',
+  },
   VISIT: {
     title: 'Nouvelle visite',
     icon: 'Calendar',
@@ -46,3 +51,7 @@ export const notificationUIConfig: Record<
     color: 'cyan',
   },
 };
+
+/** Configuration d'affichage d'un type ; un type inconnu (nouveau côté API) retombe sur SYSTEM. */
+export const getNotificationUIConfig = (type?: ENUM.NotificationType) =>
+  (type && notificationUIConfig[type]) || notificationUIConfig.SYSTEM;

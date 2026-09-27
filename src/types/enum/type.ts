@@ -33,6 +33,7 @@ export enum AgencyRole {
 }
 
 export enum NotificationType {
+  BOOKING = 'BOOKING',
   MESSAGE = 'MESSAGE',
   PAYMENT = 'PAYMENT',
   MAINTENANCE = 'MAINTENANCE',

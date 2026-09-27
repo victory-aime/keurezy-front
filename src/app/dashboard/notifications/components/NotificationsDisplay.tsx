@@ -5,7 +5,7 @@ import { NotificationsModule } from '_store/state-management';
 import { VariablesColors } from '_theme/variables';
 import { MODELS } from '_types/*';
 import { formatCreatedAt } from 'rise-core-frontend';
-import { notificationUIConfig } from '../constant/notification-config';
+import { getNotificationUIConfig } from '../constant/notification-config';
 import { useColorMode } from '_components/ui/color-mode';
 import { useThemeColors } from '_theme/useThemeColors';
 
@@ -23,7 +23,7 @@ export const NotificationsDisplay = ({
   isLast?: boolean;
 }) => {
   const { colorMode } = useColorMode();
-  const config = notificationUIConfig[request?.notification?.type];
+  const config = getNotificationUIConfig(request?.notification?.type);
   const { hexToRGB } = useThemeColors(config?.color);
   const IconComponent = Icons[config?.icon];
 
