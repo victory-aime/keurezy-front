@@ -1,5 +1,6 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { Box, Flex, Image, Link, Text } from '@chakra-ui/react';
 import { getTimeValue } from 'rise-core-frontend';
 import { useColorMode } from '_components/ui/color-mode';
@@ -8,16 +9,22 @@ import { VariablesColors } from '_theme/variables';
 import { ENUM, MODELS } from '_types/';
 import { MessageBubbleProps } from '../interface/chat';
 import { MessageStatusIcon } from './MessagesStatusIcon';
-import { formatDuration, formatFileSize } from '../utils/chat';
+import { formatFileSize } from '../utils/chat';
+import { VoiceNotePlayer } from './VoiceNotePlayer';
 
 const isRemote = (url: string) => url.startsWith('http');
 
 function Attachments({
   attachments,
   isOwn,
+  senderName,
+  voiceFooter,
 }: {
   attachments: MODELS.IChatAttachment[];
   isOwn: boolean;
+  senderName?: string;
+  /** Heure et statut, intégrés au lecteur d'une note vocale */
+  voiceFooter?: ReactNode;
 }) {
   const images = attachments.filter((item) => item.kind === ENUM.AttachmentKind.IMAGE);
   const documents = attachments.filter((item) => item.kind === ENUM.AttachmentKind.DOCUMENT);
@@ -73,15 +80,16 @@ function Attachments({
       ))}
 
       {voice && (
-        <Flex direction="column" gap={1}>
-          {/* Le m4a (AAC) enregistré sur mobile est lu nativement par les navigateurs */}
-          <audio controls preload="none" src={voice.url} style={{ height: 36, maxWidth: 260 }}>
-            <track kind="captions" />
-          </audio>
-          <Text fontSize="xs" opacity={0.75}>
-            Note vocale · {formatDuration(voice.durationMs)}
-          </Text>
-        </Flex>
+        // Le m4a (AAC) enregistré sur mobile est lu nativement par les navigateurs
+        <VoiceNotePlayer
+          url={voice.url}
+          // Nom de fichier : identique avant et après confirmation de l'envoi
+          seed={voice.fileName}
+          durationMs={voice.durationMs}
+          accent={isOwn ? VariablesColors.blue : 'var(--chakra-colors-primary-500)'}
+          senderName={senderName}
+          footer={voiceFooter}
+        />
       )}
     </Flex>
   );
@@ -96,6 +104,20 @@ export function MessageBubble({
 }: MessageBubbleProps) {
   const { colorMode } = useColorMode();
   const failed = message.status === 'failed';
+  // Note vocale seule : l'heure et le statut prennent place dans le lecteur
+  const isVoiceOnly =
+    !message.content &&
+    message.attachments.length === 1 &&
+    message.attachments[0].kind === ENUM.AttachmentKind.AUDIO;
+
+  const footer = (
+    <Flex alignItems={'center'} justifyContent={'flex-end'} gap={1}>
+      <Text mt={isVoiceOnly ? 0 : 1} fontSize="x-small" fontWeight={'medium'}>
+        {getTimeValue(message.createdAt)}
+      </Text>
+      {isOwn && !failed && <MessageStatusIcon status={message.status} />}
+    </Flex>
+  );
 
   return (
     <Flex direction="column" align={isOwn ? 'flex-end' : 'flex-start'} mb={1.5}>
@@ -116,19 +138,19 @@ export function MessageBubble({
         opacity={failed ? 0.7 : 1}
       >
         {message.attachments.length > 0 && (
-          <Attachments attachments={message.attachments} isOwn={isOwn} />
+          <Attachments
+            attachments={message.attachments}
+            isOwn={isOwn}
+            senderName={message.sender?.name}
+            voiceFooter={isVoiceOnly ? footer : undefined}
+          />
         )}
         {message.content && (
           <Text fontSize="sm" fontWeight={'medium'} wordBreak="break-word" whiteSpace="pre-wrap">
             {message.content}
           </Text>
         )}
-        <Flex alignItems={'center'} justifyContent={'flex-end'} gap={1}>
-          <Text mt={1} fontSize="x-small" fontWeight={'medium'}>
-            {getTimeValue(message.createdAt)}
-          </Text>
-          {isOwn && !failed && <MessageStatusIcon status={message.status} />}
-        </Flex>
+        {!isVoiceOnly && footer}
       </Box>
 
       {failed && (

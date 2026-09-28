@@ -38,6 +38,7 @@ Résumé des évolutions structurantes depuis `main`. `CHANGELOG.md` reste gér�
 - **Réservations** : « Contacter le client » dans le détail d'une réservation ouvre la discussion du bien, réservation en contexte.
 - **Permissions** : `view_conversations` (voir les messages) et `reply_conversations` (répondre) ; sans la seconde, la conversation est en lecture seule. L'owner a tous les droits.
 - **Temps réel** : `ChatProvider` est monté dans le layout du dashboard ; les messages reçus mettent à jour la liste et le badge sur toutes les pages. L'ancienne création de conversation (équipe / lead) est supprimée.
+- **Notes vocales** : lecteur intégré à la bulle (lecture, onde avec curseur cliquable, avatar de l'expéditeur marqué d'un micro, durée et heure sur la même ligne), à la place du lecteur audio du navigateur. Même onde que sur le mobile.
 
 ## 6. Équipe : modifier les permissions d'un membre
 

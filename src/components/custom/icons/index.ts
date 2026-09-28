@@ -46,6 +46,9 @@ import {
   IoCheckmarkDone,
   IoDocumentTextOutline,
   IoLockClosed,
+  IoMic,
+  IoPause,
+  IoPlay,
   IoRocketSharp,
   IoShieldCheckmarkSharp,
 } from 'react-icons/io5';
@@ -180,4 +183,7 @@ export const Icons = {
   LuFiles,
   LuFileImage,
   LuFile,
+  VoicePlay: IoPlay,
+  VoicePause: IoPause,
+  Mic: IoMic,
 };
