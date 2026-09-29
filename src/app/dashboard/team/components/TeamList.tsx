@@ -12,11 +12,19 @@ import { CONSTANTS, MODELS, ENUM } from '_types/*';
 import { formatDisplayDate } from 'rise-core-frontend';
 import { TeamDetails } from './TeamDetails';
 import { useState } from 'react';
+import { useAuthContext } from '_context/auth-context';
+import { UserRole } from '../../../../types/enum';
+import { memberRemovalImpact } from '_utils/impact';
+import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 
 export const TeamList = () => {
   const { user } = useUserContext();
   const [selectedValues, setSelectedValues] = useState<MODELS.ITeam | null>(null);
   const [openDetails, setOpenDetails] = useState(false);
+  // Retrait réservé à l'owner (le backend le refuse sinon) ; impact chargé à l'ouverture
+  const { user: authUser } = useAuthContext();
+  const isOwner = authUser?.role === UserRole.OWNER;
+  const [memberToRemove, setMemberToRemove] = useState<MODELS.ITeam | null>(null);
 
   const agencyId = user?.agencyId;
   const userId = user?.ownerId ?? user?.staffId;
@@ -32,6 +40,15 @@ export const TeamList = () => {
     queryOptions: {
       enabled: !!agencyId && !!userId,
     },
+  });
+
+  const { data: memberImpact, isLoading: isImpactLoading } = TeamModule.getMemberImpactQueries({
+    params: { agencyId: agencyId ?? '', id: memberToRemove?.id ?? '' },
+    queryOptions: { enabled: !!agencyId && !!memberToRemove?.id && isOwner },
+  });
+
+  const { mutate: removeMember, isPending: isRemoving } = TeamModule.removeMemberMutation({
+    mutationOptions: { onSuccess: () => setMemberToRemove(null) },
   });
 
   const { mutateAsync: changeStatusTeam, isPending: isChangeStatusPending } =
@@ -91,6 +108,14 @@ export const TeamList = () => {
             setSelectedValues(data);
           },
         },
+        {
+          name: 'delete',
+          title: "Retirer de l'équipe",
+          isDisabled: () => !isOwner,
+          handleClick(data) {
+            setMemberToRemove(data);
+          },
+        },
       ],
     },
   ];
@@ -125,6 +150,21 @@ export const TeamList = () => {
           );
           setOpenDetails(false);
         }}
+      />
+      <ActionImpactDialog
+        isOpen={!!memberToRemove}
+        onChange={(open: boolean) => !open && setMemberToRemove(null)}
+        title="Retirer ce membre de l'équipe"
+        subject={memberToRemove ? `${memberToRemove.name} · ${memberToRemove.email}` : undefined}
+        summary={memberImpact ? memberRemovalImpact(memberImpact) : undefined}
+        isLoadingImpact={isImpactLoading}
+        isSubmitting={isRemoving}
+        confirmTitle="Retirer de l'équipe"
+        onConfirm={() =>
+          memberToRemove?.id &&
+          agencyId &&
+          removeMember({ params: { agencyId, id: memberToRemove.id } })
+        }
       />
     </BaseContainer>
   );

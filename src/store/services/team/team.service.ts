@@ -24,4 +24,22 @@ export class TeamService extends BaseApi {
       { params: { agencyId } },
     );
   }
+
+  /** Ce que le retrait d'un membre entraîne (owner uniquement). */
+  getMemberImpact(params: { agencyId: string; id: string }) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().TEAM.MEMBER_IMPACT,
+      {},
+      { params },
+    );
+  }
+
+  /** Retire un membre : travail désassigné, compte désactivé, sessions fermées. */
+  removeMember(params: { agencyId: string; id: string }) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().TEAM.REMOVE_MEMBER,
+      {},
+      { params },
+    );
+  }
 }

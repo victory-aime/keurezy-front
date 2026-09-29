@@ -1,3 +1,4 @@
+import { ENTITY_QUERY_OPTIONS } from '../query-options';
 import * as Constants from './constants';
 import { teamServiceInstance } from './team.service-instance';
 import { MODELS } from '_types/index';
@@ -52,4 +53,38 @@ const updateTeamPermissionsMutation = (
   });
 };
 
-export { changeStatusTeamMutation, getAllTeamByAgency, updateTeamPermissionsMutation };
+type MemberParams = { agencyId: string; id: string };
+
+/** Impact du retrait d'un membre ; chargé à l'ouverture de la confirmation. */
+const getMemberImpactQueries = (
+  args: QUERIES.QueryPayload<MODELS.IMemberImpact, undefined, MemberParams>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, MemberParams, MODELS.IMemberImpact>({
+    queryKey: [Constants.TEAM_KEYS.MEMBER_IMPACT, params],
+    queryFn: () => teamServiceInstance().getMemberImpact(params as MemberParams),
+    options: { ...ENTITY_QUERY_OPTIONS, ...queryOptions },
+  });
+};
+
+/** Retrait d'un membre : la liste de l'équipe est rechargée ensuite. */
+const removeMemberMutation = (args: QUERIES.MutationPayload<unknown, unknown, MemberParams> = {}) =>
+  QUERIES.useCustomMutation<unknown, unknown, MemberParams>({
+    mutationKey: [Constants.TEAM_KEYS.REMOVE_MEMBER],
+    mutationFn: ({ params }) => teamServiceInstance().removeMember(params!),
+    options: {
+      ...args.mutationOptions,
+      onSuccess: (...result) => {
+        QUERIES.QueryCache.invalidate([Constants.TEAM_KEYS.ALL_TEAMS]);
+        return args.mutationOptions?.onSuccess?.(...result);
+      },
+    },
+  });
+
+export {
+  changeStatusTeamMutation,
+  getAllTeamByAgency,
+  updateTeamPermissionsMutation,
+  getMemberImpactQueries,
+  removeMemberMutation,
+};

@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  BaseContainer,
-  BaseTag,
-  ColumnsDataTable,
-  DataTableContainer,
-  DeleteModalAnimation,
-} from '_components/custom';
+import { BaseContainer, BaseTag, ColumnsDataTable, DataTableContainer } from '_components/custom';
 import { DASHBOARD_ROUTES } from '../../routes';
 import { useRouter } from 'next/navigation';
 import { InvitationModule } from '_store/state-management';
@@ -17,14 +11,19 @@ import { useTranslation } from 'react-i18next';
 import { generateAuditCell } from '_utils/generateAdit.utils';
 import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
+import { invitationCancelImpact, invitationResendImpact } from '_utils/impact';
+import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 
 export const InvitationsList = () => {
   const { hasPermission } = usePermissions();
   const { user } = useUserContext();
   const router = useRouter();
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const [selectedInvitation, setSelectedInvitation] = useState<string | null>(null);
+  // Invitation dont on confirme l'annulation ou le renvoi (l'impact est montré avant)
+  const [pending, setPending] = useState<{
+    action: 'cancel' | 'resend';
+    invitation: { id: string; email: string; name?: string };
+  } | null>(null);
 
   const agencyId = user?.agencyId!;
   const userId = user?.ownerId! ?? user?.staffId!;
@@ -40,14 +39,19 @@ export const InvitationsList = () => {
     queryOptions: { enabled: !!agencyId && !!userId },
   });
 
-  const { mutateAsync: cancelInvitation, isPending: cancelLoading } =
-    InvitationModule.cancelInvitationMutation({
-      mutationOptions: {
-        onSuccess: async () => {
-          await refetchAllInvitations();
-        },
+  const afterAction = {
+    mutationOptions: {
+      onSuccess: async () => {
+        setPending(null);
+        await refetchAllInvitations();
       },
-    });
+    },
+  };
+  const { mutateAsync: cancelInvitation, isPending: cancelLoading } =
+    InvitationModule.cancelInvitationMutation(afterAction);
+  const { mutateAsync: resendInvitation, isPending: resendLoading } =
+    InvitationModule.resendInvitationMutation(afterAction);
+  const isResend = pending?.action === 'resend';
 
   const invitationColumns: ColumnsDataTable[] = [
     {
@@ -79,7 +83,19 @@ export const InvitationsList = () => {
       accessor: 'actions',
       actions: [
         {
+          name: 'resend',
+          title: "Renvoyer l'invitation",
+          // Seule une invitation en attente peut être renvoyée (règle du backend)
+          isDisabled: (data) =>
+            !hasPermission(AppPermissions.INVITATIONS.RESEND) ||
+            data.status !== ENUM.COMMON.Status.PENDING,
+          handleClick(data) {
+            setPending({ action: 'resend', invitation: data });
+          },
+        },
+        {
           name: 'cancel',
+          title: "Annuler l'invitation",
           isDisabled(data) {
             return (
               !hasPermission(AppPermissions.INVITATIONS.CANCEL) ||
@@ -89,8 +105,7 @@ export const InvitationsList = () => {
             );
           },
           handleClick(data) {
-            setOpen(true);
-            setSelectedInvitation(data.id);
+            setPending({ action: 'cancel', invitation: data });
           },
         },
       ],
@@ -125,18 +140,28 @@ export const InvitationsList = () => {
         }}
         hidePagination={allInvitations && allInvitations?.length < 10}
       />
-      <DeleteModalAnimation
-        title={"Annuler l'invitation"}
-        onChange={setOpen}
-        isOpen={open}
-        isLoading={cancelLoading}
-        callback={async () => {
-          await cancelInvitation({ params: { inviteId: selectedInvitation! } });
+      <ActionImpactDialog
+        isOpen={!!pending}
+        onChange={(open: boolean) => !open && setPending(null)}
+        title={isResend ? "Renvoyer l'invitation" : "Annuler l'invitation"}
+        subject={pending?.invitation.name ?? pending?.invitation.email}
+        summary={
+          pending
+            ? isResend
+              ? invitationResendImpact(pending.invitation.email)
+              : invitationCancelImpact(pending.invitation.email)
+            : undefined
+        }
+        isSubmitting={cancelLoading || resendLoading}
+        confirmTitle={isResend ? "Renvoyer l'invitation" : "Annuler l'invitation"}
+        confirmColor={isResend ? 'primary' : 'danger'}
+        onConfirm={async () => {
+          if (!pending) return;
+          const params = { inviteId: pending.invitation.id };
+          if (isResend) await resendInvitation({ params });
+          else await cancelInvitation({ params });
         }}
-        ignoreFooter={false}
-      >
-        Etes vous sur de vouloir annuler cette invitation ? Cette action est irreversible.
-      </DeleteModalAnimation>
+      />
     </BaseContainer>
   );
 };

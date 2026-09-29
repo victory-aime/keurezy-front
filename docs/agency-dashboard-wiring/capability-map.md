@@ -28,7 +28,7 @@ Chaque module aura son dossier `docs/<module-id>/` avec `spec.md`, `plan.md` et 
 Il faut étendre la règle « impact avant l'action », avec `ActionImpactDialog` et un endpoint `impact` côté backend si besoin, aux confirmations qui utilisent encore l'ancien `DeleteModalAnimation` :
 - suppression d'annonce (`DeleteAnnonce`) ;
 - annulation de visite (`VisitsList`) ;
-- annulation d'invitation (`invitationsList`, traitée avec `team-lifecycle`) ;
+- désactivation d'un membre par l'interrupteur de statut (`TeamList`) ;
 - déconnexion du Drive et corbeille (`integrations`) ;
 - désactivation du compte (`profile`, `security`).
 

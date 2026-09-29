@@ -370,6 +370,11 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         method: 'POST',
       }),
+      RESEND_INVITATION: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INVITATION}/resend-invitation`,
+        pathBase: 'SECURED_API',
+        method: 'POST',
+      }),
     },
     TEAM: {
       ALL_TEAMS: api({
@@ -387,6 +392,17 @@ export const APIS = (baseUrl?: string) => {
         path: `${APIS_ROUTES_MODULES_PATH.TEAM}/update-permissions`,
         pathBase: 'SECURED_API',
         method: 'PATCH',
+      }),
+      REMOVE_MEMBER: api({
+        path: `${APIS_ROUTES_MODULES_PATH.TEAM}/remove-member`,
+        pathBase: 'SECURED_API',
+        method: 'DELETE',
+      }),
+      MEMBER_IMPACT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.TEAM}/member-impact`,
+        pathBase: 'SECURED_API',
+        method: 'GET',
+        showResponse: false,
       }),
     },
     ANNONCES: {

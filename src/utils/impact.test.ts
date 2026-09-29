@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vitest';
 import {
   bookingCancelImpact,
   buildingDeleteImpact,
+  invitationCancelImpact,
+  invitationResendImpact,
   landDeleteImpact,
+  memberRemovalImpact,
   propertyCloseImpact,
   propertyDeleteImpact,
 } from './impact';
@@ -139,5 +142,56 @@ describe('bookingCancelImpact', () => {
     expect(summary.groups[0].items[0]).toBe(
       'Le client sera prévenu par notification et par e-mail, avec votre motif.',
     );
+  });
+});
+
+describe('memberRemovalImpact', () => {
+  it('signale les visites à réassigner, retire les accès et conserve les messages', () => {
+    const summary = memberRemovalImpact({
+      name: 'Moussa',
+      email: 'moussa@example.com',
+      visits: { assigned: 3, upcoming: 1 },
+      tickets: 0,
+      permissions: 4,
+    });
+    const changes = summary.groups.find((group) => group.tone === 'warning')!;
+    expect(changes.items).toEqual([
+      '3 visites (dont 1 à venir) ne lui seront plus assignées : réassignez-les.',
+    ]);
+    const removed = summary.groups.find((group) => group.tone === 'danger')!;
+    expect(removed.items).toContain('Ses 4 permissions');
+    expect(removed.items).toContain('Ses sessions en cours : déconnexion immédiate');
+    const kept = summary.groups.find((group) => group.tone === 'success')!;
+    expect(kept.items).toContain('Son compte, désactivé : vous pourrez le réinviter');
+  });
+
+  it("n'affiche pas de changement quand le membre n'a rien d'assigné", () => {
+    const summary = memberRemovalImpact({
+      name: 'A',
+      email: 'a@x.com',
+      visits: { assigned: 0, upcoming: 0 },
+      tickets: 0,
+      permissions: 0,
+    });
+    expect(summary.groups.some((group) => group.tone === 'warning')).toBe(false);
+  });
+});
+
+describe('invitation impacts', () => {
+  it('renvoi : nouveau mot de passe, ancien invalide, 7 jours', () => {
+    const summary = invitationResendImpact('awa@example.com');
+    expect(summary.groups[0].items).toEqual([
+      'Un nouveau mot de passe temporaire sera envoyé à awa@example.com.',
+      'L’ancien mot de passe envoyé ne fonctionnera plus.',
+      'L’invitation sera valable 7 jours à partir d’aujourd’hui.',
+    ]);
+  });
+
+  it('annulation : lien invalide, place libérée, réinvitation possible', () => {
+    const summary = invitationCancelImpact('awa@example.com');
+    expect(summary.groups[0].items[0]).toBe(
+      'Le lien d’invitation envoyé à awa@example.com ne fonctionnera plus.',
+    );
+    expect(summary.groups[1].items).toContain('Vous pourrez réinviter cette adresse.');
   });
 });

@@ -1,6 +1,7 @@
 import type { IPropertyImpact } from '../types/models/property';
 import type { ILandImpact } from '../types/models/land';
 import type { IBuildingImpact } from '../types/models/building';
+import type { IMemberImpact } from '../types/models/team';
 
 /**
  * Règle produit : une suppression ou une fermeture montre d'abord ce qu'elle entraîne.
@@ -238,6 +239,86 @@ export function bookingCancelImpact(booking: {
         items: [
           'La réservation reste dans l’historique, avec le statut Annulée et votre motif.',
           'La discussion avec le client.',
+        ],
+      },
+    ],
+  };
+}
+
+/**
+ * Retrait d'un membre : son travail est désassigné (pas supprimé), ses accès disparaissent,
+ * son compte est seulement désactivé (réinvitable) et ses messages restent dans les discussions.
+ */
+export function memberRemovalImpact(impact: IMemberImpact): ImpactSummary {
+  const { visits, tickets, permissions } = impact;
+  const changes = [
+    visits.assigned > 0 &&
+      `${count(visits.assigned, 'visite')}${visits.upcoming > 0 ? ` (dont ${visits.upcoming} à venir)` : ''} ne lui ${visits.assigned > 1 ? 'seront' : 'sera'} plus assignée${visits.assigned > 1 ? 's' : ''} : réassignez-les.`,
+    tickets > 0 &&
+      `${count(tickets, 'ticket')} ne lui ${tickets > 1 ? 'seront' : 'sera'} plus assigné${tickets > 1 ? 's' : ''}.`,
+  ].filter((item): item is string => !!item);
+
+  return {
+    blocked: false,
+    groups: [
+      ...(changes.length
+        ? [{ tone: 'warning' as const, title: 'Ce qui change', items: changes }]
+        : []),
+      {
+        tone: 'danger',
+        title: 'Retiré',
+        items: [
+          "Son accès à l'agence",
+          ...(permissions > 0 ? [`Ses ${count(permissions, 'permission')}`] : []),
+          'Ses sessions en cours : déconnexion immédiate',
+        ],
+      },
+      {
+        tone: 'success',
+        title: 'Ce qui est conservé',
+        items: [
+          'Ses messages dans les discussions',
+          'Son compte, désactivé : vous pourrez le réinviter',
+        ],
+      },
+    ],
+  };
+}
+
+/** Renvoi d'une invitation : un nouveau mot de passe temporaire remplace le précédent. */
+export function invitationResendImpact(email: string): ImpactSummary {
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'warning',
+        title: 'Ce qui change',
+        items: [
+          `Un nouveau mot de passe temporaire sera envoyé à ${email}.`,
+          'L’ancien mot de passe envoyé ne fonctionnera plus.',
+          'L’invitation sera valable 7 jours à partir d’aujourd’hui.',
+        ],
+      },
+    ],
+  };
+}
+
+/** Annulation d'une invitation : le lien devient invalide, la place du plan est libérée. */
+export function invitationCancelImpact(email: string): ImpactSummary {
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'danger',
+        title: 'Ce qui change',
+        items: [`Le lien d’invitation envoyé à ${email} ne fonctionnera plus.`],
+      },
+      {
+        tone: 'success',
+        title: 'Ce qui est libéré',
+        items: [
+          'La place réservée sur votre plan est libérée.',
+          'Vous pourrez réinviter cette adresse.',
         ],
       },
     ],

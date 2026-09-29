@@ -41,7 +41,18 @@ const cancelInvitationMutation = (
   });
 };
 
+/** Renvoi d'une invitation en attente (nouveau mot de passe temporaire). */
+const resendInvitationMutation = (
+  args: QUERIES.MutationPayload<unknown, unknown, { inviteId: string }> = {},
+) =>
+  QUERIES.useCustomMutation<unknown, unknown, { inviteId: string }>({
+    mutationKey: [Constants.INVITE_KEYS.RESEND_INVITATION],
+    mutationFn: ({ params }) => invitationServiceInstance().resendInvitation(params!.inviteId),
+    options: args.mutationOptions,
+  });
+
 export {
+  resendInvitationMutation,
   createInvitationMutation,
   cancelInvitationMutation,
   acceptInvitationMutation,

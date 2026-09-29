@@ -42,3 +42,14 @@ export interface IUpdateStaffPermissionsResponse {
   message: string;
   member: ITeam;
 }
+
+/** Ce que le retrait d'un membre entraîne (`GET team/member-impact`). */
+export interface IMemberImpact {
+  name: string;
+  email: string;
+  /** Visites assignées au membre (dont à venir) : elles seront désassignées */
+  visits: { assigned: number; upcoming: number };
+  tickets: number;
+  /** Permissions retirées avec le profil */
+  permissions: number;
+}

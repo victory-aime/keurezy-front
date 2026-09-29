@@ -32,4 +32,13 @@ export class InvitationService extends BaseApi {
       { params: { inviteId } },
     );
   }
+
+  /** Renvoie une invitation en attente avec un nouveau mot de passe temporaire. */
+  resendInvitation(inviteId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().INVITATION.RESEND_INVITATION,
+      {},
+      { params: { inviteId } },
+    );
+  }
 }

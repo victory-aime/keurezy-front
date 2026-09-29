@@ -11,6 +11,13 @@ const ACTION_CONFIG = {
     color: 'white',
     aria: 'Supprimer',
   },
+  resend: {
+    tooltip: 'COMMON.RESEND',
+    icon: Icons.SendMail,
+    bg: 'blue',
+    color: 'white',
+    aria: 'Renvoyer',
+  },
   close: {
     tooltip: 'COMMON.CLOSE',
     icon: Icons.Lock,
