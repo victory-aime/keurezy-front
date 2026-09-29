@@ -88,12 +88,13 @@ export function ActionImpactDialog({
       title={title}
       description={subject}
       icon={blocked ? <Icons.Lock /> : <Icons.Warn />}
-      buttonCancelTitle="Annuler"
+      buttonCancelTitle="Retour"
       buttonSaveTitle={confirmTitle}
       colorSaveButton={confirmColor}
       onClick={onConfirm}
-      // Impossible tant que l'impact n'est pas connu, ou quand il bloque l'action
-      disabled={isLoadingImpact || blocked}
+      // Confirmation impossible tant que l'impact n'est pas connu ou s'il bloque l'action ;
+      // « Retour » et l'alternative restent utilisables
+      saveDisabled={isLoadingImpact || blocked}
       isLoading={isSubmitting}
       buttonRejectTitle={blocked && alternative ? alternative.title : ''}
       onReject={alternative?.onClick}

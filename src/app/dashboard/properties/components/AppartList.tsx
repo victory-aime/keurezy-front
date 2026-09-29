@@ -183,7 +183,7 @@ export const PropertyList = () => {
         },
         {
           // Fermer : retire les annonces en ligne, conserve le bien et son historique
-          name: 'cancel',
+          name: 'close',
           title: 'Fermer le bien',
           isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.UPDATE),
           handleClick(data) {

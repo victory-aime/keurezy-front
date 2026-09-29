@@ -34,4 +34,13 @@ export class BuildingService extends BaseApi {
       },
     );
   }
+
+  /** Biens et historique supprimés avec le bâtiment, avant confirmation. */
+  getBuildingImpact(params: { id: string }) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().BUILDING.BUILDING_IMPACT,
+      {},
+      { params },
+    );
+  }
 }

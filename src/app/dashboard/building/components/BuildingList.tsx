@@ -13,7 +13,8 @@ import { BuildingModule } from '_store/state-management';
 import { useRouter } from 'next/navigation';
 import { DASHBOARD_ROUTES } from '../../routes';
 import { CONSTANTS, MODELS } from '_types/*';
-import { BuildingDelete } from './BuildingDelete';
+import { buildingDeleteImpact } from '_utils/impact';
+import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 import { BuildingDetails } from './BuildingDetail';
 import { FormikValues } from 'formik';
 import { BuildingStatsCard } from './BuildingStats';
@@ -70,10 +71,18 @@ export const BuildingList = () => {
     BuildingModule.deleteBuildingMutation({
       mutationOptions: {
         onSuccess: async () => {
+          setOpenDelete(false);
           setFilterValues(null);
           await reloadBuildingList();
         },
       },
+    });
+
+  // Ce que la suppression entraîne (biens supprimés avec le bâtiment), chargé à l'ouverture
+  const { data: buildingImpact, isLoading: isImpactLoading } =
+    BuildingModule.getBuildingImpactQueries({
+      params: { id: selectedValues?.id ?? '' },
+      queryOptions: { enabled: openDelete && !!selectedValues?.id },
     });
 
   const buildingColumns: ColumnsDataTable[] = [
@@ -221,16 +230,16 @@ export const BuildingList = () => {
         columns={buildingColumns}
         notFoundTitle="Aucun bâtiment trouvé"
       />
-      <BuildingDelete
-        onChange={setOpenDelete}
+      <ActionImpactDialog
         isOpen={openDelete}
-        isLoading={isDeletePending}
-        data={selectedValues}
-        callback={() =>
-          handleDeleteBuilding({
-            id: selectedValues?.id!,
-          })
-        }
+        onChange={setOpenDelete}
+        title="Supprimer ce bâtiment"
+        subject={selectedValues?.name}
+        summary={buildingImpact ? buildingDeleteImpact(buildingImpact) : undefined}
+        isLoadingImpact={isImpactLoading}
+        isSubmitting={isDeletePending}
+        confirmTitle="Supprimer définitivement"
+        onConfirm={() => selectedValues?.id && handleDeleteBuilding({ id: selectedValues.id })}
       />
       <BuildingDetails
         onChange={setOpenDetails}

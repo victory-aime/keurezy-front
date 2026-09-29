@@ -1,5 +1,6 @@
 import type { IPropertyImpact } from '../types/models/property';
 import type { ILandImpact } from '../types/models/land';
+import type { IBuildingImpact } from '../types/models/building';
 
 /**
  * Règle produit : une suppression ou une fermeture montre d'abord ce qu'elle entraîne.
@@ -26,21 +27,26 @@ export interface ImpactSummary {
 const count = (n: number, singular: string, plural = `${singular}s`) =>
   `${n} ${n > 1 ? plural : singular}`;
 
+/** Historique qui empêche une suppression : réservations, discussions, visites (hors zéros). */
+function historyItems(impact: IPropertyImpact): string[] {
+  const { bookings, visits } = impact;
+  const bookingDetails = [
+    bookings.upcoming > 0 && `${bookings.upcoming} à venir`,
+    bookings.pending > 0 && `${bookings.pending} en attente`,
+  ].filter(Boolean);
+  return [
+    bookings.total > 0 &&
+      `${count(bookings.total, 'réservation')}${bookingDetails.length ? ` (dont ${bookingDetails.join(', ')})` : ''}`,
+    impact.conversations > 0 && `${count(impact.conversations, 'discussion')} avec des clients`,
+    visits.total > 0 &&
+      `${count(visits.total, 'visite')}${visits.upcoming > 0 ? ` (dont ${visits.upcoming} à venir)` : ''}`,
+  ].filter((item): item is string => !!item);
+}
+
 /** Suppression d'un bien : ce qui disparaît, ou ce qui l'empêche (alors : fermer le bien). */
 export function propertyDeleteImpact(impact: IPropertyImpact): ImpactSummary {
   if (!impact.canDelete) {
-    const { bookings, visits } = impact;
-    const bookingDetails = [
-      bookings.upcoming > 0 && `${bookings.upcoming} à venir`,
-      bookings.pending > 0 && `${bookings.pending} en attente`,
-    ].filter(Boolean);
-    const blocking = [
-      bookings.total > 0 &&
-        `${count(bookings.total, 'réservation')}${bookingDetails.length ? ` (dont ${bookingDetails.join(', ')})` : ''}`,
-      impact.conversations > 0 && `${count(impact.conversations, 'discussion')} avec des clients`,
-      visits.total > 0 &&
-        `${count(visits.total, 'visite')}${visits.upcoming > 0 ? ` (dont ${visits.upcoming} à venir)` : ''}`,
-    ].filter((item): item is string => !!item);
+    const blocking = historyItems(impact);
 
     return {
       blocked: true,
@@ -144,6 +150,50 @@ export function landDeleteImpact(impact: ILandImpact): ImpactSummary {
         title: 'Supprimé définitivement',
         items: [
           'Le terrain, ses caractéristiques et ses documents',
+          'Cette action est irréversible.',
+        ],
+      },
+    ],
+  };
+}
+
+/**
+ * Suppression d'un bâtiment : ses biens partent avec lui (cascade). Bloquée dès qu'un de ses
+ * biens a un historique ; sinon, les biens et leurs annonces sont nommés en rouge.
+ */
+export function buildingDeleteImpact(impact: IBuildingImpact): ImpactSummary {
+  if (!impact.canDelete) {
+    return {
+      blocked: true,
+      groups: [
+        {
+          tone: 'blocked',
+          title: 'Des biens de ce bâtiment ont un historique',
+          items: historyItems(impact),
+        },
+        {
+          tone: 'warning',
+          title: 'Que faire ?',
+          items: ['Fermez plutôt les biens concernés : leur historique sera conservé.'],
+        },
+      ],
+    };
+  }
+  const { properties, annonces } = impact;
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'danger',
+        title: 'Supprimé définitivement',
+        items: [
+          'Le bâtiment et ses caractéristiques',
+          ...(properties.length > 0
+            ? [
+                `${count(properties.length, 'bien')} : ${properties.map((property) => `« ${property.title} »`).join(', ')}`,
+              ]
+            : []),
+          ...(annonces.total > 0 ? [`${count(annonces.total, 'annonce')} et leurs photos`] : []),
           'Cette action est irréversible.',
         ],
       },

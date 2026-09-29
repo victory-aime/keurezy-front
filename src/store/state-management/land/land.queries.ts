@@ -1,3 +1,4 @@
+import { ENTITY_QUERY_OPTIONS } from '../query-options';
 import * as Constants from './constants';
 import { landServiceInstance } from './land.service-instance';
 import { MODELS } from '_types/index';
@@ -65,7 +66,7 @@ const getLandImpactQueries = (
   return QUERIES.useCustomQuery<undefined, { id: string }, MODELS.ILandImpact>({
     queryKey: [Constants.LAND_KEYS.LAND_IMPACT, params],
     queryFn: () => landServiceInstance().getLandImpact(params as { id: string }),
-    options: queryOptions,
+    options: { ...ENTITY_QUERY_OPTIONS, ...queryOptions },
   });
 };
 

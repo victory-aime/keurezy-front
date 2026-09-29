@@ -1,3 +1,4 @@
+import { ENTITY_QUERY_OPTIONS } from '../query-options';
 import * as Constants from './constants';
 import { chatServiceInstance } from './chat.service-instance';
 import { MODELS } from '_types/index';
@@ -28,7 +29,7 @@ const getConversationQueries = (
   return QUERIES.useCustomQuery<undefined, undefined, MODELS.Conversation>({
     queryKey: [Constants.CHAT_KEYS.CONVERSATION, conversationId],
     queryFn: () => chatServiceInstance().getConversation(conversationId!),
-    options: { ...args.queryOptions, enabled: !!conversationId },
+    options: { ...ENTITY_QUERY_OPTIONS, ...args.queryOptions, enabled: !!conversationId },
   });
 };
 

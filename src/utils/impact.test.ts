@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { landDeleteImpact, propertyCloseImpact, propertyDeleteImpact } from './impact';
+import {
+  buildingDeleteImpact,
+  landDeleteImpact,
+  propertyCloseImpact,
+  propertyDeleteImpact,
+} from './impact';
 
 const impact = (overrides = {}) => ({
   annonces: { total: 0, online: 0 },
@@ -73,5 +78,33 @@ describe('landDeleteImpact', () => {
     const summary = landDeleteImpact({ batiments: [], villas: 0, canDelete: true });
     expect(summary.blocked).toBe(false);
     expect(summary.groups[0].tone).toBe('danger');
+  });
+});
+
+describe('buildingDeleteImpact', () => {
+  const building = (overrides = {}) => ({
+    ...impact(),
+    properties: [
+      { id: 'p1', title: 'Appartement 1' },
+      { id: 'p2', title: 'Appartement 2' },
+    ],
+    ...overrides,
+  });
+
+  it('nomme les biens supprimés avec le bâtiment', () => {
+    const summary = buildingDeleteImpact(building({ annonces: { total: 3, online: 1 } }));
+    expect(summary.blocked).toBe(false);
+    expect(summary.groups[0].tone).toBe('danger');
+    expect(summary.groups[0].items).toContain('2 biens : « Appartement 1 », « Appartement 2 »');
+    expect(summary.groups[0].items).toContain('3 annonces et leurs photos');
+  });
+
+  it('bloque la suppression quand un de ses biens a un historique', () => {
+    const summary = buildingDeleteImpact(
+      building({ bookings: { total: 1, upcoming: 1, pending: 0 }, canDelete: false }),
+    );
+    expect(summary.blocked).toBe(true);
+    expect(summary.groups[0].tone).toBe('blocked');
+    expect(summary.groups[0].items).toContain('1 réservation (dont 1 à venir)');
   });
 });

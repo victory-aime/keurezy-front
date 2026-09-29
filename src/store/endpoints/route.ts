@@ -284,6 +284,12 @@ export const APIS = (baseUrl?: string) => {
         showResponse: false,
         pathBase: 'SECURED_API',
       }),
+      BUILDING_IMPACT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.BUILDING}/impact`,
+        method: 'GET',
+        showResponse: false,
+        pathBase: 'SECURED_API',
+      }),
     },
     LAND: {
       ALL_LAND_BY_AGENCY: api({

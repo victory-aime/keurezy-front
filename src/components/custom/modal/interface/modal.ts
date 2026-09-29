@@ -30,6 +30,8 @@ interface ModalProps extends DialogRootProps {
   onClick?: () => void;
   isLoading?: boolean;
   disabled?: boolean;
+  /** Désactive uniquement le bouton de confirmation (les autres restent utilisables) */
+  saveDisabled?: boolean;
   children: ReactNode;
   animateConfetti?: boolean;
   ref?: React.Ref<HTMLDivElement> | undefined;

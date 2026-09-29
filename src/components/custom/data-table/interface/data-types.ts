@@ -13,6 +13,7 @@ export type DataActionsButtonType =
   | 'link'
   | 'chat'
   | 'cancel'
+  | 'close'
   | 'publish'
   | 'assign';
 

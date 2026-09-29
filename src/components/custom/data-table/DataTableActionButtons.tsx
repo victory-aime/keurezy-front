@@ -11,6 +11,13 @@ const ACTION_CONFIG = {
     color: 'white',
     aria: 'Supprimer',
   },
+  close: {
+    tooltip: 'COMMON.CLOSE',
+    icon: Icons.Lock,
+    bg: 'orange',
+    color: 'white',
+    aria: 'Fermer',
+  },
   cancel: {
     tooltip: 'COMMON.CANCEL',
     icon: Icons.Close,
@@ -138,8 +145,9 @@ export const DataTableActionButtons = <T,>({ actions, item }: ActionButtonsProps
 
     const Icon = config.icon;
 
+    // Titre propre à l'action s'il est fourni (ex. « Fermer le bien »), sinon libellé générique
     return (
-      <BaseTooltip message={config.tooltip} show>
+      <BaseTooltip message={action.title ?? config.tooltip} show>
         <IconButton
           onClick={handleClick}
           disabled={isDisabled || isLoading}
@@ -214,7 +222,7 @@ export const DataTableActionButtons = <T,>({ actions, item }: ActionButtonsProps
                       <Loader loader size="xs" />
                     ) : (
                       <IconButton
-                        aria-label={config.aria}
+                        aria-label={action.title ?? config.aria}
                         colorPalette={config.bg}
                         width={'full'}
                         variant={'surface'}
@@ -222,7 +230,7 @@ export const DataTableActionButtons = <T,>({ actions, item }: ActionButtonsProps
                         disabled={isDisabled || isLoading}
                       >
                         <Icon />
-                        {t(config.tooltip)}
+                        {action.title ?? t(config.tooltip)}
                       </IconButton>
                     )}
                   </HStack>

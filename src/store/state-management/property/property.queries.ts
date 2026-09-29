@@ -1,3 +1,4 @@
+import { ENTITY_QUERY_OPTIONS } from '../query-options';
 import * as Constants from './constants';
 import { propertyServiceInstance } from './property.service-instance';
 import { MODELS } from '_types/index';
@@ -76,7 +77,7 @@ const getPropertyDetailQueries = (
   return QUERIES.useCustomQuery<undefined, { id: string }, MODELS.IPropertyDetail>({
     queryKey: [Constants.PROPERTIES_KEYS.PROPERTY_DETAIL, params],
     queryFn: () => propertyServiceInstance().getPropertyDetail(params as { id: string }),
-    options: queryOptions,
+    options: { ...ENTITY_QUERY_OPTIONS, ...queryOptions },
   });
 };
 
@@ -88,7 +89,7 @@ const getPropertyImpactQueries = (
   return QUERIES.useCustomQuery<undefined, { id: string }, MODELS.IPropertyImpact>({
     queryKey: [Constants.PROPERTIES_KEYS.PROPERTY_IMPACT, params],
     queryFn: () => propertyServiceInstance().getPropertyImpact(params as { id: string }),
-    options: queryOptions,
+    options: { ...ENTITY_QUERY_OPTIONS, ...queryOptions },
   });
 };
 

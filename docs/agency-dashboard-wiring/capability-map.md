@@ -24,6 +24,14 @@ Chaque module aura son dossier `docs/<module-id>/` avec `spec.md`, `plan.md` et 
 4. `visits-period-filter`
 5. `dashboard-real-stats`
 
+## Chantier suivant : `destructive-impact-rollout`
+Il faut étendre la règle « impact avant l'action », avec `ActionImpactDialog` et un endpoint `impact` côté backend si besoin, aux confirmations qui utilisent encore l'ancien `DeleteModalAnimation` :
+- suppression d'annonce (`DeleteAnnonce`) ;
+- annulation de visite (`VisitsList`) ;
+- annulation d'invitation (`invitationsList`, traitée avec `team-lifecycle`) ;
+- déconnexion du Drive et corbeille (`integrations`) ;
+- désactivation du compte (`profile`, `security`).
+
 ## Processus pour chaque module
 1. Spécification (`spec-driven-development`), validée par toi.
 2. Plan et tâches (`planning-and-task-breakdown`).

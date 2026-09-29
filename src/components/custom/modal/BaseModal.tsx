@@ -43,6 +43,7 @@ const BaseModal = ({
   iconRejectButton,
   onReject,
   buttonRejectTitle = '',
+  saveDisabled,
   colorRejectButton,
   scrollBehavior = 'inside',
   showEditButton,
@@ -147,7 +148,7 @@ const BaseModal = ({
                     )}
                     {buttonSaveTitle && (
                       <BaseButton
-                        disabled={disabled}
+                        disabled={disabled || saveDisabled}
                         withGradient
                         onClick={() => onClick?.()}
                         leftIcon={iconSaveButton}
