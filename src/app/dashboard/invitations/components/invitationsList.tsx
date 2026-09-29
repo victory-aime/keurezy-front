@@ -15,8 +15,11 @@ import { CONSTANTS, ENUM } from '_types/*';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { generateAuditCell } from '_utils/generateAdit.utils';
+import { usePermissions } from '_hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
 
 export const InvitationsList = () => {
+  const { hasPermission } = usePermissions();
   const { user } = useUserContext();
   const router = useRouter();
   const { t } = useTranslation();
@@ -79,6 +82,7 @@ export const InvitationsList = () => {
           name: 'cancel',
           isDisabled(data) {
             return (
+              !hasPermission(AppPermissions.INVITATIONS.CANCEL) ||
               data.status === ENUM.COMMON.Status.CANCELLED ||
               data.status === ENUM.COMMON.Status.EXPIRED ||
               data.status === ENUM.COMMON.Status.ACCEPTED
@@ -101,6 +105,8 @@ export const InvitationsList = () => {
       withActionButtons
       actionsButtonProps={{
         validateTitle: 'Invite un membre',
+        // Point d'entrée masqué sans la permission d'inviter
+        validatePermission: hasPermission(AppPermissions.INVITATIONS.SEND),
         onClick() {
           router.push(DASHBOARD_ROUTES.INVITATIONS.ADD);
         },

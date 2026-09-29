@@ -17,8 +17,11 @@ import { LandDetails } from './LandDetails';
 import { FormikValues } from 'formik';
 import { LandStatsCard } from './LandStats';
 import { useUserContext } from '_context/user-context';
+import { usePermissions } from '_hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
 
 export const LandList = () => {
+  const { hasPermission } = usePermissions();
   const router = useRouter();
   const { user: currentUser } = useUserContext();
   const [currentPage, setCurrentPage] = useState(1);
@@ -91,6 +94,7 @@ export const LandList = () => {
         },
         {
           name: 'edit',
+          isDisabled: () => !hasPermission(AppPermissions.LAND.MANAGE),
           handleClick(data) {
             router.push(`${DASHBOARD_ROUTES.LAND.ADD}?landId=${data?.id}`);
           },
@@ -140,6 +144,8 @@ export const LandList = () => {
       }
       actionsButtonProps={{
         validateTitle: 'Ajouter',
+        // Point d'entrée masqué sans la permission de création
+        validatePermission: hasPermission(AppPermissions.LAND.MANAGE),
         downloadTitle: `Exporter PDF (${allLands?.content?.length ?? 0})`,
         onClick() {
           router.push(DASHBOARD_ROUTES.LAND.ADD);

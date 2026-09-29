@@ -18,8 +18,11 @@ import { Flex, Stack } from '@chakra-ui/react';
 import { MODELS } from '_types/*';
 import { DeleteAnnonce } from './DeleteAnnonce';
 import { AnnoncesDetails } from './AnnonceDetails';
+import { usePermissions } from '_hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
 
 export const AnnoncesList = () => {
+  const { hasPermission } = usePermissions();
   const { push } = useRouter();
   const { user } = useUserContext();
   const [selectedValues, setSelectedValues] = useState<MODELS.IAnnonceResponse | null>(null);
@@ -90,6 +93,7 @@ export const AnnoncesList = () => {
       actions: [
         {
           name: 'edit',
+          isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.PUBLISH),
           handleClick(data) {
             push(`${DASHBOARD_ROUTES.ANNONCES.ADD}/?annonceId=${data?.id}`);
           },
@@ -103,6 +107,7 @@ export const AnnoncesList = () => {
         },
         {
           name: 'delete',
+          isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.UNPUBLISH),
           handleClick(data) {
             setSelectedValues(data);
             setOpenDelete(true);
@@ -120,6 +125,8 @@ export const AnnoncesList = () => {
       withActionButtons
       actionsButtonProps={{
         validateTitle: 'Nouvelle annonce',
+        // Point d'entrée masqué sans la permission de création
+        validatePermission: hasPermission(AppPermissions.PROPERTIES.PUBLISH),
         onReload: async () => {
           await reloadAnnonceList();
         },

@@ -12,6 +12,8 @@ import { formatDisplayDate, getTimeValue } from 'rise-core-frontend';
 import { FormCard } from '../../components/FormCard';
 import { DetailsModalSection, DetailsInfoItem } from '../../components/DetailsSection';
 import { useColorMode } from '_components/ui/color-mode';
+import { usePermissions } from '_hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
 
 export const VisitDetails = ({
   isOpen,
@@ -22,6 +24,7 @@ export const VisitDetails = ({
   onDelete = () => {},
 }: ModalOpenProps) => {
   const { colorMode } = useColorMode();
+  const { hasPermission } = usePermissions();
 
   return (
     <BaseModal
@@ -31,8 +34,12 @@ export const VisitDetails = ({
       icon={<Icons.Agenda />}
       status={data?.status}
       ignoreFooter
-      showEditButton={data?.status !== ENUM.COMMON.Status.DONE}
-      showDeleteButton={data?.status !== ENUM.COMMON.Status.DONE}
+      showEditButton={
+        data?.status !== ENUM.COMMON.Status.DONE && hasPermission(AppPermissions.VISITS.UPDATE)
+      }
+      showDeleteButton={
+        data?.status !== ENUM.COMMON.Status.DONE && hasPermission(AppPermissions.VISITS.CANCEL)
+      }
       onEdit={onEdit}
       onDelete={onDelete}
     >

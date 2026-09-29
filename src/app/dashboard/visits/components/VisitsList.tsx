@@ -19,8 +19,11 @@ import { format } from 'date-fns';
 import { VisitForm } from './VisitForm';
 import { VisitDetails } from './VisiteDetails';
 import { CalendarEvent } from '_components/custom/agenda/interface/agenda';
+import { usePermissions } from '_hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
 
 export const VisitsList = () => {
+  const { hasPermission } = usePermissions();
   const { user } = useUserContext();
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -157,12 +160,17 @@ export const VisitsList = () => {
       <BaseAgenda
         events={agendaEvents ?? []}
         loading={isLoading}
-        onCreate={(date) => {
-          setOpen(true);
-          setSelectedValues({
-            scheduledAt: parseDate(format(new Date(date!), 'yyyy-MM-dd')),
-          });
-        }}
+        // Sans permission de planifier, un clic sur l'agenda n'ouvre pas le formulaire
+        onCreate={
+          hasPermission(AppPermissions.VISITS.SCHEDULE)
+            ? (date) => {
+                setOpen(true);
+                setSelectedValues({
+                  scheduledAt: parseDate(format(new Date(date!), 'yyyy-MM-dd')),
+                });
+              }
+            : undefined
+        }
         onSelectEvent={(event) => {
           setSelectedValues(event.meta as MODELS.IVisitResponse);
           setOpenModal(true);

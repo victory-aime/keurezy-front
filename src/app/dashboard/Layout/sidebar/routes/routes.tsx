@@ -16,23 +16,26 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         path: DASHBOARD_ROUTES.ANNONCES.LIST,
         icon: Icons.Megaphone,
         highlight: true,
+        permission: AppPermissions.PROPERTIES.VIEW,
       },
       {
         label: 'Terrains',
         path: DASHBOARD_ROUTES.LAND.LIST,
         icon: Icons.Map,
+        permission: AppPermissions.LAND.MANAGE,
       },
       {
         label: 'Bâtiments',
         path: DASHBOARD_ROUTES.BUILDING.LIST,
         icon: Icons.RiBuildingLine,
+        permission: AppPermissions.BUILDING.MANAGE,
       },
       {
         label: 'Propriétés',
         path: DASHBOARD_ROUTES.PROPERTIES.LIST,
         icon: Icons.Home,
         feature: 'manage_properties',
-        permission: 'view_properties',
+        permission: AppPermissions.PROPERTIES.VIEW,
       },
       {
         label: 'Réservations',
@@ -63,12 +66,14 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         label: 'Rendez-vous',
         path: DASHBOARD_ROUTES.VISITS,
         icon: Icons.Calendar,
+        permission: AppPermissions.VISITS.VIEW,
         badge: 5,
       },
       {
         label: 'Invitations',
         path: DASHBOARD_ROUTES.INVITATIONS.LIST,
         icon: Icons.SendMail,
+        permission: AppPermissions.USERS.VIEW,
         badge: 5,
       },
 
@@ -76,6 +81,7 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         label: 'Equipe',
         path: DASHBOARD_ROUTES.TEAM.LIST,
         icon: Icons.FaUsers,
+        permission: AppPermissions.USERS.VIEW,
         badge: 5,
       },
       {

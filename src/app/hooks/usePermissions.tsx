@@ -3,6 +3,7 @@
 import { useAuthContext } from '_context/auth-context';
 import { useMemo } from 'react';
 import { UserRole } from '../../types/enum';
+import { canAccess } from '_utils/permissions';
 
 interface IPermissionHooks {
   hasCategoryAccess: (category: string) => boolean;
@@ -39,8 +40,7 @@ export const usePermissions = (): IPermissionHooks => {
    * 🔥 O(1)
    */
   function hasPermission(permissionName: string) {
-    if (isOwner) return true;
-    return permissionSet.has(permissionName);
+    return canAccess({ isOwner, permissions: permissionSet }, permissionName);
   }
 
   /**

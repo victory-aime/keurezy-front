@@ -139,6 +139,7 @@ export const PropertyList = () => {
         },
         {
           name: 'publish',
+          isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.PUBLISH),
           handleClick() {
             router.push(DASHBOARD_ROUTES.ANNONCES.ADD);
           },
@@ -171,6 +172,8 @@ export const PropertyList = () => {
       }
       actionsButtonProps={{
         validateTitle: 'Ajouter une propriété',
+        // Point d'entrée masqué sans la permission de création
+        validatePermission: hasPermission(AppPermissions.PROPERTIES.CREATE),
         isEmailVerified: user?.emailVerified,
         onReload: async () => {
           await refetchProperty();

@@ -18,8 +18,11 @@ import { BuildingDetails } from './BuildingDetail';
 import { FormikValues } from 'formik';
 import { BuildingStatsCard } from './BuildingStats';
 import { useUserContext } from '_context/user-context';
+import { usePermissions } from '_hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
 
 export const BuildingList = () => {
+  const { hasPermission } = usePermissions();
   const router = useRouter();
   const { user: currentUser } = useUserContext();
   const [currentPage, setCurrentPage] = useState(1);
@@ -120,12 +123,14 @@ export const BuildingList = () => {
         },
         {
           name: 'edit',
+          isDisabled: () => !hasPermission(AppPermissions.BUILDING.MANAGE),
           handleClick(data) {
             router.push(`${DASHBOARD_ROUTES.BUILDING.ADD}?buildingId=${data?.id}`);
           },
         },
         {
           name: 'delete',
+          isDisabled: () => !hasPermission(AppPermissions.BUILDING.MANAGE),
           handleClick(data) {
             setOpenDelete(true);
             setSelectedValues(data);
@@ -180,6 +185,8 @@ export const BuildingList = () => {
       }
       actionsButtonProps={{
         validateTitle: 'Ajouter',
+        // Point d'entrée masqué sans la permission de création
+        validatePermission: hasPermission(AppPermissions.BUILDING.MANAGE),
         downloadTitle: `Exporter PDF (${allBuildings?.content?.length ?? 0})`,
         onClick() {
           router.push(DASHBOARD_ROUTES.BUILDING.ADD);

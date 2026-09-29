@@ -11,7 +11,8 @@
     "start:prod": "dotenv -e .env.production --override -- next start",
     "dev:prod": "dotenv -e .env.production --override -- next dev --port 5080",
     "dev:uat": "dotenv -e .env.uat --override -- next dev --port 5080",
-    "commit": "prettier --write . && git add . && cz"
+    "commit": "prettier --write . && git add . && cz",
+    "test": "vitest run"
   },
   "config": {
     "commitizen": {
@@ -74,6 +75,7 @@
     "husky": "^9.1.7",
     "semantic-release": "^25.0.2",
     "serwist": "^9.5.11",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.2"
   }
 }
