@@ -5,7 +5,6 @@ const APIS_ROUTES_MODULES_PATH = {
   USER: '/users',
   AGENCY: '/agency',
   PROPERTY: '/property',
-  LEADS: '/leads',
   CHAT: '/chat',
   NOTIFICATION: '/notif',
   PUSH_NOTIFICATIONS: '/push-notification',
@@ -161,35 +160,6 @@ export const APIS = (baseUrl?: string) => {
 
       MONTHLY_REVENUE: api({
         path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/monthly-revenue`,
-        method: 'GET',
-        pathBase: 'SECURED_API',
-        showResponse: false,
-      }),
-    },
-    LEADS: {
-      CREATE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.LEADS}/create`,
-        method: 'POST',
-        pathBase: 'SECURED_API',
-      }),
-      ASSIGN: api({
-        path: `${APIS_ROUTES_MODULES_PATH.LEADS}/assign`,
-        method: 'PATCH',
-        pathBase: 'SECURED_API',
-      }),
-      DELETE: api({
-        path: `${APIS_ROUTES_MODULES_PATH.LEADS}/delete`,
-        method: 'DELETE',
-        pathBase: 'SECURED_API',
-      }),
-      AGENCY_LEADS_LIST: api({
-        path: `${APIS_ROUTES_MODULES_PATH.LEADS}/agency-leads`,
-        method: 'GET',
-        pathBase: 'SECURED_API',
-        showResponse: false,
-      }),
-      USER_LEADS_LIST: api({
-        path: `${APIS_ROUTES_MODULES_PATH.LEADS}/user-leads-list`,
         method: 'GET',
         pathBase: 'SECURED_API',
         showResponse: false,
@@ -458,6 +428,12 @@ export const APIS = (baseUrl?: string) => {
         path: `${APIS_ROUTES_MODULES_PATH.VISITS}/assign-agent`,
         pathBase: 'SECURED_API',
         method: 'PATCH',
+        showResponse: false,
+      }),
+      AGENCY_CLIENTS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.VISITS}/agency-clients`,
+        pathBase: 'SECURED_API',
+        method: 'GET',
         showResponse: false,
       }),
     },

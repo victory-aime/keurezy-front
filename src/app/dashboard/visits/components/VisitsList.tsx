@@ -8,7 +8,7 @@ import {
   DeleteModalAnimation,
 } from '_components/custom';
 import { useUserContext } from '_context/user-context';
-import { VisitsModule, LeadsModule } from '_store/state-management';
+import { PropertyModule, TeamModule, VisitsModule } from '_store/state-management';
 import { ENUM } from '_types/';
 import { FormikValues } from 'formik';
 import { useMemo, useState } from 'react';
@@ -21,6 +21,7 @@ import { VisitDetails } from './VisiteDetails';
 import { CalendarEvent } from '_components/custom/agenda/interface/agenda';
 import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
+import { pickVisitRefs } from '_utils/visits';
 
 export const VisitsList = () => {
   const { hasPermission } = usePermissions();
@@ -50,7 +51,24 @@ export const VisitsList = () => {
     isLoading,
   } = VisitsModule.getAllVisitByAgencyQueries(queryPayload);
 
-  const { data: leadsRequestList } = LeadsModule.agencyLeadsListQueries(queryPayload);
+  // Listes du formulaire, chargées à son ouverture et selon les permissions (sinon 403)
+  const canSchedule = hasPermission(AppPermissions.VISITS.SCHEDULE);
+  const formQuery = (permission: boolean) => ({
+    params: { agencyId },
+    queryOptions: { enabled: open && !!agencyId && !!userId && permission },
+  });
+  const { data: agencyClients, isLoading: clientsLoading } = VisitsModule.agencyClientsQueries(
+    formQuery(canSchedule),
+  );
+  // ponytail: 100 biens au plus dans la liste ; recherche asynchrone au-delà
+  const { data: properties, isLoading: propertiesLoading } =
+    PropertyModule.getAllPropertiesByAgency({
+      params: { agencyId, limitPerPage: 100 },
+      queryOptions: formQuery(hasPermission(AppPermissions.PROPERTIES.VIEW)).queryOptions,
+    });
+  const { data: team } = TeamModule.getAllTeamByAgency(
+    formQuery(hasPermission(AppPermissions.USERS.VIEW)),
+  );
 
   const { mutateAsync: createVisit, isPending: isCreatePending } =
     VisitsModule.createNewVisitsMutation({
@@ -92,49 +110,45 @@ export const VisitsList = () => {
     meta: visit,
   }));
 
-  const leadList = createListCollection({
-    items:
-      leadsRequestList?.map((item: MODELS.ILeadsAgency) => ({
-        label: `Demande ${item?.property?.title} - faite par ${item?.client?.user?.name}`,
-        value: item.id,
-      })) || [],
+  /** Clients qui ont réservé ou écrit à l'agence (filtrés par le backend). */
+  const clientList = createListCollection({
+    items: (agencyClients ?? []).map((client) => ({
+      label: `${client.user.name} · ${client.user.email}`,
+      value: client.id,
+    })),
   });
 
-  const extractRestValues = (leadId?: string) => {
-    if (!leadId || !leadsRequestList?.length) {
-      return null;
-    }
+  const propertyList = createListCollection({
+    items: (properties?.content ?? []).map((property) => ({
+      label: property.title,
+      value: property.id,
+    })),
+  });
 
-    return leadsRequestList.find((item: MODELS.ILeadsAgency) => item.id === leadId) ?? null;
-  };
+  /** Agents assignables : membres actifs de l'équipe. */
+  const agentList = createListCollection({
+    items: (team ?? [])
+      .filter((member) => member.status === ENUM.COMMON.Status.ACTIVE)
+      .map((member) => ({ label: member.name ?? '', value: member.id ?? '' })),
+  });
 
   const handleSubmitValues = async (values: FormikValues) => {
-    const leadId = values?.leadId?.[0];
-    const additionalValues = extractRestValues(leadId);
-
-    if (!additionalValues) {
-      return;
-    }
-    const { assignedToId, id, propertyId } = additionalValues;
-    if (!id || !propertyId) {
-      return;
-    }
-
+    const refs = pickVisitRefs(values);
     const request: MODELS.IVisitPayload = {
       startTime: mergeDateAndTime(values.scheduledAt, values.startTime),
       endTime: mergeDateAndTime(values.scheduledAt, values.endTime),
       scheduledAt: normalizeToDate(values?.scheduledAt),
-      agentId: assignedToId,
-      leadId: id,
-      status: values?.status && values?.status?.[0],
+      ...refs,
+      status: refs.status as ENUM.COMMON.Status | undefined,
       notes: values.notes,
       title: values.title,
-      propertyId,
     };
 
     if (selectedValues?.id) {
+      // Client et bien ne se modifient pas après création (non acceptés par visits/update)
+      const { clientId, propertyId, ...changes } = request;
       updateVisit({
-        payload: { ...request, visitId: selectedValues?.id },
+        payload: { ...changes, visitId: selectedValues?.id },
       });
     } else {
       await createVisit({
@@ -176,7 +190,7 @@ export const VisitsList = () => {
           setOpenModal(true);
         }}
         renderEventSubtitle={(event: CalendarEvent<any>) => (
-          <BaseText fontSize={'xs'}>{event.meta?.lead?.property?.title}</BaseText>
+          <BaseText fontSize={'xs'}>{event.meta?.property?.title}</BaseText>
         )}
         statuses={[
           ENUM.COMMON.Status.PLANNED,
@@ -190,10 +204,12 @@ export const VisitsList = () => {
         onChange={setOpen}
         isOpen={open}
         callback={handleSubmitValues}
-        extractRestValues={extractRestValues}
         data={selectedValues}
         isLoading={isCreatePending || isUpdatePending}
-        leadList={leadList}
+        clientList={clientList}
+        propertyList={propertyList}
+        agentList={agentList}
+        listsLoading={clientsLoading || propertiesLoading}
       />
       <VisitDetails
         isOpen={openModal}

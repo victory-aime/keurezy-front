@@ -1,7 +1,6 @@
 export * from './users';
 export * from './agency';
 export * from './property';
-export * from './leads';
 export * from './chat';
 export * from './notifications';
 export * from './auth';

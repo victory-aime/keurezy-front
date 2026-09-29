@@ -65,14 +65,6 @@ interface IAgencyStats {
     rented: number;
     occupancyRate: number;
   };
-  leads: {
-    total: number;
-    new: number;
-    contacted: number;
-    visitPlanned: number;
-    converted: number;
-    conversionRate: number;
-  };
   visits: {
     total: number;
     planned: number;

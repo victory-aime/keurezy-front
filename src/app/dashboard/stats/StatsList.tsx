@@ -24,13 +24,6 @@ export function StatsList() {
       icon: <Icons.RiBuildingLine />,
     },
     {
-      label: 'personne intéressées',
-      value: data?.leads?.total ?? 0,
-      description: 'Nouveaux prospects',
-      color: 'blue.600',
-      icon: <Icons.FaUsers />,
-    },
-    {
       label: 'Visites',
       value: data?.visits?.total ?? 0,
       description: 'Visites planifiées',
@@ -54,7 +47,6 @@ export function StatsList() {
 
   const lineChartData = [
     { category: 'Biens', value: data?.properties?.total ?? 0 },
-    { category: 'Leads', value: data?.leads?.total ?? 0 },
     { category: 'Visites', value: data?.visits?.total ?? 0 },
     { category: 'Tickets', value: data?.tickets?.total ?? 0 },
   ];
@@ -63,10 +55,6 @@ export function StatsList() {
     {
       type: 'Biens',
       allocation: data?.properties?.total || 0,
-    },
-    {
-      type: 'Leads',
-      allocation: data?.leads?.total || 0,
     },
     {
       type: 'Visites',

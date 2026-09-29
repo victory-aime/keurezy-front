@@ -10,6 +10,15 @@ export class VisitsService extends BaseApi {
     );
   }
 
+  /** Clients pouvant être invités à une visite (réservation ou discussion avec l'agence). */
+  getAgencyClients(data: MODELS.IAgencyCommonParams) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().VISITS.AGENCY_CLIENTS,
+      {},
+      { params: data },
+    );
+  }
+
   create_visit(payload: MODELS.IVisitPayload, data: { agencyId: string }) {
     return this.apiService.invoke(this.applicationContext.getApiConfig().VISITS.CREATE, payload, {
       params: data,

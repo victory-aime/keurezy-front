@@ -2,7 +2,6 @@ export * as UserModule from './users';
 export * as AuthModule from './auth';
 export * as AgencyModule from './agency';
 export * as PropertyModule from './property';
-export * as LeadsModule from './leads';
 export * as ChatModule from './chat';
 export * as NotificationsModule from './notifications';
 export * as BuildingModule from './building';

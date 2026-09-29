@@ -60,40 +60,34 @@ export const VisitDetails = ({
         <VStack align="stretch" gap={0} width={'full'}>
           <Flex py={2} justify="space-between">
             <BaseText color="gray.500">Bien concerné</BaseText>
-            <BaseText>{data?.lead?.property?.title ?? 'N/A'}</BaseText>
+            <BaseText>{data?.property?.title ?? 'N/A'}</BaseText>
           </Flex>
 
           <Separator />
           <Flex py={2} justify="space-between">
             <BaseText color="gray.500">Prix de location</BaseText>
-            <BaseFormatNumber value={data?.lead?.property?.price ?? 0} />
+            <BaseFormatNumber value={data?.property?.price ?? 0} />
           </Flex>
 
           <Separator />
           <Flex py={2} justify="space-between">
             <BaseText color="gray.500">Agent Traiteur</BaseText>
-            <BaseText textTransform={'capitalize'}>
-              {data?.lead?.assignedTo?.user?.name ?? 'Aucun'}
-            </BaseText>
+            <BaseText textTransform={'capitalize'}>{data?.agent?.user?.name ?? 'Aucun'}</BaseText>
           </Flex>
           <Separator />
         </VStack>
         <DetailsModalSection icon={<Icons.User />} title="Informations sur le prospect">
           <Flex width="full" alignItems={'flex-start'} gap={4} mt={2} mb={2}>
-            <DetailsInfoItem
-              icon={<Icons.User />}
-              label={'Nom'}
-              value={data?.lead?.client?.user?.name}
-            />
+            <DetailsInfoItem icon={<Icons.User />} label={'Nom'} value={data?.client?.user?.name} />
             <DetailsInfoItem
               icon={<Icons.Mail />}
               label={'Email'}
-              value={data?.lead?.client?.user?.email}
+              value={data?.client?.user?.email}
             />
             <DetailsInfoItem
               icon={<Icons.Phone />}
               label={'Tel'}
-              value={data?.lead?.client?.phone || 'Non renseigné'}
+              value={data?.client?.phone || 'Non renseigné'}
             />
           </Flex>
         </DetailsModalSection>

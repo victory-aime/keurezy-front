@@ -32,12 +32,6 @@ export const FEATURE_LABELS: Record<
     unlimited: 'Mises en avant illimitées',
   },
 
-  MANAGE_LEADS: {
-    singular: 'prospect',
-    plural: 'prospects',
-    unlimited: 'Prospects illimités',
-  },
-
   VIEW_REPORTS: {
     unlimited: 'Rapports et statistiques avancés',
   },

@@ -9,10 +9,14 @@ export const visitSchema = Yup.object({
 
   scheduledAt: Yup.string().required('Le date est obligatoire.'),
 
-  leadId: Yup.array()
+  clientId: Yup.array()
     .of(Yup.string().required())
-    .min(1, 'La demande est obligatoire.')
-    .test('not-empty', 'La demande est obligatoire.', (arr) => arr && arr[0] !== ''),
+    .min(1, 'Le client est obligatoire.')
+    .test('not-empty', 'Le client est obligatoire.', (arr) => arr && arr[0] !== ''),
+  propertyId: Yup.array()
+    .of(Yup.string().required())
+    .min(1, 'Le bien est obligatoire.')
+    .test('not-empty', 'Le bien est obligatoire.', (arr) => arr && arr[0] !== ''),
   status: Yup.array()
     .of(Yup.string().required())
     .min(1, 'Le statut du bien est obligatoire.')

@@ -1,7 +1,13 @@
 import { ENUM } from '..';
 import { COMMON } from '../enum';
-import { ILeadsAgency } from './leads';
 import { IPropertyResponse } from './property';
+
+/** Client proposé pour une visite : il a réservé ou écrit à l'agence (`visits/agency-clients`). */
+interface IVisitClient {
+  id: string;
+  phone?: string | null;
+  user: { name: string; email: string };
+}
 
 interface IVisitResponse {
   id?: string;
@@ -11,28 +17,30 @@ interface IVisitResponse {
   endTime?: string;
   status?: ENUM.COMMON.Status;
   notes?: string;
-  leadId?: string;
+  clientId?: string;
   propertyId?: string;
   agentId?: string;
   agencyId?: string;
   createdAt?: string;
   updatedAt?: string;
   property?: IPropertyResponse;
-  agent?: null | any;
-  lead?: ILeadsAgency;
+  client?: IVisitClient;
+  /** Agent assigné (membre de l'équipe) */
+  agent?: { user: { id?: string; name: string; email?: string } } | null;
 }
 
+/** Données envoyées à `visits/create` (client et bien obligatoires) et `visits/update`. */
 interface IVisitPayload {
   title?: string;
   scheduledAt?: string | any;
   startTime?: string;
   endTime?: string;
+  clientId?: string;
   propertyId?: string;
-  leadId?: string;
   status?: COMMON.Status;
   agentId?: string;
   notes?: string;
   visitId?: string;
 }
 
-export type { IVisitResponse, IVisitPayload };
+export type { IVisitClient, IVisitResponse, IVisitPayload };

@@ -15,6 +15,19 @@ const getAllVisitByAgencyQueries = (
   });
 };
 
+/** Clients proposés dans le formulaire de visite (remplace l'ancienne liste des leads). */
+const agencyClientsQueries = (
+  args: QUERIES.QueryPayload<MODELS.IVisitClient[], undefined, MODELS.IAgencyCommonParams>,
+) => {
+  const { params, queryOptions } = args;
+
+  return QUERIES.useCustomQuery<undefined, MODELS.IAgencyCommonParams, MODELS.IVisitClient[]>({
+    queryKey: [Constants.VISITS_KEYS.AGENCY_CLIENTS, params],
+    queryFn: () => visitsServiceInstance().getAgencyClients(params as MODELS.IAgencyCommonParams),
+    options: queryOptions,
+  });
+};
+
 const createNewVisitsMutation = (
   args: QUERIES.MutationPayload<MODELS.IVisitPayload, any, { data: MODELS.IAgencyCommonParams }>,
 ) => {
@@ -48,6 +61,7 @@ const cancelVisitMutation = (
 
 export {
   getAllVisitByAgencyQueries,
+  agencyClientsQueries,
   createNewVisitsMutation,
   updateVisitMutation,
   cancelVisitMutation,
