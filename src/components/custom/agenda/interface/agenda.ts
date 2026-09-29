@@ -74,6 +74,8 @@ interface BaseAgendaProps<TMeta = Record<string, unknown>> extends BaseLoadingPr
   views?: CalendarView[];
   // Actions
   onCreate?: (date?: Date) => void;
+  /** Plage affichée (au montage puis à chaque navigation) : pour ne charger que cette période */
+  onRangeChange?: (range: { from: Date; to: Date }) => void;
   onSelectEvent?: (event: CalendarEvent<TMeta>) => void;
   onMoveEvent?: (eventId: string, newDate: Date) => void;
   onResizeEvent?: (eventId: string, newEndDate: Date) => void;

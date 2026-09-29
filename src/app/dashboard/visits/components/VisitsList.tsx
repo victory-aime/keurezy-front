@@ -33,22 +33,24 @@ export const VisitsList = () => {
   const agencyId = user?.agencyId!;
   const userId = user?.ownerId! ?? user?.staffId!;
 
+  // Période affichée par l'agenda (AAAA-MM-JJ) : seules ses visites sont chargées
+  const [range, setRange] = useState<{ from: string; to: string } | null>(null);
+
   const queryPayload = useMemo(
     () => ({
-      params: {
-        agencyId: agencyId!,
-      },
-      queryOptions: {
-        enabled: !!agencyId && !!userId,
-      },
+      params: { agencyId: agencyId!, ...range },
+      // La requête attend la première période signalée par l'agenda
+      queryOptions: { enabled: !!agencyId && !!userId && !!range },
     }),
-    [agencyId, userId],
+    [agencyId, userId, range],
   );
 
+  // `isFetching` : l'agenda garde la période précédente affichée pendant le chargement
   const {
     data: visitsList,
     refetch,
     isLoading,
+    isFetching,
   } = VisitsModule.getAllVisitByAgencyQueries(queryPayload);
 
   // Listes du formulaire, chargées à son ouverture et selon les permissions (sinon 403)
@@ -173,7 +175,10 @@ export const VisitsList = () => {
     >
       <BaseAgenda
         events={agendaEvents ?? []}
-        loading={isLoading}
+        loading={isLoading || isFetching}
+        onRangeChange={({ from, to }) =>
+          setRange({ from: format(from, 'yyyy-MM-dd'), to: format(to, 'yyyy-MM-dd') })
+        }
         // Sans permission de planifier, un clic sur l'agenda n'ouvre pas le formulaire
         onCreate={
           hasPermission(AppPermissions.VISITS.SCHEDULE)

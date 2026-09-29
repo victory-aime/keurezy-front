@@ -2,7 +2,8 @@ import { BaseApi } from 'rise-core-frontend';
 import { MODELS } from '_types/';
 
 export class VisitsService extends BaseApi {
-  getAllVisits(data: { agencyId: string }) {
+  /** Visites de l'agence ; `from` / `to` (AAAA-MM-JJ) limitent à la période affichée. */
+  getAllVisits(data: { agencyId: string; from?: string; to?: string }) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().VISITS.ALL_BY_AGENCY,
       {},

@@ -3,14 +3,17 @@ import { visitsServiceInstance } from './visits.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
 
+/** Période facultative (AAAA-MM-JJ, fin incluse) : visites planifiées dans l'intervalle. */
+type AgencyVisitsParams = MODELS.IAgencyCommonParams & { from?: string; to?: string };
+
 const getAllVisitByAgencyQueries = (
-  args: QUERIES.QueryPayload<MODELS.IVisitResponse[], undefined, MODELS.IAgencyCommonParams>,
+  args: QUERIES.QueryPayload<MODELS.IVisitResponse[], undefined, AgencyVisitsParams>,
 ) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<undefined, MODELS.IAgencyCommonParams, MODELS.IVisitResponse[]>({
+  return QUERIES.useCustomQuery<undefined, AgencyVisitsParams, MODELS.IVisitResponse[]>({
     queryKey: [Constants.VISITS_KEYS.ALL_AGENCY_VISITS, params],
-    queryFn: () => visitsServiceInstance().getAllVisits(params as MODELS.IAgencyCommonParams),
+    queryFn: () => visitsServiceInstance().getAllVisits(params as AgencyVisitsParams),
     options: queryOptions,
   });
 };

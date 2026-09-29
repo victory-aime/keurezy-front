@@ -2,9 +2,12 @@ import { CalendarView } from '../interface/agenda';
 import {
   addDays,
   addMonths,
+  endOfMonth,
   endOfWeek,
   format,
   Locale,
+  startOfDay,
+  startOfMonth,
   startOfWeek,
   subDays,
   subMonths,
@@ -40,4 +43,25 @@ function navigate(view: CalendarView, date: Date, dir: -1 | 1): Date {
   }
 }
 
-export { navigate, buildCurrentLabel };
+/**
+ * Plage de dates affichée par la vue : c'est elle que l'on charge (`onRangeChange`).
+ * Mois et liste couvrent les semaines complètes de la grille (jours du mois voisin inclus).
+ */
+function visibleRange(view: CalendarView, date: Date): { from: Date; to: Date } {
+  switch (view) {
+    case 'day':
+      return { from: startOfDay(date), to: startOfDay(date) };
+    case 'week':
+      return {
+        from: startOfWeek(date, { weekStartsOn: 1 }),
+        to: startOfDay(endOfWeek(date, { weekStartsOn: 1 })),
+      };
+    default:
+      return {
+        from: startOfWeek(startOfMonth(date), { weekStartsOn: 1 }),
+        to: startOfDay(endOfWeek(endOfMonth(date), { weekStartsOn: 1 })),
+      };
+  }
+}
+
+export { navigate, buildCurrentLabel, visibleRange };

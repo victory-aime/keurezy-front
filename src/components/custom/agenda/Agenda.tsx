@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { fr } from 'date-fns/locale';
 import { Box, HStack, SegmentGroup, VStack } from '@chakra-ui/react';
 
@@ -18,7 +18,7 @@ import { ENUM } from '_types/*';
 import { BaseAgendaProps, CalendarEvent, CalendarView, ViewDefinition } from './interface/agenda';
 import { Status } from '_components/ui/status';
 import { DEFAULT_VIEW_DEFS } from './constants/agenda';
-import { buildCurrentLabel, navigate } from './functions/agenda';
+import { buildCurrentLabel, navigate, visibleRange } from './functions/agenda';
 import { t } from 'i18next';
 import { StatusValue } from '_components/ui/status';
 
@@ -34,6 +34,7 @@ export const BaseAgenda = <TMeta = Record<string, unknown>,>({
 
   // Actions
   onCreate,
+  onRangeChange,
   onSelectEvent,
   onMoveEvent,
   onResizeEvent,
@@ -94,6 +95,13 @@ export const BaseAgenda = <TMeta = Record<string, unknown>,>({
   // -------------------------------------------------------------------------
   // Stable callbacks — dependencies are narrowed to avoid unnecessary rebuilds
   // -------------------------------------------------------------------------
+
+  // Période affichée signalée au parent (chargement des seuls événements visibles)
+  useEffect(() => {
+    onRangeChange?.(visibleRange(view, current));
+    // onRangeChange volontairement exclu : seul un changement de vue ou de date compte
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, current]);
 
   const handlePrev = useCallback(() => setCurrent((d) => navigate(view, d, -1)), [view]);
 
