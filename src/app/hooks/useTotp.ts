@@ -30,6 +30,28 @@ export const useTotp = () => {
     }
   };
 
+  /**
+   * Connexion avec un code de secours (téléphone perdu). Même format de retour que
+   * `verifyTotp` ; Better Auth invalide le code après usage.
+   */
+  const verifyBackupCode = async (code: string, trustedDevice?: boolean) => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await authClient.twoFactor.verifyBackupCode({
+        code: code.trim(),
+        trustDevice: trustedDevice ?? false,
+      });
+      if (error) {
+        return { status: error.status, message: error.statusText ?? 'Code de secours invalide' };
+      }
+      return data;
+    } catch (e) {
+      return { status: 500, message: 'Erreur inattendue' };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const enable = useCallback(async (password: string) => {
     try {
       setIsLoading(true);
@@ -75,6 +97,7 @@ export const useTotp = () => {
     enableTotp: enable,
     disableTotp: disable,
     verifyTotp,
+    verifyBackupCode,
     isLoading,
   };
 };

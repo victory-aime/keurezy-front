@@ -61,15 +61,24 @@ export const FormOtpInput: FC<OtpInputProps> = ({
                 bg={
                   field.value?.[index]
                     ? isError
-                      ? hexToRGB('danger', 0.3)
-                      : hexToRGB('primary', 0.3)
-                    : hexToRGB('lighter', 0.4)
+                      ? hexToRGB('danger', 0.12)
+                      : hexToRGB('primary', 0.12)
+                    : 'bg'
                 }
-                borderColor={field.value?.[index] ? (isError ? 'red' : 'primary.500') : 'bg.muted'}
+                // Case vide toujours visible (clair comme sombre) ; l'état se lit aussi à la couleur du chiffre
+                borderColor={
+                  isError ? 'red.500' : field.value?.[index] ? 'primary.500' : 'border.emphasized'
+                }
                 borderWidth={1.5}
+                fontWeight={'semibold'}
+                _focusVisible={{
+                  borderColor: 'primary.500',
+                  outline: '2px solid',
+                  outlineColor: 'primary.500',
+                  outlineOffset: '1px',
+                }}
                 animation={isError ? 'shake' : undefined}
-                boxShadow={field.value?.[index] ? 'lg' : 'none'}
-                placeholder="."
+                placeholder="·"
               />
             ))}
           </Group>

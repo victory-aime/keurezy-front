@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { DisabledAccount } from '../../profile/components/DisabledAccount';
 import { VStack, HStack, Flex } from '@chakra-ui/react';
 import {
@@ -13,7 +13,7 @@ import {
   DeleteModalAnimation,
   BaseTag,
 } from '_components/custom';
-import { Formik } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import { ProfileForm } from '../../profile/components/ProfileForm';
 import { useTranslation } from 'react-i18next';
 import { formatCreatedAt, formatDisplayDate } from 'rise-core-frontend';
@@ -26,7 +26,6 @@ import { UserModule } from '_store/state-management';
 import { PassKeyModal } from './PassKeyModal';
 import { authClient } from '../../../lib/auth-client';
 import { usePasskey } from '_hooks/usePasskey';
-import { MODELS } from '_types/*';
 import { parseUserAgent } from '../utils/user-agent';
 import { handleApiError } from '_utils/handleApiError';
 import { handleApiSuccess } from '_utils/handleApiSuccess';
@@ -41,9 +40,7 @@ export const Settings = () => {
     totpURI: string;
     backupCodes: string[];
   }>({ totpURI: '', backupCodes: [] });
-  const [initialValues, setInitialValues] = useState<MODELS.IUser>({} as MODELS.IUser);
   const [openTotp, setOpenTotp] = useState<boolean>(false);
-  const [refetchUserInfo, setRefetchUserInfo] = useState(false);
   const [open2FA, setOpen2FA] = useState(false);
   const [checked, setChecked] = useState(false);
   const [openCloseSessionModal, setOpenCloseSessionModal] = useState<boolean>(false);
@@ -53,9 +50,21 @@ export const Settings = () => {
   const currentSessionId = session?.id;
   const [validateDisabledAccount, setValidateDisabledAccount] = useState<boolean>(false);
 
-  const { data: currentUser, isLoading: userDataLoading } = UserModule.getUserInfo({
-    queryOptions: { enabled: refetchUserInfo },
+  // État serveur : seule source de vérité de l'interrupteur 2FA (relu après chaque action)
+  const {
+    data: currentUser,
+    isLoading: userDataLoading,
+    refetch: refetchUser,
+  } = UserModule.getUserInfo({
+    queryOptions: { enabled: !!user?.id },
   });
+  const formikRef = useRef<FormikProps<{ twoFactorEnabled: boolean; newPassword: string }>>(null);
+
+  /** Relit l'utilisateur et aligne l'interrupteur, y compris après une activation abandonnée. */
+  const syncTwoFactor = async () => {
+    const { data } = await refetchUser();
+    await formikRef.current?.setFieldValue('twoFactorEnabled', !!data?.twoFactorEnabled);
+  };
 
   const {
     data: passkeySessionsList,
@@ -65,20 +74,19 @@ export const Settings = () => {
     queryOptions: { enabled: !!user?.id },
   });
 
+  // `checked` = état demandé par l'interrupteur ; un mot de passe faux laisse la modale ouverte
   const onSubmit2FA = async (value: { password: string }) => {
-    if (currentUser?.twoFactorEnabled) {
-      await disableTotp(value.password).then((data) => {
-        setRefetchUserInfo(data);
-        setOpen2FA(false);
-      });
-    } else {
-      await enableTotp(value.password).then((data) => {
-        if (!data) return;
-        setOpenTotp(true);
-        setOpen2FA(false);
-        setTotpData(data);
-      });
+    if (!checked) {
+      if (!(await disableTotp(value.password))) return;
+      setOpen2FA(false);
+      await syncTwoFactor();
+      return;
     }
+    const data = await enableTotp(value.password);
+    if (!data) return;
+    setTotpData(data);
+    setOpen2FA(false);
+    setOpenTotp(true);
   };
 
   const handleRegisterNewKey = async (values: { passkeyName: string }) => {
@@ -114,19 +122,12 @@ export const Settings = () => {
     }
   };
 
-  useEffect(() => {
-    if (currentUser) {
-      setInitialValues({
-        twoFactorEnabled: currentUser?.twoFactorEnabled,
-      });
-    }
-  }, []);
-
   return (
     <React.Fragment>
       <Formik
         enableReinitialize
-        initialValues={{ ...initialValues, newPassword: '' }}
+        innerRef={formikRef}
+        initialValues={{ twoFactorEnabled: !!currentUser?.twoFactorEnabled, newPassword: '' }}
         onSubmit={() => {}}
       >
         {({ values, handleSubmit, resetForm, dirty }) => (
@@ -362,9 +363,14 @@ export const Settings = () => {
       />
 
       <TotpQrCode
+        // Fermer sans code valide laisse la 2FA désactivée : l'état serveur est relu dans les deux cas
         onChange={() => {
           setOpenTotp(false);
-          setRefetchUserInfo(true);
+          void syncTwoFactor();
+        }}
+        onVerified={() => {
+          setOpenTotp(false);
+          void syncTwoFactor();
         }}
         isOpen={openTotp}
         data={totpData}
