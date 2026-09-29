@@ -28,4 +28,13 @@ export class LandService extends BaseApi {
       },
     );
   }
+
+  /** Bâtiments et villas portés par le terrain, avant sa suppression. */
+  getLandImpact(params: { id: string }) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().LAND.LAND_IMPACT,
+      {},
+      { params },
+    );
+  }
 }

@@ -47,12 +47,32 @@ const updateLandMutation = (
   });
 };
 
-const deleteLandMutation = (args: QUERIES.MutationPayload<MODELS.IDeleteBuilding>) => {
-  return QUERIES.useCustomMutation({
+const deleteLandMutation = (
+  args: QUERIES.MutationPayload<unknown, unknown, MODELS.IDeleteBuilding>,
+) => {
+  return QUERIES.useCustomMutation<unknown, unknown, MODELS.IDeleteBuilding>({
     mutationKey: [Constants.LAND_KEYS.DELETE_LAND],
     mutationFn: ({ params }) => landServiceInstance().delete_land(params!),
     options: args.mutationOptions,
   });
 };
 
-export { createLandMutation, updateLandMutation, getAllLandsByAgencyQueries, deleteLandMutation };
+/** Impact d'une suppression de terrain ; chargé à l'ouverture de la confirmation. */
+const getLandImpactQueries = (
+  args: QUERIES.QueryPayload<MODELS.ILandImpact, undefined, { id: string }>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, { id: string }, MODELS.ILandImpact>({
+    queryKey: [Constants.LAND_KEYS.LAND_IMPACT, params],
+    queryFn: () => landServiceInstance().getLandImpact(params as { id: string }),
+    options: queryOptions,
+  });
+};
+
+export {
+  createLandMutation,
+  updateLandMutation,
+  getAllLandsByAgencyQueries,
+  deleteLandMutation,
+  getLandImpactQueries,
+};

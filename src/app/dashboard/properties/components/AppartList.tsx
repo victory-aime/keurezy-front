@@ -19,6 +19,9 @@ import { PropertyFilter } from './PropertyFilter';
 import { useUserContext } from '_context/user-context';
 import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
+import { propertyCloseImpact, propertyDeleteImpact } from '_utils/impact';
+import { ActionImpactDialog } from '../../components/ActionImpactDialog';
+import { PropertyDetails } from './PropertyDetails';
 
 export const PropertyList = () => {
   const router = useRouter();
@@ -27,6 +30,12 @@ export const PropertyList = () => {
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
   const [filterValues, setFilterValues] = useState<MODELS.IAgencyFilters | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [detailId, setDetailId] = useState<string | null>(null);
+  // Action destructrice en cours de confirmation : son impact est chargé à l'ouverture
+  const [pending, setPending] = useState<{
+    action: 'close' | 'delete';
+    property: MODELS.IPropertyResponse;
+  } | null>(null);
 
   const agencyId = user?.agencyId;
   const userId = user?.ownerId ?? user?.staffId;
@@ -51,6 +60,26 @@ export const PropertyList = () => {
     isLoading,
     refetch: refetchProperty,
   } = PropertyModule.getAllPropertiesByAgency(queryPayload);
+
+  const { data: impact, isLoading: isImpactLoading } = PropertyModule.getPropertyImpactQueries({
+    params: { id: pending?.property.id ?? '' },
+    queryOptions: { enabled: !!pending },
+  });
+
+  const afterAction = {
+    mutationOptions: {
+      onSuccess: async () => {
+        setPending(null);
+        await refetchProperty();
+      },
+    },
+  };
+  const { mutate: closeProperty, isPending: isClosing } =
+    PropertyModule.closePropertyMutation(afterAction);
+  const { mutate: deleteProperty, isPending: isDeleting } =
+    PropertyModule.deletePropertyMutation(afterAction);
+
+  const isDelete = pending?.action === 'delete';
 
   const { data: allBuildings } = BuildingModule.getAllBuildingByAgencyQueries({
     params: {
@@ -131,6 +160,14 @@ export const PropertyList = () => {
       accessor: 'actions',
       actions: [
         {
+          name: 'view',
+          title: 'Voir le bien',
+          isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.VIEW),
+          handleClick(data) {
+            setDetailId(data.id);
+          },
+        },
+        {
           name: 'edit',
           isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.UPDATE),
           handleClick(data) {
@@ -142,6 +179,23 @@ export const PropertyList = () => {
           isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.PUBLISH),
           handleClick() {
             router.push(DASHBOARD_ROUTES.ANNONCES.ADD);
+          },
+        },
+        {
+          // Fermer : retire les annonces en ligne, conserve le bien et son historique
+          name: 'cancel',
+          title: 'Fermer le bien',
+          isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.UPDATE),
+          handleClick(data) {
+            setPending({ action: 'close', property: data });
+          },
+        },
+        {
+          name: 'delete',
+          title: 'Supprimer le bien',
+          isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.DELETE),
+          handleClick(data) {
+            setPending({ action: 'delete', property: data });
           },
         },
       ],
@@ -198,6 +252,40 @@ export const PropertyList = () => {
           totalPages: allProperties?.totalPages,
         }}
         hidePagination={allProperties?.totalPages === 1}
+      />
+      <PropertyDetails propertyId={detailId} onClose={() => setDetailId(null)} />
+      <ActionImpactDialog
+        isOpen={!!pending}
+        onChange={(open: boolean) => !open && setPending(null)}
+        title={isDelete ? 'Supprimer ce bien' : 'Fermer ce bien'}
+        subject={pending?.property.title}
+        summary={
+          impact
+            ? isDelete
+              ? propertyDeleteImpact(impact)
+              : propertyCloseImpact(impact)
+            : undefined
+        }
+        isLoadingImpact={isImpactLoading}
+        isSubmitting={isClosing || isDeleting}
+        confirmTitle={isDelete ? 'Supprimer définitivement' : 'Fermer le bien'}
+        confirmColor={isDelete ? 'danger' : 'warning'}
+        onConfirm={() => {
+          if (!pending) return;
+          const params = { id: pending.property.id };
+          if (isDelete) deleteProperty({ params });
+          else closeProperty({ params });
+        }}
+        // Suppression bloquée par l'historique : proposer la fermeture, plus sûre
+        alternative={
+          isDelete && hasPermission(AppPermissions.PROPERTIES.UPDATE)
+            ? {
+                title: 'Fermer le bien plutôt',
+                onClick: () =>
+                  pending && setPending({ action: 'close', property: pending.property }),
+              }
+            : undefined
+        }
       />
     </BaseContainer>
   );

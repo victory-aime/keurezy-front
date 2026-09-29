@@ -19,6 +19,8 @@ import { LandStatsCard } from './LandStats';
 import { useUserContext } from '_context/user-context';
 import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
+import { landDeleteImpact } from '_utils/impact';
+import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 
 export const LandList = () => {
   const { hasPermission } = usePermissions();
@@ -29,6 +31,8 @@ export const LandList = () => {
   const [openDetails, setOpenDetails] = useState(false);
   const [selectedValues, setSelectedValues] = useState<MODELS.LandResponseDto | null>(null);
   const [filterValues, setFilterValues] = useState<MODELS.ILandFilter | null>(null);
+  // Terrain dont on confirme la suppression (l'impact est chargé à l'ouverture)
+  const [landToDelete, setLandToDelete] = useState<MODELS.LandResponseDto | null>(null);
 
   const agencyId = currentUser?.agencyId;
   const userId = currentUser?.ownerId ?? currentUser?.staffId;
@@ -54,6 +58,20 @@ export const LandList = () => {
     isFetching,
     refetch: reloadLandsList,
   } = LandModule.getAllLandsByAgencyQueries(queryPayload);
+
+  const { data: landImpact, isLoading: isImpactLoading } = LandModule.getLandImpactQueries({
+    params: { id: landToDelete?.id ?? '' },
+    queryOptions: { enabled: !!landToDelete },
+  });
+
+  const { mutate: deleteLand, isPending: isDeleting } = LandModule.deleteLandMutation({
+    mutationOptions: {
+      onSuccess: async () => {
+        setLandToDelete(null);
+        await reloadLandsList();
+      },
+    },
+  });
 
   const landColumns: ColumnsDataTable[] = [
     { header: 'Terrain', accessor: 'title' },
@@ -97,6 +115,13 @@ export const LandList = () => {
           isDisabled: () => !hasPermission(AppPermissions.LAND.MANAGE),
           handleClick(data) {
             router.push(`${DASHBOARD_ROUTES.LAND.ADD}?landId=${data?.id}`);
+          },
+        },
+        {
+          name: 'delete',
+          isDisabled: () => !hasPermission(AppPermissions.LAND.MANAGE),
+          handleClick(data) {
+            setLandToDelete(data);
           },
         },
       ],
@@ -183,8 +208,21 @@ export const LandList = () => {
         data={selectedValues}
         isLoading={isLandLoad || isFetching}
         callback={() => {
+          // Bouton « Supprimer » du détail : même confirmation avec impact que la liste
           setOpenDetails(false);
+          setLandToDelete(selectedValues);
         }}
+      />
+      <ActionImpactDialog
+        isOpen={!!landToDelete}
+        onChange={(open: boolean) => !open && setLandToDelete(null)}
+        title="Supprimer ce terrain"
+        subject={landToDelete?.title}
+        summary={landImpact ? landDeleteImpact(landImpact) : undefined}
+        isLoadingImpact={isImpactLoading}
+        isSubmitting={isDeleting}
+        confirmTitle="Supprimer définitivement"
+        onConfirm={() => landToDelete && deleteLand({ params: { id: landToDelete.id } })}
       />
     </BaseContainer>
   );

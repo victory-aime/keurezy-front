@@ -29,3 +29,10 @@ export interface LandResponseDto extends ILandDto {
 }
 
 export interface ILandFilter extends IPagination, ILandDto {}
+
+/** Bâtiments et villas portés par un terrain (`GET land/impact`), affichés avant sa suppression. */
+export interface ILandImpact {
+  batiments: { id: string; name: string }[];
+  villas: number;
+  canDelete: boolean;
+}

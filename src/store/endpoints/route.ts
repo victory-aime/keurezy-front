@@ -150,6 +150,23 @@ export const APIS = (baseUrl?: string) => {
         method: 'POST',
         pathBase: 'SECURED_API',
       }),
+      PROPERTY_DETAIL: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/detail`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      PROPERTY_IMPACT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/impact`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      DELETE_PROPERTY: api({
+        path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/delete`,
+        method: 'DELETE',
+        pathBase: 'SECURED_API',
+      }),
 
       OCCUPATION_RATE_BY_PROPERTY_TYPE: api({
         path: `${APIS_ROUTES_MODULES_PATH.PROPERTY}/occupation-rate-property-type`,
@@ -292,6 +309,12 @@ export const APIS = (baseUrl?: string) => {
         method: 'DELETE',
 
         pathBase: 'SECURED_API',
+      }),
+      LAND_IMPACT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.LAND}/impact`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
       }),
     },
     COMMON: {

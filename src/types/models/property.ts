@@ -95,7 +95,27 @@ interface IOccupationRateStats {
   occupationRate: number;
 }
 
+/**
+ * Ce qui est lié à un bien (`GET property/impact`), affiché avant de le fermer ou de le
+ * supprimer. `canDelete` est la règle du backend : ne jamais la recalculer côté web.
+ */
+interface IPropertyImpact {
+  annonces: { total: number; online: number };
+  bookings: { total: number; upcoming: number; pending: number };
+  conversations: number;
+  visits: { total: number; upcoming: number };
+  canDelete: boolean;
+}
+
+/** Bien avec ses annonces et modalités (`GET property/detail`). */
+interface IPropertyDetail extends IPropertyResponse {
+  annonces?: { id: string; status: string; createdAt?: string }[];
+  rentalConfigs?: IRentalConfigResponse[];
+}
+
 export type {
+  IPropertyImpact,
+  IPropertyDetail,
   IPropertyResponse,
   ICreateProperty,
   IMonthlyRevenueStats,

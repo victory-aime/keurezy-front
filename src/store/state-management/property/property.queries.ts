@@ -68,7 +68,49 @@ const updatePropertyMutation = (
   });
 };
 
+/** Détail d'un bien ; chargé à l'ouverture du panneau. */
+const getPropertyDetailQueries = (
+  args: QUERIES.QueryPayload<MODELS.IPropertyDetail, undefined, { id: string }>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, { id: string }, MODELS.IPropertyDetail>({
+    queryKey: [Constants.PROPERTIES_KEYS.PROPERTY_DETAIL, params],
+    queryFn: () => propertyServiceInstance().getPropertyDetail(params as { id: string }),
+    options: queryOptions,
+  });
+};
+
+/** Impact d'une fermeture ou d'une suppression ; chargé à l'ouverture de la confirmation. */
+const getPropertyImpactQueries = (
+  args: QUERIES.QueryPayload<MODELS.IPropertyImpact, undefined, { id: string }>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, { id: string }, MODELS.IPropertyImpact>({
+    queryKey: [Constants.PROPERTIES_KEYS.PROPERTY_IMPACT, params],
+    queryFn: () => propertyServiceInstance().getPropertyImpact(params as { id: string }),
+    options: queryOptions,
+  });
+};
+
+const closePropertyMutation = (args: QUERIES.MutationPayload<unknown, unknown, { id: string }>) =>
+  QUERIES.useCustomMutation<unknown, unknown, { id: string }>({
+    mutationKey: [Constants.PROPERTIES_KEYS.CLOSE_PROPERTY],
+    mutationFn: ({ params }) => propertyServiceInstance().close_property(params!),
+    options: args.mutationOptions,
+  });
+
+const deletePropertyMutation = (args: QUERIES.MutationPayload<unknown, unknown, { id: string }>) =>
+  QUERIES.useCustomMutation<unknown, unknown, { id: string }>({
+    mutationKey: [Constants.PROPERTIES_KEYS.DELETE_PROPERTY],
+    mutationFn: ({ params }) => propertyServiceInstance().delete_property(params!),
+    options: args.mutationOptions,
+  });
+
 export {
+  getPropertyDetailQueries,
+  getPropertyImpactQueries,
+  closePropertyMutation,
+  deletePropertyMutation,
   getAllPropertiesByAgency,
   getMonthlyRevenueQueries,
   getOccupationRateByTypeQueries,

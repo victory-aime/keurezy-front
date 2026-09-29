@@ -40,4 +40,40 @@ export class PropertyService extends BaseApi {
       { params: data },
     );
   }
+
+  /** Bien de l'agence avec ses annonces et modalités de location. */
+  getPropertyDetail(params: { id: string }) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().PROPERTY.PROPERTY_DETAIL,
+      {},
+      { params },
+    );
+  }
+
+  /** Ce qui est lié au bien, avant une fermeture ou une suppression. */
+  getPropertyImpact(params: { id: string }) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().PROPERTY.PROPERTY_IMPACT,
+      {},
+      { params },
+    );
+  }
+
+  /** Fermer : les annonces en ligne du bien sont retirées, le bien est conservé. */
+  close_property(params: { id: string }) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().PROPERTY.CLOSE_PROPERTY,
+      {},
+      { params },
+    );
+  }
+
+  /** Supprimer un bien sans historique (refus du backend sinon). */
+  delete_property(params: { id: string }) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().PROPERTY.DELETE_PROPERTY,
+      {},
+      { params },
+    );
+  }
 }
