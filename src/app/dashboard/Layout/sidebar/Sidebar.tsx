@@ -45,37 +45,37 @@ export const Sidebar = ({
   const agencyId = user?.agencyId;
   const userId = user?.ownerId ?? user?.staffId;
 
-  const queryPayload = useMemo(
-    () => ({
-      params: {
-        agencyId: agencyId!,
-      },
-      queryOptions: {
-        enabled: !!agencyId && !!userId,
-      },
-    }),
-    [agencyId],
-  );
-
-  const { data: propertyList } = PropertyModule.getAllPropertiesByAgency({
+  /**
+   * Requête d'un badge, lancée seulement si l'utilisateur a la permission du lien :
+   * sans elle, le backend répond 403 (et le lien est de toute façon masqué).
+   */
+  const badgeQuery = (permission: string) => ({
     params: { agencyId: agencyId! },
-    queryOptions: {
-      enabled: !!agencyId && !!userId && hasPermission(AppPermissions.PROPERTIES.VIEW),
-    },
+    queryOptions: { enabled: !!agencyId && !!userId && hasPermission(permission) },
   });
 
-  const { data: buildingList } = BuildingModule.getAllBuildingByAgencyQueries(queryPayload);
+  const { data: propertyList } = PropertyModule.getAllPropertiesByAgency(
+    badgeQuery(AppPermissions.PROPERTIES.VIEW),
+  );
 
-  const { data: allLandsList } = LandModule.getAllLandsByAgencyQueries(queryPayload);
+  const { data: buildingList } = BuildingModule.getAllBuildingByAgencyQueries(
+    badgeQuery(AppPermissions.BUILDING.MANAGE),
+  );
 
-  const { data: teamList } = TeamModule.getAllTeamByAgency(queryPayload);
+  const { data: allLandsList } = LandModule.getAllLandsByAgencyQueries(
+    badgeQuery(AppPermissions.LAND.MANAGE),
+  );
 
-  const { data: invitationList } = InvitationModule.getAllInvitationByAgency(queryPayload);
+  const { data: teamList } = TeamModule.getAllTeamByAgency(badgeQuery(AppPermissions.USERS.VIEW));
+
+  const { data: invitationList } = InvitationModule.getAllInvitationByAgency(
+    badgeQuery(AppPermissions.USERS.VIEW),
+  );
 
   // Badge : demandes de réservation à traiter
   const { data: pendingBookings } = BookingsModule.agencyBookingsQueries({
     params: { agencyId: agencyId!, status: ENUM.BookingStatus.PENDING },
-    queryOptions: queryPayload.queryOptions,
+    queryOptions: badgeQuery(AppPermissions.BOOKINGS.VIEW).queryOptions,
   });
 
   // Badge : messages non lus des clients (même requête que la page Messages, cache partagé)

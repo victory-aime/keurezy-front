@@ -125,8 +125,11 @@ actionsButtonProps={{
   - afficher un nom de permission à l'utilisateur ;
   - considérer le masquage côté web comme un contrôle de sécurité.
 
+## Mise à jour (après test manuel)
+- **Réservations** : le backend ajoute `view_bookings` et `manage_bookings` (`docs/agency-booking-permission` côté backend). Le lien Réservations exige `view_bookings`. Les boutons confirmer et refuser exigent `manage_bookings`.
+- **Sidebar** : les requêtes de badge ne partent qu'avec la permission du lien. Sans ça, un staff limité déclenchait des 403 à chaque chargement. Les badges « 5 » écrits en dur sont supprimés.
+
 ## Hors périmètre
-- Les réservations : aucune permission n'est seedée. Elles restent visibles de tous les membres.
 - Les écrans des leads : ils sont retirés par le module `agency-remove-leads`.
 
 ## Questions ouvertes

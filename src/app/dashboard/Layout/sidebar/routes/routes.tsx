@@ -41,6 +41,7 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         label: 'Réservations',
         path: DASHBOARD_ROUTES.BOOKINGS,
         icon: Icons.Calendar,
+        permission: AppPermissions.BOOKINGS.VIEW,
       },
     ],
     title: 'Gestion Immobiliers',
@@ -67,14 +68,12 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         path: DASHBOARD_ROUTES.VISITS,
         icon: Icons.Calendar,
         permission: AppPermissions.VISITS.VIEW,
-        badge: 5,
       },
       {
         label: 'Invitations',
         path: DASHBOARD_ROUTES.INVITATIONS.LIST,
         icon: Icons.SendMail,
         permission: AppPermissions.USERS.VIEW,
-        badge: 5,
       },
 
       {
@@ -82,7 +81,6 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         path: DASHBOARD_ROUTES.TEAM.LIST,
         icon: Icons.FaUsers,
         permission: AppPermissions.USERS.VIEW,
-        badge: 5,
       },
       {
         label: 'Messages',

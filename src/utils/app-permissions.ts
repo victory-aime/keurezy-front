@@ -25,6 +25,10 @@ export const AppPermissions = {
     UPDATE: 'update_visit',
     CANCEL: 'cancel_visit',
   },
+  BOOKINGS: {
+    VIEW: 'view_bookings',
+    MANAGE: 'manage_bookings',
+  },
   CONVERSATIONS: {
     VIEW: 'view_conversations',
     REPLY: 'reply_conversations',

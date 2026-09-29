@@ -54,7 +54,9 @@ export const BookingDetailsModal = ({
   const { colorMode } = useColorMode();
   const router = useRouter();
   const { hasPermission } = usePermissions();
-  const isPending = data?.status === ENUM.BookingStatus.PENDING;
+  // Décision (confirmer / refuser) : demande en attente et permission de traiter les réservations
+  const isPending =
+    data?.status === ENUM.BookingStatus.PENDING && hasPermission(AppPermissions.BOOKINGS.MANAGE);
 
   // Discussion du bien avec ce client, réservation en contexte (retrouvée ou créée)
   const { mutate: openConversation, isPending: isOpeningChat } =
