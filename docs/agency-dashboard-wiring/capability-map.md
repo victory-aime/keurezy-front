@@ -29,8 +29,9 @@ Il faut étendre la règle « impact avant l'action », avec `ActionImpactDialog
 - suppression d'annonce (`DeleteAnnonce`) ;
 - annulation de visite (`VisitsList`) ;
 - désactivation d'un membre par l'interrupteur de statut (`TeamList`) ;
-- déconnexion du Drive et corbeille (`integrations`) ;
 - désactivation du compte (`profile`, `security`).
+
+Drive et la corbeille sont retirés de ce chantier (décision du 29/09). Voir [`destructive-impact-rollout`](../destructive-impact-rollout/spec.md). Chantiers ouverts en parallèle : [`invitation-acceptance`](../invitation-acceptance/spec.md), [`auth-flow-audit`](../auth-flow-audit/spec.md) et [`dashboard-quick-actions`](../dashboard-quick-actions/spec.md).
 
 ## Processus pour chaque module
 1. Spécification (`spec-driven-development`), validée par toi.
