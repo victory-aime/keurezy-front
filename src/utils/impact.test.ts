@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  bookingCancelImpact,
   buildingDeleteImpact,
   landDeleteImpact,
   propertyCloseImpact,
@@ -106,5 +107,37 @@ describe('buildingDeleteImpact', () => {
     expect(summary.blocked).toBe(true);
     expect(summary.groups[0].tone).toBe('blocked');
     expect(summary.groups[0].items).toContain('1 réservation (dont 1 à venir)');
+  });
+});
+
+describe('bookingCancelImpact', () => {
+  it('dit qui est prévenu, quelles dates se libèrent et ce qui est conservé', () => {
+    const summary = bookingCancelImpact({
+      clientName: 'Awa Diop',
+      period: 'du 5 au 10 octobre',
+      totalAmount: 150000,
+    });
+    expect(summary.blocked).toBe(false);
+    const changes = summary.groups.find((group) => group.tone === 'warning')!;
+    expect(changes.items).toEqual([
+      'Awa Diop sera prévenu(e) par notification et par e-mail, avec votre motif.',
+      'Les dates du 5 au 10 octobre redeviennent réservables.',
+      'Le séjour de 150 000 FCFA n’aura pas lieu.',
+    ]);
+    const kept = summary.groups.find((group) => group.tone === 'success')!;
+    expect(kept.items).toContain(
+      'La réservation reste dans l’historique, avec le statut Annulée et votre motif.',
+    );
+  });
+
+  it('reste compréhensible sans nom de client', () => {
+    const summary = bookingCancelImpact({
+      clientName: null,
+      period: 'du 1 au 2 mai',
+      totalAmount: 0,
+    });
+    expect(summary.groups[0].items[0]).toBe(
+      'Le client sera prévenu par notification et par e-mail, avec votre motif.',
+    );
   });
 });

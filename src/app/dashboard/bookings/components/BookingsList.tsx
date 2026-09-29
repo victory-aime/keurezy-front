@@ -26,6 +26,7 @@ import {
 import { BookingsStatsCard } from './BookingsStatsCard';
 import { BookingDetailsModal } from './BookingDetailsModal';
 import { RejectBookingModal } from './RejectBookingModal';
+import { CancelBookingDialog } from './CancelBookingDialog';
 
 type StatusFilter = 'ALL' | ENUM.BookingStatus;
 
@@ -35,6 +36,8 @@ const STATUS_FILTERS: { value: StatusFilter; label: string }[] = [
   { value: ENUM.BookingStatus.CONFIRMED, label: 'Confirmées' },
   { value: ENUM.BookingStatus.REJECTED, label: 'Refusées' },
   { value: ENUM.BookingStatus.CANCELLED, label: 'Annulées' },
+  // Posé chaque nuit par le backend quand le séjour est terminé
+  { value: ENUM.BookingStatus.COMPLETED, label: 'Terminées' },
 ];
 
 export const BookingsList = () => {
@@ -43,6 +46,7 @@ export const BookingsList = () => {
   const [selected, setSelected] = useState<MODELS.IAgencyBooking | null>(null);
   const [openDetails, setOpenDetails] = useState(false);
   const [openReject, setOpenReject] = useState(false);
+  const [openCancel, setOpenCancel] = useState(false);
 
   const agencyId = user?.agencyId;
   const userId = user?.ownerId ?? user?.staffId;
@@ -76,6 +80,16 @@ export const BookingsList = () => {
       mutationOptions: {
         onSuccess: () => {
           setOpenReject(false);
+          setOpenDetails(false);
+        },
+      },
+    });
+
+  const { mutate: cancelBooking, isPending: isCancelling } =
+    BookingsModule.agencyCancelBookingMutation({
+      mutationOptions: {
+        onSuccess: () => {
+          setOpenCancel(false);
           setOpenDetails(false);
         },
       },
@@ -225,6 +239,17 @@ export const BookingsList = () => {
           if (selected) await confirmBooking({ params: { id: selected.id } });
         }}
         onReject={() => setOpenReject(true)}
+        onCancelBooking={() => setOpenCancel(true)}
+      />
+
+      <CancelBookingDialog
+        isOpen={openCancel}
+        onChange={setOpenCancel}
+        booking={selected}
+        isSubmitting={isCancelling}
+        onConfirm={(reason) =>
+          selected && cancelBooking({ payload: { reason }, params: { id: selected.id } })
+        }
       />
 
       <RejectBookingModal

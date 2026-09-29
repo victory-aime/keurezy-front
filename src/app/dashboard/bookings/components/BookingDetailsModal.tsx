@@ -49,14 +49,26 @@ export const BookingDetailsModal = ({
   overlappingPending,
   callback,
   onReject,
+  onCancelBooking,
   isEmailVerified,
-}: ModalOpenProps & { data: MODELS.IAgencyBooking | null; overlappingPending: number }) => {
+}: ModalOpenProps & {
+  data: MODELS.IAgencyBooking | null;
+  overlappingPending: number;
+  /** Ouvre la confirmation d'annulation (réservation confirmée à venir) */
+  onCancelBooking?: () => void;
+}) => {
   const { colorMode } = useColorMode();
   const router = useRouter();
   const { hasPermission } = usePermissions();
   // Décision (confirmer / refuser) : demande en attente et permission de traiter les réservations
-  const isPending =
-    data?.status === ENUM.BookingStatus.PENDING && hasPermission(AppPermissions.BOOKINGS.MANAGE);
+  const canManage = hasPermission(AppPermissions.BOOKINGS.MANAGE);
+  const isPending = data?.status === ENUM.BookingStatus.PENDING && canManage;
+  // Annulation par l'agence : séjour confirmé qui n'a pas commencé (règle du backend)
+  const today = new Date().toLocaleDateString('sv'); // AAAA-MM-JJ, jour local
+  const isCancellable =
+    data?.status === ENUM.BookingStatus.CONFIRMED &&
+    data.startDate.slice(0, 10) > today &&
+    canManage;
 
   // Discussion du bien avec ce client, réservation en contexte (retrouvée ou créée)
   const { mutate: openConversation, isPending: isOpeningChat } =
@@ -71,13 +83,13 @@ export const BookingDetailsModal = ({
     <BaseModal
       isOpen={isOpen}
       onChange={onChange}
-      onReject={onReject}
+      onReject={isPending ? onReject : onCancelBooking}
       onClick={callback}
       title="Demande de réservation"
       description={data?.property?.title}
       status={data ? toTagStatus(data.status) : undefined}
       buttonCancelTitle="Fermer"
-      buttonRejectTitle={isPending ? 'Refuser' : ''}
+      buttonRejectTitle={isPending ? 'Refuser' : isCancellable ? 'Annuler la réservation' : ''}
       iconRejectButton={<Icons.Close />}
       iconSaveButton={<Icons.Check />}
       buttonSaveTitle={isPending ? 'Confirmer la réservation' : ''}

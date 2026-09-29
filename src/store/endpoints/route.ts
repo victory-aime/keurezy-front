@@ -430,6 +430,11 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         method: 'PATCH',
       }),
+      AGENCY_CANCEL: api({
+        path: `${APIS_ROUTES_MODULES_PATH.BOOKINGS}/agency-cancel`,
+        pathBase: 'SECURED_API',
+        method: 'PATCH',
+      }),
     },
     VISITS: {
       CREATE: api({

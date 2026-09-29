@@ -24,4 +24,13 @@ export class BookingsService extends BaseApi {
       params: { id },
     });
   }
+
+  /** Annulation par l'agence d'une réservation confirmée à venir ; le motif est transmis au client. */
+  agencyCancelBooking(id: string, data: MODELS.IRejectBookingPayload) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().BOOKINGS.AGENCY_CANCEL,
+      data,
+      { params: { id } },
+    );
+  }
 }

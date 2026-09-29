@@ -200,3 +200,46 @@ export function buildingDeleteImpact(impact: IBuildingImpact): ImpactSummary {
     ],
   };
 }
+
+/** « 150 000 FCFA » (espaces insécables d'Intl remplacées par des espaces simples) */
+const formatFcfa = (amount: number) =>
+  `${new Intl.NumberFormat('fr-FR').format(amount).replace(/[  ]/g, ' ')} FCFA`;
+
+/**
+ * Annulation d'une réservation confirmée par l'agence : le client est prévenu, les dates se
+ * libèrent, l'historique est conservé. Aucun remboursement n'est évoqué : pas de paiement en ligne.
+ */
+export function bookingCancelImpact(booking: {
+  clientName: string | null | undefined;
+  /** Période lisible, ex. « du 5 au 10 octobre » */
+  period: string;
+  totalAmount: number;
+}): ImpactSummary {
+  const who = booking.clientName
+    ? `${booking.clientName} sera prévenu(e)`
+    : 'Le client sera prévenu';
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'warning',
+        title: 'Ce qui change',
+        items: [
+          `${who} par notification et par e-mail, avec votre motif.`,
+          `Les dates ${booking.period} redeviennent réservables.`,
+          ...(booking.totalAmount > 0
+            ? [`Le séjour de ${formatFcfa(booking.totalAmount)} n’aura pas lieu.`]
+            : []),
+        ],
+      },
+      {
+        tone: 'success',
+        title: 'Ce qui est conservé',
+        items: [
+          'La réservation reste dans l’historique, avec le statut Annulée et votre motif.',
+          'La discussion avec le client.',
+        ],
+      },
+    ],
+  };
+}

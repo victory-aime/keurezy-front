@@ -66,4 +66,35 @@ const rejectBookingMutation = (
   });
 };
 
-export { agencyBookingsQueries, confirmBookingMutation, rejectBookingMutation };
+/** Annulation par l'agence : la liste (et le badge de la sidebar) est rechargée ensuite. */
+const agencyCancelBookingMutation = (
+  args: QUERIES.MutationPayload<
+    MODELS.IRejectBookingPayload,
+    { message: string },
+    { id: string }
+  > = {},
+) => {
+  return QUERIES.useCustomMutation<
+    MODELS.IRejectBookingPayload,
+    { message: string },
+    { id: string }
+  >({
+    mutationKey: [Constants.BOOKINGS_KEYS.AGENCY_CANCEL_BOOKING],
+    mutationFn: ({ payload, params }) =>
+      bookingsServiceInstance().agencyCancelBooking(params!.id, payload!),
+    options: {
+      ...args.mutationOptions,
+      onSuccess: (...result) => {
+        BookingsCache.invalidateAgencyBookings();
+        return args.mutationOptions?.onSuccess?.(...result);
+      },
+    },
+  });
+};
+
+export {
+  agencyBookingsQueries,
+  confirmBookingMutation,
+  rejectBookingMutation,
+  agencyCancelBookingMutation,
+};

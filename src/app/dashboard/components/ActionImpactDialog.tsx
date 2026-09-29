@@ -32,6 +32,10 @@ interface ActionImpactDialogProps {
   onConfirm: () => void;
   /** Action plus sûre proposée à la place, ex. « Fermer le bien » quand la suppression est bloquée */
   alternative?: { title: string; onClick: () => void };
+  /** Contenu affiché sous l'impact, ex. le champ Motif d'une annulation */
+  children?: ReactNode;
+  /** Confirmation désactivée par l'appelant, ex. motif encore vide */
+  confirmDisabled?: boolean;
 }
 
 /** Un groupe de conséquences : bande colorée, icône, titre explicite et liste. */
@@ -79,6 +83,8 @@ export function ActionImpactDialog({
   confirmColor = 'danger',
   onConfirm,
   alternative,
+  children,
+  confirmDisabled,
 }: ActionImpactDialogProps) {
   const blocked = summary?.blocked ?? true;
   return (
@@ -94,7 +100,7 @@ export function ActionImpactDialog({
       onClick={onConfirm}
       // Confirmation impossible tant que l'impact n'est pas connu ou s'il bloque l'action ;
       // « Retour » et l'alternative restent utilisables
-      saveDisabled={isLoadingImpact || blocked}
+      saveDisabled={isLoadingImpact || blocked || confirmDisabled}
       isLoading={isSubmitting}
       buttonRejectTitle={blocked && alternative ? alternative.title : ''}
       onReject={alternative?.onClick}
@@ -109,6 +115,7 @@ export function ActionImpactDialog({
         ) : (
           summary.groups.map((group) => <ImpactGroupBlock key={group.title} group={group} />)
         )}
+        {children}
       </VStack>
     </BaseModal>
   );
