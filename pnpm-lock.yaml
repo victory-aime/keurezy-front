@@ -24,8 +24,8 @@ importers:
         specifier: ^9.5.11
         version: 9.5.11(next@16.3.6(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)(typescript@5.9.3)(webpack@5.108.0)
       axios:
-        specifier: 1.15.2
-        version: 1.15.2
+        specifier: 1.20.0
+        version: 1.20.0
       better-auth:
         specifier: ^1.6.11
         version: 1.6.20(next@16.3.6(@types/node@20.19.43)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@5.0.2(@types/node@20.19.43)(vite@7.3.6(@types/node@20.19.43)(jiti@2.6.1)(terser@5.48.0)))
@@ -90,8 +90,8 @@ importers:
         specifier: ^3.8.0
         version: 3.9.0(@types/react@19.2.17)(react-dom@19.2.3(react@19.2.3))(react-is@16.13.1)(react@19.2.3)(redux@5.0.1)
       rise-core-frontend:
-        specifier: 4.4.19
-        version: 4.4.19(@tanstack/react-query@5.101.1(react@19.2.3))(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
+        specifier: 4.4.20
+        version: 4.4.20(@tanstack/react-query@5.101.1(react@19.2.3))(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
       socket.io-client:
         specifier: ^4.8.3
         version: 4.8.3
@@ -2023,6 +2023,10 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  agent-base@6.0.2:
+    resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
+    engines: {node: '>= 6.0.0'}
+
   agent-base@9.0.0:
     resolution: {integrity: sha512-TQf59BsZnytt8GdJKLPfUZ54g/iaUL2OWDSFCCvMOhsHduDQxO8xC4PNeyIkVcA5KwL2phPSv0douC0fgWzmnA==}
     engines: {node: '>= 20'}
@@ -2106,8 +2110,8 @@ packages:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
 
-  axios@1.15.2:
-    resolution: {integrity: sha512-wLrXxPtcrPTsNlJmKjkPnNPK2Ihe0hn0wGSaTEiHRPxwjvJwT3hKmXF4dpqxmPO9SoNb2FsYXj/xEo0gHN+D5A==}
+  axios@1.20.0:
+    resolution: {integrity: sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==}
 
   babel-plugin-macros@3.1.0:
     resolution: {integrity: sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==}
@@ -2950,6 +2954,10 @@ packages:
   http-proxy-agent@9.1.0:
     resolution: {integrity: sha512-2NxoveTT58mjYT4n3RPTEfCZGLMbidoO8XEieXfpSYxu+PQJ1qpx4ypwH6N+uF9twBPIvRRgvkvW5HUTYWENig==}
     engines: {node: '>= 20'}
+
+  https-proxy-agent@5.0.1:
+    resolution: {integrity: sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==}
+    engines: {node: '>= 6'}
 
   https-proxy-agent@9.1.0:
     resolution: {integrity: sha512-ag87y7cJJ9/3+GxFr8Oy4O5faDsGRGnBGsJj/YjOSsSx/5eadKLYTMPlzuR6obgoCDDm0abAAZitXXQkMOPSpA==}
@@ -3904,8 +3912,8 @@ packages:
     resolution: {integrity: sha512-l+sSefzHpj5qimhFSE5a8nufZYAM3sBSVMAPtYkmC+4EH2anSGaEMXSD0izRQbu9nfyQ9y5JrVmp7E8oZrUjvA==}
     engines: {node: '>=8'}
 
-  rise-core-frontend@4.4.19:
-    resolution: {integrity: sha512-evrMk+UlgAI7xTH43d8H1sL6dmPGjnEcRtw94MQU+w9xR8I0KQnxGgNEKhXtMZMQR05x6AokMyHxsTGzh7RPVw==}
+  rise-core-frontend@4.4.20:
+    resolution: {integrity: sha512-1pa3yFFWOdAdGWy6m/D52HELUdOcCgOhX4xPVAaC9YO3ZC8mSB4BZ7Gnq5igie2GO0LvClA6Vf0HZsw+CUvAxA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@tanstack/react-query': '>=5 <6'
@@ -6933,6 +6941,12 @@ snapshots:
 
   acorn@8.17.0: {}
 
+  agent-base@6.0.2:
+    dependencies:
+      debug: 4.4.3
+    transitivePeerDependencies:
+      - supports-color
+
   agent-base@9.0.0: {}
 
   aggregate-error@3.1.0:
@@ -7003,13 +7017,15 @@ snapshots:
 
   at-least-node@1.0.0: {}
 
-  axios@1.15.2:
+  axios@1.20.0:
     dependencies:
       follow-redirects: 1.16.0
       form-data: 4.0.6
+      https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
+      - supports-color
 
   babel-plugin-macros@3.1.0:
     dependencies:
@@ -7898,6 +7914,13 @@ snapshots:
       - kerberos
       - supports-color
 
+  https-proxy-agent@5.0.1:
+    dependencies:
+      agent-base: 6.0.2
+      debug: 4.4.3
+    transitivePeerDependencies:
+      - supports-color
+
   https-proxy-agent@9.1.0:
     dependencies:
       agent-base: 9.0.0
@@ -8663,10 +8686,10 @@ snapshots:
       onetime: 5.1.2
       signal-exit: 3.0.7
 
-  rise-core-frontend@4.4.19(@tanstack/react-query@5.101.1(react@19.2.3))(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3)):
+  rise-core-frontend@4.4.20(@tanstack/react-query@5.101.1(react@19.2.3))(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3)):
     dependencies:
       '@tanstack/react-query': 5.101.1(react@19.2.3)
-      axios: 1.15.2
+      axios: 1.20.0
       dayjs: 1.11.21
       react: 19.2.3
       yup: 1.7.1
@@ -8677,6 +8700,7 @@ snapshots:
       - '@types/react'
       - debug
       - immer
+      - supports-color
       - use-sync-external-store
 
   rollup@4.63.5:

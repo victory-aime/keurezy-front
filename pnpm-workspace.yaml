@@ -7,3 +7,4 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - rise-core-frontend@4.4.18
   - rise-core-frontend@4.4.19
+  - rise-core-frontend@4.4.20
