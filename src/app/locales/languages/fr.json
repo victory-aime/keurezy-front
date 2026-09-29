@@ -58,10 +58,10 @@
     "PROGRESS": "Envoi en cours..."
   },
   "CHART": {
-    "EXPECTED": "Montant attendus",
-    "RECEIVED": "Montant reçu",
+    "EXPECTED": "Montant attendu",
+    "RECEIVED": "Séjours terminés",
     "PAYE": "Montant Payé",
-    "REST_AMOUNT": "Montant restant"
+    "REST_AMOUNT": "Séjours confirmés à venir"
   },
   "COMMON": {
     "LEGAL_MENTIONS": "Mentions légales",

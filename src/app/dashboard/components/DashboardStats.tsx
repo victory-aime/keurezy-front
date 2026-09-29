@@ -1,6 +1,6 @@
 'use client';
 
-import { Flex, For, SimpleGrid, Span, Stack, VStack } from '@chakra-ui/react';
+import { Flex, For, HStack, IconButton, SimpleGrid, Span, Stack, VStack } from '@chakra-ui/react';
 import {
   BaseContainer,
   BaseIcon,
@@ -10,17 +10,19 @@ import {
   Icons,
 } from '_components/custom';
 import { NotificationsModule, PropertyModule } from '_store/state-management';
-import { ENUM } from '_types/*';
+import { CONSTANTS, ENUM } from '_types/*';
 import { OccupationRateByType } from './OccupationRateByType';
 import { MonthlyRevenueAreaChart } from './MonthlyRevenueAreaChart';
 import { useUserContext } from '_context/user-context';
-import { useMemo } from 'react';
+import { useState } from 'react';
 import { DASHBOARD_ROUTES } from '../routes';
 import { useRouter } from 'next/navigation';
 import { useAppTheme } from '_context/theme-context';
 import { RenderNotifications } from '../notifications/components/RenderNotifications';
 import { MODELS } from '_types/*';
-import { Months } from '_utils/generate';
+import { usePermissions } from '_hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
+import { currentMonthExpected } from '_utils/revenue';
 
 export const DashboardStats = () => {
   const { push } = useRouter();
@@ -30,20 +32,32 @@ export const DashboardStats = () => {
   const agencyId = user?.agencyId;
   const userId = user?.ownerId ?? user?.staffId;
 
-  const queryPayload = useMemo(
-    () => ({
-      params: {
-        agencyId: agencyId!,
-      },
-      queryOptions: {
-        enabled: !!agencyId && !!userId,
-      },
-    }),
-    [agencyId],
+  const { hasPermission } = usePermissions();
+  const canViewProperties = hasPermission(AppPermissions.PROPERTIES.VIEW);
+  const currentYear = new Date().getFullYear();
+  const [year, setYear] = useState(currentYear);
+
+  // Statistiques des biens : uniquement avec `view_properties` (sinon 403 du backend)
+  const statsQuery = <T extends object>(params: T) => ({
+    params: { agencyId: agencyId!, ...params },
+    queryOptions: { enabled: !!agencyId && !!userId && canViewProperties },
+  });
+
+  // Une seule ligne suffit : seul le total (`totalItems`) est affiché
+  const { data: allProperties, isLoading: propertiesLoad } =
+    PropertyModule.getAllPropertiesByAgency(statsQuery({ limitPerPage: 1 }));
+
+  const { data: monthlyRevenue, isLoading: revenueLoad } = PropertyModule.getMonthlyRevenueQueries(
+    statsQuery({ year }),
   );
 
-  const { data: allProperties, isLoading: propertiesLoad } =
-    PropertyModule.getAllPropertiesByAgency(queryPayload);
+  const { data: occupation, isLoading: occupationLoad } =
+    PropertyModule.getOccupationRateByTypeQueries(statsQuery({}));
+
+  // Revenus du mois en cours : toujours l'année courante, même si le graphique en montre une autre
+  const { data: currentYearRevenue } = PropertyModule.getMonthlyRevenueQueries(
+    statsQuery({ year: currentYear }),
+  );
 
   const {
     data: allActivities,
@@ -53,25 +67,16 @@ export const DashboardStats = () => {
     queryOptions: { enabled: !!user?.id },
   });
 
-  const revenues = allProperties?.content?.reduce(
-    (acc: { revenue: number }, p: { status: ENUM.COMMON.Status; price: number }) => {
-      if (p.status !== ENUM.COMMON.Status.AVAILABLE) {
-        acc.revenue += Number(p.price ?? 0);
-      }
-      return acc;
-    },
-    { revenue: 0 },
-  );
-
   const stats: BaseStatsProps[] = [
     {
-      title: 'Total Propriétes',
-      value: allProperties?.content?.length ?? 0,
+      title: 'Propriétés',
+      value: allProperties?.totalItems ?? 0,
       icon: <Icons.RiBuildingLine />,
     },
     {
-      title: 'Revenues Mensuels',
-      value: revenues?.revenue ?? 0,
+      title: 'Revenus du mois',
+      // Réservations terminées et confirmées du mois (pas de paiement en ligne)
+      value: currentMonthExpected(currentYearRevenue ?? []),
       isNumber: true,
       currency: ENUM.COMMON.Currency.XOF,
       icon: <Icons.Payment />,
@@ -79,28 +84,36 @@ export const DashboardStats = () => {
     },
   ];
 
-  const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+  const occupationData = (occupation ?? []).map((row) => ({
+    ...row,
+    propertyType: (CONSTANTS.propertyTypes.find((type) => type.value === row.propertyType)?.label ??
+      row.propertyType) as MODELS.IOccupationRateStats['propertyType'],
+  }));
 
-  const generateMonthlyRevenueStats = (): MODELS.IMonthlyRevenueStats[] => {
-    return Months().map((month) => {
-      const receivedAmount = random(500000, 5000000);
-      const remainingAmount = random(100000, 2000000);
-
-      return {
-        month,
-        receivedAmount,
-        remainingAmount,
-      };
-    });
-  };
-
-  const generateOccupationRateStats = (): MODELS.IOccupationRateStats[] => {
-    const propertyTypes = ['Studio', 'Appartement', 'Villa', 'Duplex', 'Bureau', 'Commerce'] as any;
-    return propertyTypes.map((propertyType: any) => ({
-      propertyType,
-      occupationRate: random(20, 100),
-    }));
-  };
+  const yearSelector = (
+    <HStack justify="flex-end" gap={1} width="full" mt={2}>
+      <IconButton
+        aria-label="Année précédente"
+        size="xs"
+        variant="ghost"
+        onClick={() => setYear((value) => value - 1)}
+      >
+        <Icons.ChevronLeft />
+      </IconButton>
+      <BaseText fontWeight="semibold" minW="48px" textAlign="center" aria-live="polite">
+        {year}
+      </BaseText>
+      <IconButton
+        aria-label="Année suivante"
+        size="xs"
+        variant="ghost"
+        disabled={year >= currentYear}
+        onClick={() => setYear((value) => Math.min(value + 1, currentYear))}
+      >
+        <Icons.ChevronRight />
+      </IconButton>
+    </HStack>
+  );
 
   return (
     <BaseContainer
@@ -127,8 +140,12 @@ export const DashboardStats = () => {
       </SimpleGrid>
 
       <Flex width={'full'} gap={3} flexDir={{ base: 'column', sm: 'row' }} data-tour="charts">
-        <MonthlyRevenueAreaChart data={generateMonthlyRevenueStats()} isLoading={propertiesLoad} />
-        <OccupationRateByType data={generateOccupationRateStats()} isLoading={propertiesLoad} />
+        <MonthlyRevenueAreaChart
+          data={monthlyRevenue ?? []}
+          isLoading={revenueLoad}
+          toolbar={yearSelector}
+        />
+        <OccupationRateByType data={occupationData} isLoading={occupationLoad} />
       </Flex>
       <BaseContainer
         title="Activite recente"
