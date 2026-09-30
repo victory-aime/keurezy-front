@@ -24,7 +24,7 @@
 | Comptes désactivés | La réactivation passe `status` à ACTIVE dans la même transaction. Le hook de session (chantier `destructive-impact-rollout`) laisse ensuite la connexion passer. |
 
 ## Points résiduels
-- **Colonne `temporaryPassword`** : les valeurs héritées sont effacées à l'acceptation ou à l'annulation. La colonne sera supprimée par `12_drop_invitation_temp_password`, au moins 7 jours après le déploiement.
+- **Colonne `temporaryPassword`** : les valeurs héritées sont effacées à l'acceptation ou à l'annulation. La colonne sera supprimée par `13_drop_invitation_temp_password`, au moins 7 jours après le déploiement.
 - **Modèle Resend** : la variable du mot de passe n'est plus envoyée ; le texte du modèle est à mettre à jour manuellement.
 - **Message d'erreur du code** : il indique le nombre d'essais restants. C'est acceptable, car le code est lié à une invitation précise et limité à 5 essais.
 

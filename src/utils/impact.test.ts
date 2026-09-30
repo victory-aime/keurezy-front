@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   agencyCloseImpact,
+  backupCodesRegenerateImpact,
+  memberTwoFactorResetImpact,
   annonceDeleteImpact,
   bookingCancelImpact,
   memberDisableImpact,
@@ -294,5 +296,21 @@ describe('sessionRevokeImpact', () => {
 
   it("bloque quand il n'y a aucune autre session", () => {
     expect(sessionRevokeImpact([]).blocked).toBe(true);
+  });
+});
+
+describe('backupCodesRegenerateImpact', () => {
+  it('prévient que les codes actuels cessent de fonctionner', () => {
+    const summary = backupCodesRegenerateImpact(3);
+    expect(summary.groups[0].items[0]).toMatch(/^Vos 3 codes de secours actuels/);
+    expect(summary.blocked).toBe(false);
+  });
+});
+
+describe('memberTwoFactorResetImpact', () => {
+  it('nomme le membre et annonce la déconnexion', () => {
+    const summary = memberTwoFactorResetImpact({ name: 'Awa' });
+    expect(summary.groups[0].items).toContain('Ses sessions en cours : déconnexion immédiate');
+    expect(summary.groups[1].items[0]).toMatch(/^Awa se reconnectera/);
   });
 });

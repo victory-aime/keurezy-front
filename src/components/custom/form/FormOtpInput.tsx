@@ -29,7 +29,22 @@ export const FormOtpInput: FC<OtpInputProps> = ({
   const isError = isReadOnly ? !!error : !!(error && (touched || submitCount > 0));
   const allowed = charset === 'numeric' ? /[^0-9]/g : /[^a-zA-Z0-9]/g;
   const controlRef = useRef<HTMLDivElement>(null);
+  // Dernier code complet déjà envoyé : un collage déclenche à la fois notre gestionnaire et
+  // `onValueComplete` du PinInput ; sans ce garde, le même code partait deux fois (le second
+  // envoi échouait, code déjà consommé, puis le premier réussissait).
+  const lastSentRef = useRef('');
+  const sendOnce = (code: string) => {
+    if (code.length !== count || code === lastSentRef.current) return;
+    lastSentRef.current = code;
+    onChangeFunction?.(code);
+  };
   const isEmpty = !field.value?.some?.(Boolean);
+  const isComplete = Array.isArray(field.value) && field.value.filter(Boolean).length === count;
+
+  // Cases modifiées ou vidées (après une erreur) : le prochain code complet pourra repartir
+  useEffect(() => {
+    if (!isComplete) lastSentRef.current = '';
+  }, [isComplete]);
   const disabled = isReadOnly || isDisabled;
 
   // Code refusé : cases vidées → focus sur la première, une fois les cases réactivées (un
@@ -51,7 +66,7 @@ export const FormOtpInput: FC<OtpInputProps> = ({
     event.stopPropagation();
     const next = Array.from({ length: count }, (_, i) => chars[i] ?? '');
     await setValue(next);
-    if (chars.length === count) onChangeFunction?.(chars);
+    sendOnce(chars);
   };
 
   const renderCell = (index: number) => (
@@ -101,7 +116,7 @@ export const FormOtpInput: FC<OtpInputProps> = ({
         }}
         onValueComplete={async (e) => {
           await setValue(e.value);
-          onChangeFunction?.(e.value?.join(''));
+          sendOnce(e.value?.join('') ?? '');
         }}
         // 10 cases (codes de secours) : taille réduite pour tenir sur mobile
         size={separatorAt ? { base: 'sm', sm: 'md' } : 'xl'}

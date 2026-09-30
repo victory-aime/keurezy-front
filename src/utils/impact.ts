@@ -526,3 +526,60 @@ export function sessionRevokeImpact(devices: string[]): ImpactSummary {
       : [{ tone: 'blocked', title: 'Aucune autre session active', items: ['Rien à fermer.'] }],
   };
 }
+
+/** Régénération des codes de secours : les anciens cessent de fonctionner immédiatement. */
+export function backupCodesRegenerateImpact(remaining: number): ImpactSummary {
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'danger',
+        title: 'Invalidés immédiatement',
+        items: [
+          remaining > 0
+            ? `Vos ${count(remaining, 'code')} de secours actuel${remaining > 1 ? 's' : ''}, y compris ceux déjà enregistrés ou imprimés`
+            : 'Vos anciens codes de secours',
+        ],
+      },
+      {
+        tone: 'success',
+        title: 'Ce que vous obtenez',
+        items: [
+          '10 nouveaux codes, à télécharger et garder en lieu sûr',
+          'Votre application d’authentification continue de fonctionner',
+        ],
+      },
+    ],
+  };
+}
+
+/** L'owner réinitialise la 2FA d'un membre qui a perdu son téléphone et ses codes. */
+export function memberTwoFactorResetImpact(member: { name?: string }): ImpactSummary {
+  const who = member.name ?? 'Le membre';
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'danger',
+        title: 'Supprimé',
+        items: [
+          'Sa configuration de double authentification et ses codes de secours',
+          'Ses sessions en cours : déconnexion immédiate',
+        ],
+      },
+      {
+        tone: 'warning',
+        title: 'Ce qui change',
+        items: [
+          `${who} se reconnectera avec son seul mot de passe, puis devra réactiver la double authentification.`,
+          'Un e-mail le prévient de cette réinitialisation.',
+        ],
+      },
+      {
+        tone: 'success',
+        title: 'Ce qui est conservé',
+        items: ['Son compte, ses permissions et son historique'],
+      },
+    ],
+  };
+}

@@ -19,3 +19,20 @@ export interface IAuthSession {
     category: string;
   }[];
 }
+
+/** Récupération de compte (2FA perdue), étape 1. */
+export interface ITwoFactorRecoveryRequest {
+  email: string;
+  password: string;
+}
+
+/** Étape 2 : mêmes identifiants et code reçu par e-mail. */
+export interface ITwoFactorRecoveryConfirm extends ITwoFactorRecoveryRequest {
+  code: string;
+}
+
+/** Code envoyé : validité et délai avant renvoi, en secondes. */
+export interface IOneTimeCodeSent {
+  expiresIn: number;
+  retryIn: number;
+}

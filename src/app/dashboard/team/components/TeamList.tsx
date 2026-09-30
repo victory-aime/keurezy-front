@@ -14,7 +14,11 @@ import { TeamDetails } from './TeamDetails';
 import { useState } from 'react';
 import { useAuthContext } from '_context/auth-context';
 import { UserRole } from '../../../../types/enum';
-import { memberDisableImpact, memberRemovalImpact } from '_utils/impact';
+import {
+  memberDisableImpact,
+  memberRemovalImpact,
+  memberTwoFactorResetImpact,
+} from '_utils/impact';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 
 export const TeamList = () => {
@@ -28,6 +32,11 @@ export const TeamList = () => {
   // Désactivation confirmée après l'impact ; la réactivation reste immédiate
   const [memberToDisable, setMemberToDisable] = useState<MODELS.ITeam | null>(null);
   const impactMember = memberToRemove ?? memberToDisable;
+  // Réinitialisation de la 2FA d'un membre qui a perdu son téléphone et ses codes (owner)
+  const [memberToReset, setMemberToReset] = useState<MODELS.ITeam | null>(null);
+  const { mutate: resetTwoFactor, isPending: isResetting } = TeamModule.resetTwoFactorMutation({
+    mutationOptions: { onSuccess: () => setMemberToReset(null) },
+  });
 
   const agencyId = user?.agencyId;
   const userId = user?.ownerId ?? user?.staffId;
@@ -152,14 +161,33 @@ export const TeamList = () => {
         isOpen={openDetails}
         onUpdated={setSelectedValues}
         callback={() => {
-          // Bascule : un membre actif est désactivé, et inversement
-          handleStatus(
-            selectedValues?.status !== ENUM.COMMON.Status.ACTIVE,
-            selectedValues?.id!,
-            selectedValues?.userId!,
-          );
+          // Désactivation : même confirmation avec impact que l'interrupteur ; réactivation directe
+          if (selectedValues?.status === ENUM.COMMON.Status.ACTIVE) {
+            setMemberToDisable(selectedValues);
+          } else {
+            handleStatus(true, selectedValues?.id!, selectedValues?.userId!);
+          }
           setOpenDetails(false);
         }}
+        onResetTwoFactor={() => {
+          setMemberToReset(selectedValues);
+          setOpenDetails(false);
+        }}
+      />
+      <ActionImpactDialog
+        isOpen={!!memberToReset}
+        onChange={(open: boolean) => !open && setMemberToReset(null)}
+        title="Réinitialiser la double authentification"
+        subject={memberToReset ? `${memberToReset.name} · ${memberToReset.email}` : undefined}
+        summary={memberToReset ? memberTwoFactorResetImpact(memberToReset) : undefined}
+        isSubmitting={isResetting}
+        confirmTitle="Réinitialiser"
+        confirmColor="warning"
+        onConfirm={() =>
+          memberToReset?.id &&
+          agencyId &&
+          resetTwoFactor({ params: { agencyId, id: memberToReset.id } })
+        }
       />
       <ActionImpactDialog
         isOpen={!!memberToDisable}

@@ -50,6 +50,24 @@ export const APIS = (baseUrl?: string) => {
         method: 'POST',
         pathBase: 'UNSECURED_API',
       }),
+      TWO_FACTOR_RECOVERY_REQUEST: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/two-factor-recovery/request`,
+        method: 'POST',
+        pathBase: 'UNSECURED_API',
+        showResponse: false,
+      }),
+      TWO_FACTOR_RECOVERY_CONFIRM: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/two-factor-recovery/confirm`,
+        method: 'POST',
+        pathBase: 'UNSECURED_API',
+        showResponse: false,
+      }),
+      TWO_FACTOR_RECOVERY_CANCEL: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AUTH}/two-factor-recovery/cancel`,
+        method: 'POST',
+        pathBase: 'UNSECURED_API',
+        showResponse: false,
+      }),
       CHECK_EMAIL: api({
         path: `${APIS_ROUTES_MODULES_PATH.AUTH}/verified-email`,
         method: 'POST',
@@ -67,6 +85,12 @@ export const APIS = (baseUrl?: string) => {
       }),
       PASSKEY_SESSION: api({
         path: `${APIS_ROUTES_MODULES_PATH.USER}/passkey-session`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      BACKUP_CODES_REMAINING: api({
+        path: `${APIS_ROUTES_MODULES_PATH.USER}/backup-codes/remaining`,
         method: 'GET',
         pathBase: 'SECURED_API',
         showResponse: false,
@@ -427,6 +451,11 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         method: 'GET',
         showResponse: false,
+      }),
+      RESET_TWO_FACTOR: api({
+        path: `${APIS_ROUTES_MODULES_PATH.TEAM}/reset-two-factor`,
+        pathBase: 'SECURED_API',
+        method: 'POST',
       }),
     },
     ANNONCES: {

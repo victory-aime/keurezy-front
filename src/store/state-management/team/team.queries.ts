@@ -81,7 +81,24 @@ const removeMemberMutation = (args: QUERIES.MutationPayload<unknown, unknown, Me
     },
   });
 
+/** Réinitialisation de la 2FA d'un membre : la liste est rechargée (badge 2FA). */
+const resetTwoFactorMutation = (
+  args: QUERIES.MutationPayload<unknown, unknown, MemberParams> = {},
+) =>
+  QUERIES.useCustomMutation<unknown, unknown, MemberParams>({
+    mutationKey: [Constants.TEAM_KEYS.RESET_TWO_FACTOR],
+    mutationFn: ({ params }) => teamServiceInstance().resetTwoFactor(params!),
+    options: {
+      ...args.mutationOptions,
+      onSuccess: (...result) => {
+        QUERIES.QueryCache.invalidate([Constants.TEAM_KEYS.ALL_TEAMS]);
+        return args.mutationOptions?.onSuccess?.(...result);
+      },
+    },
+  });
+
 export {
+  resetTwoFactorMutation,
   changeStatusTeamMutation,
   getAllTeamByAgency,
   updateTeamPermissionsMutation,

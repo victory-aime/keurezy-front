@@ -48,7 +48,37 @@ const checkEmailMutation = (args: QUERIES.MutationPayload<{ email: string }>) =>
   });
 };
 
+const twoFactorRecoveryRequestMutation = (
+  args: QUERIES.MutationPayload<MODELS.ITwoFactorRecoveryRequest, MODELS.IOneTimeCodeSent> = {},
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AUTH_KEYS.TWO_FACTOR_RECOVERY_REQUEST],
+    mutationFn: ({ payload }) => authServiceInstance().two_factor_recovery_request(payload!),
+    options: args.mutationOptions,
+  });
+
+const twoFactorRecoveryConfirmMutation = (
+  args: QUERIES.MutationPayload<MODELS.ITwoFactorRecoveryConfirm, { executeAt: string }> = {},
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AUTH_KEYS.TWO_FACTOR_RECOVERY_CONFIRM],
+    mutationFn: ({ payload }) => authServiceInstance().two_factor_recovery_confirm(payload!),
+    options: args.mutationOptions,
+  });
+
+const twoFactorRecoveryCancelMutation = (
+  args: QUERIES.MutationPayload<{ token: string }, { message: string }> = {},
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AUTH_KEYS.TWO_FACTOR_RECOVERY_CANCEL],
+    mutationFn: ({ payload }) => authServiceInstance().two_factor_recovery_cancel(payload!.token),
+    options: args.mutationOptions,
+  });
+
 export {
+  twoFactorRecoveryRequestMutation,
+  twoFactorRecoveryConfirmMutation,
+  twoFactorRecoveryCancelMutation,
   registerUserMutation,
   sendEmailVerificationMutation,
   forgotPasswordInitMutation,

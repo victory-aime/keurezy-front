@@ -32,4 +32,12 @@ const updateUserMutation = (args: QUERIES.MutationPayload<MODELS.IUser>) => {
   });
 };
 
-export { getUserInfo, updateUserMutation, getPasskeySessions };
+/** Codes de secours 2FA restants (le nombre seulement). */
+const getBackupCodesRemaining = (args: QUERIES.QueryPayload<{ remaining: number }>) =>
+  QUERIES.useCustomQuery<undefined, undefined, { remaining: number }>({
+    queryKey: [Constants.USERS_KEYS.BACKUP_CODES_REMAINING],
+    queryFn: () => usersServiceInstance().backup_codes_remaining(),
+    options: args.queryOptions,
+  });
+
+export { getUserInfo, updateUserMutation, getPasskeySessions, getBackupCodesRemaining };

@@ -42,4 +42,13 @@ export class TeamService extends BaseApi {
       { params },
     );
   }
+
+  /** Réinitialise la 2FA d'un membre (owner uniquement) : sessions fermées, membre prévenu. */
+  resetTwoFactor(params: { agencyId: string; id: string }) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().TEAM.RESET_TWO_FACTOR,
+      {},
+      { params },
+    );
+  }
 }

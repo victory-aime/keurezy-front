@@ -25,6 +25,8 @@ interface TeamDetails extends ModalOpenProps {
   data: MODELS.ITeam | null;
   /** Membre mis à jour après l'enregistrement de ses permissions */
   onUpdated?: (member: MODELS.ITeam) => void;
+  /** Réinitialiser sa 2FA (owner, membre dont la 2FA est active) */
+  onResetTwoFactor?: () => void;
 }
 
 export const TeamDetails = ({
@@ -34,6 +36,7 @@ export const TeamDetails = ({
   isLoading,
   callback,
   onUpdated,
+  onResetTwoFactor,
 }: TeamDetails) => {
   const { user: authUser } = useAuthContext();
   const { user } = useUserContext();
@@ -153,13 +156,25 @@ export const TeamDetails = ({
                 />
               </Stack>
             </HStack>
-            <BaseButton
-              colorType={isActive ? 'danger' : 'tertiary'}
-              variant={'outline'}
-              onClick={() => callback?.()}
-            >
-              {isActive ? 'Désactiver' : 'Activer'}
-            </BaseButton>
+            <Flex gap={2} wrap="wrap">
+              {isOwner && data?.twoFactorEnabled && onResetTwoFactor && (
+                <BaseButton
+                  colorType="warning"
+                  variant="outline"
+                  leftIcon={<Icons.Lock />}
+                  onClick={onResetTwoFactor}
+                >
+                  Réinitialiser la 2FA
+                </BaseButton>
+              )}
+              <BaseButton
+                colorType={isActive ? 'danger' : 'tertiary'}
+                variant={'outline'}
+                onClick={() => callback?.()}
+              >
+                {isActive ? 'Désactiver' : 'Activer'}
+              </BaseButton>
+            </Flex>
           </Flex>
         )}
       </Box>

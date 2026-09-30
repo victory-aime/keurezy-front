@@ -84,9 +84,11 @@ const BaseButton: FC<ButtonBaseProps> = ({
     _active: {
       background: isOutline ? hover : withGradient ? hover : `${bg}AA`,
     },
+    // Contraste lisible (≈ 5:1) : Chakra ajoute sinon une opacité de 0.4 sur un texte déjà clair
     _disabled: {
-      background: 'gray.300',
-      color: 'white',
+      background: variant === 'plain' ? 'transparent' : 'gray.200',
+      color: 'gray.600',
+      opacity: 1,
       cursor: 'not-allowed',
       borderColor: 'gray.300',
     },

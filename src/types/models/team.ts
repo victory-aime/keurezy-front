@@ -6,6 +6,8 @@ export interface ITeam {
   email?: string;
   role?: UserRole;
   status?: COMMON.Status;
+  /** Double authentification active (la réinitialisation n'est proposée que dans ce cas) */
+  twoFactorEnabled?: boolean;
   userId?: string;
   createdAt?: string;
   permissions: {

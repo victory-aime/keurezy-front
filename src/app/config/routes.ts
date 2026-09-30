@@ -6,6 +6,7 @@ export const APP_ROUTES = {
     _2FA: '/auth/signin/totp',
     RESET_PASSWORD: '/auth/forget-pass/request',
     RESET_PASSWORD_VALIDATE: '/auth/forget-pass/validate',
+    TWO_FACTOR_RECOVERY: '/auth/two-factor-recovery',
     VERIFIED_EMAIL: '/auth/email-verified',
     ONBOARD: '/auth/onboarding',
   },

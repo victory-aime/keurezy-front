@@ -16,6 +16,7 @@ export const useTotp = () => {
       if (error) {
         return {
           status: error.status,
+          code: error.code,
           message: error.statusText ?? 'Code de vérification invalide',
         };
       }
@@ -42,7 +43,11 @@ export const useTotp = () => {
         trustDevice: trustedDevice ?? false,
       });
       if (error) {
-        return { status: error.status, message: error.statusText ?? 'Code de secours invalide' };
+        return {
+          status: error.status,
+          code: error.code,
+          message: error.statusText ?? 'Code de secours invalide',
+        };
       }
       return data;
     } catch (e) {

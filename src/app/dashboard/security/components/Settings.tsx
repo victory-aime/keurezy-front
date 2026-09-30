@@ -1,6 +1,7 @@
 'use client';
 import React, { useRef, useState } from 'react';
 import { AgencyClosureControl } from '../../agency/components/AgencyClosureControl';
+import { TwoFactorBackupSection } from './TwoFactorBackupSection';
 import { sessionRevokeImpact } from '_utils/impact';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 import { VStack, HStack, Flex } from '@chakra-ui/react';
@@ -234,6 +235,13 @@ export const Settings = () => {
                     }
                   }}
                 />
+                {/* Prévenir la perte d'accès : codes restants, régénération, passkey de secours */}
+                {currentUser?.twoFactorEnabled && (
+                  <TwoFactorBackupSection
+                    hasPasskey={!!passkeySessionsList?.passkeys?.length}
+                    onAddPasskey={() => setOpenPasskeyModal(true)}
+                  />
+                )}
               </ProfileForm>
 
               <ProfileForm
