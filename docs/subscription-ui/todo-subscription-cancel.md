@@ -44,8 +44,8 @@ Vérification commune :
 - **Dépend de** : T4. **Taille** : M.
 
 ## T6 : bandeau d'expiration
-- [ ] [back] `subscription-info` renvoie aussi `status` (additif, sous réserve de ton accord).
-- [ ] Bandeau dans le layout du dashboard pour owner et staff : « Votre abonnement a expiré : le tableau de bord est en lecture seule. » ; lien « Réactiver » pour l'owner. Après expiration, « Réactiver » renvoie vers le paiement (module checkout) ; en attendant, lien vers la page abonnement.
+- [x] [back] `subscription-info` renvoie aussi `status` (additif, validé le 2026-10-01).
+- [x] Bandeau dans le layout du dashboard pour owner et staff : « Votre abonnement a expiré : le tableau de bord est en lecture seule. » ; lien « Réactiver » pour l'owner. Après expiration, « Réactiver » renvoie vers le paiement (module checkout) ; en attendant, lien vers la page abonnement.
 - **Fichiers** : `agency/agency.service.ts` (back), `types/models/agency.ts`, `dashboard/layout.tsx` ou composant de bandeau.
 - **Dépend de** : T1. **Taille** : S.
 
