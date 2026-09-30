@@ -18,8 +18,8 @@ interface CancelSubscriptionProps {
 }
 
 /**
- * Résiliation et réactivation, sous le plan actuel. La résiliation est une action secondaire
- * (lien discret) précédée de son impact ; une fois programmée, « Réactiver » devient l'action
+ * Résiliation et réactivation, sous le plan actuel. La résiliation (bouton rouge en contour)
+ * est précédée de son impact ; une fois programmée, « Réactiver » devient l'action
  * principale. Un abonnement expiré se réactive par paiement (module checkout) : rien ici.
  */
 export const CancelSubscription = ({
@@ -76,7 +76,7 @@ export const CancelSubscription = ({
   return (
     <>
       <Flex mt={4} justifyContent="flex-end">
-        <BaseButton variant="plain" colorType="neutral" size="sm" onClick={() => setOpen(true)}>
+        <BaseButton variant="outline" colorType="danger" size="sm" onClick={() => setOpen(true)}>
           Résilier mon abonnement
         </BaseButton>
       </Flex>
