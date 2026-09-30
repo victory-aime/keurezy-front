@@ -3,6 +3,27 @@ import { authClient } from '../lib/auth-client';
 import { handleApiSuccess } from '_utils/handleApiSuccess';
 import { handleApiError } from '_utils/handleApiError';
 
+/** État de la vérification 2FA en cours (`GET /two-factor/status` du backend). */
+export interface TwoFactorStatus {
+  /** Fin du verrouillage (ISO), `null` si le compte n'est pas verrouillé. */
+  lockedUntil: string | null;
+  remainingAttempts: number;
+  /** Recours sans code : récupération autonome (membre) ou support (owner). */
+  recovery: 'self' | 'support';
+}
+
+/** `null` quand aucun défi 2FA n'est valide (expiré, détruit après trop d'essais, ou absent). */
+export const fetchTwoFactorStatus = async (): Promise<TwoFactorStatus | null> => {
+  try {
+    const { data, error } = await authClient.$fetch<TwoFactorStatus>('/two-factor/status', {
+      method: 'GET',
+    });
+    return error ? null : data;
+  } catch {
+    return null;
+  }
+};
+
 export const useTotp = () => {
   const [isLoading, setIsLoading] = useState(false);
 

@@ -7,7 +7,6 @@
  * Un 429 sans code vient de la limite par IP (5 par minute).
  */
 export const ATTEMPTS_PER_SIGN_IN = 5;
-export const ACCOUNT_LOCK_MS = 15 * 60_000;
 
 export type TotpFailure = 'invalid' | 'challenge-expired' | 'locked' | 'rate-limited' | 'unknown';
 

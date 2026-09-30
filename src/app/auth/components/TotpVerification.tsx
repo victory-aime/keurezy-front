@@ -3,17 +3,16 @@
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { BaseButton, BaseText, FormCheckbox, FormOtpInput } from '_components/custom';
-import React, { useEffect, useState } from 'react';
-import { Box, VStack } from '@chakra-ui/react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Box, Link, VStack } from '@chakra-ui/react';
 import { APP_ROUTES } from '_config/routes';
 import { useRouter } from 'next/navigation';
 import { AuthBoxContainer } from './AuthBoxContainer';
-import { useAuth } from '_hooks/useAuth';
-import { useTotp } from '_hooks/useTotp';
+import { fetchTwoFactorStatus, TwoFactorStatus, useTotp } from '_hooks/useTotp';
+import { authClient } from '../../lib/auth-client';
 import { formatCountdown, useSecondsUntil } from '_hooks/useSecondsUntil';
 import { VALIDATION } from '_types/';
 import {
-  ACCOUNT_LOCK_MS,
   ATTEMPTS_PER_SIGN_IN,
   BACKUP_LENGTH,
   BACKUP_SPLIT,
@@ -33,30 +32,12 @@ interface TotpFormValues {
 const EMPTY_CODE = Array(6).fill('');
 /** Pause côté client après un 429 de la limite par IP (5 par minute). */
 const PAUSE_AFTER_RATE_LIMIT_MS = 60_000;
-/**
- * Fin du verrouillage, gardée dans le navigateur : quitter la page puis revenir ne doit ni
- * remettre le décompte à zéro, ni rouvrir la saisie avant la levée du verrou serveur.
- * ponytail: clé unique par navigateur (aucun utilisateur connu à cette étape) ; le serveur reste
- * la référence, un autre compte sur ce navigateur attendrait au pire la fin du décompte.
- */
-const LOCK_STORAGE_KEY = 'keurezy.two-factor-locked-until';
+/** Contact affiché à l'owner bloqué (optionnel) : personne d'autre ne peut réinitialiser sa 2FA. */
+const SUPPORT_EMAIL = process.env.NEXT_PUBLIC_SUPPORT_EMAIL;
 
-const readStoredLock = () => {
-  try {
-    return Number(localStorage.getItem(LOCK_STORAGE_KEY)) || 0;
-  } catch {
-    return 0;
-  }
-};
+/** Défi 2FA terminé : on ferme la session en silence, sans action demandée à l'utilisateur. */
+const silentSignOut = () => authClient.signOut().catch(() => undefined);
 
-const storeLock = (until: number) => {
-  try {
-    if (until) localStorage.setItem(LOCK_STORAGE_KEY, String(until));
-    else localStorage.removeItem(LOCK_STORAGE_KEY);
-  } catch {
-    // Stockage indisponible (navigation privée) : le décompte reste en mémoire
-  }
-};
 const EMPTY_BACKUP = Array(BACKUP_LENGTH).fill('');
 
 const backupCodeSchema = Yup.object({
@@ -78,30 +59,49 @@ const backupCodeSchema = Yup.object({
  */
 export const TotpVerification = () => {
   const router = useRouter();
-  const { logout, isLoading: logoutLoading } = useAuth();
   const { verifyTotp, verifyBackupCode, isLoading } = useTotp();
   const [mode, setMode] = useState<Mode>('totp');
-  // Codes refusés sur cette page : au 5e, le serveur verrouille la 2FA du compte pour 15 min
-  const [failures, setFailures] = useState(0);
-  // Compte verrouillé 15 min (persisté) ou limite par IP d'une minute : saisie suspendue
-  const [lockedUntil, setLockedUntil] = useState(0);
+  // État lu en base (verrou, essais restants, recours) : identique quel que soit l'appareil
+  const [status, setStatus] = useState<TwoFactorStatus | null>(null);
+  // Défi 2FA terminé (verrou levé mais défi expiré, ou détruit) : plus de saisie possible
+  const [ended, setEnded] = useState(false);
+  // Limite par IP (429 sans code) : pause d'une minute, propre à ce navigateur
   const [rateLimitedUntil, setRateLimitedUntil] = useState(0);
+  const lockedUntil = status?.lockedUntil ? Date.parse(status.lockedUntil) : 0;
   const lockedFor = useSecondsUntil(lockedUntil);
   const rateLimitedFor = useSecondsUntil(rateLimitedUntil);
   const pausedFor = Math.max(lockedFor, rateLimitedFor);
-  const blocked = pausedFor > 0;
-  const remaining = ATTEMPTS_PER_SIGN_IN - failures;
+  const blocked = ended || pausedFor > 0;
+  const remaining = status?.remainingAttempts ?? ATTEMPTS_PER_SIGN_IN;
 
-  // Lu après le montage : localStorage n'existe pas au rendu serveur
-  useEffect(() => setLockedUntil(readStoredLock()), []);
+  const end = useCallback(() => {
+    setEnded(true);
+    void silentSignOut();
+  }, []);
 
-  /** Démarre le décompte, sans jamais repousser un verrou déjà en cours. */
-  const lock = () => {
-    if (lockedUntil > Date.now()) return;
-    const until = Date.now() + ACCOUNT_LOCK_MS;
-    setLockedUntil(until);
-    storeLock(until);
-  };
+  /**
+   * Relit l'état serveur. Sans défi valide dès l'arrivée (page ouverte sans connexion en cours),
+   * retour discret à la connexion ; en cours de route, l'écran passe à « compte bloqué ».
+   */
+  const refresh = useCallback(
+    async (initial = false) => {
+      const next = await fetchTwoFactorStatus();
+      if (next) return setStatus(next);
+      if (!initial) return end();
+      await silentSignOut();
+      router.replace(APP_ROUTES.ROOT);
+    },
+    [end, router],
+  );
+
+  useEffect(() => {
+    void refresh(true);
+  }, [refresh]);
+
+  // Fin du décompte : le défi a en général expiré entre-temps, l'état serveur tranche
+  useEffect(() => {
+    if (lockedUntil && lockedFor === 0) void refresh();
+  }, [lockedUntil, lockedFor, refresh]);
 
   const handleSubmit = async (values: TotpFormValues, helpers: FormikHelpers<TotpFormValues>) => {
     const result =
@@ -111,21 +111,18 @@ export const TotpVerification = () => {
 
     if (!result || 'status' in result) {
       const kind = totpFailureKind(result?.status, result?.code);
-      if (kind === 'invalid') {
-        const count = failures + 1;
-        setFailures(count);
-        // Le 5e échec verrouille le compte côté serveur (`accountLockout`) : on l'affiche sans attendre
-        if (count >= ATTEMPTS_PER_SIGN_IN) lock();
-      }
-      if (kind === 'locked') lock();
+      // Échec compté ou verrou : essais restants et fin du verrou relus en base
+      if (kind === 'invalid' || kind === 'locked') await refresh();
+      if (kind === 'challenge-expired') end();
       if (kind === 'rate-limited') setRateLimitedUntil(Date.now() + PAUSE_AFTER_RATE_LIMIT_MS);
       // Cases vidées : FormOtpInput remet alors le focus sur la première
       const field = mode === 'totp' ? 'totpCode' : 'backupCode';
       await helpers.setFieldValue(field, mode === 'totp' ? EMPTY_CODE : EMPTY_BACKUP, false);
-      helpers.setFieldError(field, totpErrorMessage(result?.status, result?.code));
+      // Verrou et blocage ont leur propre message sous le formulaire
+      if (kind === 'invalid' || kind === 'rate-limited' || kind === 'unknown')
+        helpers.setFieldError(field, totpErrorMessage(result?.status, result?.code));
       return;
     }
-    storeLock(0);
     router.replace(APP_ROUTES.REDIRECT);
   };
 
@@ -202,7 +199,7 @@ export const TotpVerification = () => {
                   : 'Utiliser le code de l’application'}
               </BaseButton>
 
-              {!blocked && failures > 0 && remaining > 0 && (
+              {!blocked && remaining > 0 && remaining < ATTEMPTS_PER_SIGN_IN && (
                 <BaseText fontSize="sm" color="orange.500" aria-live="polite">
                   {remaining > 1
                     ? `Encore ${remaining} essais avant un blocage de 15 minutes`
@@ -210,8 +207,15 @@ export const TotpVerification = () => {
                 </BaseText>
               )}
 
-              {blocked && (
-                <BaseText fontSize="sm" color="orange.500" textAlign="center" aria-live="polite">
+              {!ended && pausedFor > 0 && (
+                <BaseText
+                  fontSize="sm"
+                  color="orange.500"
+                  textAlign="center"
+                  aria-live="polite"
+                  mb={2}
+                  mt={2}
+                >
                   Trop d’échecs : vérification bloquée pour protéger votre compte. Réessayez dans{' '}
                   <Box as="span" fontWeight="bold" fontVariantNumeric="tabular-nums">
                     {formatCountdown(pausedFor)}
@@ -219,17 +223,41 @@ export const TotpVerification = () => {
                 </BaseText>
               )}
 
-              {/* Masqué pendant le décompte : l'aller-retour vers la récupération ne doit pas
-                  servir à rouvrir la saisie */}
-              {!blocked && (failures >= ATTEMPTS_PER_SIGN_IN || lockedUntil > 0) && (
-                <BaseButton
-                  variant={'plain'}
-                  colorType={'primary'}
-                  onClick={() => router.push(APP_ROUTES.AUTH.TWO_FACTOR_RECOVERY)}
-                  disabled={isLoading}
-                >
-                  Plus accès à votre application ni à vos codes ? Récupérer mon compte
-                </BaseButton>
+              {ended && (
+                <VStack gap={2} width={'full'} my={2} aria-live="polite">
+                  <BaseText fontSize="sm" color="orange.500" textAlign="center">
+                    Votre compte est bloqué : la vérification en deux étapes n’est plus possible.
+                  </BaseText>
+                  {status?.recovery === 'support' ? (
+                    <BaseText fontSize="sm" textAlign="center">
+                      En tant que propriétaire de l’agence, contactez le support pour débloquer
+                      votre compte
+                      {SUPPORT_EMAIL ? (
+                        <>
+                          {' '}
+                          :{' '}
+                          <Link
+                            href={`mailto:${SUPPORT_EMAIL}`}
+                            color="primary.500"
+                            fontWeight="bold"
+                          >
+                            {SUPPORT_EMAIL}
+                          </Link>
+                        </>
+                      ) : (
+                        '.'
+                      )}
+                    </BaseText>
+                  ) : (
+                    <BaseButton
+                      width={'full'}
+                      colorType={'primary'}
+                      onClick={() => router.push(APP_ROUTES.AUTH.TWO_FACTOR_RECOVERY)}
+                    >
+                      Récupérer mon compte
+                    </BaseButton>
+                  )}
+                </VStack>
               )}
 
               <FormCheckbox
@@ -241,18 +269,6 @@ export const TotpVerification = () => {
                 Si vous faites confiance à cet appareil, nous ne vous demanderons plus de code lors
                 de vos prochaines connexions
               </BaseText>
-              {!blocked && (
-                <BaseButton
-                  width={'full'}
-                  variant={'outline'}
-                  colorType={'danger'}
-                  onClick={() => logout()}
-                  isLoading={logoutLoading}
-                  disabled={isLoading || logoutLoading}
-                >
-                  Se déconnecter
-                </BaseButton>
-              )}
             </VStack>
           </AuthBoxContainer>
         );
