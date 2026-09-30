@@ -18,8 +18,6 @@ export const ForgetPassInitRequest = () => {
   const [status, setStatus] = useState(false);
   const router = useRouter();
 
-  const { mutateAsync: checkEmail, isPending } = AuthModule.checkEmailMutation({});
-
   const { mutateAsync: forgotPasswordRequest, isPending: isForgotPending } =
     AuthModule.forgotPasswordInitMutation({
       mutationOptions: {
@@ -82,19 +80,13 @@ export const ForgetPassInitRequest = () => {
             initialValues={{ email: '' }}
             onSubmit={resetPasswordInit}
             validateOnChange={false}
-            validationSchema={VALIDATION.AUTH.resetPasswordInitRequestValidationSchema(
-              async (email: string) => {
-                const user = await checkEmail({ payload: { email } });
-                return !!user;
-              },
-            )}
+            validationSchema={VALIDATION.AUTH.resetPasswordInitRequestValidationSchema}
           >
             {({ handleSubmit, isValid }) => (
               <VStack gap={2} alignItems={'flex-start'}>
                 <FormTextInput
                   name={'email'}
                   placeholder={'FORM.EMAIL_PLACEHOLDER'}
-                  isVerified={isPending}
                 />
                 <BaseButton
                   width={'full'}

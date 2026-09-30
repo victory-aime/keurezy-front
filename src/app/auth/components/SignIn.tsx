@@ -22,51 +22,44 @@ export const SignIn = () => {
   const { login } = useAuth();
   const lastMethod = authClient.getLastUsedLoginMethod();
 
+  // Suggestion de passkey dans le champ e-mail (autofill). Silencieuse : l'utilisateur qui
+  // l'ignore ou qui n'a pas de passkey ne doit voir aucune erreur au chargement.
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    const isConditionalAvailable = PublicKeyCredential.isConditionalMediationAvailable?.();
-    if (!isConditionalAvailable) return;
-    void authClient.signIn.passkey({
-      autoFill: true,
-      fetchOptions: {
-        onSuccess() {
-          router.push(APP_ROUTES.REDIRECT);
-        },
-        onError(context) {
-          const error = context.error;
-          if (
-            error.message?.includes('AuthCancelled') ||
-            error.message?.includes('NotAllowedError')
-          ) {
+    if (typeof window === 'undefined' || !window.PublicKeyCredential) return;
+    void (async () => {
+      const available = await PublicKeyCredential.isConditionalMediationAvailable?.();
+      if (!available) return;
+      await authClient.signIn.passkey({
+        autoFill: true,
+        fetchOptions: {
+          onSuccess() {
+            router.push(APP_ROUTES.REDIRECT);
+          },
+          onError(context) {
+            const message = context.error.message ?? '';
+            if (/Abort|NotAllowed|AuthCancelled/.test(message)) return;
             handleApiError({
-              message:
-                "L'authentification par passkey n'est actuellement pas disponible. Veuillez utiliser votre email et mot de passe.",
-              status: error.status,
+              message: 'Authentification par passkey échouée',
+              status: context.error.status,
             });
-            return;
-          }
-          handleApiError({
-            message: 'Authentification par passkey échouée',
-            status: error.status,
-          });
+          },
         },
-      },
-    });
+      });
+    })();
   }, []);
 
   const handlePasswordSubmit = async (values: FormikValues) => {
     setIsLoading(true);
     await login({ email: values.email, password: values.password })
-      .catch((error) => console.error('Login error:', error))
+      .catch(() => undefined)
       .finally(() => setIsLoading(false));
   };
 
   const handlePasskeyClick = async () => {
     setIsPasskeyLoading(true);
     try {
-      const result = await authClient.signIn.passkey({
+      // Les erreurs sont affichées par `onError` uniquement (pas une seconde fois via le résultat)
+      await authClient.signIn.passkey({
         fetchOptions: {
           onSuccess(context) {
             if (context.data?.twoFactorRedirect) {
@@ -95,13 +88,6 @@ export const SignIn = () => {
           },
         },
       });
-      if (result?.error) {
-        console.error('Login error:', result?.error);
-        handleApiError({
-          status: result.error.status,
-          message: 'Authentification par passkey échouée',
-        });
-      }
     } finally {
       setIsPasskeyLoading(false);
     }

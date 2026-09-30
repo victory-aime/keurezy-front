@@ -14,8 +14,6 @@ export const TokenExpired = () => {
   const [openRecap, setOpenRecap] = useState(false);
   const router = useRouter();
 
-  const { mutateAsync: checkEmail, isPending } = AuthModule.checkEmailMutation({});
-
   const { mutateAsync: sendEmailVerification, isPending: isSendingEmailVerification } =
     AuthModule.sendEmailVerificationMutation({
       mutationOptions: {
@@ -45,19 +43,13 @@ export const TokenExpired = () => {
         onSubmit={resendEmailVerification}
         validateOnChange={false}
         validateOnBlur
-        validationSchema={VALIDATION.AUTH.resetPasswordInitRequestValidationSchema(
-          async (email: string) => {
-            const user = await checkEmail({ payload: { email } });
-            return !!user;
-          },
-        )}
+        validationSchema={VALIDATION.AUTH.resetPasswordInitRequestValidationSchema}
       >
         {({ dirty, isValid, handleSubmit }) => (
           <VStack gap={2}>
             <FormTextInput
               name={'email'}
               placeholder={'FORM.EMAIL_PLACEHOLDER'}
-              isVerified={isPending}
             />
             <BaseButton
               isLoading={isSendingEmailVerification}
