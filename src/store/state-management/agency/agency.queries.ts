@@ -28,6 +28,22 @@ const getAgencySubscriptionInfo = (
   });
 };
 
+/** Page « Mon abonnement » : souscription, consommation et fonctionnalités (owner). */
+const getAgencySubscriptionQueries = (
+  args: QUERIES.QueryPayload<MODELS.IAgencySubscriptionOverview, undefined, { agencyId: string }>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<
+    undefined,
+    { agencyId: string },
+    MODELS.IAgencySubscriptionOverview
+  >({
+    queryKey: [Constants.AGENCY_KEYS.AGENCY_SUBSCRIPTION, params],
+    queryFn: () => agencyServiceInstance().agency_subscription(params?.agencyId!),
+    options: { ...ENTITY_QUERY_OPTIONS, ...queryOptions },
+  });
+};
+
 /** Impact de la fermeture ; chargé à l'ouverture de la confirmation. */
 const getCloseImpactQueries = (
   args: QUERIES.QueryPayload<MODELS.IAgencyCloseImpact, undefined, { agencyId: string }>,
@@ -107,5 +123,6 @@ export {
   getCloseImpactQueries,
   cancelCloseMutation,
   getAgencySubscriptionInfo,
+  getAgencySubscriptionQueries,
   getAgencyStats,
 };

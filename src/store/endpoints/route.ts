@@ -120,6 +120,12 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
+      AGENCY_SUBSCRIPTION: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
       UPDATE_AGENCY: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/update`,
         method: 'POST',

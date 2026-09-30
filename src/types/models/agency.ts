@@ -1,4 +1,4 @@
-import { BillingCycle, COMMON, PropertyType } from '../enum';
+import { BillingCycle, COMMON, PlanType, PropertyType } from '../enum';
 import { IPagination } from './pagination';
 interface ICreateAgency {
   name?: string;
@@ -57,7 +57,44 @@ interface IAgencySubscriptionInfo {
     category: string;
     limit: null;
   }[];
-  expiresAt: string;
+}
+
+/** État d'un quota, calculé par le backend (`NEAR_LIMIT` dès 80 %). */
+type SubscriptionUsageState = 'OK' | 'NEAR_LIMIT' | 'REACHED' | 'UNLIMITED';
+
+/** `GET agency/subscription` : page « Mon abonnement » (owner uniquement). */
+interface IAgencySubscriptionOverview {
+  /** null : l'agence n'a aucune souscription */
+  subscription: {
+    status: 'ACTIVE' | 'INACTIVE';
+    plan: { id: string; name: PlanType };
+    billingCycle: BillingCycle | null;
+    price: number | null;
+    currency: string | null;
+    currentPeriodStart: string | null;
+    currentPeriodEnd: string | null;
+    cancelAtPeriodEnd: boolean;
+    canceledAt: string | null;
+  } | null;
+  /** Une entrée par fonctionnalité limitée ayant un compteur réel */
+  usage: {
+    feature: string;
+    used: number;
+    /** null : illimité */
+    limit: number | null;
+    remaining: number | null;
+    /** 0–100, null si illimité */
+    percentage: number | null;
+    state: SubscriptionUsageState;
+  }[];
+  features: {
+    name: string;
+    category: string;
+    description: string | null;
+    limit: number | null;
+    /** false : proposée par un autre plan */
+    included: boolean;
+  }[];
 }
 
 interface IAgencyStats {
@@ -113,6 +150,8 @@ export type {
   IAgencyFilters,
   IAgencyCommonParams,
   IAgencySubscriptionInfo,
+  IAgencySubscriptionOverview,
+  SubscriptionUsageState,
   IAgencyStats,
   IAgencyCloseImpact,
 };
