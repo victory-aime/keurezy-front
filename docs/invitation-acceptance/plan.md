@@ -15,7 +15,7 @@ Spec : [`spec.md`](spec.md). Tâches : [`todo.md`](todo.md). Étude : [`study.md
 - **Session ouverte après la transaction** par `auth.api.signInEmail({ body, headers, asResponse })`. Le contrôleur relaie le cookie `Set-Cookie`. Le front n'a plus besoin du mot de passe.
 - **Migration en deux temps** :
   - *expand* : le code n'utilise plus `temporaryPassword`, et la colonne reste nullable ;
-  - *contract* : la migration `11_drop_invitation_temp_password` supprime la colonne, après le déploiement et l'expiration des invitations en cours (7 jours).
+  - *contract* : la migration `12_drop_invitation_temp_password` supprime la colonne, après le déploiement et l'expiration des invitations en cours (7 jours).
 - **Invitations en attente au moment du déploiement** : elles restent valides. Le nouveau parcours ignore leur mot de passe temporaire.
 
 ## Risques

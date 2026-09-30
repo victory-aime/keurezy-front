@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
+  agencyCloseImpact,
+  annonceDeleteImpact,
   bookingCancelImpact,
+  memberDisableImpact,
+  sessionRevokeImpact,
+  visitCancelImpact,
   buildingDeleteImpact,
   invitationCancelImpact,
   invitationResendImpact,
@@ -193,5 +198,101 @@ describe('invitation impacts', () => {
       'Le lien d’invitation envoyé à awa@example.com ne fonctionnera plus.',
     );
     expect(summary.groups[1].items).toContain('Vous pourrez réinviter cette adresse.');
+  });
+});
+
+describe('annonceDeleteImpact', () => {
+  it("prévient quand c'était la dernière annonce en ligne du bien", () => {
+    const summary = annonceDeleteImpact(
+      { isOnline: true },
+      impact({
+        annonces: { total: 1, online: 1 },
+        bookings: { total: 2, upcoming: 0, pending: 0 },
+      }),
+    );
+    expect(summary.groups.map((group) => group.tone)).toEqual(['danger', 'warning', 'success']);
+    expect(summary.groups[2].items).toContain('2 réservations');
+  });
+
+  it("ne prévient pas si le bien reste en ligne ou si l'annonce était hors ligne", () => {
+    const stillOnline = annonceDeleteImpact(
+      { isOnline: true },
+      impact({ annonces: { total: 2, online: 2 } }),
+    );
+    const offline = annonceDeleteImpact({ isOnline: false }, impact());
+    expect(stillOnline.groups.some((group) => group.tone === 'warning')).toBe(false);
+    expect(offline.groups.some((group) => group.tone === 'warning')).toBe(false);
+  });
+});
+
+describe('visitCancelImpact', () => {
+  it('nomme les personnes prévenues', () => {
+    const summary = visitCancelImpact({
+      status: 'PLANNED',
+      clientName: 'Awa',
+      agentName: 'Moussa',
+    });
+    expect(summary.blocked).toBe(false);
+    expect(summary.groups[0].items[1]).toBe(
+      'Prévenus par notification : Awa (client), Moussa (agent assigné).',
+    );
+  });
+
+  it('bloque une visite déjà effectuée', () => {
+    expect(visitCancelImpact({ status: 'DONE' }).blocked).toBe(true);
+  });
+});
+
+describe('memberDisableImpact', () => {
+  const member = {
+    name: 'Awa',
+    email: 'awa@x.sn',
+    visits: { assigned: 3, upcoming: 2 },
+    tickets: 0,
+    permissions: 4,
+  };
+
+  it("suspend l'accès, signale les visites à venir et garde les permissions", () => {
+    const summary = memberDisableImpact(member);
+    expect(summary.groups.map((group) => group.tone)).toEqual(['danger', 'warning', 'success']);
+    expect(summary.groups[1].items[0]).toMatch(/^2 visites à venir/);
+    expect(summary.groups[2].items[0]).toBe('Ses 4 permissions');
+  });
+});
+
+describe('agencyCloseImpact', () => {
+  const base = {
+    members: { active: 2 },
+    properties: { total: 5, online: 3 },
+    bookings: { upcoming: 1, pending: 0 },
+    subscription: { plan: 'PREMIUM', currentPeriodEnd: null },
+    closeScheduledAt: null,
+    closeDelayDays: 15,
+  };
+
+  it("annonce la date effective (dans 15 jours) et que rien ne change d'ici là", () => {
+    const summary = agencyCloseImpact(base, new Date('2026-09-30T10:00:00Z'));
+    const [grace, definitive, changes] = summary.groups;
+    expect(grace.title).toBe('Fermeture programmée le 15/10/2026');
+    expect(definitive.items).toContain("L'accès de 2 membres de l'équipe (déconnexion immédiate)");
+    expect(changes.items[1]).toMatch(/avant le 15\/10\/2026/);
+  });
+
+  it('reprend la date déjà programmée', () => {
+    const summary = agencyCloseImpact({ ...base, closeScheduledAt: '2026-10-20T02:00:00Z' });
+    expect(summary.groups[0].title).toBe('Fermeture programmée le 20/10/2026');
+  });
+});
+
+describe('sessionRevokeImpact', () => {
+  it('liste les appareils déconnectés et garde la session actuelle', () => {
+    const summary = sessionRevokeImpact(['Chrome · macOS', 'Safari · iOS']);
+    expect(summary.blocked).toBe(false);
+    expect(summary.groups[0].title).toBe('Déconnectés immédiatement');
+    expect(summary.groups[0].items).toEqual(['Chrome · macOS', 'Safari · iOS']);
+  });
+
+  it("bloque quand il n'y a aucune autre session", () => {
+    expect(sessionRevokeImpact([]).blocked).toBe(true);
   });
 });

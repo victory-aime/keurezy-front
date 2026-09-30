@@ -35,6 +35,8 @@ interface IAgency {
   isApprove: boolean;
   agencyLogo?: string;
   documents: string[];
+  /** Fermeture demandée par l'owner, effective à cette date (annulable d'ici là) */
+  closeScheduledAt?: string | null;
 }
 
 interface IAgencyFilters extends IPagination {
@@ -90,6 +92,19 @@ interface IAgencyStats {
   };
 }
 
+/** `GET agency/close-impact` : ce que la fermeture de l'agence entraîne (owner uniquement). */
+interface IAgencyCloseImpact {
+  members: { active: number };
+  /** `online` : biens ayant au moins une annonce en ligne */
+  properties: { total: number; online: number };
+  /** `upcoming` : réservations confirmées dont le séjour n'est pas terminé */
+  bookings: { upcoming: number; pending: number };
+  subscription: { plan: string; currentPeriodEnd: string | null } | null;
+  closeScheduledAt: string | null;
+  /** Délai de grâce appliqué par le backend (jours) */
+  closeDelayDays: number;
+}
+
 export type {
   ICreateAgency,
   IUpdateAgency,
@@ -99,4 +114,5 @@ export type {
   IAgencyCommonParams,
   IAgencySubscriptionInfo,
   IAgencyStats,
+  IAgencyCloseImpact,
 };

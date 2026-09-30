@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  BaseContainer,
-  BaseAgenda,
-  BaseText,
-  Icons,
-  DeleteModalAnimation,
-} from '_components/custom';
+import { BaseContainer, BaseAgenda, BaseText, Icons } from '_components/custom';
 import { useUserContext } from '_context/user-context';
 import { PropertyModule, TeamModule, VisitsModule } from '_store/state-management';
 import { ENUM } from '_types/';
@@ -22,6 +16,8 @@ import { CalendarEvent } from '_components/custom/agenda/interface/agenda';
 import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
 import { pickVisitRefs } from '_utils/visits';
+import { visitCancelImpact } from '_utils/impact';
+import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 
 export const VisitsList = () => {
   const { hasPermission } = usePermissions();
@@ -96,7 +92,10 @@ export const VisitsList = () => {
   const { mutateAsync: deleteVisit, isPending: isDeletePending } = VisitsModule.cancelVisitMutation(
     {
       mutationOptions: {
-        onSuccess: async () => await refetch(),
+        onSuccess: async () => {
+          setOpenDelete(false);
+          await refetch();
+        },
       },
     },
   );
@@ -231,28 +230,25 @@ export const VisitsList = () => {
           setSelectedValues(selectedValues);
         }}
       />
-      <DeleteModalAnimation
-        title={'Annuler cette visite ?'}
-        onChange={setOpenDelete}
+      <ActionImpactDialog
         isOpen={openDelete}
-        isLoading={isDeletePending}
-        ignoreFooter={false}
-        buttonSaveTitle={"Valider l'annulation"}
-        callback={async () =>
-          await deleteVisit({
-            params: {
-              data: {
-                visitId: selectedValues?.id!,
-              },
-            },
-          })
+        onChange={(open: boolean) => setOpenDelete(open)}
+        title="Annuler cette visite"
+        subject={[selectedValues?.title, selectedValues?.property?.title]
+          .filter(Boolean)
+          .join(' · ')}
+        // Impact calculé depuis la visite chargée : aucun appel supplémentaire
+        summary={visitCancelImpact({
+          status: selectedValues?.status,
+          clientName: selectedValues?.client?.user?.name,
+          agentName: selectedValues?.agent?.user?.name,
+        })}
+        isSubmitting={isDeletePending}
+        confirmTitle="Annuler la visite"
+        onConfirm={() =>
+          selectedValues?.id && deleteVisit({ params: { data: { visitId: selectedValues.id } } })
         }
-      >
-        <BaseText textAlign={'center'}>
-          Vous êtes sur le point d’annuler cette visite. Cette action mettra automatiquement à jour
-          son statut et pourra notifier le client ainsi que les membres concernés de votre agence.
-        </BaseText>
-      </DeleteModalAnimation>
+      />
     </BaseContainer>
   );
 };

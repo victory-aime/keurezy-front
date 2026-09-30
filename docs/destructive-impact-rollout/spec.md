@@ -67,3 +67,7 @@ Migrer les dernières confirmations de l'ancien `DeleteModalAnimation` vers `Act
 
 ## Hors périmètre
 Drive et la corbeille, puis la suppression RGPD complète d'un compte, qui fera l'objet d'un chantier dédié.
+
+## Révision du 30/09 (retour de test)
+- **Fermeture différée** : « Supprimer mon compte » (Sécurité) et « Fermer l'agence » (Agence) utilisent le même composant `AgencyClosureControl`, et l'impact s'affiche **sur place**, sans redirection. La confirmation **programme** la fermeture à J+15 (`closeScheduledAt`). Rien ne change d'ici là : un encart « Fermeture programmée le … » propose d'annuler. Un cron backend exécute la fermeture à la date prévue.
+- **Membre désactivé** : il ne peut plus se reconnecter. Le refus se fait à la création de session (hook Better Auth), et non plus seulement sur les routes métier.

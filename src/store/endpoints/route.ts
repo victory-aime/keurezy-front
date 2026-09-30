@@ -107,6 +107,17 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
+      CLOSE_IMPACT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/close-impact`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      CANCEL_CLOSE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/cancel-close`,
+        method: 'POST',
+        pathBase: 'SECURED_API',
+      }),
       CHECK_NAME: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/verified-name`,
         method: 'POST',

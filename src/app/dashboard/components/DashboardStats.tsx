@@ -1,9 +1,8 @@
 'use client';
 
-import { Flex, For, HStack, IconButton, SimpleGrid, Span, Stack, VStack } from '@chakra-ui/react';
+import { Flex, For, HStack, IconButton, SimpleGrid, Span, Stack } from '@chakra-ui/react';
 import {
   BaseContainer,
-  BaseIcon,
   BaseStats,
   BaseStatsProps,
   BaseText,
@@ -17,16 +16,14 @@ import { useUserContext } from '_context/user-context';
 import { useState } from 'react';
 import { DASHBOARD_ROUTES } from '../routes';
 import { useRouter } from 'next/navigation';
-import { useAppTheme } from '_context/theme-context';
 import { RenderNotifications } from '../notifications/components/RenderNotifications';
 import { MODELS } from '_types/*';
 import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
 import { currentMonthExpected } from '_utils/revenue';
+import { CreateMenu } from './CreateMenu';
 
 export const DashboardStats = () => {
-  const { push } = useRouter();
-  const { vars } = useAppTheme();
   const { user } = useUserContext();
   const router = useRouter();
   const agencyId = user?.agencyId;
@@ -129,6 +126,10 @@ export const DashboardStats = () => {
       }
       border={'none'}
     >
+      {/* Créations autorisées : un seul point d'entrée, en haut, filtré par permissions */}
+      <Flex width={'full'} justifyContent={'flex-end'}>
+        <CreateMenu />
+      </Flex>
       <SimpleGrid data-tour="kpis" columns={2} mt={10} width={'full'} gap={3}>
         <For each={stats}>
           {(stat, i) => (
@@ -165,65 +166,6 @@ export const DashboardStats = () => {
             displayLength={4}
           />
         </Stack>
-      </BaseContainer>
-
-      <BaseContainer data-tour="quick-actions" height={'fit-content'} title="Actions rapides">
-        <SimpleGrid
-          columns={{ base: 1, sm: 2, md: 4 }}
-          width={'full'}
-          gap={3}
-          mt={{ base: '0', sm: '30px' }}
-        >
-          {[
-            {
-              title: 'Voir les terrains',
-              link: DASHBOARD_ROUTES.LAND.LIST,
-              icon: Icons.Map,
-              color: vars.primary100,
-              borderColor: 'primary.500',
-            },
-            {
-              title: 'Ajouter un bâtiment',
-              link: DASHBOARD_ROUTES.BUILDING.ADD,
-              icon: Icons.RiBuildingLine,
-              color: 'secondary.100',
-              borderColor: 'secondary.500',
-            },
-            {
-              title: 'Voir les propriétés',
-              link: DASHBOARD_ROUTES.PROPERTIES.LIST,
-              icon: Icons.Home,
-              color: 'orange.100',
-              borderColor: 'orange.500',
-            },
-            {
-              title: 'Ajouter un membre de votre équipe',
-              link: DASHBOARD_ROUTES.INVITATIONS.ADD,
-              icon: Icons.SendMail,
-              color: 'success.100',
-              borderColor: 'success.500',
-            },
-          ].map((item, i) => (
-            <VStack
-              key={i}
-              bgColor={item.color}
-              borderWidth={1}
-              borderColor={item.borderColor}
-              cursor={'pointer'}
-              rounded={'lg'}
-              p={4}
-              gap={1}
-              onClick={() => push(item.link)}
-            >
-              <BaseIcon color={item.borderColor}>
-                <item.icon />
-              </BaseIcon>
-              <BaseText textAlign={'center'} textSizeAdjust={'auto'} color={'black'}>
-                {item.title}
-              </BaseText>
-            </VStack>
-          ))}
-        </SimpleGrid>
       </BaseContainer>
     </BaseContainer>
   );

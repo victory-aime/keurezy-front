@@ -2,6 +2,7 @@ import type { IPropertyImpact } from '../types/models/property';
 import type { ILandImpact } from '../types/models/land';
 import type { IBuildingImpact } from '../types/models/building';
 import type { IMemberImpact } from '../types/models/team';
+import type { IAgencyCloseImpact } from '../types/models/agency';
 
 /**
  * Règle produit : une suppression ou une fermeture montre d'abord ce qu'elle entraîne.
@@ -322,5 +323,206 @@ export function invitationCancelImpact(email: string): ImpactSummary {
         ],
       },
     ],
+  };
+}
+
+/**
+ * Suppression d'une annonce, avec l'impact du bien auquel elle appartient : seule l'annonce
+ * disparaît ; le bien et son historique restent. Si c'était sa dernière annonce en ligne,
+ * le bien n'est plus visible des clients.
+ */
+export function annonceDeleteImpact(
+  annonce: { isOnline: boolean },
+  /** Absent sans la permission de voir les biens : l'impact reste générique */
+  propertyImpact?: IPropertyImpact,
+): ImpactSummary {
+  const lastOnline = annonce.isOnline && !!propertyImpact && propertyImpact.annonces.online <= 1;
+  const kept = propertyImpact
+    ? [
+        'Le bien et ses caractéristiques',
+        propertyImpact.bookings.total > 0 && count(propertyImpact.bookings.total, 'réservation'),
+        propertyImpact.conversations > 0 && count(propertyImpact.conversations, 'discussion'),
+        propertyImpact.visits.total > 0 && count(propertyImpact.visits.total, 'visite'),
+      ].filter((item): item is string => !!item)
+    : ['Le bien, ses réservations, discussions et visites'];
+
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'danger',
+        title: 'Supprimé définitivement',
+        items: ['L’annonce, son texte et ses photos', 'Cette action est irréversible.'],
+      },
+      ...(lastOnline
+        ? [
+            {
+              tone: 'warning' as const,
+              title: 'Ce qui change',
+              items: [
+                'C’était la seule annonce en ligne de ce bien : les clients ne le verront plus.',
+              ],
+            },
+          ]
+        : []),
+      { tone: 'success', title: 'Ce qui est conservé', items: kept },
+    ],
+  };
+}
+
+/** Annulation d'une visite : qui est prévenu, ce qui reste ; une visite effectuée est figée. */
+export function visitCancelImpact(visit: {
+  status?: string;
+  clientName?: string;
+  agentName?: string;
+}): ImpactSummary {
+  if (visit.status === 'DONE') {
+    return {
+      blocked: true,
+      groups: [
+        {
+          tone: 'blocked',
+          title: 'Cette visite a déjà eu lieu',
+          items: ['Une visite effectuée ne peut plus être annulée : elle reste dans l’historique.'],
+        },
+      ],
+    };
+  }
+  const notified = [
+    visit.clientName ? `${visit.clientName} (client)` : 'Le client',
+    visit.agentName && `${visit.agentName} (agent assigné)`,
+  ].filter(Boolean);
+
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'warning',
+        title: 'Ce qui change',
+        items: [
+          'La visite passe au statut « Annulée » : le créneau est libéré.',
+          `Prévenu${notified.length > 1 ? 's' : ''} par notification : ${notified.join(', ')}.`,
+        ],
+      },
+      {
+        tone: 'success',
+        title: 'Ce qui est conservé',
+        items: ['La visite reste dans l’historique', 'Le bien et ses réservations'],
+      },
+    ],
+  };
+}
+
+/** Désactivation d'un membre (réversible) : accès suspendu, travail toujours assigné. */
+export function memberDisableImpact(impact: IMemberImpact): ImpactSummary {
+  const { visits, tickets, permissions } = impact;
+  const changes = [
+    visits.upcoming > 0 &&
+      `${count(visits.upcoming, 'visite')} à venir ${visits.upcoming > 1 ? 'lui restent assignées' : 'lui reste assignée'} : réassignez-les si besoin.`,
+    tickets > 0 &&
+      `${count(tickets, 'ticket')} ${tickets > 1 ? 'lui restent assignés' : 'lui reste assigné'}.`,
+  ].filter((item): item is string => !!item);
+
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'danger',
+        title: 'Suspendu',
+        items: ["Son accès à l'agence", 'Ses sessions en cours : déconnexion immédiate'],
+      },
+      ...(changes.length
+        ? [{ tone: 'warning' as const, title: 'À surveiller', items: changes }]
+        : []),
+      {
+        tone: 'success',
+        title: 'Ce qui est conservé',
+        items: [
+          ...(permissions > 0 ? [`Ses ${count(permissions, 'permission')}`] : []),
+          'Ses messages et son historique',
+          'Son compte : vous pourrez le réactiver à tout moment',
+        ],
+      },
+    ],
+  };
+}
+
+/**
+ * Fermeture de l'agence, différée : rien ne change avant la date effective (délai de grâce
+ * appliqué par le backend), puis tout s'arrête. Annulable d'ici là.
+ */
+export function agencyCloseImpact(impact: IAgencyCloseImpact, now = new Date()): ImpactSummary {
+  const { members, properties, bookings, subscription } = impact;
+  const effective = impact.closeScheduledAt
+    ? new Date(impact.closeScheduledAt)
+    : new Date(now.getTime() + impact.closeDelayDays * 86_400_000);
+  const date = effective.toLocaleDateString('fr-FR');
+
+  const changes = [
+    properties.online > 0 &&
+      `${count(properties.online, 'bien')} en ligne ${properties.online > 1 ? 'seront retirés' : 'sera retiré'} de la recherche publique.`,
+    bookings.upcoming > 0 &&
+      `${count(bookings.upcoming, 'réservation confirmée')} à venir : prévenez les clients ou annulez-les avant le ${date}.`,
+    bookings.pending > 0 &&
+      `${count(bookings.pending, 'demande')} en attente ne ${bookings.pending > 1 ? 'seront' : 'sera'} plus traitée${bookings.pending > 1 ? 's' : ''}.`,
+  ].filter((item): item is string => !!item);
+
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'warning',
+        title: `Fermeture programmée le ${date}`,
+        items: [
+          "Rien ne change d'ici là : votre agence, vos annonces et votre équipe fonctionnent normalement.",
+          'Vous pouvez annuler la fermeture à tout moment avant cette date.',
+        ],
+      },
+      {
+        tone: 'danger',
+        title: `Le ${date}, définitivement`,
+        items: [
+          'Votre accès propriétaire au tableau de bord',
+          ...(members.active > 0
+            ? [`L'accès de ${count(members.active, 'membre')} de l'équipe (déconnexion immédiate)`]
+            : []),
+          subscription ? `L'abonnement ${subscription.plan}` : "L'abonnement",
+        ],
+      },
+      ...(changes.length
+        ? [{ tone: 'warning' as const, title: 'Ce qui change', items: changes }]
+        : []),
+      {
+        tone: 'success',
+        title: 'Ce qui est conservé',
+        items: [
+          `L'historique de l'agence (${count(properties.total, 'bien')}, réservations, paiements) pour vos obligations comptables`,
+        ],
+      },
+    ],
+  };
+}
+
+/** Fermeture de sessions (une ou toutes les autres) : appareils déconnectés, session actuelle gardée. */
+export function sessionRevokeImpact(devices: string[]): ImpactSummary {
+  return {
+    blocked: devices.length === 0,
+    groups: devices.length
+      ? [
+          {
+            tone: 'danger',
+            title: `Déconnecté${devices.length > 1 ? 's' : ''} immédiatement`,
+            items: devices,
+          },
+          {
+            tone: 'success',
+            title: 'Ce qui est conservé',
+            items: [
+              'Votre session actuelle sur cet appareil',
+              'Ces appareils pourront se reconnecter avec vos identifiants',
+            ],
+          },
+        ]
+      : [{ tone: 'blocked', title: 'Aucune autre session active', items: ['Rien à fermer.'] }],
   };
 }

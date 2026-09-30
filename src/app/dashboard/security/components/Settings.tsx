@@ -1,6 +1,8 @@
 'use client';
 import React, { useRef, useState } from 'react';
-import { DisabledAccount } from '../../profile/components/DisabledAccount';
+import { AgencyClosureControl } from '../../agency/components/AgencyClosureControl';
+import { sessionRevokeImpact } from '_utils/impact';
+import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 import { VStack, HStack, Flex } from '@chakra-ui/react';
 import {
   BaseText,
@@ -43,12 +45,15 @@ export const Settings = () => {
   const [openTotp, setOpenTotp] = useState<boolean>(false);
   const [open2FA, setOpen2FA] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [openCloseSessionModal, setOpenCloseSessionModal] = useState<boolean>(false);
+  // Sessions à fermer : une seule (corbeille) ou toutes les autres ; confirmées après l'impact
+  const [sessionsToRevoke, setSessionsToRevoke] = useState<
+    { kind: 'one'; token: string; label: string } | { kind: 'others' } | null
+  >(null);
+  const [isRevokingSessions, setIsRevokingSessions] = useState(false);
   const [isRevoke, setIsRevoke] = useState<boolean>(false);
   const [openPassKeyModal, setOpenPasskeyModal] = useState<boolean>(false);
   const [selectedData, setSelectedData] = useState<string | null>(null);
   const currentSessionId = session?.id;
-  const [validateDisabledAccount, setValidateDisabledAccount] = useState<boolean>(false);
 
   // État serveur : seule source de vérité de l'interrupteur 2FA (relu après chaque action)
   const {
@@ -103,22 +108,31 @@ export const Settings = () => {
     });
   };
 
-  const clearOtherSessions = async () => {
+  const otherSessions = (passkeySessionsList?.sessions ?? []).filter(
+    (item) => item.id !== currentSessionId,
+  );
+  const deviceLabel = (item: { userAgent: string | null; ipAddress: string | null }) =>
+    `${parseUserAgent(item.userAgent!)}${item.ipAddress ? ` · ${item.ipAddress}` : ''}`;
+
+  const revokeSessions = async () => {
+    if (!sessionsToRevoke) return;
+    setIsRevokingSessions(true);
     try {
-      const { data, error } = await authClient.revokeOtherSessions();
+      const { error } =
+        sessionsToRevoke.kind === 'one'
+          ? await authClient.revokeSession({ token: sessionsToRevoke.token })
+          : await authClient.revokeOtherSessions();
       if (error) {
-        handleApiError({ status: 400, message: error.statusText! });
+        handleApiError({ status: error.status ?? 400, message: error.message ?? 'Échec' });
         return;
       }
-      if (data.status) {
-        handleApiSuccess({
-          message: 'Operation réussie',
-          status: 200,
-        });
-        await refetchPassKeySessionList();
-      }
-    } catch (error) {
+      handleApiSuccess({ status: 200, message: 'Session(s) fermée(s)' });
+      setSessionsToRevoke(null);
+      await refetchPassKeySessionList();
+    } catch {
       handleApiError({ status: 500, message: 'Erreur inattendue' });
+    } finally {
+      setIsRevokingSessions(false);
     }
   };
 
@@ -232,7 +246,8 @@ export const Settings = () => {
                   withGradient
                   colorType={'danger'}
                   variant={'outline'}
-                  onClick={() => clearOtherSessions()}
+                  disabled={!otherSessions.length}
+                  onClick={() => setSessionsToRevoke({ kind: 'others' })}
                 >
                   Annuler les autres sessions
                 </BaseButton>
@@ -271,20 +286,23 @@ export const Settings = () => {
                         </HStack>
                       </Flex>
                     </VStack>
-                    {passkeySessionsList?.sessions?.length > 1 && (
+                    {session?.id !== currentSessionId && (
                       <BaseIcon
+                        as="button"
+                        aria-label={`Fermer la session ${parseUserAgent(session?.userAgent!)}`}
                         bgColor={'red'}
                         boxSize={'30px'}
                         borderRadius={'7px'}
                         cursor="pointer"
-                        onClick={() => session.id}
+                        onClick={() =>
+                          setSessionsToRevoke({
+                            kind: 'one',
+                            token: session.token,
+                            label: deviceLabel(session),
+                          })
+                        }
                       >
-                        <Icons.Trash
-                          onClick={() => {
-                            setOpenCloseSessionModal(true);
-                            setSelectedData(session.id);
-                          }}
-                        />
+                        <Icons.Trash />
                       </BaseIcon>
                     )}
                   </HStack>
@@ -314,13 +332,8 @@ export const Settings = () => {
                     <BaseButton isLoading={false} colorType="danger" onClick={() => logout()}>
                       {t('COMMON.LOGOUT')}
                     </BaseButton>
-                    <BaseButton
-                      colorType={'danger'}
-                      isLoading={false}
-                      onClick={() => setValidateDisabledAccount(!validateDisabledAccount)}
-                    >
-                      {t('PROFILE.DANGER_ZONE.DELETE_ACCOUNT')}
-                    </BaseButton>
+                    {/* Owner : fermeture programmée de l'agence, impact affiché ici ; rien pour le staff */}
+                    <AgencyClosureControl label={t('PROFILE.DANGER_ZONE.DELETE_ACCOUNT')} />
                   </VStack>
                 </Flex>
               </ProfileForm>
@@ -354,13 +367,6 @@ export const Settings = () => {
         callback={handleRegisterNewKey}
         isLoading={passkeyLoading}
       />
-      <DisabledAccount
-        onChange={() => setValidateDisabledAccount(!validateDisabledAccount)}
-        isOpen={validateDisabledAccount}
-        callback={() => {}}
-        data={currentUser?.email}
-        isLoading={false}
-      />
 
       <TotpQrCode
         // Fermer sans code valide laisse la 2FA désactivée : l'état serveur est relu dans les deux cas
@@ -386,15 +392,25 @@ export const Settings = () => {
       >
         <BaseText>{t('PROFILE.REMOVE_KEY_TITLE_DESC')}</BaseText>
       </DeleteModalAnimation>
-      <DeleteModalAnimation
-        title={'PROFILE.CLOSE_SESSION'}
-        isOpen={openCloseSessionModal}
-        onChange={() => setOpenCloseSessionModal(false)}
-        //callback={handleClearSession}
-        ignoreFooter={false}
-      >
-        <BaseText>{t('PROFILE.CLOSE_SESSION_DESC')}</BaseText>
-      </DeleteModalAnimation>
+      <ActionImpactDialog
+        isOpen={!!sessionsToRevoke}
+        onChange={(open: boolean) => !open && setSessionsToRevoke(null)}
+        title={
+          sessionsToRevoke?.kind === 'one' ? 'Fermer cette session' : 'Fermer les autres sessions'
+        }
+        summary={
+          sessionsToRevoke
+            ? sessionRevokeImpact(
+                sessionsToRevoke.kind === 'one'
+                  ? [sessionsToRevoke.label]
+                  : otherSessions.map(deviceLabel),
+              )
+            : undefined
+        }
+        isSubmitting={isRevokingSessions}
+        confirmTitle="Déconnecter"
+        onConfirm={revokeSessions}
+      />
     </React.Fragment>
   );
 };

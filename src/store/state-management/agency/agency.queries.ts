@@ -2,6 +2,7 @@ import * as Constants from './constants';
 import { agencyServiceInstance } from './agency.service-instance';
 import { MODELS } from '_types/index';
 import { QUERIES } from 'rise-core-frontend';
+import { ENTITY_QUERY_OPTIONS } from '../query-options';
 
 const getAgencyInfo = (
   args: QUERIES.QueryPayload<MODELS.IAgency, undefined, MODELS.IAgencyCommonParams>,
@@ -24,6 +25,18 @@ const getAgencySubscriptionInfo = (
     queryKey: [Constants.AGENCY_KEYS.AGENCY_SUBSCRIPTION_INFO, params],
     queryFn: () => agencyServiceInstance().agency_subscription_info(params?.agencyId!),
     options: queryOptions,
+  });
+};
+
+/** Impact de la fermeture ; chargé à l'ouverture de la confirmation. */
+const getCloseImpactQueries = (
+  args: QUERIES.QueryPayload<MODELS.IAgencyCloseImpact, undefined, { agencyId: string }>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, { agencyId: string }, MODELS.IAgencyCloseImpact>({
+    queryKey: [Constants.AGENCY_KEYS.CLOSE_IMPACT, params],
+    queryFn: () => agencyServiceInstance().close_impact(params?.agencyId!),
+    options: { ...ENTITY_QUERY_OPTIONS, ...queryOptions },
   });
 };
 
@@ -56,6 +69,16 @@ const closeAgencyMutation = (args: QUERIES.MutationPayload<any, any, MODELS.IClo
   });
 };
 
+/** Annule la fermeture programmée de l'agence. */
+const cancelCloseMutation = (
+  args: QUERIES.MutationPayload<unknown, unknown, MODELS.ICloseAgency>,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.CANCEL_CLOSE],
+    mutationFn: ({ params }) => agencyServiceInstance().cancel_close(params!.agencyId),
+    options: args.mutationOptions,
+  });
+
 const checkNameMutation = (args: QUERIES.MutationPayload<{ name: string }>) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.AGENCY_KEYS.CHECK_NAME],
@@ -81,6 +104,8 @@ export {
   getAgencyInfo,
   updateAgencyMutation,
   closeAgencyMutation,
+  getCloseImpactQueries,
+  cancelCloseMutation,
   getAgencySubscriptionInfo,
   getAgencyStats,
 };

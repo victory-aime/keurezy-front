@@ -22,8 +22,9 @@ export const tourSteps: ITourStep[] = [
   },
   {
     target: "[data-tour='quick-actions']",
-    title: 'Actions rapides',
-    description: 'Ajoutez une propriété, un locataire ou enregistrez un paiement en un seul clic.',
+    title: 'Créer',
+    description:
+      'Créez un bien, une annonce, planifiez une visite ou invitez un membre en un clic. Seules les actions autorisées pour votre compte apparaissent.',
     position: 'left',
   },
   {

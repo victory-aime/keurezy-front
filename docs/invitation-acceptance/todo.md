@@ -56,4 +56,4 @@ Vérification commune à chaque tâche :
 - [ ] `security-audit.md` (skill `security-and-hardening`) et `CHANGES.md` du backend.
 
 ## T7 [back] : contraction (au moins 7 jours après le déploiement)
-- [ ] Migration `11_drop_invitation_temp_password`, et suppression de `encryptPassword`/`decryptPassword` s'ils n'ont plus d'usage.
+- [ ] Migration `12_drop_invitation_temp_password`, et suppression de `encryptPassword`/`decryptPassword` s'ils n'ont plus d'usage.

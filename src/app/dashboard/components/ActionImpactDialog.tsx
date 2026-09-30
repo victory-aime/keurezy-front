@@ -69,7 +69,7 @@ function ImpactGroupBlock({ group }: { group: ImpactGroup }) {
 /**
  * Confirmation d'une action destructrice (suppression, fermeture, annulation) qui montre ce
  * qu'elle entraîne réellement avant de l'autoriser. Quand l'impact bloque l'action, le bouton
- * de confirmation est désactivé et l'alternative éventuelle est proposée.
+ * de confirmation est désactivé ; l'alternative plus sûre, si elle existe, reste proposée.
  */
 export function ActionImpactDialog({
   isOpen,
@@ -102,7 +102,8 @@ export function ActionImpactDialog({
       // « Retour » et l'alternative restent utilisables
       saveDisabled={isLoadingImpact || blocked || confirmDisabled}
       isLoading={isSubmitting}
-      buttonRejectTitle={blocked && alternative ? alternative.title : ''}
+      // Action plus sûre toujours proposée quand elle existe (fermer, dépublier…)
+      buttonRejectTitle={alternative?.title ?? ''}
       onReject={alternative?.onClick}
       colorRejectButton="primary"
     >

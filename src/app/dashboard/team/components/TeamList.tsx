@@ -14,7 +14,7 @@ import { TeamDetails } from './TeamDetails';
 import { useState } from 'react';
 import { useAuthContext } from '_context/auth-context';
 import { UserRole } from '../../../../types/enum';
-import { memberRemovalImpact } from '_utils/impact';
+import { memberDisableImpact, memberRemovalImpact } from '_utils/impact';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 
 export const TeamList = () => {
@@ -25,6 +25,9 @@ export const TeamList = () => {
   const { user: authUser } = useAuthContext();
   const isOwner = authUser?.role === UserRole.OWNER;
   const [memberToRemove, setMemberToRemove] = useState<MODELS.ITeam | null>(null);
+  // Désactivation confirmée après l'impact ; la réactivation reste immédiate
+  const [memberToDisable, setMemberToDisable] = useState<MODELS.ITeam | null>(null);
+  const impactMember = memberToRemove ?? memberToDisable;
 
   const agencyId = user?.agencyId;
   const userId = user?.ownerId ?? user?.staffId;
@@ -43,8 +46,8 @@ export const TeamList = () => {
   });
 
   const { data: memberImpact, isLoading: isImpactLoading } = TeamModule.getMemberImpactQueries({
-    params: { agencyId: agencyId ?? '', id: memberToRemove?.id ?? '' },
-    queryOptions: { enabled: !!agencyId && !!memberToRemove?.id && isOwner },
+    params: { agencyId: agencyId ?? '', id: impactMember?.id ?? '' },
+    queryOptions: { enabled: !!agencyId && !!impactMember?.id && isOwner },
   });
 
   const { mutate: removeMember, isPending: isRemoving } = TeamModule.removeMemberMutation({
@@ -54,7 +57,10 @@ export const TeamList = () => {
   const { mutateAsync: changeStatusTeam, isPending: isChangeStatusPending } =
     TeamModule.changeStatusTeamMutation({
       mutationOptions: {
-        onSuccess: async () => await reloadTeamList(),
+        onSuccess: async () => {
+          setMemberToDisable(null);
+          await reloadTeamList();
+        },
       },
     });
 
@@ -86,8 +92,12 @@ export const TeamList = () => {
         <BaseSwitch
           isChecked={values.status === ENUM.COMMON.Status.ACTIVE}
           isLoading={isChangeStatusPending}
+          // Réservé à l'owner, comme côté backend
+          isDisabled={!isOwner}
+          // L'interrupteur suit l'état serveur : il ne bascule qu'après confirmation
           onSwitchChange={async (item) => {
-            await handleStatus(item, values.id, values.userId);
+            if (item) await handleStatus(true, values.id, values.userId);
+            else setMemberToDisable(values);
           }}
         />
       ),
@@ -152,11 +162,22 @@ export const TeamList = () => {
         }}
       />
       <ActionImpactDialog
+        isOpen={!!memberToDisable}
+        onChange={(open: boolean) => !open && setMemberToDisable(null)}
+        title="Désactiver ce membre"
+        subject={memberToDisable ? `${memberToDisable.name} · ${memberToDisable.email}` : undefined}
+        summary={memberImpact && memberToDisable ? memberDisableImpact(memberImpact) : undefined}
+        isLoadingImpact={isImpactLoading}
+        isSubmitting={isChangeStatusPending}
+        confirmTitle="Désactiver"
+        onConfirm={() => memberToDisable?.id && handleStatus(false, memberToDisable.id, '')}
+      />
+      <ActionImpactDialog
         isOpen={!!memberToRemove}
         onChange={(open: boolean) => !open && setMemberToRemove(null)}
         title="Retirer ce membre de l'équipe"
         subject={memberToRemove ? `${memberToRemove.name} · ${memberToRemove.email}` : undefined}
-        summary={memberImpact ? memberRemovalImpact(memberImpact) : undefined}
+        summary={memberImpact && memberToRemove ? memberRemovalImpact(memberImpact) : undefined}
         isLoadingImpact={isImpactLoading}
         isSubmitting={isRemoving}
         confirmTitle="Retirer de l'équipe"

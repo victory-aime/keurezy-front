@@ -9,7 +9,6 @@ import {
   FormTextArea,
   FormPhonePicker,
   Icons,
-  BaseModal,
   BaseText,
   useBaseFileUpload,
 } from '_components/custom';
@@ -19,25 +18,25 @@ import { ProfileForm } from '../../profile/components/ProfileForm';
 import { AgencyModule } from '_store/state-management';
 import { ENUM, MODELS, VALIDATION } from '_types/';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { APP_ROUTES } from '_config/routes';
-import { authClient } from '../../../lib/auth-client';
 import { useGlobalLoader } from '_context/loaderContext';
 import { DocumentPreviewModal } from './DocumentPreviewModal';
 import { useUserContext } from '_context/user-context';
 import { ACCEPTED_TYPES } from '_components/custom/drag-drop/constant/constants';
+import { useAuthContext } from '_context/auth-context';
+import { UserRole } from '../../../../types/enum';
+import { AgencyClosureControl } from './AgencyClosureControl';
 
 export const AgencyInfo = () => {
   const { user } = useUserContext();
   const { showLoader, hideLoader } = useGlobalLoader();
-  const router = useRouter();
   const fileUpload = useBaseFileUpload({
     accept: ACCEPTED_TYPES,
     maxFiles: 1,
   });
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [closeAgencyOpen, setCloseAgencyOpen] = useState(false);
+  const { user: authUser } = useAuthContext();
+  const isOwner = authUser?.role === UserRole.OWNER;
 
   const [initialAgencyValues, setInitialAgencyValues] = useState<MODELS.IAgency>(
     {} as MODELS.IAgency,
@@ -67,18 +66,6 @@ export const AgencyInfo = () => {
     },
   });
 
-  const { mutateAsync: closeAgency, isPending: closePending } = AgencyModule.closeAgencyMutation({
-    mutationOptions: {
-      onSuccess: async () => {
-        const { data } = await authClient.getSession();
-        if (data?.session) {
-          hideLoader();
-          router.push(APP_ROUTES.ROOT);
-        }
-      },
-    },
-  });
-
   const handleUpdateAgency = async (values: FormikValues) => {
     const formData = new FormData();
     // N'envoie que les champs renseignés (évite d'enregistrer la chaîne "undefined")
@@ -92,11 +79,6 @@ export const AgencyInfo = () => {
       formData.append('agencyLogo', values.agencyLogo);
     }
     await updateAgency({ payload: formData as MODELS.IUpdateAgency });
-  };
-
-  const handleCloseAgency = async (values: { agencyId: string; userId: string }) => {
-    showLoader();
-    await closeAgency({ params: values });
   };
 
   const handleOpenDoc = (url: string) => {
@@ -212,46 +194,23 @@ export const AgencyInfo = () => {
                   ))}
                 </VStack>
               </ProfileForm>
-              <ProfileForm
-                title="PROFILE.DANGER_ZONE.TITLE"
-                description="Cette section regroupe des actions sensibles pouvant impacter définitivement votre compte. Merci de procéder avec prudence."
-                borderColor="red"
-                borderWidth={1.5}
-                borderRadius="7px"
-              >
-                <BaseButton
-                  withGradient
-                  colorType="danger"
-                  onClick={() => setCloseAgencyOpen(true)}
+              {isOwner && (
+                <ProfileForm
+                  title="PROFILE.DANGER_ZONE.TITLE"
+                  description="Cette section regroupe des actions sensibles pouvant impacter définitivement votre compte. Merci de procéder avec prudence."
+                  borderColor="red"
+                  borderWidth={1.5}
+                  borderRadius="7px"
                 >
-                  {t('Fermer définitivement l’agence')}
-                </BaseButton>
-              </ProfileForm>
+                  <AgencyClosureControl label={t('Fermer définitivement l’agence')} />
+                </ProfileForm>
+              )}
             </BaseContainer>
             <Flex width="full" alignItems="flex-end" justifyContent="flex-end">
               <BaseButton colorType="success" onClick={() => handleSubmit()}>
                 {t('Sauvegarder les changements')}
               </BaseButton>
             </Flex>
-            <BaseModal
-              icon={<Icons.Close />}
-              isOpen={closeAgencyOpen}
-              onChange={() => setCloseAgencyOpen(false)}
-              title="Confirmer la fermeture définitive de l’agence"
-              modalType={'alertdialog'}
-              onClick={() => {
-                handleCloseAgency({
-                  agencyId: agency?.id!,
-                  userId: user?.ownerId!,
-                });
-                setCloseAgencyOpen(!closeAgencyOpen);
-              }}
-              buttonSaveTitle={'Confirmer la fermeture'}
-            >
-              La fermeture de votre agence est irréversible. Vous perdrez définitivement l’accès à
-              votre espace propriétaire ainsi qu’aux services associés. Êtes-vous certain de vouloir
-              poursuivre ?
-            </BaseModal>
             <DocumentPreviewModal onChange={setIsOpen} isOpen={isOpen} data={selectedDoc} />
           </FileUploadRootProvider>
         );

@@ -10,16 +10,18 @@ import {
 } from '_components/custom';
 import { useUserContext } from '_context/user-context';
 import React, { useState } from 'react';
-import { AnnonceModule } from '_store/state-management';
+import { AnnonceModule, PropertyModule } from '_store/state-management';
 import { formatDisplayDate } from 'rise-core-frontend';
 import { useRouter } from 'next/navigation';
 import { DASHBOARD_ROUTES } from '../../routes';
 import { Flex, Stack } from '@chakra-ui/react';
 import { MODELS } from '_types/*';
-import { DeleteAnnonce } from './DeleteAnnonce';
 import { AnnoncesDetails } from './AnnonceDetails';
 import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
+import { annonceDeleteImpact } from '_utils/impact';
+import { ENUM } from '_types/';
+import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 
 export const AnnoncesList = () => {
   const { hasPermission } = usePermissions();
@@ -40,14 +42,45 @@ export const AnnoncesList = () => {
     queryOptions: { enabled: !!agencyId && !!userId },
   });
 
+  const closeDelete = async () => {
+    setOpenDelete(false);
+    await reloadAnnonceList();
+  };
+
   const { mutateAsync: deleteAnnonce, isPending: isDeletePending } =
-    AnnonceModule.deleteAnnonceMutation({
-      mutationOptions: {
-        onSuccess: async () => {
-          await reloadAnnonceList();
-        },
+    AnnonceModule.deleteAnnonceMutation({ mutationOptions: { onSuccess: closeDelete } });
+
+  // Alternative réversible à la suppression : l'annonce sort de la mise en ligne
+  const { mutateAsync: updateAnnonce, isPending: isUnpublishing } =
+    AnnonceModule.updateAnnonceMutation({ mutationOptions: { onSuccess: closeDelete } });
+
+  // Impact du bien de l'annonce, chargé à l'ouverture de la confirmation
+  const { data: propertyImpact, isLoading: isImpactLoading } =
+    PropertyModule.getPropertyImpactQueries({
+      params: { id: selectedValues?.propertyId ?? '' },
+      queryOptions: {
+        enabled:
+          openDelete &&
+          !!selectedValues?.propertyId &&
+          hasPermission(AppPermissions.PROPERTIES.VIEW),
       },
     });
+  const isOnline = selectedValues?.status === ENUM.COMMON.Status.ACTIVE;
+  const canViewImpact = hasPermission(AppPermissions.PROPERTIES.VIEW);
+  // Sans accès aux biens, impact générique : la suppression reste possible
+  const deleteSummary =
+    canViewImpact && !propertyImpact
+      ? undefined
+      : annonceDeleteImpact({ isOnline }, propertyImpact);
+
+  const unpublish = async () => {
+    const formData = new FormData();
+    formData.append(
+      'data',
+      JSON.stringify({ id: selectedValues?.id, status: ENUM.COMMON.Status.INACTIVE }),
+    );
+    await updateAnnonce({ payload: formData as MODELS.ICreateAnnonce });
+  };
 
   const annonceColumns: ColumnsDataTable[] = [
     {
@@ -151,16 +184,21 @@ export const AnnoncesList = () => {
           setOpenDelete(true);
         }}
       />
-      <DeleteAnnonce
-        onChange={setOpenDelete}
+      <ActionImpactDialog
         isOpen={openDelete}
-        isLoading={isDeletePending}
-        callback={async () =>
-          await deleteAnnonce({
-            params: { id: selectedValues?.id! },
-          })
+        onChange={(open: boolean) => setOpenDelete(open)}
+        title="Supprimer cette annonce"
+        subject={selectedValues?.title}
+        summary={deleteSummary}
+        isLoadingImpact={isImpactLoading}
+        isSubmitting={isDeletePending || isUnpublishing}
+        confirmTitle="Supprimer définitivement"
+        onConfirm={() => selectedValues?.id && deleteAnnonce({ params: { id: selectedValues.id } })}
+        alternative={
+          isOnline && hasPermission(AppPermissions.PROPERTIES.PUBLISH)
+            ? { title: 'Dépublier plutôt', onClick: unpublish }
+            : undefined
         }
-        ignoreFooter={false}
       />
     </BaseContainer>
   );
