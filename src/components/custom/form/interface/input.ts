@@ -131,6 +131,10 @@ interface TimeInputProps extends TextInputProps {
 interface OtpInputProps extends TextInputProps {
   count?: number;
   attached?: boolean;
+  /** `alphanumeric` pour les codes de secours 2FA (sensibles à la casse) ; `numeric` par défaut */
+  charset?: 'numeric' | 'alphanumeric';
+  /** Affiche un tiret après cette case (ex. 5 pour `xxxxx-xxxxx`) ; absent du code saisi */
+  separatorAt?: number;
 }
 
 type countriesList = ['cg' | 'fr' | 'cd' | 'sn'];
