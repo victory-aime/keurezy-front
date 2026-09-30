@@ -27,3 +27,20 @@
 
 ## Conclusion
 Aucune faille bloquante dans le module. Deux points sont reportés aux modules concernés.
+
+---
+
+# Audit de sécurité : module `subscription-cancel`
+
+| # | Point | Résultat |
+|---|---|---|
+| 1 | Contournement de la lecture seule | `ActiveSubscriptionGuard` est global et **refuse par défaut** : une route d'écriture oubliée est bloquée, pas ouverte. L'état vient de la base (agence de la session), jamais du client. |
+| 2 | Allowlist | 18 routes `@AllowWhenInactive()`, validées le 2026-10-01. Aucune ne crée de contenu public ni n'élargit un accès : elles communiquent (discussions), clôturent (refus, annulations) ou retirent des accès (membres, invitations, intégrations). |
+| 3 | Fuite d'annonces d'une agence expirée | Un seul filtre `publicAnnonceWhere` pour les 5 lectures publiques ; exécuté sur la base de dev sans erreur. Revue : plus aucune lecture publique avec seulement `status: ACTIVE`. |
+| 4 | Résilier ou réactiver l'agence d'un autre | `cancel`, `resume` et `cancel-impact` : `agencyAccessControl` (identité de session) puis `OWNER_ONLY`. Staff refusé, testé. |
+| 5 | Réactivation gratuite après expiration | `resume` refuse un abonnement `INACTIVE` (`409 SUBSCRIPTION_EXPIRED`) : la réactivation passe par un paiement. |
+| 6 | Blocage massif accidentel | Le job n'expire les périodes non renouvelées qu'avec `SUBSCRIPTION_EXPIRY_ENABLED=true` (8 abonnements sur 14 en dev ont déjà une période échue). Les résiliations sont toujours appliquées. |
+| 7 | Divulgation au staff | `subscription-info` n'expose que `status` en plus (ni prix, ni dates). |
+| 8 | Dépendances | Aucune ajoutée. |
+
+**À surveiller** : une nouvelle route d'écriture destinée à rester utilisable pendant l'expiration doit recevoir `@AllowWhenInactive()` explicitement (rappel dans `CHANGES.md`).
