@@ -23,7 +23,6 @@ import { InviteTeamStep3 } from './InviteTeamStep3';
 import { CommonModule, InvitationModule } from '_store/state-management';
 import { TOTAL_ONBOARD_STEPS } from '../../../auth/onboarding/constants/onboard';
 import { InviteTeamFinalStep } from './InviteTeamFinalStep';
-import { generateRandomPassword } from 'rise-core-frontend';
 
 export const MainTeamInvite = () => {
   const navigate = useRouter();
@@ -83,7 +82,6 @@ export const MainTeamInvite = () => {
           agencyId: user?.agencyId!,
           payload: {
             name: formikRef.current.values.account.name,
-            temporaryPassword: generateRandomPassword(12),
             email: formikRef.current.values.account.email,
             role: formikRef.current.values.account.role[0],
             permissions: formikRef.current.values.permissions.map((p: ISelectPermissions) => ({

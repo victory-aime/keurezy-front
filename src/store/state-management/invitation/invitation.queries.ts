@@ -23,13 +23,35 @@ const createInvitationMutation = (args: QUERIES.MutationPayload<MODELS.ICreateIn
   });
 };
 
-const acceptInvitationMutation = (args: QUERIES.MutationPayload<any, any, { token: string }>) => {
-  return QUERIES.useCustomMutation({
-    mutationKey: [Constants.INVITE_KEYS.ACCEPT_INVITATION],
-    mutationFn: ({ params }) => invitationServiceInstance().acceptInvitation(params!.token),
-    options: args.mutationOptions,
+/** Aperçu de l'invitation : sans nouvel essai automatique (une erreur est un état, pas un incident). */
+const getInvitationPreview = (
+  args: QUERIES.QueryPayload<MODELS.IInvitationPreview, undefined, { token: string }>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, { token: string }, MODELS.IInvitationPreview>({
+    queryKey: [Constants.INVITE_KEYS.PREVIEW_INVITATION, params],
+    queryFn: () => invitationServiceInstance().previewInvitation(params!.token),
+    options: { retry: false, refetchOnWindowFocus: false, ...queryOptions },
   });
 };
+
+const sendInvitationCodeMutation = (
+  args: QUERIES.MutationPayload<{ token: string }, MODELS.IInvitationCodeSent> = {},
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.INVITE_KEYS.SEND_INVITATION_CODE],
+    mutationFn: ({ payload }) => invitationServiceInstance().sendInvitationCode(payload!.token),
+    options: args.mutationOptions,
+  });
+
+const acceptInvitationMutation = (
+  args: QUERIES.MutationPayload<MODELS.IAcceptInvitation, { email: string }> = {},
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.INVITE_KEYS.ACCEPT_INVITATION],
+    mutationFn: ({ payload }) => invitationServiceInstance().acceptInvitation(payload!),
+    options: args.mutationOptions,
+  });
 
 const cancelInvitationMutation = (
   args: QUERIES.MutationPayload<any, any, { inviteId: string }>,
@@ -56,5 +78,7 @@ export {
   createInvitationMutation,
   cancelInvitationMutation,
   acceptInvitationMutation,
+  getInvitationPreview,
+  sendInvitationCodeMutation,
   getAllInvitationByAgency,
 };

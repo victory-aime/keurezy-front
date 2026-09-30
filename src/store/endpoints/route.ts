@@ -369,6 +369,19 @@ export const APIS = (baseUrl?: string) => {
         path: `${APIS_ROUTES_MODULES_PATH.INVITATION}/accept-invitation`,
         pathBase: 'UNSECURED_API',
         method: 'POST',
+        showResponse: false,
+      }),
+      PREVIEW_INVITATION: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INVITATION}/preview`,
+        pathBase: 'UNSECURED_API',
+        method: 'GET',
+        showResponse: false,
+      }),
+      SEND_INVITATION_CODE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.INVITATION}/send-code`,
+        pathBase: 'UNSECURED_API',
+        method: 'POST',
+        showResponse: false,
       }),
 
       CREATE_INVITATION: api({

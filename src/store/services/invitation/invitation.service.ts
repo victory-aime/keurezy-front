@@ -17,11 +17,28 @@ export class InvitationService extends BaseApi {
     );
   }
 
-  acceptInvitation(token: string) {
+  /** Aperçu en lecture seule (lien d'invitation) : agence, rôle, permissions, e-mail masqué. */
+  previewInvitation(token: string) {
     return this.apiService.invoke(
-      this.applicationContext.getApiConfig().INVITATION.ACCEPT_INVITATION,
+      this.applicationContext.getApiConfig().INVITATION.PREVIEW_INVITATION,
       {},
       { params: { token } },
+    );
+  }
+
+  /** Envoie le code de confirmation à l'adresse invitée. */
+  sendInvitationCode(token: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().INVITATION.SEND_INVITATION_CODE,
+      { token },
+    );
+  }
+
+  /** Acceptation : code reçu et mot de passe choisi ; renvoie l'e-mail du compte, jamais de secret. */
+  acceptInvitation(data: MODELS.IAcceptInvitation) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().INVITATION.ACCEPT_INVITATION,
+      data,
     );
   }
 
