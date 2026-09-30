@@ -27,6 +27,8 @@ interface INavItem {
   permission?: string;
   disabled?: boolean;
   highlight?: boolean;
+  /** Visible uniquement par le propriétaire de l'agence (ex. abonnement et facturation) */
+  ownerOnly?: boolean;
 }
 
 export interface SidebarNavGroupProps {

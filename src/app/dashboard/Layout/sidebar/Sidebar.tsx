@@ -25,6 +25,7 @@ import { useMemo } from 'react';
 import { DASHBOARD_ROUTES } from '../../routes';
 import { useColorMode } from '_components/ui/color-mode';
 import { useUserContext } from '_context/user-context';
+import { useAuthContext } from '_context/auth-context';
 import { useAccessControl } from '_hooks/useAccessControl';
 import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
@@ -40,6 +41,8 @@ export const Sidebar = ({
   const { dismissToast } = useSessionRefreshContext();
   const { colorMode } = useColorMode();
   const { user } = useUserContext();
+  const { user: authUser } = useAuthContext();
+  const isOwner = authUser?.role === ENUM.UserRole.OWNER;
   const { hasPermission } = usePermissions();
   const { canAccess, isLoading: accessControlLoading } = useAccessControl();
   const agencyId = user?.agencyId;
@@ -118,6 +121,9 @@ export const Sidebar = ({
       ALL_CSA_ROUTES.map((group) => {
         const links = group.links
           .map((link): (typeof link & { disabled?: boolean }) | null => {
+            // Réservé au propriétaire (le backend refuse aussi le staff)
+            if (link.ownerOnly && !isOwner) return null;
+
             const hasFeatureAccess = canAccess({
               feature: link.feature,
             });
@@ -151,7 +157,7 @@ export const Sidebar = ({
          */
         .filter((group) => group.links.length > 0)
     );
-  }, [badgesByPath, canAccess, hasPermission, isLoading]);
+  }, [badgesByPath, canAccess, hasPermission, isLoading, isOwner]);
 
   return (
     <Box>

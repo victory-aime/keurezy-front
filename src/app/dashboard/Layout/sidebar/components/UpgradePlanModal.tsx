@@ -1,58 +1,44 @@
-import { BaseModal, ModalOpenProps } from '_components/custom';
-import { VStack, Text, Box } from '@chakra-ui/react';
-import { Icons } from '_components/custom';
+import { useRouter } from 'next/navigation';
+import { BaseModal, BaseText, Icons, ModalOpenProps, TextVariant } from '_components/custom';
+import { VStack } from '@chakra-ui/react';
+import { useAuthContext } from '_context/auth-context';
+import { ENUM } from '_types/*';
+import { DASHBOARD_ROUTES } from '../../../routes';
 
-export const UpgradePlanModal = ({ isOpen, onChange, callback, isLoading }: ModalOpenProps) => {
+/**
+ * Ouvert au clic sur un lien de la sidebar non inclus dans le plan. Le propriétaire est envoyé
+ * vers « Mon abonnement » ; un membre de l'équipe est invité à s'adresser au propriétaire.
+ */
+export const UpgradePlanModal = ({ isOpen, onChange }: ModalOpenProps) => {
+  const router = useRouter();
+  const { user } = useAuthContext();
+  const isOwner = user?.role === ENUM.UserRole.OWNER;
+
+  const goToSubscription = () => {
+    onChange(false);
+    router.push(DASHBOARD_ROUTES.SUBSCRIPTION);
+  };
+
   return (
     <BaseModal
-      title="Unlock this feature"
+      title="Fonctionnalité non incluse"
       isOpen={isOpen}
       onChange={onChange}
       size="md"
-      onClick={callback}
-      isLoading={isLoading}
+      onClick={isOwner ? goToSubscription : undefined}
       icon={<Icons.Lock />}
-      buttonSaveTitle="Upgrade plan"
+      // Chaîne vide : pas de bouton d'action pour le staff (undefined afficherait « Valider »)
+      buttonSaveTitle={isOwner ? 'Voir mon abonnement' : ''}
     >
-      <VStack align="start" gap={4} py={2}>
-        <Box>
-          <Text fontSize="md" fontWeight="semibold" mb={1}>
-            This feature is not available in your current plan
-          </Text>
-
-          <Text fontSize="sm" color="gray.500">
-            Upgrade your subscription to unlock advanced features, improve productivity, and give
-            your team full access to the platform.
-          </Text>
-        </Box>
-
-        <Box
-          w="full"
-          p={3}
-          borderRadius="md"
-          bg="gray.50"
-          border="1px solid"
-          borderColor="gray.200"
-        >
-          <Text fontSize="sm" fontWeight="medium">
-            🚀 What you get with upgrade:
-          </Text>
-
-          <VStack align="start" mt={2} gap={1}>
-            <Text fontSize="sm" color="gray.600">
-              • Access to all premium modules
-            </Text>
-            <Text fontSize="sm" color="gray.600">
-              • Advanced team permissions
-            </Text>
-            <Text fontSize="sm" color="gray.600">
-              • Higher usage limits
-            </Text>
-            <Text fontSize="sm" color="gray.600">
-              • Priority support
-            </Text>
-          </VStack>
-        </Box>
+      <VStack align="start" gap={2} py={2}>
+        <BaseText variant={TextVariant.M} fontWeight="semibold">
+          Cette fonctionnalité n’est pas incluse dans votre plan actuel.
+        </BaseText>
+        <BaseText variant={TextVariant.S} color="fg.muted">
+          {isOwner
+            ? 'Consultez votre abonnement pour voir votre consommation et les fonctionnalités de chaque plan.'
+            : 'Contactez le propriétaire de votre agence pour en savoir plus sur l’abonnement.'}
+        </BaseText>
       </VStack>
     </BaseModal>
   );

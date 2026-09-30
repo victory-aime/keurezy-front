@@ -122,6 +122,12 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         path: DASHBOARD_ROUTES.SECURITY,
         icon: Icons.Shield,
       },
+      {
+        label: 'Abonnement',
+        path: DASHBOARD_ROUTES.SUBSCRIPTION,
+        icon: Icons.CreditCard,
+        ownerOnly: true,
+      },
     ],
   },
 ];
