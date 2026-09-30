@@ -44,6 +44,38 @@ const getAgencySubscriptionQueries = (
   });
 };
 
+/** Impact de la résiliation ; chargé à l'ouverture de la confirmation. */
+const getSubscriptionCancelImpactQueries = (
+  args: QUERIES.QueryPayload<MODELS.ISubscriptionCancelImpact, undefined, { agencyId: string }>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, { agencyId: string }, MODELS.ISubscriptionCancelImpact>({
+    queryKey: [Constants.AGENCY_KEYS.SUBSCRIPTION_CANCEL_IMPACT, params],
+    queryFn: () => agencyServiceInstance().subscription_cancel_impact(params?.agencyId!),
+    options: { ...ENTITY_QUERY_OPTIONS, ...queryOptions },
+  });
+};
+
+/** Résilie l'abonnement à la fin de la période. */
+const cancelSubscriptionMutation = (
+  args: QUERIES.MutationPayload<MODELS.ISubscriptionCancellation, unknown, { agencyId: string }>,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.CANCEL_SUBSCRIPTION],
+    mutationFn: ({ params }) => agencyServiceInstance().cancel_subscription(params!.agencyId),
+    options: args.mutationOptions,
+  });
+
+/** Annule la résiliation programmée (sans paiement). */
+const resumeSubscriptionMutation = (
+  args: QUERIES.MutationPayload<MODELS.ISubscriptionCancellation, unknown, { agencyId: string }>,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.RESUME_SUBSCRIPTION],
+    mutationFn: ({ params }) => agencyServiceInstance().resume_subscription(params!.agencyId),
+    options: args.mutationOptions,
+  });
+
 /** Impact de la fermeture ; chargé à l'ouverture de la confirmation. */
 const getCloseImpactQueries = (
   args: QUERIES.QueryPayload<MODELS.IAgencyCloseImpact, undefined, { agencyId: string }>,
@@ -124,5 +156,8 @@ export {
   cancelCloseMutation,
   getAgencySubscriptionInfo,
   getAgencySubscriptionQueries,
+  getSubscriptionCancelImpactQueries,
+  cancelSubscriptionMutation,
+  resumeSubscriptionMutation,
   getAgencyStats,
 };

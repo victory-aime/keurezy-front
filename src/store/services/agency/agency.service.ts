@@ -28,6 +28,30 @@ export class AgencyService extends BaseApi {
       { params: { agencyId } },
     );
   }
+  /** Ce que la résiliation change à l'échéance (owner uniquement). */
+  subscription_cancel_impact(agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_CANCEL_IMPACT,
+      {},
+      { params: { agencyId } },
+    );
+  }
+  /** Résilie l'abonnement à la fin de la période (owner uniquement). */
+  cancel_subscription(agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_CANCEL,
+      {},
+      { params: { agencyId } },
+    );
+  }
+  /** Annule la résiliation programmée (owner uniquement). */
+  resume_subscription(agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_RESUME,
+      {},
+      { params: { agencyId } },
+    );
+  }
   create_agency(data: MODELS.ICreateAgency | FormData) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().AGENCY.CREATE_AGENCY,

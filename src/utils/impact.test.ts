@@ -15,6 +15,7 @@ import {
   memberRemovalImpact,
   propertyCloseImpact,
   propertyDeleteImpact,
+  subscriptionCancelImpact,
 } from './impact';
 
 const impact = (overrides = {}) => ({
@@ -312,5 +313,56 @@ describe('memberTwoFactorResetImpact', () => {
     const summary = memberTwoFactorResetImpact({ name: 'Awa' });
     expect(summary.groups[0].items).toContain('Ses sessions en cours : déconnexion immédiate');
     expect(summary.groups[1].items[0]).toMatch(/^Awa se reconnectera/);
+  });
+});
+
+describe('subscriptionCancelImpact', () => {
+  const base = {
+    activeUntil: '2026-10-30T00:00:00.000Z',
+    annonces: { online: 4 },
+    members: { active: 3 },
+    bookings: { upcoming: 2 },
+  };
+
+  it("dit que rien ne change avant l'échéance et que la réactivation reste possible", () => {
+    const summary = subscriptionCancelImpact(base);
+    expect(summary.blocked).toBe(false);
+    expect(summary.groups[0]).toEqual({
+      tone: 'success',
+      title: 'Jusqu’au 30/10/2026, rien ne change',
+      items: [
+        'Votre agence, vos annonces et votre équipe fonctionnent normalement.',
+        'Vous pouvez réactiver votre abonnement à tout moment, sans frais.',
+      ],
+    });
+  });
+
+  it("détaille ce qui change à l'échéance", () => {
+    const changes = subscriptionCancelImpact(base).groups[1];
+    expect(changes.tone).toBe('warning');
+    expect(changes.title).toBe('Le 30/10/2026');
+    expect(changes.items).toEqual([
+      '4 annonces en ligne seront masquées du public.',
+      'Le tableau de bord passera en lecture seule pour vous et les 3 membres de votre équipe.',
+    ]);
+  });
+
+  it('rappelle ce qui est conservé, dont les réservations à honorer', () => {
+    const kept = subscriptionCancelImpact(base).groups[2];
+    expect(kept.tone).toBe('success');
+    expect(kept.items).toContain('2 réservations confirmées à venir, à honorer.');
+    expect(kept.items).toContain('Les discussions avec vos clients, pour leur répondre.');
+  });
+
+  it('reste juste sans échéance enregistrée ni annonce en ligne', () => {
+    const summary = subscriptionCancelImpact({
+      activeUntil: null,
+      annonces: { online: 0 },
+      members: { active: 0 },
+      bookings: { upcoming: 0 },
+    });
+    expect(summary.groups[0].title).toBe('Jusqu’à la fin de la période, rien ne change');
+    expect(summary.groups[1].title).toBe('À la fin de la période');
+    expect(summary.groups[1].items).toEqual(['Le tableau de bord passera en lecture seule.']);
   });
 });

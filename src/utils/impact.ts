@@ -2,7 +2,7 @@ import type { IPropertyImpact } from '../types/models/property';
 import type { ILandImpact } from '../types/models/land';
 import type { IBuildingImpact } from '../types/models/building';
 import type { IMemberImpact } from '../types/models/team';
-import type { IAgencyCloseImpact } from '../types/models/agency';
+import type { IAgencyCloseImpact, ISubscriptionCancelImpact } from '../types/models/agency';
 
 /**
  * Règle produit : une suppression ou une fermeture montre d'abord ce qu'elle entraîne.
@@ -579,6 +579,59 @@ export function memberTwoFactorResetImpact(member: { name?: string }): ImpactSum
         tone: 'success',
         title: 'Ce qui est conservé',
         items: ['Son compte, ses permissions et son historique'],
+      },
+    ],
+  };
+}
+
+/**
+ * Résiliation de l'abonnement : rien ne change avant l'échéance ; ensuite annonces masquées et
+ * tableau de bord en lecture seule, données, réservations confirmées et discussions conservées.
+ */
+export function subscriptionCancelImpact(impact: ISubscriptionCancelImpact): ImpactSummary {
+  const { annonces, members, bookings } = impact;
+  const date = impact.activeUntil ? new Date(impact.activeUntil).toLocaleDateString('fr-FR') : null;
+  const team = members.active === 1 ? 'le membre' : `les ${members.active} membres`;
+
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'success',
+        title: date
+          ? `Jusqu’au ${date}, rien ne change`
+          : 'Jusqu’à la fin de la période, rien ne change',
+        items: [
+          'Votre agence, vos annonces et votre équipe fonctionnent normalement.',
+          'Vous pouvez réactiver votre abonnement à tout moment, sans frais.',
+        ],
+      },
+      {
+        tone: 'warning',
+        title: date ? `Le ${date}` : 'À la fin de la période',
+        items: [
+          ...(annonces.online > 0
+            ? [
+                `${count(annonces.online, 'annonce')} en ligne ${annonces.online > 1 ? 'seront masquées' : 'sera masquée'} du public.`,
+              ]
+            : []),
+          members.active > 0
+            ? `Le tableau de bord passera en lecture seule pour vous et ${team} de votre équipe.`
+            : 'Le tableau de bord passera en lecture seule.',
+        ],
+      },
+      {
+        tone: 'success',
+        title: 'Ce qui est conservé',
+        items: [
+          'Toutes vos données : biens, annonces, équipe et historique.',
+          ...(bookings.upcoming > 0
+            ? [
+                `${count(bookings.upcoming, 'réservation confirmée', 'réservations confirmées')} à venir, à honorer.`,
+              ]
+            : []),
+          'Les discussions avec vos clients, pour leur répondre.',
+        ],
       },
     ],
   };

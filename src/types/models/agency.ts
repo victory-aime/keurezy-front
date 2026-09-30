@@ -62,6 +62,22 @@ interface IAgencySubscriptionInfo {
 /** État d'un quota, calculé par le backend (`NEAR_LIMIT` dès 80 %). */
 type SubscriptionUsageState = 'OK' | 'NEAR_LIMIT' | 'REACHED' | 'UNLIMITED';
 
+/** `GET agency/subscription/cancel-impact` : ce que la résiliation change à l'échéance. */
+interface ISubscriptionCancelImpact {
+  /** Fin de la période ; null si l'abonnement n'a pas d'échéance enregistrée */
+  activeUntil: string | null;
+  annonces: { online: number };
+  members: { active: number };
+  /** Réservations confirmées à venir, à honorer */
+  bookings: { upcoming: number };
+}
+
+/** Réponse de `subscription/cancel` et `subscription/resume`. */
+interface ISubscriptionCancellation {
+  cancelAtPeriodEnd: boolean;
+  activeUntil: string | null;
+}
+
 /** `GET agency/subscription` : page « Mon abonnement » (owner uniquement). */
 interface IAgencySubscriptionOverview {
   /** null : l'agence n'a aucune souscription */
@@ -151,6 +167,8 @@ export type {
   IAgencyCommonParams,
   IAgencySubscriptionInfo,
   IAgencySubscriptionOverview,
+  ISubscriptionCancelImpact,
+  ISubscriptionCancellation,
   SubscriptionUsageState,
   IAgencyStats,
   IAgencyCloseImpact,

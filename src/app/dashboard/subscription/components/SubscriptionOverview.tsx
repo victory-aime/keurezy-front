@@ -7,6 +7,7 @@ import { useAuthContext } from '_context/auth-context';
 import { useUserContext } from '_context/user-context';
 import { AgencyModule } from '_store/state-management';
 import { UserRole } from '../../../../types/enum';
+import { CancelSubscription } from './CancelSubscription';
 import { CurrentPlan } from './CurrentPlan';
 import { PlanFeatures } from './PlanFeatures';
 import { Section } from './Section';
@@ -81,6 +82,11 @@ export const SubscriptionOverview = () => {
       <>
         <Section title="Abonnement actuel" index={0} reduceMotion={reduceMotion}>
           <CurrentPlan subscription={data.subscription} />
+          <CancelSubscription
+            agencyId={agencyId}
+            subscription={data.subscription}
+            onChanged={refetch}
+          />
         </Section>
         <Section
           title="Votre utilisation"

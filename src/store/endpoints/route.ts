@@ -126,6 +126,24 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
+      SUBSCRIPTION_CANCEL_IMPACT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/cancel-impact`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      SUBSCRIPTION_CANCEL: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/cancel`,
+        method: 'POST',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      SUBSCRIPTION_RESUME: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/resume`,
+        method: 'POST',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
       UPDATE_AGENCY: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/update`,
         method: 'POST',
