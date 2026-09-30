@@ -4,7 +4,6 @@ import { Props } from './interface/badge';
 import { BaseText, TextVariant } from '../base-text';
 import { variantColorType, useVariantStyles } from '../button';
 import { useTranslation } from 'react-i18next';
-import { useThemeColors } from '_theme/useThemeColors';
 
 const getBadgeContent = (
   status?: string,
@@ -58,7 +57,6 @@ export const BaseBadge: FC<Props> = ({
   textSize = TextVariant.XS,
   ...props
 }) => {
-  const { hexToRGB } = useThemeColors();
   const { t } = useTranslation();
 
   const { variant: resolvedVariant, label: resolvedLabel } = getBadgeContent(status, type, t);
@@ -66,7 +64,8 @@ export const BaseBadge: FC<Props> = ({
   const { bg, gradient, hover, textColor } = useVariantStyles(resolvedVariant, variant, true);
 
   const isSubtle = variant === 'subtle';
-  const backgroundColor = isSubtle ? hexToRGB(500, 0.2) : (gradient ?? bg ?? 'none');
+  // Subtle : fond teinté de la couleur du statut (vert pour Actif…), pas de la couleur du thème
+  const backgroundColor = isSubtle ? bg : (gradient ?? bg ?? 'none');
 
   return (
     <Badge
