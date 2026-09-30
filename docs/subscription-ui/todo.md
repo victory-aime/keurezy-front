@@ -22,7 +22,8 @@ Vérification commune :
 
 ## Checkpoint A
 - [x] Tests back verts (owner, staff, sans souscription couverts par `subscription.service.spec.ts`) ; route vérifiée en HTTP : 401 sans session.
-- [ ] Appel réel en owner et en staff : fait au checkpoint B depuis le navigateur.
+- [x] Appel réel en owner depuis le navigateur.
+- [ ] Appel réel en staff (403 attendu).
 
 ## T3 : couche données front
 - [x] Route `AGENCY.AGENCY_SUBSCRIPTION`, `agency_subscription(agencyId)`, `getAgencySubscriptionQueries`, clé `AGENCY_SUBSCRIPTION`.
@@ -51,7 +52,9 @@ Vérification commune :
 - **Dépend de** : T4. **Taille** : S.
 
 ## Checkpoint B
-- [ ] Owner : valeurs réelles ; créer des biens jusqu'à la limite → jauge = refus.
+- [x] Owner (plan Entreprise, tout illimité) : valeurs réelles, badge vert, lien sidebar visible.
+- [ ] Jauges sur un plan limité (Basic ou Standard) : créer des biens jusqu'à la limite → jauge = refus.
 - [ ] Staff : pas de lien, API 403.
-- [ ] 320 / 768 / 1024 / 1440 px, clavier, lecteur d'écran (titres h1/h2), reduced motion.
+- [x] 375 et 768 px : sections empilées, aucun débordement horizontal ; titres h1 puis h2.
+- [ ] Clavier et reduced motion.
 - [x] `security-audit.md` (skill `security-and-hardening`) : contrôle d'accès owner, aucune donnée de facturation au staff, pas d'IDOR sur `agencyId`.

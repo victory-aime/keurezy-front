@@ -115,9 +115,15 @@ export const CurrentPlan = ({ subscription }: { subscription: Subscription }) =>
         ) : (
           <>
             <Eyebrow>Prochaine échéance</Eyebrow>
-            <BaseText variant={TextVariant.XL} fontWeight="semibold">
-              {end ? formatDate(end) : '—'}
-            </BaseText>
+            {end ? (
+              <BaseText variant={TextVariant.XL} fontWeight="semibold">
+                {formatDate(end)}
+              </BaseText>
+            ) : (
+              <BaseText variant={TextVariant.S} color="fg.muted">
+                Aucune échéance n’est enregistrée pour cet abonnement.
+              </BaseText>
+            )}
             <Box>
               <Price subscription={subscription} />
             </Box>
