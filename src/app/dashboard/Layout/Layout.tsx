@@ -12,6 +12,7 @@ import { useBreakpointValue } from '@chakra-ui/react';
 import { tourSteps } from '_constants/tourStep';
 import { StorageKey } from '_constants/StorageKeys';
 import { EmailNotVerifiedBanner } from './banner/EmailNotVerified';
+import { SubscriptionInactiveBanner } from './banner/SubscriptionInactiveBanner';
 import { BaseModal, BaseText, BaseToast, Icons, ToastStatus } from '_components/custom';
 import { EmailVerifiedSuccessBanner } from './banner/EmailVerifiedSuccessBanner';
 import { AuthModule } from '_store/state-management';
@@ -177,6 +178,7 @@ export const Layout: FunctionComponent<{
           />
 
           <SidebarInset variant="inset" collapsed={!isSidebarOpen} data-tour="finish">
+            <SubscriptionInactiveBanner />
             {isShowEmailNotVerifiedBanner && (
               <EmailNotVerifiedBanner onResend={resendEmailLink} isLoading={isPending} />
             )}

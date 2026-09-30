@@ -51,6 +51,8 @@ interface IAgencyCommonParams {
 
 interface IAgencySubscriptionInfo {
   plan: string;
+  /** INACTIVE : abonnement expiré, tableau de bord en lecture seule. Absent sans souscription. */
+  status?: 'ACTIVE' | 'INACTIVE';
   features: {
     id: string;
     name: string;
