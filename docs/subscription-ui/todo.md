@@ -21,7 +21,8 @@ Vérification commune :
 - **Dépend de** : T1. **Taille** : M.
 
 ## Checkpoint A
-- [x] Tests back verts ; appel Swagger en owner, en staff, sur une agence sans souscription.
+- [x] Tests back verts (owner, staff, sans souscription couverts par `subscription.service.spec.ts`) ; route vérifiée en HTTP : 401 sans session.
+- [ ] Appel réel en owner et en staff : fait au checkpoint B depuis le navigateur.
 
 ## T3 : couche données front
 - [x] Route `AGENCY.AGENCY_SUBSCRIPTION`, `agency_subscription(agencyId)`, `getAgencySubscriptionQueries`, clé `AGENCY_SUBSCRIPTION`.
