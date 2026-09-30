@@ -1,53 +1,5 @@
 import { MODELS, ENUM } from '_types/*';
-
-export const FEATURE_LABELS: Record<
-  string,
-  {
-    singular?: string;
-    plural?: string;
-    unlimited?: string;
-  }
-> = {
-  MANAGE_PROPERTIES: {
-    singular: 'bien immobilier',
-    plural: 'biens immobiliers',
-    unlimited: 'Biens immobiliers illimités',
-  },
-
-  PUBLISH_PROPERTIES: {
-    singular: 'annonce immobilière',
-    plural: 'annonces immobilières',
-    unlimited: 'Annonces immobilières illimitées',
-  },
-
-  MANAGE_USERS: {
-    singular: 'collaborateur',
-    plural: 'collaborateurs',
-    unlimited: 'Collaborateurs illimités',
-  },
-
-  BOOST_ANNONCES: {
-    singular: 'mise en avant',
-    plural: 'mises en avant',
-    unlimited: 'Mises en avant illimitées',
-  },
-
-  VIEW_REPORTS: {
-    unlimited: 'Rapports et statistiques avancés',
-  },
-
-  MANAGE_ACCOUNTING: {
-    unlimited: 'Module de comptabilité',
-  },
-
-  ANNONCE_STATS: {
-    unlimited: 'Statistiques des annonces',
-  },
-
-  PREMIUM_SUPPORT: {
-    unlimited: 'Support premium prioritaire',
-  },
-};
+import { formatFeatureLimit } from '_utils/subscription';
 
 export const getPricing = (
   plan: MODELS.COMMON.ISubscriptionPlan,
@@ -66,27 +18,8 @@ export const getCommercialFeatures = (
   return plan.planFeatures.filter((f) => f.feature?.isCommercial);
 };
 
-export const formatLimit = (feature: MODELS.COMMON.IPlanFeature): string => {
-  const key = feature.feature?.name?.toUpperCase();
-
-  const config = FEATURE_LABELS[key];
-
-  if (!config) return '';
-
-  // Feature sans limite numérique
-  if (feature.limit === null) {
-    return config.unlimited ?? '';
-  }
-
-  // Cas simple sans pluralisation
-  if (!config.singular && !config.plural) {
-    return `${feature.limit} ${config.unlimited}`;
-  }
-
-  const label = feature.limit === 1 ? config.singular : config.plural;
-
-  return `Jusqu’à ${feature.limit} ${label}`;
-};
+export const formatLimit = (feature: MODELS.COMMON.IPlanFeature): string =>
+  formatFeatureLimit(feature.feature?.name, feature.limit);
 
 export const getFilteredPlans = (
   allPacks: MODELS.COMMON.ISubscriptionPlan[] | undefined,
