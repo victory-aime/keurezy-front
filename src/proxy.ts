@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { APP_ROUTES } from '_config/routes';
 import { UserRole } from './types/enum';
 import { DASHBOARD_ROUTES } from './app/dashboard/routes';
+import { forwardClientIp } from './app/lib/client-ip';
 
 const PROTECTED_ROUTES: Record<string, string[]> = {
   ...Object.fromEntries(
@@ -148,6 +149,13 @@ async function getSession(request: NextRequest): Promise<BetterAuthSession | nul
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
+  // Appels API réécrits vers le backend (next.config) : on y joint l'IP réelle du visiteur
+  if (pathname.startsWith('/api/v1/')) {
+    const headers = new Headers(request.headers);
+    forwardClientIp(headers, request.headers);
+    return NextResponse.next({ request: { headers } });
+  }
+
   // 🔐 Reset password sans token → signin
   if (pathname === RESET_PASSWORD_ROUTE && !searchParams.get('token')) {
     return redirectTo(request, APP_ROUTES.AUTH.SIGN_IN, true);
@@ -186,5 +194,10 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/auth/signin/totp', '/auth/forget-pass/validate'],
+  matcher: [
+    '/dashboard/:path*',
+    '/auth/signin/totp',
+    '/auth/forget-pass/validate',
+    '/api/v1/:path*',
+  ],
 };

@@ -1,5 +1,6 @@
 // app/api/auth/[...all]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { forwardClientIp } from '../../../lib/client-ip';
 
 export const runtime = 'nodejs';
 
@@ -18,6 +19,8 @@ async function handler(req: NextRequest): Promise<NextResponse> {
       forwardHeaders.set(key, value);
     }
   });
+  // IP réelle du visiteur pour le limiteur de Better Auth (sinon, IP du serveur Next pour tous)
+  forwardClientIp(forwardHeaders, req.headers);
 
   const backendRes = await fetch(backendUrl, {
     method: req.method,
