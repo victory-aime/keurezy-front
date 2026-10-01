@@ -44,3 +44,46 @@ Aucune faille bloquante dans le module. Deux points sont reportés aux modules c
 | 8 | Dépendances | Aucune ajoutée. |
 
 **À surveiller** : une nouvelle route d'écriture destinée à rester utilisable pendant l'expiration doit recevoir `@AllowWhenInactive()` explicitement (rappel dans `CHANGES.md`).
+
+---
+
+# Audit de sécurité : module `subscription-checkout`
+
+> Skill `security-and-hardening`. Périmètre : quotas actifs, biens désactivés, `quote`, `checkout`, `payment`, `schedule-change`, `scheduled-change`, `assets/activate`, confirmation des paiements (webhook, polling), job d'échéance, rappels, UI de la page abonnement.
+
+## Modèle de menace
+- **Frontières** :
+  - les routes owner (paramètres `agencyId`, `planId`, `keep`, `orderId`, en-tête `Idempotency-Key`) ;
+  - le webhook NabooPay (anonyme, signé) ;
+  - le retour du navigateur depuis NabooPay (`?payment=`).
+- **Actifs** : argent encaissé, période et plan de l'agence, éléments actifs (membres, annonces, biens).
+- **Attaquants** : membre du staff, owner d'une autre agence, client qui rejoue ou falsifie une requête, faux webhook.
+
+## Constats
+| # | Point | Résultat |
+|---|---|---|
+| 1 | Montant falsifié | Le client n'envoie jamais de montant. Le devis est recalculé au checkout et figé dans `amount_to_pay`. Le paiement n'est appliqué que si le montant **relu chez NabooPay** (pas celui du webhook) est au moins égal ; sinon `FAILED` et erreur journalisée. |
+| 2 | Paiement appliqué deux fois | Clé `naboo_order_id` (unique), réclamation atomique `PENDING → PAID` dans la transaction qui applique : webhook et polling simultanés n'appliquent qu'une fois, testé. |
+| 3 | Deux checkouts pour une même intention | `Idempotency-Key` obligatoire et unique en base. Même clé : même checkout, sans nouvel appel NabooPay. Course entre deux requêtes : départagée par la contrainte unique. |
+| 4 | Clé d'une autre agence | Une clé déjà utilisée par une autre agence ou pour une autre demande renvoie `422 IDEMPOTENCY_KEY_REUSED`, **sans** renvoyer l'URL de paiement de l'autre agence. |
+| 5 | Faux webhook | `NabooSignatureGuard`, puis statut relu chez NabooPay avant toute application. Le webhook n'apporte que l'`order_id`. |
+| 6 | IDOR et élévation | Toutes les routes passent par `assertOwner` (identité de session). `payment` cherche la commande dans l'agence de l'appelant, hors onboarding. `assets/activate` cherche le bien avec l'`agencyId`. Staff refusé, testé. |
+| 7 | Choix des éléments gardés | `validateKeep` n'accepte que des éléments actifs de l'agence (`SELECTION_INVALID`), dans la limite (`SELECTION_EXCEEDS_LIMIT`). Les désactivations filtrent toutes par `agencyId` : un identifiant étranger ne touche rien. |
+| 8 | Contournement des quotas | Quota contrôlé au passage à l'état actif (annonce mise en ligne, membre réactivé, bien réactivé). Un bien désactivé est en lecture seule (`ASSET_INACTIVE`) et ses annonces sont retirées. |
+| 9 | Contournement de la lecture seule | Seul `checkout` porte `@AllowWhenInactive()` (la réactivation est un paiement). `schedule-change`, l'annulation du downgrade et `assets/activate` restent bloqués pendant l'expiration. |
+| 10 | Fuite de données | `payment` ne renvoie que `{ status }`. `quote` ne liste les éléments (libellés) qu'à l'owner. Aucun `metadata` exposé. |
+| 11 | Redirection ouverte | L'URL de paiement vient de NabooPay via le backend, et les URL de retour sont construites depuis l'environnement. Le front ne lit de l'URL que la présence de `?payment` ; le statut vient toujours du backend. |
+| 12 | Rappels en double | Palier réclamé (`updateMany` conditionnel) avant l'émission : pas de doublon si le job est relancé ou tourne sur deux instances. |
+| 13 | Déni de service | Le suivi interroge toutes les 3 s pendant 2 min au plus, par onglet ouvert, et chaque appel relit NabooPay (limite de 100 req/min). `SessionThrottlerGuard` s'applique. *ponytail : sans cache du statut NabooPay ; en ajouter un si plusieurs onglets posent problème.* |
+| 14 | Dépendances, secrets | Aucune dépendance ajoutée. Aucun secret dans le diff. Nouvelle variable : `RESEND_TEMPLATE_SUBSCRIPTION_RENEWAL_REMINDER_ID`. |
+
+## À surveiller
+- **Paiement inférieur au devis** : il passe `FAILED` et doit être vérifié à la main (remboursement ou application manuelle). Il n'y a pas encore d'écran admin pour ça.
+- **`common/polling` (onboarding)** :
+  - Appelée avec l'`orderId` d'un abonnement, elle échoue en 500 (pas de mot de passe à déchiffrer), sans rien divulguer.
+  - Son rattrapage passe désormais par l'événement, donc il est sans effet sur l'onboarding.
+  - Le défaut connu (mot de passe renvoyé) reste traité par la tâche séparée.
+- **Surplus apparu après le choix d'un downgrade** : il n'est pas réduit. L'agence est simplement bloquée à la création jusqu'à revenir sous la limite (`ponytail` dans `applyScheduledChanges`).
+
+## Conclusion
+Aucune faille bloquante. Les vérifications manuelles du checkpoint B restent à faire (sandbox NabooPay, navigateur).

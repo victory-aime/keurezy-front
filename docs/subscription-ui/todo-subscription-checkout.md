@@ -71,24 +71,24 @@ Vérification commune :
 - [ ] Dev : downgrade programmé puis appliqué (`scheduledAt` avancé à la main).
 
 ## T8 : UI changement de plan, renouvellement et réactivation
-- [ ] Données : routes, services, requêtes (`quote`, `payment`), mutation `checkout` avec un `Idempotency-Key` généré à l'ouverture de « Confirmer » et conservé pour les nouvelles tentatives.
-- [ ] Drawer « Changer de plan » (plein écran sur mobile) :
+- [x] Données : routes, services, requêtes (`quote`, `payment`), mutation `checkout` avec un `Idempotency-Key` généré à l'ouverture de « Confirmer » et conservé pour les nouvelles tentatives.
+- [x] Drawer « Changer de plan » (plein écran sur mobile) :
   - **Choisir** : cartes légères, plan actuel marqué, `BillingCycleToggle`, différence avec le plan actuel ;
   - **Vérifier** : « À payer aujourd'hui », échéance ;
   - **Confirmer** : redirection NabooPay.
-- [ ] Retour depuis NabooPay : suivi par `payment?orderId` jusqu'au statut final, puis invalidation des requêtes abonnement.
-- [ ] Bouton « Renouveler » à partir de J-7 et après expiration ; le bandeau d'expiration de l'owner mène au checkout de réactivation.
+- [x] Retour depuis NabooPay : suivi par `payment?orderId` jusqu'au statut final, puis invalidation des requêtes abonnement.
+- [x] Bouton « Renouveler » à partir de J-7 et après expiration ; le bandeau d'expiration de l'owner mène au checkout de réactivation.
 - **Fichiers** : `store/…`, `subscription/components/ChangePlanDrawer.tsx`, `PaymentReturn.tsx`, `CurrentPlan.tsx`, `SubscriptionInactiveBanner.tsx`.
 - **Dépend de** : T5. **Taille** : M.
 
 ## T9 : UI downgrade
-- [ ] Étape « Vérifier » d'un downgrade : liste à cocher par fonctionnalité en surplus (« Gardez 1 collaborateur sur 8 »), compteur en direct, bouton désactivé tant que le choix dépasse.
-- [ ] Bandeau « Passage au plan Basic le 30 oct. », avec « Modifier » et « Annuler ».
-- [ ] Biens désactivés : badge « Désactivé » et action « Réactiver » dans les listes.
+- [x] Étape « Vérifier » d'un downgrade : liste à cocher par fonctionnalité en surplus (« Gardez 1 collaborateur sur 8 »), compteur en direct, bouton désactivé tant que le choix dépasse.
+- [x] Bandeau « Passage au plan Basic le 30 oct. », avec « Modifier » et « Annuler ».
+- [x] Biens désactivés : badge « Désactivé » et action « Réactiver » dans les listes.
 - **Fichiers** : `subscription/components/KeepSelection.tsx`, `ScheduledChangeBanner.tsx`, listes de biens.
 - **Dépend de** : T6, T8. **Taille** : M.
 
 ## Checkpoint B
 - [ ] Navigateur, mobile compris : upgrade, renouvellement, réactivation, downgrade (choix, modification, annulation).
-- [ ] `security-audit.md` complété.
+- [x] `security-audit.md` complété.
 - [ ] Décision sur l'activation de `SUBSCRIPTION_EXPIRY_ENABLED` (délai de grâce, plan, décision 5).
