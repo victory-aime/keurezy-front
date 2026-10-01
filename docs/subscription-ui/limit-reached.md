@@ -21,7 +21,16 @@ Quand une fonctionnalité limitée est utilisée à 100 %, par exemple après un
 Mêmes compteurs que la page abonnement. Aucun prix ni montant payé n'est renvoyé.
 
 ## Tâches
-- [ ] T1 [back] : route `limits` (+ tests : membre de l'agence OK, autre agence refusée, historique = paiement payé hors inscription).
-- [ ] T2 : `useFeatureGuard(feature)` et `LimitReachedModal` (aperçu calculé depuis le catalogue public des plans).
-- [ ] T3 : branchement sur les points d'entrée listés.
-- [ ] Checkpoint : tests et builds, audit de sécurité, vérification manuelle sur Mobelite.
+- [x] T1 [back] : route `limits` (+ tests : membre de l'agence OK, autre agence refusée, historique = paiement payé hors inscription).
+- [x] T2 : `useFeatureGuard(feature)` et `LimitReachedModal` (aperçu calculé depuis le catalogue public des plans).
+- [x] T3 : branchement sur les points d'entrée listés.
+- [x] Tests (back 316, front 71) et builds OK ; audit ci-dessous.
+- [ ] Vérification manuelle : Mobelite (historique de paiement simulé, donc pop-up sans aperçu) et une agence sans historique (avec aperçu).
+
+## Audit de sécurité
+| # | Point | Résultat |
+|---|---|---|
+| 1 | Contournement du pop-up (URL directe du formulaire, appel API) | Sans effet sur les quotas : le backend refuse toute création au-delà de la limite (`*_CAPACITY_REACHED`). Le pop-up n'est qu'un confort. |
+| 2 | Données exposées au staff | `limits` ne renvoie que le plan, les compteurs et un booléen d'historique. Ni prix payé ni transaction ; les prix de l'aperçu viennent du catalogue public. |
+| 3 | IDOR | `agencyAccessControl` (identité de session) : une autre agence est refusée, testé. |
+| 4 | Dépendances, secrets | Aucun ajout. |
