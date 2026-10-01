@@ -2,7 +2,6 @@
 import {
   BaseContainer,
   BaseFormatNumber,
-  BaseTag,
   BaseText,
   ColumnsDataTable,
   DataTableContainer,
@@ -21,6 +20,11 @@ import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
 import { landDeleteImpact } from '_utils/impact';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
+import {
+  assetStatusColumn,
+  isInactiveAsset,
+  useReactivateAssetAction,
+} from '../../components/InactiveAsset';
 
 export const LandList = () => {
   const { hasPermission } = usePermissions();
@@ -73,6 +77,9 @@ export const LandList = () => {
     },
   });
 
+  // Bien désactivé par un downgrade : réactivable par l'owner dans la limite du plan
+  const reactivateAction = useReactivateAssetAction('LAND', reloadLandsList);
+
   const landColumns: ColumnsDataTable[] = [
     { header: 'Terrain', accessor: 'title' },
     {
@@ -94,15 +101,12 @@ export const LandList = () => {
       accessor: 'address',
       cell: (value) => <BaseText fontSize={'sm'}>{value ?? 'Aucune addresse'}</BaseText>,
     },
-    {
-      header: 'Status',
-      accessor: 'status',
-      cell: (value) => <BaseTag status={value} />,
-    },
+    assetStatusColumn,
     {
       header: 'Actions',
       accessor: 'actions',
       actions: [
+        reactivateAction,
         {
           name: 'view',
           handleClick(data) {
@@ -112,7 +116,7 @@ export const LandList = () => {
         },
         {
           name: 'edit',
-          isDisabled: () => !hasPermission(AppPermissions.LAND.MANAGE),
+          isDisabled: (data) => !hasPermission(AppPermissions.LAND.MANAGE) || isInactiveAsset(data),
           handleClick(data) {
             router.push(`${DASHBOARD_ROUTES.LAND.ADD}?landId=${data?.id}`);
           },

@@ -4,7 +4,6 @@ import {
   BaseContainer,
   BaseText,
   ColumnsDataTable,
-  BaseTag,
   DataTableContainer,
   BaseFormatNumber,
 } from '_components/custom';
@@ -22,6 +21,11 @@ import { AppPermissions } from '_utils/app-permissions';
 import { propertyCloseImpact, propertyDeleteImpact } from '_utils/impact';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 import { PropertyDetails } from './PropertyDetails';
+import {
+  assetStatusColumn,
+  isInactiveAsset,
+  useReactivateAssetAction,
+} from '../../components/InactiveAsset';
 
 export const PropertyList = () => {
   const router = useRouter();
@@ -115,6 +119,9 @@ export const PropertyList = () => {
     return data?.name;
   };
 
+  // Bien désactivé par un downgrade : réactivable par l'owner dans la limite du plan
+  const reactivateAction = useReactivateAssetAction('PROPERTY', refetchProperty);
+
   const appartColumns: ColumnsDataTable[] = [
     {
       header: '',
@@ -150,15 +157,12 @@ export const PropertyList = () => {
       cell: (price: number) => <BaseFormatNumber value={price} />,
     },
 
-    {
-      header: 'Status',
-      accessor: 'status',
-      cell: (status: ENUM.COMMON.Status) => <BaseTag status={status} />,
-    },
+    assetStatusColumn,
     {
       header: 'Actions',
       accessor: 'actions',
       actions: [
+        reactivateAction,
         {
           name: 'view',
           title: 'Voir le bien',
@@ -169,7 +173,8 @@ export const PropertyList = () => {
         },
         {
           name: 'edit',
-          isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.UPDATE),
+          isDisabled: (data) =>
+            !hasPermission(AppPermissions.PROPERTIES.UPDATE) || isInactiveAsset(data),
           handleClick(data) {
             router.push(`${DASHBOARD_ROUTES.PROPERTIES.ADD}?requestId=${data?.id}`);
           },

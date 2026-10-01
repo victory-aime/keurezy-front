@@ -1,12 +1,6 @@
 'use client';
 import { VStack } from '@chakra-ui/react';
-import {
-  BaseContainer,
-  BaseTag,
-  BaseText,
-  ColumnsDataTable,
-  DataTableContainer,
-} from '_components/custom';
+import { BaseContainer, BaseText, ColumnsDataTable, DataTableContainer } from '_components/custom';
 import { useMemo, useState } from 'react';
 import { BuildingFilter } from './BuildingFilter';
 import { BuildingModule } from '_store/state-management';
@@ -21,6 +15,11 @@ import { BuildingStatsCard } from './BuildingStats';
 import { useUserContext } from '_context/user-context';
 import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
+import {
+  assetStatusColumn,
+  isInactiveAsset,
+  useReactivateAssetAction,
+} from '../../components/InactiveAsset';
 
 export const BuildingList = () => {
   const { hasPermission } = usePermissions();
@@ -85,6 +84,9 @@ export const BuildingList = () => {
       queryOptions: { enabled: openDelete && !!selectedValues?.id },
     });
 
+  // Bien désactivé par un downgrade : réactivable par l'owner dans la limite du plan
+  const reactivateAction = useReactivateAssetAction('BUILDING', reloadBuildingList);
+
   const buildingColumns: ColumnsDataTable[] = [
     { header: 'Bâtiment', accessor: 'name' },
     {
@@ -114,15 +116,12 @@ export const BuildingList = () => {
     //   accessor: "loyer_mensuel",
     //   cell: (value) => <BaseFormatNumber value={value} />,
     // },
-    {
-      header: 'Status',
-      accessor: 'status',
-      cell: (value) => <BaseTag status={value} />,
-    },
+    assetStatusColumn,
     {
       header: 'Actions',
       accessor: 'actions',
       actions: [
+        reactivateAction,
         {
           name: 'view',
           handleClick(data) {
@@ -132,7 +131,8 @@ export const BuildingList = () => {
         },
         {
           name: 'edit',
-          isDisabled: () => !hasPermission(AppPermissions.BUILDING.MANAGE),
+          isDisabled: (data) =>
+            !hasPermission(AppPermissions.BUILDING.MANAGE) || isInactiveAsset(data),
           handleClick(data) {
             router.push(`${DASHBOARD_ROUTES.BUILDING.ADD}?buildingId=${data?.id}`);
           },
