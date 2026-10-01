@@ -120,10 +120,14 @@ export const ChangePlanDialog = ({
     });
   }, [quote]);
 
-  // Un plan sans prix sur le nouveau cycle disparaît de la liste : on le désélectionne
+  // On désélectionne un plan qui disparaît sur le nouveau cycle (pas de prix) ou qui y devient le
+  // plan actuel, non sélectionnable (ex. Standard annuel choisi, retour au mensuel actuel)
   const changeCycle = (next: ENUM.BillingCycle) => {
     const selected = plans.find((p) => p.id === planId);
-    if (selected && !priceOn(selected, next)) setPlanId(null);
+    const becomesCurrent =
+      selected?.id === subscription.plan.id &&
+      (isFreePlan(subscription.plan) || next === subscription.billingCycle);
+    if (selected && (!priceOn(selected, next) || becomesCurrent)) setPlanId(null);
     setCycle(next);
   };
 
