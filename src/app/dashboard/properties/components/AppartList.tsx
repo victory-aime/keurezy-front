@@ -8,7 +8,7 @@ import {
   BaseFormatNumber,
 } from '_components/custom';
 import { BuildingModule, PropertyModule } from '_store/state-management';
-import { CONSTANTS, ENUM, MODELS } from '_types/*';
+import { CONSTANTS, MODELS } from '_types/*';
 import { useRouter } from 'next/navigation';
 import { DASHBOARD_ROUTES } from '../../routes';
 import { PropertyStatsCard } from './AppartStats';
