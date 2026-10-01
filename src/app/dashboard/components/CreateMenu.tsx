@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ReactNode } from 'react';
 import { Icons } from '_components/custom';
 import { usePermissions } from '_hooks/usePermissions';
+import { useFeatureGuard } from '_hooks/useFeatureGuard';
 import { createActions, CreateActionIcon } from './create-actions';
 
 const ICONS: Record<CreateActionIcon, ReactNode> = {
@@ -22,44 +23,60 @@ export const CreateMenu = () => {
   const { push } = useRouter();
   const { hasPermission } = usePermissions();
   const actions = createActions(hasPermission);
+  // Créations soumises à une limite du plan : pop-up « limite atteinte » quand elle est pleine
+  const property = useFeatureGuard('manage_properties');
+  const annonce = useFeatureGuard('publish_properties');
+  const invite = useFeatureGuard('manage_users');
+  const guards: Partial<Record<CreateActionIcon, typeof property>> = { property, annonce, invite };
   if (!actions.length) return null;
 
+  const open = (icon: CreateActionIcon, route: string) => {
+    const guarded = guards[icon];
+    if (guarded) guarded.guard(() => push(route));
+    else push(route);
+  };
+
   return (
-    <Menu.Root positioning={{ placement: 'bottom-end' }}>
-      <Menu.Trigger asChild>
-        <Button
-          data-tour="quick-actions"
-          // Nuances du thème (pas de tokens sémantiques `primary.solid` dans ce projet)
-          bg="primary.500"
-          color="white"
-          _hover={{ bg: 'primary.600' }}
-          size={{ base: 'sm', md: 'md' }}
-          aria-label="Créer"
-          px={{ base: 2, md: 4 }}
-        >
-          <Icons.PlusMinus size={20} />
-          <Box as="span" display={{ base: 'none', md: 'inline' }}>
-            Créer
-          </Box>
-        </Button>
-      </Menu.Trigger>
-      <Portal>
-        <Menu.Positioner>
-          <Menu.Content minW="220px">
-            {actions.map((action) => (
-              <Menu.Item
-                key={action.route}
-                value={action.route}
-                onSelect={() => push(action.route)}
-                cursor="pointer"
-              >
-                {ICONS[action.icon]}
-                {action.label}
-              </Menu.Item>
-            ))}
-          </Menu.Content>
-        </Menu.Positioner>
-      </Portal>
-    </Menu.Root>
+    <>
+      <Menu.Root positioning={{ placement: 'bottom-end' }}>
+        <Menu.Trigger asChild>
+          <Button
+            data-tour="quick-actions"
+            // Nuances du thème (pas de tokens sémantiques `primary.solid` dans ce projet)
+            bg="primary.500"
+            color="white"
+            _hover={{ bg: 'primary.600' }}
+            size={{ base: 'sm', md: 'md' }}
+            aria-label="Créer"
+            px={{ base: 2, md: 4 }}
+          >
+            <Icons.PlusMinus size={20} />
+            <Box as="span" display={{ base: 'none', md: 'inline' }}>
+              Créer
+            </Box>
+          </Button>
+        </Menu.Trigger>
+        <Portal>
+          <Menu.Positioner>
+            <Menu.Content minW="220px">
+              {actions.map((action) => (
+                <Menu.Item
+                  key={action.route}
+                  value={action.route}
+                  onSelect={() => open(action.icon, action.route)}
+                  cursor="pointer"
+                >
+                  {ICONS[action.icon]}
+                  {action.label}
+                </Menu.Item>
+              ))}
+            </Menu.Content>
+          </Menu.Positioner>
+        </Portal>
+      </Menu.Root>
+      {property.limitModal}
+      {annonce.limitModal}
+      {invite.limitModal}
+    </>
   );
 };

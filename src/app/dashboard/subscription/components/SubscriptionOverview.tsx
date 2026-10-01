@@ -66,13 +66,22 @@ export const SubscriptionOverview = () => {
     refetch();
   }, [refetch]);
 
-  // Bandeau d'expiration → « Réactiver » : ouvre directement le paiement
+  // Liens entrants : bandeau d'expiration (« Réactiver ») et pop-up « limite atteinte »
+  // (« Changer de plan », avec ou sans plan proposé)
   useEffect(() => {
+    if (!subscription) return;
     const params = new URLSearchParams(window.location.search);
-    if (params.get('action') !== 'reactivate' || subscription?.status !== 'INACTIVE') return;
+    const action = params.get('action');
+    if (action !== 'reactivate' && action !== 'change') return;
     window.history.replaceState(null, '', window.location.pathname);
-    openRenewal();
-  }, [subscription?.status, openRenewal]);
+    if (action === 'reactivate') {
+      if (subscription.status === 'INACTIVE') openRenewal();
+      return;
+    }
+    const planId = params.get('plan');
+    const cycle = params.get('cycle') === 'YEARLY' ? 'YEARLY' : 'MONTHLY';
+    setDrawer(planId ? { open: true, target: { planId, billingCycle: cycle } } : { open: true });
+  }, [subscription, openRenewal]);
 
   const body = () => {
     if (!isOwner) {

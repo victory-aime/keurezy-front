@@ -20,10 +20,13 @@ import {
   isInactiveAsset,
   useReactivateAssetAction,
 } from '../../components/InactiveAsset';
+import { useFeatureGuard } from '_hooks/useFeatureGuard';
 
 export const BuildingList = () => {
   const { hasPermission } = usePermissions();
   const router = useRouter();
+  // Bouton « Ajouter » : pop-up « limite atteinte » quand le plan est plein
+  const { guard, limitModal } = useFeatureGuard('manage_properties');
   const { user: currentUser } = useUserContext();
   const [currentPage, setCurrentPage] = useState(1);
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
@@ -198,7 +201,7 @@ export const BuildingList = () => {
         validatePermission: hasPermission(AppPermissions.BUILDING.MANAGE),
         downloadTitle: `Exporter PDF (${allBuildings?.content?.length ?? 0})`,
         onClick() {
-          router.push(DASHBOARD_ROUTES.BUILDING.ADD);
+          guard(() => router.push(DASHBOARD_ROUTES.BUILDING.ADD));
         },
         onReload: async () => {
           await reloadBuildingList();
@@ -251,6 +254,7 @@ export const BuildingList = () => {
           setOpenDelete(true);
         }}
       />
+      {limitModal}
     </BaseContainer>
   );
 };

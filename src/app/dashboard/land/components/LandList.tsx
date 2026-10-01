@@ -25,10 +25,13 @@ import {
   isInactiveAsset,
   useReactivateAssetAction,
 } from '../../components/InactiveAsset';
+import { useFeatureGuard } from '_hooks/useFeatureGuard';
 
 export const LandList = () => {
   const { hasPermission } = usePermissions();
   const router = useRouter();
+  // Bouton « Ajouter » : pop-up « limite atteinte » quand le plan est plein
+  const { guard, limitModal } = useFeatureGuard('manage_properties');
   const { user: currentUser } = useUserContext();
   const [currentPage, setCurrentPage] = useState(1);
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
@@ -177,7 +180,7 @@ export const LandList = () => {
         validatePermission: hasPermission(AppPermissions.LAND.MANAGE),
         downloadTitle: `Exporter PDF (${allLands?.content?.length ?? 0})`,
         onClick() {
-          router.push(DASHBOARD_ROUTES.LAND.ADD);
+          guard(() => router.push(DASHBOARD_ROUTES.LAND.ADD));
         },
         onReload: async () => {
           await reloadLandsList();
@@ -228,6 +231,7 @@ export const LandList = () => {
         confirmTitle="Supprimer définitivement"
         onConfirm={() => landToDelete && deleteLand({ params: { id: landToDelete.id } })}
       />
+      {limitModal}
     </BaseContainer>
   );
 };

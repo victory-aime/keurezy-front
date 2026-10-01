@@ -180,6 +180,12 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
+      SUBSCRIPTION_LIMITS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/limits`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
       SUBSCRIPTION_ACTIVATE_ASSET: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/assets/activate`,
         method: 'POST',

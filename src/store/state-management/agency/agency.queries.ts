@@ -109,6 +109,18 @@ const getSubscriptionPaymentQueries = (
   });
 };
 
+/** Limites du plan et usage actif ; partagé par tous les boutons « Ajouter ». */
+const getSubscriptionLimitsQueries = (
+  args: QUERIES.QueryPayload<MODELS.ISubscriptionLimits, undefined, { agencyId: string }>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, { agencyId: string }, MODELS.ISubscriptionLimits>({
+    queryKey: [Constants.AGENCY_KEYS.SUBSCRIPTION_LIMITS, params],
+    queryFn: () => agencyServiceInstance().subscription_limits(params!.agencyId),
+    options: queryOptions,
+  });
+};
+
 /** Historique de facturation, une page à la fois. */
 const getSubscriptionPaymentsQueries = (
   args: QUERIES.QueryPayload<
@@ -261,6 +273,7 @@ export {
   getSubscriptionQuoteQueries,
   getSubscriptionPaymentQueries,
   getSubscriptionPaymentsQueries,
+  getSubscriptionLimitsQueries,
   subscriptionCheckoutMutation,
   scheduleSubscriptionChangeMutation,
   cancelScheduledChangeMutation,

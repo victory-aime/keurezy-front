@@ -18,6 +18,7 @@ import { FormCard } from '../../components/FormCard';
 import { formatDisplayDate } from 'rise-core-frontend';
 import { DASHBOARD_ROUTES } from '../../routes';
 import { CONSTANTS, ENUM, MODELS } from '_types/*';
+import { useFeatureGuard } from '_hooks/useFeatureGuard';
 
 interface IBuildingDetail extends ModalOpenProps {
   data: MODELS.IBuilding | null;
@@ -31,6 +32,8 @@ export const BuildingDetails = ({
   callback,
 }: IBuildingDetail) => {
   const router = useRouter();
+  // « Ajouter un bien » : pop-up « limite atteinte » quand le plan est plein
+  const { guard, limitModal } = useFeatureGuard('manage_properties');
 
   const propertyColumns: ColumnsDataTable[] = [
     {
@@ -118,10 +121,12 @@ export const BuildingDetails = ({
             <BaseText> Au moins {data?.properties?.length} proprietes associés </BaseText>
             <BaseIcon
               cursor={'pointer'}
-              onClick={() => {
-                onChange(!isOpen);
-                router.push(DASHBOARD_ROUTES.PROPERTIES.ADD);
-              }}
+              onClick={() =>
+                guard(() => {
+                  onChange(!isOpen);
+                  router.push(DASHBOARD_ROUTES.PROPERTIES.ADD);
+                })
+              }
             >
               <Icons.PlusMinus size={24} />
             </BaseIcon>
@@ -139,49 +144,52 @@ export const BuildingDetails = ({
   ];
 
   return (
-    <BaseDrawer
-      title={'Detail du bâtiment'}
-      description={' Visualisation des informations du bâtiment'}
-      size={'xl'}
-      icon={<Icons.RiBuildingLine />}
-      onChange={onChange}
-      isOpen={isOpen}
-      ignoreFooter
-    >
-      <Box
-        borderLeftWidth={2}
-        boxShadow={'sm'}
-        borderRadius={'lg'}
-        borderColor={'primary.500'}
-        p={4}
+    <>
+      <BaseDrawer
+        title={'Detail du bâtiment'}
+        description={' Visualisation des informations du bâtiment'}
+        size={'xl'}
+        icon={<Icons.RiBuildingLine />}
+        onChange={onChange}
+        isOpen={isOpen}
+        ignoreFooter
       >
-        <Flex alignItems={'center'} justifyContent={'space-between'} gap={5}>
-          <HStack>
-            <BaseIcon>
-              <Icons.RiBuildingLine />
-            </BaseIcon>
-            <Stack gap={0}>
-              <BaseText>{data?.name}</BaseText>
-              <BaseText textTransform={'capitalize'}>
-                {data?.city},{data?.address},{data?.district}
-              </BaseText>
-            </Stack>
-          </HStack>
-          <BaseButton colorType="danger" variant={'outline'} onClick={() => callback?.()}>
-            Supprimer
-          </BaseButton>
-        </Flex>
-      </Box>
-      <BaseAccordion
-        items={buildingDetailsAccordions}
-        multipleOpen
-        isLoading={isLoading}
-        mt={5}
-        itemContentProps={{
-          p: '0',
-          mt: '2',
-        }}
-      />
-    </BaseDrawer>
+        <Box
+          borderLeftWidth={2}
+          boxShadow={'sm'}
+          borderRadius={'lg'}
+          borderColor={'primary.500'}
+          p={4}
+        >
+          <Flex alignItems={'center'} justifyContent={'space-between'} gap={5}>
+            <HStack>
+              <BaseIcon>
+                <Icons.RiBuildingLine />
+              </BaseIcon>
+              <Stack gap={0}>
+                <BaseText>{data?.name}</BaseText>
+                <BaseText textTransform={'capitalize'}>
+                  {data?.city},{data?.address},{data?.district}
+                </BaseText>
+              </Stack>
+            </HStack>
+            <BaseButton colorType="danger" variant={'outline'} onClick={() => callback?.()}>
+              Supprimer
+            </BaseButton>
+          </Flex>
+        </Box>
+        <BaseAccordion
+          items={buildingDetailsAccordions}
+          multipleOpen
+          isLoading={isLoading}
+          mt={5}
+          itemContentProps={{
+            p: '0',
+            mt: '2',
+          }}
+        />
+      </BaseDrawer>
+      {limitModal}
+    </>
   );
 };

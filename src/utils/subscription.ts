@@ -175,3 +175,34 @@ export function keepFitsLimits(
 ): boolean {
   return excess.every(({ feature, limit }) => (keep[feature]?.length ?? 0) <= limit);
 }
+
+/** Plan du catalogue, réduit à ce qui sert à le comparer. */
+export interface CatalogPlan {
+  id: string;
+  monthlyPrice: number;
+  features: PlanFeatureLimit[];
+}
+
+/**
+ * Plus petit plan, plus cher que l'actuel, qui lève la limite d'une fonctionnalité (limite plus
+ * haute ou illimitée). null s'il n'y en a pas (déjà au plus haut).
+ */
+export function nextPlanFor(
+  plans: CatalogPlan[],
+  currentPlanId: string,
+  feature: string,
+): CatalogPlan | null {
+  const current = plans.find((p) => p.id === currentPlanId);
+  if (!current) return null;
+  const limitIn = (plan: CatalogPlan) => plan.features.find((f) => f.name === feature);
+  const currentLimit = limitIn(current)?.limit ?? 0;
+  const lifts = (plan: CatalogPlan) => {
+    const target = limitIn(plan);
+    return !!target && (target.limit === null || target.limit > currentLimit);
+  };
+  return (
+    plans
+      .filter((p) => p.monthlyPrice > current.monthlyPrice && lifts(p))
+      .sort((a, b) => a.monthlyPrice - b.monthlyPrice)[0] ?? null
+  );
+}

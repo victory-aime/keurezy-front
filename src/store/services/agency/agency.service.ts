@@ -79,6 +79,14 @@ export class AgencyService extends BaseApi {
       { params: { agencyId, orderId } },
     );
   }
+  /** Limites du plan et usage actif (owner et staff). */
+  subscription_limits(agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_LIMITS,
+      {},
+      { params: { agencyId } },
+    );
+  }
   /** Historique de facturation de l'agence, paginé (owner uniquement). */
   subscription_payments(params: MODELS.IPagination) {
     return this.apiService.invoke(

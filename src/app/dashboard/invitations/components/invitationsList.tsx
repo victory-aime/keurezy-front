@@ -13,11 +13,14 @@ import { usePermissions } from '_hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
 import { invitationCancelImpact, invitationResendImpact } from '_utils/impact';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
+import { useFeatureGuard } from '_hooks/useFeatureGuard';
 
 export const InvitationsList = () => {
   const { hasPermission } = usePermissions();
   const { user } = useUserContext();
   const router = useRouter();
+  // Bouton « Inviter » : pop-up « limite atteinte » quand le plan est plein
+  const { guard, limitModal } = useFeatureGuard('manage_users');
   const { t } = useTranslation();
   // Invitation dont on confirme l'annulation ou le renvoi (l'impact est montré avant)
   const [pending, setPending] = useState<{
@@ -123,7 +126,7 @@ export const InvitationsList = () => {
         // Point d'entrée masqué sans la permission d'inviter
         validatePermission: hasPermission(AppPermissions.INVITATIONS.SEND),
         onClick() {
-          router.push(DASHBOARD_ROUTES.INVITATIONS.ADD);
+          guard(() => router.push(DASHBOARD_ROUTES.INVITATIONS.ADD));
         },
         onReload: async () => {
           await refetchAllInvitations();
@@ -162,6 +165,7 @@ export const InvitationsList = () => {
           else await cancelInvitation({ params });
         }}
       />
+      {limitModal}
     </BaseContainer>
   );
 };

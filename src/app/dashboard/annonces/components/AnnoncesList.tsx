@@ -22,10 +22,13 @@ import { AppPermissions } from '_utils/app-permissions';
 import { annonceDeleteImpact } from '_utils/impact';
 import { ENUM } from '_types/';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
+import { useFeatureGuard } from '_hooks/useFeatureGuard';
 
 export const AnnoncesList = () => {
   const { hasPermission } = usePermissions();
   const { push } = useRouter();
+  // Bouton « Ajouter » : pop-up « limite atteinte » quand le plan est plein
+  const { guard, limitModal } = useFeatureGuard('publish_properties');
   const { user } = useUserContext();
   const [selectedValues, setSelectedValues] = useState<MODELS.IAnnonceResponse | null>(null);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -164,7 +167,7 @@ export const AnnoncesList = () => {
           await reloadAnnonceList();
         },
         onClick() {
-          push(DASHBOARD_ROUTES.ANNONCES.ADD);
+          guard(() => push(DASHBOARD_ROUTES.ANNONCES.ADD));
         },
       }}
     >
@@ -200,6 +203,7 @@ export const AnnoncesList = () => {
             : undefined
         }
       />
+      {limitModal}
     </BaseContainer>
   );
 };

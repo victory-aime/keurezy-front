@@ -116,6 +116,14 @@ interface ISubscriptionPaymentStatus {
   status: 'PENDING' | 'PAID' | 'FAILED' | 'CANCELLED';
 }
 
+/** `GET agency/subscription/limits` : limites et usage, pour toute l'équipe. */
+interface ISubscriptionLimits {
+  plan: { id: string; name: PlanType } | null;
+  usage: IAgencySubscriptionOverview['usage'];
+  /** Paiement payé autre que l'inscription : pas d'aperçu promotionnel */
+  hasPaymentHistory: boolean;
+}
+
 /** Paiement de l'historique de facturation (`GET agency/subscription/payments`). */
 interface IAgencyPayment {
   id: string;
@@ -243,6 +251,7 @@ export type {
   ISubscriptionCheckout,
   ISubscriptionPaymentStatus,
   IAgencyPayment,
+  ISubscriptionLimits,
   IAgencyStats,
   IAgencyCloseImpact,
 };

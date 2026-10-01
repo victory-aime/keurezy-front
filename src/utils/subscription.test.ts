@@ -4,6 +4,7 @@ import {
   featureLabel,
   formatFeatureLimit,
   keepFitsLimits,
+  nextPlanFor,
   planDifferences,
   usageRemainingLabel,
 } from './subscription';
@@ -126,5 +127,38 @@ describe('keepFitsLimits', () => {
 
   it('refuse un choix au-delà de la limite', () => {
     expect(keepFitsLimits(excess, { manage_users: ['s1', 's2'] })).toBe(false);
+  });
+});
+
+describe('nextPlanFor', () => {
+  const basic = {
+    id: 'basic',
+    monthlyPrice: 5_000,
+    features: [{ name: 'manage_users', limit: 1 }],
+  };
+  const standard = {
+    id: 'standard',
+    monthlyPrice: 10_000,
+    features: [{ name: 'manage_users', limit: 5 }],
+  };
+  const premium = {
+    id: 'premium',
+    monthlyPrice: 18_000,
+    features: [{ name: 'manage_users', limit: null }],
+  };
+  const plans = [premium, basic, standard];
+
+  it('propose le plus petit plan supérieur qui lève la limite', () => {
+    expect(nextPlanFor(plans, 'basic', 'manage_users')?.id).toBe('standard');
+    expect(nextPlanFor(plans, 'standard', 'manage_users')?.id).toBe('premium');
+  });
+
+  it('saute un plan supérieur qui ne lève pas cette limite', () => {
+    const sameLimit = { ...standard, features: [{ name: 'manage_users', limit: 1 }] };
+    expect(nextPlanFor([basic, sameLimit, premium], 'basic', 'manage_users')?.id).toBe('premium');
+  });
+
+  it('rien au plus haut', () => {
+    expect(nextPlanFor(plans, 'premium', 'manage_users')).toBeNull();
   });
 });

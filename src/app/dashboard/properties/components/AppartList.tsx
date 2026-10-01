@@ -26,9 +26,20 @@ import {
   isInactiveAsset,
   useReactivateAssetAction,
 } from '../../components/InactiveAsset';
+import { useFeatureGuard } from '_hooks/useFeatureGuard';
 
 export const PropertyList = () => {
   const router = useRouter();
+  // Boutons « Ajouter » : pop-up « limite atteinte » quand le plan est plein
+  const { guard, limitModal: propertyLimitModal } = useFeatureGuard('manage_properties');
+  const { guard: guardAnnonce, limitModal: annonceLimitModal } =
+    useFeatureGuard('publish_properties');
+  const limitModal = (
+    <>
+      {propertyLimitModal}
+      {annonceLimitModal}
+    </>
+  );
   const { user } = useUserContext();
   const { hasPermission } = usePermissions();
   const [toggleFilter, setToggleFilter] = useState<boolean>(false);
@@ -183,7 +194,7 @@ export const PropertyList = () => {
           name: 'publish',
           isDisabled: () => !hasPermission(AppPermissions.PROPERTIES.PUBLISH),
           handleClick() {
-            router.push(DASHBOARD_ROUTES.ANNONCES.ADD);
+            guardAnnonce(() => router.push(DASHBOARD_ROUTES.ANNONCES.ADD));
           },
         },
         {
@@ -238,7 +249,7 @@ export const PropertyList = () => {
           await refetchProperty();
         },
         onClick: () => {
-          router.push(DASHBOARD_ROUTES.PROPERTIES.ADD);
+          guard(() => router.push(DASHBOARD_ROUTES.PROPERTIES.ADD));
         },
       }}
     >
@@ -292,6 +303,7 @@ export const PropertyList = () => {
             : undefined
         }
       />
+      {limitModal}
     </BaseContainer>
   );
 };
