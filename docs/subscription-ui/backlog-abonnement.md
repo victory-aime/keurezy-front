@@ -4,13 +4,15 @@
 >
 > **Exclus** : le back-office administrateur ; l'application mobile, réservée aux clients finaux qui réservent les biens des agences.
 
-## 1. Module facturation (fonctionnalité commerciale)
+## 1. Module facturation
+> Décision du 2026-10-02 : en deux temps, **après la section 2**. D'abord les reçus PDF de Keurezy à l'agence pour ses paiements d'abonnement (pour tous les plans, sans quota). Ensuite la facturation de l'agence à ses clients (réservations), fonctionnalité commerciale avec quota par plan. PDF générés côté backend (`pdfkit`).
+
 - **Reçus et factures PDF**, générés par Keurezy pour chaque paiement d'abonnement. Numérotation continue, mentions légales de l'agence et de la plateforme.
 - **Fonctionnalité commerciale** (par exemple `manage_invoices`), avec un **quota par plan**, du Gratuit au Premium. Elle s'ajoute aux compteurs existants : jauges, alerte à 80 %, blocage à 100 %.
 - E-mail « paiement confirmé » enrichi du reçu en pièce jointe ou en lien.
 - **Dépend de** la section 2 (informations légales de l'agence).
 
-## 2. Informations légales de l'agence et statut « vérifié »
+## 2. Informations légales de l'agence et statut « vérifié » (en cours : [spec](../agency-legal-info/spec.md))
 - Nouveaux champs dans la page **Agence** : raison sociale, NINEA, RCCM, adresse de facturation, e-mail de facturation et autres mentions requises.
 - **Règle** : sans ces informations, l'agence ne peut pas passer au statut **vérifié**.
 - **Note visible sur la page Agence** pour l'expliquer, avec la liste des informations manquantes.
