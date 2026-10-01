@@ -98,6 +98,13 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         path: DASHBOARD_ROUTES.AGENCY,
         icon: Icons.Office,
       },
+      {
+        // Accès du staff avec la permission de facturation : module I3
+        label: 'Modèles de facture',
+        path: DASHBOARD_ROUTES.INVOICING.TEMPLATES,
+        icon: Icons.Paper,
+        ownerOnly: true,
+      },
     ],
   },
 

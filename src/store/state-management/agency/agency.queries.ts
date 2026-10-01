@@ -126,6 +126,64 @@ const getSubscriptionLimitsQueries = (
   });
 };
 
+/** Modèles de facture et réglages de facturation de l'agence. */
+const getInvoiceTemplatesQueries = (
+  args: QUERIES.QueryPayload<MODELS.IInvoiceTemplatesResponse, undefined, { agencyId: string }>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, { agencyId: string }, MODELS.IInvoiceTemplatesResponse>({
+    queryKey: [Constants.AGENCY_KEYS.INVOICE_TEMPLATES, params],
+    queryFn: () => agencyServiceInstance().invoice_templates(params!.agencyId),
+    options: queryOptions,
+  });
+};
+
+/** Catalogue des variables insérables (stable : chargé une fois). */
+const getInvoiceTemplateVariablesQueries = (args: QUERIES.QueryPayload<MODELS.IInvoiceVariables>) =>
+  QUERIES.useCustomQuery<undefined, undefined, MODELS.IInvoiceVariables>({
+    queryKey: [Constants.AGENCY_KEYS.INVOICE_TEMPLATE_VARIABLES],
+    queryFn: () => agencyServiceInstance().invoice_template_variables(),
+    options: { staleTime: Infinity, ...args.queryOptions },
+  });
+
+const saveInvoiceTemplateMutation = (
+  args: QUERIES.MutationPayload<
+    { name?: string; config: MODELS.IInvoiceTemplateConfig },
+    MODELS.IInvoiceTemplate,
+    { agencyId: string; id?: string }
+  >,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.SAVE_INVOICE_TEMPLATE],
+    mutationFn: ({ payload, params }) =>
+      agencyServiceInstance().save_invoice_template(params!.agencyId, payload!, params!.id),
+    options: args.mutationOptions,
+  });
+
+const deleteInvoiceTemplateMutation = (
+  args: QUERIES.MutationPayload<unknown, unknown, { agencyId: string; id: string }>,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.DELETE_INVOICE_TEMPLATE],
+    mutationFn: ({ params }) =>
+      agencyServiceInstance().delete_invoice_template(params!.agencyId, params!.id),
+    options: args.mutationOptions,
+  });
+
+const updateInvoiceSettingsMutation = (
+  args: QUERIES.MutationPayload<
+    Partial<MODELS.IInvoiceSettings>,
+    MODELS.IInvoiceSettings,
+    { agencyId: string }
+  >,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.UPDATE_INVOICE_SETTINGS],
+    mutationFn: ({ payload, params }) =>
+      agencyServiceInstance().update_invoice_settings(params!.agencyId, payload!),
+    options: args.mutationOptions,
+  });
+
 /** Historique de facturation, une page à la fois. */
 const getSubscriptionPaymentsQueries = (
   args: QUERIES.QueryPayload<
@@ -287,6 +345,11 @@ export {
   updateAgencyMutation,
   closeAgencyMutation,
   updateAgencyLegalMutation,
+  getInvoiceTemplatesQueries,
+  getInvoiceTemplateVariablesQueries,
+  saveInvoiceTemplateMutation,
+  deleteInvoiceTemplateMutation,
+  updateInvoiceSettingsMutation,
   getCloseImpactQueries,
   cancelCloseMutation,
   getAgencySubscriptionInfo,

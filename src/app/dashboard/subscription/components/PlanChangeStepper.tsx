@@ -4,10 +4,17 @@ import { BaseText, Icons, TextVariant } from '_components/custom';
 export const PLAN_CHANGE_STEPS = ['Choisir', 'Vérifier', 'Récapitulatif'] as const;
 
 /**
- * Stepper du changement de plan : indicateur seulement (on avance par les boutons du pied de
+ * Stepper des parcours plein écran (changement de plan, éditeur de modèle) : indicateur seulement (on avance par les boutons du pied de
  * page, chaque étape ayant sa condition). Couleur de l'agence, libellés à partir de `md`.
  */
-export const PlanChangeStepper = ({ current }: { current: number }) => (
+export const PlanChangeStepper = ({
+  current,
+  steps = PLAN_CHANGE_STEPS,
+}: {
+  current: number;
+  /** Libellés des étapes (par défaut celles du changement de plan) */
+  steps?: readonly string[];
+}) => (
   <Flex
     as="ol"
     listStyleType="none"
@@ -15,7 +22,7 @@ export const PlanChangeStepper = ({ current }: { current: number }) => (
     gap={{ base: 2, md: 3 }}
     aria-label="Étapes"
   >
-    {PLAN_CHANGE_STEPS.map((label, index) => {
+    {steps.map((label, index) => {
       const done = index < current;
       const active = index === current;
       return (
@@ -24,7 +31,7 @@ export const PlanChangeStepper = ({ current }: { current: number }) => (
           key={label}
           alignItems="center"
           gap={2}
-          flex={index < PLAN_CHANGE_STEPS.length - 1 ? '1' : '0 0 auto'}
+          flex={index < steps.length - 1 ? '1' : '0 0 auto'}
           aria-current={active ? 'step' : undefined}
         >
           <Flex
@@ -61,7 +68,7 @@ export const PlanChangeStepper = ({ current }: { current: number }) => (
           >
             {label}
           </BaseText>
-          {index < PLAN_CHANGE_STEPS.length - 1 && (
+          {index < steps.length - 1 && (
             <Box
               aria-hidden
               flex="1"

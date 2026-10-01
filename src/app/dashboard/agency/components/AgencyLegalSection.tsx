@@ -18,6 +18,7 @@ import { AgencyModule } from '_store/state-management';
 import { MODELS } from '_types/*';
 import {
   changesIdentity,
+  BANK_FIELD_LABELS,
   LEGAL_FIELD_LABELS,
   LEGAL_FORMS,
   verificationState,
@@ -47,6 +48,18 @@ const schema = yup.object({
     }),
   billingAddress: yup.string().trim().min(5, '5 caractères minimum').max(255),
   billingEmail: yup.string().trim().email('E-mail invalide'),
+  bankName: yup.string().trim().min(2, '2 caractères minimum').max(100),
+  bankAccount: yup
+    .string()
+    .trim()
+    .matches(/^[0-9A-Za-z ]{10,40}$/, {
+      message: '10 à 40 chiffres ou lettres',
+      excludeEmptyString: true,
+    }),
+  mobileMoneyNumber: yup
+    .string()
+    .trim()
+    .matches(/^\+?[0-9 ]{8,20}$/, { message: 'Numéro invalide', excludeEmptyString: true }),
 });
 
 /** Note de vérification : ce qui manque, l'attente, ou le badge. */
@@ -75,7 +88,11 @@ const VerificationNote = ({ agency }: { agency: MODELS.IAgency }) => {
       </Flex>
       {state === 'INCOMPLETE' && (
         <BaseText variant={TextVariant.S} mt={1} pl={6}>
-          À renseigner : {agency.legalMissing!.map((f) => LEGAL_FIELD_LABELS[f]).join(', ')}.
+          À renseigner :{' '}
+          {agency
+            .legalMissing!.map((f) => LEGAL_FIELD_LABELS[f as keyof typeof LEGAL_FIELD_LABELS])
+            .join(', ')}
+          .
         </BaseText>
       )}
       {state === 'VERIFIED' && (
@@ -120,6 +137,9 @@ export const AgencyLegalSection = ({
     rccm: agency.rccm ?? '',
     billingAddress: agency.billingAddress ?? agency.address ?? '',
     billingEmail: agency.billingEmail ?? agency.email ?? '',
+    bankName: agency.bankName ?? '',
+    bankAccount: agency.bankAccount ?? '',
+    mobileMoneyNumber: agency.mobileMoneyNumber ?? '',
   };
 
   // Seuls les champs remplis partent (un champ vide n'efface rien côté serveur)
@@ -169,6 +189,25 @@ export const AgencyLegalSection = ({
                   <FormTextInput name="billingAddress" label="Adresse de facturation" />
                   <FormTextInput name="billingEmail" label="E-mail de facturation" type="email" />
                 </SimpleGrid>
+                <Stack gap={1}>
+                  <BaseText fontWeight="semibold">Coordonnées de paiement (facultatif)</BaseText>
+                  <BaseText variant={TextVariant.S} color="fg.muted">
+                    Imprimées sur vos factures quand le modèle affiche ce bloc.
+                  </BaseText>
+                </Stack>
+                <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
+                  <FormTextInput name="bankName" label={BANK_FIELD_LABELS.bankName} />
+                  <FormTextInput
+                    name="bankAccount"
+                    label={BANK_FIELD_LABELS.bankAccount}
+                    placeholder="SN012 01001 012345678901 85"
+                  />
+                  <FormTextInput
+                    name="mobileMoneyNumber"
+                    label={BANK_FIELD_LABELS.mobileMoneyNumber}
+                    placeholder="+221 77 000 00 00"
+                  />
+                </SimpleGrid>
                 <HStack justifyContent="flex-end">
                   <BaseButton
                     colorType="primary"
@@ -184,19 +223,21 @@ export const AgencyLegalSection = ({
           </Formik>
         ) : (
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={3}>
-            {(Object.keys(LEGAL_FIELD_LABELS) as (keyof Legal)[]).map((field) => (
-              <Stack key={field} gap={0}>
-                <BaseText variant={TextVariant.XS} color="fg.muted">
-                  {LEGAL_FIELD_LABELS[field]}
-                </BaseText>
-                <BaseText variant={TextVariant.S}>
-                  {field === 'legalForm'
-                    ? (LEGAL_FORMS.find((f) => f.value === agency.legalForm)?.label ??
-                      'Non renseigné')
-                    : (agency[field] ?? 'Non renseigné')}
-                </BaseText>
-              </Stack>
-            ))}
+            {(Object.keys({ ...LEGAL_FIELD_LABELS, ...BANK_FIELD_LABELS }) as (keyof Legal)[]).map(
+              (field) => (
+                <Stack key={field} gap={0}>
+                  <BaseText variant={TextVariant.XS} color="fg.muted">
+                    {{ ...LEGAL_FIELD_LABELS, ...BANK_FIELD_LABELS }[field]}
+                  </BaseText>
+                  <BaseText variant={TextVariant.S}>
+                    {field === 'legalForm'
+                      ? (LEGAL_FORMS.find((f) => f.value === agency.legalForm)?.label ??
+                        'Non renseigné')
+                      : (agency[field] ?? 'Non renseigné')}
+                  </BaseText>
+                </Stack>
+              ),
+            )}
           </SimpleGrid>
         )}
       </Stack>

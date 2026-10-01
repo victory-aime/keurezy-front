@@ -197,6 +197,38 @@ export const APIS = (baseUrl?: string) => {
         method: 'POST',
         pathBase: 'SECURED_API',
       }),
+      INVOICE_TEMPLATES: api({
+        path: '/invoicing/templates',
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      INVOICE_TEMPLATE_VARIABLES: api({
+        path: '/invoicing/templates/variables',
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      INVOICE_TEMPLATE_CREATE: api({
+        path: '/invoicing/templates',
+        method: 'POST',
+        pathBase: 'SECURED_API',
+      }),
+      INVOICE_TEMPLATE_UPDATE: api({
+        path: '/invoicing/templates',
+        method: 'PATCH',
+        pathBase: 'SECURED_API',
+      }),
+      INVOICE_TEMPLATE_DELETE: api({
+        path: '/invoicing/templates',
+        method: 'DELETE',
+        pathBase: 'SECURED_API',
+      }),
+      INVOICE_SETTINGS: api({
+        path: '/invoicing/settings',
+        method: 'PATCH',
+        pathBase: 'SECURED_API',
+      }),
       UPDATE_LEGAL: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/legal`,
         method: 'PATCH',

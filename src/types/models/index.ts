@@ -16,3 +16,4 @@ export * from './annonces';
 export * from './visits';
 export * from './bookings';
 export * from './integrations-provider';
+export * from './invoicing';

@@ -35,6 +35,9 @@ export const DASHBOARD_ROUTES = {
   PROFILE: `${APP_ROUTES.DASHBOARD}/profile`,
   SECURITY: `${APP_ROUTES.DASHBOARD}/security`,
   SUBSCRIPTION: `${APP_ROUTES.DASHBOARD}/subscription`,
+  INVOICING: {
+    TEMPLATES: `${APP_ROUTES.DASHBOARD}/invoicing/templates`,
+  },
   INTEGRATIONS_PROVIDER: `${APP_ROUTES.DASHBOARD}/integrations`,
   AGENCY: `${APP_ROUTES.DASHBOARD}/agency`,
   ANNONCES: {

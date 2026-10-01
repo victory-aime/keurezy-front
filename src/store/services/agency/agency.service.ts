@@ -130,6 +130,46 @@ export class AgencyService extends BaseApi {
       data,
     );
   }
+  /** Modèles de facture (communs et de l'agence) et réglages de facturation. */
+  invoice_templates(agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.INVOICE_TEMPLATES,
+      {},
+      { params: { agencyId } },
+    );
+  }
+  invoice_template_variables() {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.INVOICE_TEMPLATE_VARIABLES,
+    );
+  }
+  /** Crée un modèle, ou en modifie un si `id` est fourni (un modèle commun est copié). */
+  save_invoice_template(
+    agencyId: string,
+    data: { name?: string; config: MODELS.IInvoiceTemplateConfig },
+    id?: string,
+  ) {
+    const config = this.applicationContext.getApiConfig().AGENCY;
+    return this.apiService.invoke(
+      id ? config.INVOICE_TEMPLATE_UPDATE : config.INVOICE_TEMPLATE_CREATE,
+      data,
+      { params: id ? { agencyId, id } : { agencyId } },
+    );
+  }
+  delete_invoice_template(agencyId: string, id: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.INVOICE_TEMPLATE_DELETE,
+      {},
+      { params: { agencyId, id } },
+    );
+  }
+  update_invoice_settings(agencyId: string, data: Partial<MODELS.IInvoiceSettings>) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.INVOICE_SETTINGS,
+      data,
+      { params: { agencyId } },
+    );
+  }
   /** Informations légales de l'agence (owner uniquement). */
   update_legal(agencyId: string, data: Partial<MODELS.IAgencyLegal>) {
     return this.apiService.invoke(

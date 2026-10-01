@@ -3,7 +3,10 @@ import type { MODELS } from '_types/*';
 type Legal = MODELS.IAgencyLegal;
 
 /** Libellés des informations légales (note de vérification, formulaire). */
-export const LEGAL_FIELD_LABELS: Record<keyof Legal, string> = {
+export const LEGAL_FIELD_LABELS: Record<
+  Exclude<keyof Legal, 'bankName' | 'bankAccount' | 'mobileMoneyNumber'>,
+  string
+> = {
   companyName: 'Raison sociale',
   legalForm: 'Forme juridique',
   ninea: 'NINEA',
@@ -11,6 +14,13 @@ export const LEGAL_FIELD_LABELS: Record<keyof Legal, string> = {
   billingAddress: 'Adresse de facturation',
   billingEmail: 'E-mail de facturation',
 };
+
+/** Coordonnées bancaires (facultatives) : bloc « coordonnées de paiement » des factures. */
+export const BANK_FIELD_LABELS = {
+  bankName: 'Banque',
+  bankAccount: 'RIB ou IBAN',
+  mobileMoneyNumber: 'Numéro Wave ou Orange Money',
+} as const;
 
 export const LEGAL_FORMS: { value: MODELS.LegalForm; label: string }[] = [
   { value: 'SARL', label: 'SARL' },

@@ -64,12 +64,18 @@ interface IAgency {
   rccm?: string | null;
   billingAddress?: string | null;
   billingEmail?: string | null;
+  bankName?: string | null;
+  bankAccount?: string | null;
+  mobileMoneyNumber?: string | null;
 }
 
 type LegalForm = 'SARL' | 'SUARL' | 'SA' | 'SAS' | 'SASU' | 'GIE' | 'INDIVIDUAL' | 'OTHER';
 
 /** Informations légales de l'agence : jamais publiques. */
 interface IAgencyLegal {
+  bankName?: string | null;
+  bankAccount?: string | null;
+  mobileMoneyNumber?: string | null;
   companyName: string | null;
   legalForm: LegalForm | null;
   ninea: string | null;
