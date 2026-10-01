@@ -584,14 +584,37 @@ export function memberTwoFactorResetImpact(member: { name?: string }): ImpactSum
   };
 }
 
+/** Éléments comptés par une limite : singulier, pluriel, féminin. */
+const LIMIT_NOUNS: Record<string, [string, string, boolean]> = {
+  manage_properties: ['bien', 'biens', false],
+  publish_properties: ['annonce en ligne', 'annonces en ligne', true],
+  manage_users: ['collaborateur', 'collaborateurs', false],
+};
+
+/** « 3 biens sur 5 seront désactivés : les 2 plus anciens restent actifs. » */
+function excessLine({ feature, used, limit }: { feature: string; used: number; limit: number }) {
+  const [one, many, feminine] = LIMIT_NOUNS[feature] ?? ['élément', 'éléments', false];
+  const e = feminine ? 'e' : '';
+  const cut = used - limit;
+  const verb = cut > 1 ? `seront désactivé${e}s` : `sera désactivé${e}`;
+  if (limit === 0) {
+    const subject = used > 1 ? `Vos ${used} ${many}` : `Votre ${one}`;
+    return `${subject} ${verb} : le plan Gratuit n’en inclut pas.`;
+  }
+  const kept =
+    limit > 1
+      ? `les ${limit} plus ancien${feminine ? 'nes' : 's'} restent acti${feminine ? 'ves' : 'fs'}`
+      : `${feminine ? 'la plus ancienne' : 'le plus ancien'} reste acti${feminine ? 've' : 'f'}`;
+  return `${count(cut, one, many)} sur ${used} ${verb} : ${kept}.`;
+}
+
 /**
- * Résiliation de l'abonnement : rien ne change avant l'échéance ; ensuite annonces masquées et
- * tableau de bord en lecture seule, données, réservations confirmées et discussions conservées.
+ * Résiliation de l'abonnement : rien ne change avant l'échéance ; ensuite passage au plan
+ * Gratuit, ce qui dépasse ses limites est désactivé (les plus anciens gardés), rien n'est supprimé.
  */
 export function subscriptionCancelImpact(impact: ISubscriptionCancelImpact): ImpactSummary {
-  const { annonces, members, bookings } = impact;
+  const { bookings, freePlanExcess } = impact;
   const date = impact.activeUntil ? new Date(impact.activeUntil).toLocaleDateString('fr-FR') : null;
-  const team = members.active === 1 ? 'le membre' : `les ${members.active} membres`;
 
   return {
     blocked: false,
@@ -610,14 +633,11 @@ export function subscriptionCancelImpact(impact: ISubscriptionCancelImpact): Imp
         tone: 'warning',
         title: date ? `Le ${date}` : 'À la fin de la période',
         items: [
-          ...(annonces.online > 0
-            ? [
-                `${count(annonces.online, 'annonce')} en ligne ${annonces.online > 1 ? 'seront masquées' : 'sera masquée'} du public.`,
-              ]
+          'Votre agence passera au plan Gratuit, sans paiement ni échéance.',
+          ...freePlanExcess.map(excessLine),
+          ...(freePlanExcess.length > 0
+            ? ['Rien n’est supprimé : vous pourrez tout réactiver en reprenant un plan payant.']
             : []),
-          members.active > 0
-            ? `Le tableau de bord passera en lecture seule pour vous et ${team} de votre équipe.`
-            : 'Le tableau de bord passera en lecture seule.',
         ],
       },
       {

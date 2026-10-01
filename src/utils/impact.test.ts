@@ -322,6 +322,11 @@ describe('subscriptionCancelImpact', () => {
     annonces: { online: 4 },
     members: { active: 3 },
     bookings: { upcoming: 2 },
+    freePlanExcess: [
+      { feature: 'manage_properties', used: 5, limit: 2 },
+      { feature: 'publish_properties', used: 3, limit: 2 },
+      { feature: 'manage_users', used: 3, limit: 0 },
+    ],
   };
 
   it("dit que rien ne change avant l'échéance et que la réactivation reste possible", () => {
@@ -342,8 +347,11 @@ describe('subscriptionCancelImpact', () => {
     expect(changes.tone).toBe('warning');
     expect(changes.title).toBe('Le 30/10/2026');
     expect(changes.items).toEqual([
-      '4 annonces en ligne seront masquées du public.',
-      'Le tableau de bord passera en lecture seule pour vous et les 3 membres de votre équipe.',
+      'Votre agence passera au plan Gratuit, sans paiement ni échéance.',
+      '3 biens sur 5 seront désactivés : les 2 plus anciens restent actifs.',
+      '1 annonce en ligne sur 3 sera désactivée : les 2 plus anciennes restent actives.',
+      'Vos 3 collaborateurs seront désactivés : le plan Gratuit n’en inclut pas.',
+      'Rien n’est supprimé : vous pourrez tout réactiver en reprenant un plan payant.',
     ]);
   });
 
@@ -360,9 +368,12 @@ describe('subscriptionCancelImpact', () => {
       annonces: { online: 0 },
       members: { active: 0 },
       bookings: { upcoming: 0 },
+      freePlanExcess: [],
     });
     expect(summary.groups[0].title).toBe('Jusqu’à la fin de la période, rien ne change');
     expect(summary.groups[1].title).toBe('À la fin de la période');
-    expect(summary.groups[1].items).toEqual(['Le tableau de bord passera en lecture seule.']);
+    expect(summary.groups[1].items).toEqual([
+      'Votre agence passera au plan Gratuit, sans paiement ni échéance.',
+    ]);
   });
 });

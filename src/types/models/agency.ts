@@ -72,6 +72,8 @@ interface ISubscriptionCancelImpact {
   members: { active: number };
   /** Réservations confirmées à venir, à honorer */
   bookings: { upcoming: number };
+  /** À l'échéance, passage au Gratuit : ce qui dépasse ses limites (surplus désactivé) */
+  freePlanExcess: { feature: string; used: number; limit: number }[];
 }
 
 /** Éléments gardés actifs, par fonctionnalité limitée en surplus. */
