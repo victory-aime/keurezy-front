@@ -1,8 +1,8 @@
 'use client';
 
-import { Box, Flex, Skeleton, Stack } from '@chakra-ui/react';
+import { Box, Button, Flex, Skeleton, Stack } from '@chakra-ui/react';
 import { t } from 'i18next';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   BaseBadge,
   BaseButton,
@@ -10,10 +10,12 @@ import {
   BaseText,
   ColumnsDataTable,
   DataTableContainer,
+  Icons,
   TextVariant,
 } from '_components/custom';
 import { AgencyModule } from '_store/state-management';
 import { ENUM, MODELS } from '_types/*';
+import { receiptDownloadUrl } from '_utils/subscription';
 
 type Payment = MODELS.IAgencyPayment;
 
@@ -51,7 +53,22 @@ const StatusBadge = ({ payment }: { payment: Payment }) => (
   <BaseBadge {...STATUS[payment.status]} variant="subtle" size="sm" />
 );
 
-const columns: ColumnsDataTable[] = [
+/** Téléchargement du reçu PDF d'un paiement payé ; rien sinon. */
+const ReceiptLink = ({ agencyId, payment }: { agencyId: string; payment: Payment }) =>
+  payment.receiptNumber ? (
+    <Button asChild size="xs" variant="outline">
+      <a
+        href={receiptDownloadUrl(agencyId, payment.id)}
+        download={`recu-${payment.receiptNumber}.pdf`}
+        aria-label={`Télécharger le reçu ${payment.receiptNumber}`}
+      >
+        <Icons.Download aria-hidden />
+        Reçu
+      </a>
+    </Button>
+  ) : null;
+
+const columnsFor = (agencyId: string): ColumnsDataTable[] => [
   {
     header: 'Date',
     accessor: 'fullObject',
@@ -62,6 +79,11 @@ const columns: ColumnsDataTable[] = [
   { header: 'Période', accessor: 'fullObject', cell: (p: Payment) => period(p) },
   { header: 'Montant', accessor: 'fullObject', cell: (p: Payment) => <Amount payment={p} /> },
   { header: 'Statut', accessor: 'fullObject', cell: (p: Payment) => <StatusBadge payment={p} /> },
+  {
+    header: 'Reçu',
+    accessor: 'fullObject',
+    cell: (p: Payment) => <ReceiptLink agencyId={agencyId} payment={p} />,
+  },
 ];
 
 /**
@@ -69,6 +91,7 @@ const columns: ColumnsDataTable[] = [
  * montant d'abord). Montants, périodes et statuts tels que le backend les renvoie.
  */
 export const BillingHistory = ({ agencyId }: { agencyId: string }) => {
+  const columns = useMemo(() => columnsFor(agencyId), [agencyId]);
   const [page, setPage] = useState(1);
   const { data, isLoading } = AgencyModule.getSubscriptionPaymentsQueries({
     params: { agencyId, initialPage: page, limitPerPage: PAGE_SIZE },
@@ -136,7 +159,10 @@ export const BillingHistory = ({ agencyId }: { agencyId: string }) => {
                 <br />
                 {period(p)}
               </BaseText>
-              <StatusBadge payment={p} />
+              <Flex gap={2} alignItems="center">
+                <StatusBadge payment={p} />
+                <ReceiptLink agencyId={agencyId} payment={p} />
+              </Flex>
             </Flex>
           </Stack>
         ))}

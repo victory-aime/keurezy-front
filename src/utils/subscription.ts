@@ -253,3 +253,10 @@ export function markNearLimitSeen(feature: string): void {
     // Stockage indisponible : la mémoire du module suffit pour la page en cours
   }
 }
+
+/**
+ * Lien de téléchargement du reçu PDF d'un paiement. Même origine (réécriture `/api/v1` vers le
+ * backend) : le cookie de session part avec, sans passer par le client API.
+ */
+export const receiptDownloadUrl = (agencyId: string, paymentId: string) =>
+  `/api/v1/secure/agency/subscription/payments/receipt?${new URLSearchParams({ agencyId, paymentId })}`;

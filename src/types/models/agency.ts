@@ -183,6 +183,8 @@ interface IAgencyPayment {
   periodEnd: string | null;
   paidAt: string | null;
   createdAt: string;
+  /** Numéro du reçu (paiement payé) ; null sinon */
+  receiptNumber: string | null;
 }
 
 /** Réponse de `subscription/cancel` et `subscription/resume`. */
