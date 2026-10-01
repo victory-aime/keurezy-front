@@ -109,6 +109,26 @@ const getSubscriptionPaymentQueries = (
   });
 };
 
+/** Historique de facturation, une page à la fois. */
+const getSubscriptionPaymentsQueries = (
+  args: QUERIES.QueryPayload<
+    MODELS.IPaginatedResponse<MODELS.IAgencyPayment>,
+    undefined,
+    MODELS.IPagination
+  >,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<
+    undefined,
+    MODELS.IPagination,
+    MODELS.IPaginatedResponse<MODELS.IAgencyPayment>
+  >({
+    queryKey: [Constants.AGENCY_KEYS.SUBSCRIPTION_PAYMENTS, params],
+    queryFn: () => agencyServiceInstance().subscription_payments(params!),
+    options: queryOptions,
+  });
+};
+
 /** Checkout NabooPay d'un renouvellement, d'un upgrade ou d'une réactivation. */
 const subscriptionCheckoutMutation = (
   args: QUERIES.MutationPayload<
@@ -240,6 +260,7 @@ export {
   getAgencySubscriptionQueries,
   getSubscriptionQuoteQueries,
   getSubscriptionPaymentQueries,
+  getSubscriptionPaymentsQueries,
   subscriptionCheckoutMutation,
   scheduleSubscriptionChangeMutation,
   cancelScheduledChangeMutation,

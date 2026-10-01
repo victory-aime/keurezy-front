@@ -79,6 +79,14 @@ export class AgencyService extends BaseApi {
       { params: { agencyId, orderId } },
     );
   }
+  /** Historique de facturation de l'agence, paginé (owner uniquement). */
+  subscription_payments(params: MODELS.IPagination) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_PAYMENTS,
+      {},
+      { params },
+    );
+  }
   /** Programme un downgrade pour l'échéance, avec les éléments gardés actifs. */
   schedule_subscription_change(target: MODELS.ISubscriptionTarget) {
     return this.apiService.invoke(

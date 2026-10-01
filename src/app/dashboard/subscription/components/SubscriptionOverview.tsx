@@ -9,6 +9,7 @@ import { useUserContext } from '_context/user-context';
 import { AgencyModule } from '_store/state-management';
 import { MODELS } from '_types/*';
 import { UserRole } from '../../../../types/enum';
+import { BillingHistory } from './BillingHistory';
 import { CancelSubscription } from './CancelSubscription';
 import { ChangePlanDrawer, type ChangePlanTarget } from './ChangePlanDrawer';
 import { PaymentReturn } from './PaymentReturn';
@@ -152,6 +153,14 @@ export const SubscriptionOverview = () => {
             <PlanFeatures features={data.features} />
           </Section>
         )}
+        <Section
+          title="Historique de facturation"
+          description="Vos paiements, du plus récent au plus ancien."
+          index={3}
+          reduceMotion={reduceMotion}
+        >
+          <BillingHistory agencyId={agencyId} />
+        </Section>
       </>
     );
   };

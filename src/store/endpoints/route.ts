@@ -174,6 +174,12 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
+      SUBSCRIPTION_PAYMENTS: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/payments`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
       SUBSCRIPTION_ACTIVATE_ASSET: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/assets/activate`,
         method: 'POST',

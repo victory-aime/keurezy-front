@@ -116,6 +116,20 @@ interface ISubscriptionPaymentStatus {
   status: 'PENDING' | 'PAID' | 'FAILED' | 'CANCELLED';
 }
 
+/** Paiement de l'historique de facturation (`GET agency/subscription/payments`). */
+interface IAgencyPayment {
+  id: string;
+  kind: 'ONBOARDING' | 'RENEWAL' | 'UPGRADE' | 'REACTIVATION';
+  plan: PlanType;
+  amount: number;
+  currency: string;
+  status: ISubscriptionPaymentStatus['status'];
+  periodStart: string | null;
+  periodEnd: string | null;
+  paidAt: string | null;
+  createdAt: string;
+}
+
 /** Réponse de `subscription/cancel` et `subscription/resume`. */
 interface ISubscriptionCancellation {
   cancelAtPeriodEnd: boolean;
@@ -228,6 +242,7 @@ export type {
   ISubscriptionTarget,
   ISubscriptionCheckout,
   ISubscriptionPaymentStatus,
+  IAgencyPayment,
   IAgencyStats,
   IAgencyCloseImpact,
 };
