@@ -80,17 +80,17 @@ Terminer l'abonnement côté agence, sur un modèle unique :
 
 ### Phase 4 : expérience
 **C7 Questionnaire optionnel** (back et front, migration 18)
-- [ ] Table `CancellationFeedback` : agence, contexte (`SUBSCRIPTION_CANCEL` | `AGENCY_CLOSE`), raison, commentaire, date.
-- [ ] Les routes de résiliation et de fermeture acceptent `{ reason?, comment? }`.
-- [ ] Une étape facultative dans les deux dialogues d'impact, avec « Passer ».
-- [ ] Raisons : voir les réponses validées.
+- [x] Table `CancellationFeedback` : agence, contexte (`SUBSCRIPTION_CANCEL` | `AGENCY_CLOSE`), raison, commentaire, date.
+- [x] Les routes de résiliation et de fermeture acceptent `{ reason?, comment? }`.
+- [x] Questionnaire facultatif dans les deux dialogues d'impact (raison + commentaire, sous l'impact) : le laisser vide revient à le passer, sans étape en plus.
+- [x] Raisons : voir les réponses validées.
 
 **C8 [front] Code promo (design seulement)**
-- [ ] Champ « Code promo » désactivé, avec le badge « Bientôt disponible », dans le récapitulatif du changement de plan. Aucun appel API.
+- [x] Champ « Code promo » désactivé, avec le badge « Bientôt disponible », dans le récapitulatif du changement de plan. Aucun appel API.
 
 **C9 Changement de prix** (back et front)
-- [ ] Test : le renouvellement est facturé au tarif du catalogue, et la période en cours garde son prix.
-- [ ] Page abonnement : si le tarif du catalogue diffère du prix payé, afficher « Nouveau tarif de X à partir du prochain renouvellement ».
+- [x] Test : le renouvellement est facturé au tarif du catalogue, et la période en cours garde son prix.
+- [x] Page abonnement : si le tarif du catalogue diffère du prix payé, afficher « Nouveau tarif de X à partir du prochain renouvellement ».
 
 ### Phase 5 : mise en service
 **C10 Environnements**

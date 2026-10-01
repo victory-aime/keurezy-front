@@ -20,8 +20,24 @@ interface ICreateAgency {
 interface IUpdateAgency extends ICreateAgency {
   agencyId?: string;
 }
+/** Questionnaire de départ, facultatif (résiliation, fermeture d'agence). */
+type ExitFeedbackReason =
+  | 'TOO_EXPENSIVE'
+  | 'MISSING_FEATURES'
+  | 'LOW_USAGE'
+  | 'SWITCHING_TOOL'
+  | 'TECHNICAL_ISSUE'
+  | 'BUSINESS_CLOSING'
+  | 'OTHER';
+
+interface IExitFeedback {
+  reason?: ExitFeedbackReason;
+  comment?: string;
+}
+
 interface ICloseAgency {
   agencyId: string;
+  feedback?: IExitFeedback;
 }
 
 interface IAgency {
@@ -258,4 +274,6 @@ export type {
   ISubscriptionLimits,
   IAgencyStats,
   IAgencyCloseImpact,
+  IExitFeedback,
+  ExitFeedbackReason,
 };

@@ -58,11 +58,16 @@ const getSubscriptionCancelImpactQueries = (
 
 /** Résilie l'abonnement à la fin de la période. */
 const cancelSubscriptionMutation = (
-  args: QUERIES.MutationPayload<MODELS.ISubscriptionCancellation, unknown, { agencyId: string }>,
+  args: QUERIES.MutationPayload<
+    MODELS.ISubscriptionCancellation,
+    unknown,
+    { agencyId: string; feedback?: MODELS.IExitFeedback }
+  >,
 ) =>
   QUERIES.useCustomMutation({
     mutationKey: [Constants.AGENCY_KEYS.CANCEL_SUBSCRIPTION],
-    mutationFn: ({ params }) => agencyServiceInstance().cancel_subscription(params!.agencyId),
+    mutationFn: ({ params }) =>
+      agencyServiceInstance().cancel_subscription(params!.agencyId, params!.feedback),
     options: args.mutationOptions,
   });
 

@@ -8,6 +8,7 @@ import { MODELS } from '_types/*';
 import { subscriptionCancelImpact } from '_utils/impact';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 import { isFreePlan } from '_utils/subscription';
+import { ExitFeedbackFields, hasExitFeedback } from '../../components/ExitFeedbackFields';
 
 type Subscription = NonNullable<MODELS.IAgencySubscriptionOverview['subscription']>;
 
@@ -29,6 +30,7 @@ export const CancelSubscription = ({
   onChanged,
 }: CancelSubscriptionProps) => {
   const [open, setOpen] = useState(false);
+  const [feedback, setFeedback] = useState<MODELS.IExitFeedback>({});
 
   const { data: impact, isLoading: impactLoading } =
     AgencyModule.getSubscriptionCancelImpactQueries({
@@ -40,6 +42,7 @@ export const CancelSubscription = ({
     mutationOptions: {
       onSuccess: async () => {
         setOpen(false);
+        setFeedback({});
         await onChanged();
       },
     },
@@ -92,8 +95,14 @@ export const CancelSubscription = ({
         isSubmitting={cancelling}
         confirmTitle="Résilier à la fin de la période"
         confirmColor="danger"
-        onConfirm={() => cancel({ params: { agencyId } })}
-      />
+        onConfirm={() =>
+          cancel({
+            params: { agencyId, feedback: hasExitFeedback(feedback) ? feedback : undefined },
+          })
+        }
+      >
+        <ExitFeedbackFields value={feedback} onChange={setFeedback} />
+      </ActionImpactDialog>
     </>
   );
 };

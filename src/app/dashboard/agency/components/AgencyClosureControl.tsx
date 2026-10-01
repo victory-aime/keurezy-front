@@ -9,6 +9,8 @@ import { AgencyModule } from '_store/state-management';
 import { agencyCloseImpact } from '_utils/impact';
 import { UserRole } from '../../../../types/enum';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
+import { ExitFeedbackFields, hasExitFeedback } from '../../components/ExitFeedbackFields';
+import { MODELS } from '_types/*';
 
 /**
  * Fermeture de l'agence, partagée par Sécurité (« Supprimer mon compte ») et Agence : l'impact
@@ -22,6 +24,7 @@ export const AgencyClosureControl = ({ label }: { label: string }) => {
   const agencyId = user?.agencyId ?? '';
   const [open, setOpen] = useState(false);
   const [confirmName, setConfirmName] = useState('');
+  const [feedback, setFeedback] = useState<MODELS.IExitFeedback>({});
 
   // Même clé de cache que la page Agence : la date programmée est partagée
   const { data: agency, refetch: refetchAgency } = AgencyModule.getAgencyInfo({
@@ -36,6 +39,7 @@ export const AgencyClosureControl = ({ label }: { label: string }) => {
   const close = () => {
     setOpen(false);
     setConfirmName('');
+    setFeedback({});
   };
   const { mutateAsync: scheduleClose, isPending: scheduling } = AgencyModule.closeAgencyMutation({
     mutationOptions: {
@@ -95,7 +99,11 @@ export const AgencyClosureControl = ({ label }: { label: string }) => {
         isSubmitting={scheduling}
         confirmTitle="Programmer la fermeture"
         confirmDisabled={!agency?.name || confirmName.trim() !== agency.name}
-        onConfirm={() => scheduleClose({ params: { agencyId } })}
+        onConfirm={() =>
+          scheduleClose({
+            params: { agencyId, feedback: hasExitFeedback(feedback) ? feedback : undefined },
+          })
+        }
       >
         <Field.Root width="full">
           <Field.Label>
@@ -108,6 +116,7 @@ export const AgencyClosureControl = ({ label }: { label: string }) => {
             aria-label="Nom de l’agence"
           />
         </Field.Root>
+        <ExitFeedbackFields value={feedback} onChange={setFeedback} />
       </ActionImpactDialog>
     </Box>
   );

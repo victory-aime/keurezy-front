@@ -37,10 +37,10 @@ export class AgencyService extends BaseApi {
     );
   }
   /** Résilie l'abonnement à la fin de la période (owner uniquement). */
-  cancel_subscription(agencyId: string) {
+  cancel_subscription(agencyId: string, feedback?: MODELS.IExitFeedback) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_CANCEL,
-      {},
+      feedback ?? {},
       { params: { agencyId } },
     );
   }
@@ -133,7 +133,7 @@ export class AgencyService extends BaseApi {
   close_agency(data: MODELS.ICloseAgency) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().AGENCY.CLOSE_AGENCY,
-      {},
+      data.feedback ?? {},
       {
         params: { agencyId: data.agencyId },
       },
