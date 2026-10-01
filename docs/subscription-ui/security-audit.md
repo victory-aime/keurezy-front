@@ -87,3 +87,15 @@ Aucune faille bloquante dans le module. Deux points sont reportés aux modules c
 
 ## Conclusion
 Aucune faille bloquante. Les vérifications manuelles du checkpoint B restent à faire (sandbox NabooPay, navigateur).
+
+---
+
+# Audit de sécurité : module `billing-history`
+
+| # | Point | Résultat |
+|---|---|---|
+| 1 | IDOR | `assertOwner` (identité de session) puis filtre `agencyId`. Staff refusé, testé. |
+| 2 | Fuite de données d'onboarding | Seules `periodStart`, `periodEnd` et `billingCycle` sont lues dans `metadata` ; mot de passe chiffré, e-mails et documents ne sortent jamais (testé). |
+| 3 | Onboarding d'un tiers rattaché à une agence | Fermé deux fois : seuls les onboardings payés s'affichent, et `initiateAgencyPayment` refuse l'e-mail d'une agence existante avant tout appel NabooPay. |
+| 4 | Déni de service | Taille de page bornée à 50 ; requêtes indexées (`agencyId, createdAt`). |
+| 5 | Dépendances, secrets | Aucun ajout. |
