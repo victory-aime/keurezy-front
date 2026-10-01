@@ -5,7 +5,14 @@
 > **Exclus** : le back-office administrateur ; l'application mobile, réservée aux clients finaux qui réservent les biens des agences.
 
 ## 1. Module facturation
-> Décision du 2026-10-02 : en deux temps, **après la section 2**. D'abord les reçus PDF de Keurezy à l'agence pour ses paiements d'abonnement (pour tous les plans, sans quota). Ensuite la facturation de l'agence à ses clients (réservations), fonctionnalité commerciale avec quota par plan. PDF générés côté backend (`pdfkit`).
+> Décision du 2026-10-02 : en deux temps, **après la section 2**. D'abord les reçus PDF de Keurezy à l'agence pour ses paiements d'abonnement (pour tous les plans, sans quota). Ensuite la facturation de l'agence à ses clients (réservations), fonctionnalité commerciale avec quota par plan.
+>
+> **Factures de l'agence à ses clients : modèles personnalisables** (décision du 2026-10-02) :
+> - trois modèles par défaut, fournis par le backend à toutes les agences ;
+> - chaque agence peut modifier un modèle ou en ajouter un ;
+> - l'ajout est **guidé** : l'agence place les variables (client, bien, période, montant, mentions de l'agence…) que le backend remplace par les données.
+>
+> Les **reçus de Keurezy à l'agence** (abonnement, renouvellement…) restent un format **standard**, avec les informations de la plateforme : [spec](../subscription-receipts/spec.md). PDF générés côté backend (`pdfkit`).
 
 - **Reçus et factures PDF**, générés par Keurezy pour chaque paiement d'abonnement. Numérotation continue, mentions légales de l'agence et de la plateforme.
 - **Fonctionnalité commerciale** (par exemple `manage_invoices`), avec un **quota par plan**, du Gratuit au Premium. Elle s'ajoute aux compteurs existants : jauges, alerte à 80 %, blocage à 100 %.
