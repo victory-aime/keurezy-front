@@ -2,7 +2,14 @@
 
 import { Flex } from '@chakra-ui/react';
 import { useState } from 'react';
-import { BaseButton, BaseText, TextVariant } from '_components/custom';
+import {
+  BaseButton,
+  BaseModal,
+  BaseText,
+  Icons,
+  ModalOpenProps,
+  TextVariant,
+} from '_components/custom';
 import { AgencyModule } from '_store/state-management';
 import { MODELS } from '_types/*';
 import { subscriptionCancelImpact } from '_utils/impact';
@@ -31,6 +38,12 @@ export const CancelSubscription = ({
 }: CancelSubscriptionProps) => {
   const [open, setOpen] = useState(false);
   const [feedback, setFeedback] = useState<MODELS.IExitFeedback>({});
+  const [step, setStep] = useState<'impact' | 'feedback'>('impact');
+  const closeDialog = () => {
+    setOpen(false);
+    setStep('impact');
+    setFeedback({});
+  };
 
   const { data: impact, isLoading: impactLoading } =
     AgencyModule.getSubscriptionCancelImpactQueries({
@@ -41,8 +54,7 @@ export const CancelSubscription = ({
   const { mutateAsync: cancel, isPending: cancelling } = AgencyModule.cancelSubscriptionMutation({
     mutationOptions: {
       onSuccess: async () => {
-        setOpen(false);
-        setFeedback({});
+        closeDialog();
         await onChanged();
       },
     },
@@ -50,6 +62,14 @@ export const CancelSubscription = ({
   const { mutateAsync: resume, isPending: resuming } = AgencyModule.resumeSubscriptionMutation({
     mutationOptions: { onSuccess: async () => await onChanged() },
   });
+
+  // Fermeture (croix, Échap) : on repart de l'étape 1
+  const onDialogChange = ((isOpen: boolean) => {
+    if (!isOpen) closeDialog();
+  }) as ModalOpenProps['onChange'];
+
+  const confirmCancel = (answers: MODELS.IExitFeedback | undefined) =>
+    cancel({ params: { agencyId, feedback: answers } });
 
   // Le Gratuit n'a pas d'échéance : rien à résilier
   if (subscription.status !== 'ACTIVE' || isFreePlan(subscription.plan)) return null;
@@ -85,24 +105,38 @@ export const CancelSubscription = ({
           Résilier mon abonnement
         </BaseButton>
       </Flex>
+      {/* Étape 1 : ce que la résiliation entraîne */}
       <ActionImpactDialog
-        isOpen={open}
-        onChange={setOpen}
+        isOpen={open && step === 'impact'}
+        onChange={(isOpen: boolean) => !isOpen && closeDialog()}
         title="Résilier votre abonnement"
-        subject="L’abonnement reste actif jusqu’à la fin de la période en cours."
+        subject="Étape 1 sur 2 · L’abonnement reste actif jusqu’à la fin de la période en cours."
         summary={impact ? subscriptionCancelImpact(impact) : undefined}
         isLoadingImpact={impactLoading}
-        isSubmitting={cancelling}
-        confirmTitle="Résilier à la fin de la période"
-        confirmColor="danger"
-        onConfirm={() =>
-          cancel({
-            params: { agencyId, feedback: hasExitFeedback(feedback) ? feedback : undefined },
-          })
-        }
+        confirmTitle="Continuer"
+        confirmColor="primary"
+        onConfirm={() => setStep('feedback')}
+      />
+      {/* Étape 2 : questionnaire facultatif, puis résiliation */}
+      <BaseModal
+        isOpen={open && step === 'feedback'}
+        onChange={onDialogChange}
+        title="Avant de partir"
+        description="Étape 2 sur 2 · Facultatif : vos réponses nous aident à nous améliorer."
+        size="md"
+        icon={<Icons.Chat />}
+        buttonCancelTitle=""
+        buttonRejectTitle="Passer et résilier"
+        colorRejectButton="neutral"
+        onReject={() => confirmCancel(undefined)}
+        buttonSaveTitle="Envoyer et résilier"
+        colorSaveButton="danger"
+        saveDisabled={!hasExitFeedback(feedback)}
+        onClick={() => confirmCancel(feedback)}
+        isLoading={cancelling}
       >
         <ExitFeedbackFields value={feedback} onChange={setFeedback} />
-      </ActionImpactDialog>
+      </BaseModal>
     </>
   );
 };

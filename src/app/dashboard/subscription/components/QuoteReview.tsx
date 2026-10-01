@@ -103,7 +103,9 @@ export const QuoteReview = ({
       <Stack gap={2} p={4} rounded="7px" bg="bg.subtle">
         {quote.kind === 'DOWNGRADE' ? (
           <>
-            <Line label="À payer aujourd’hui">Rien</Line>
+            <Line label="À payer aujourd’hui">
+              <Amount quote={{ ...quote, amount: 0 }} />
+            </Line>
             <BaseText variant={TextVariant.S} color="fg.muted">
               Vous gardez votre plan actuel jusqu’au {start}.{' '}
               {targetFree
@@ -113,7 +115,9 @@ export const QuoteReview = ({
           </>
         ) : targetFree ? (
           <>
-            <Line label="À payer aujourd’hui">Rien</Line>
+            <Line label="À payer aujourd’hui">
+              <Amount quote={{ ...quote, amount: 0 }} />
+            </Line>
             <BaseText variant={TextVariant.S} color="fg.muted">
               Votre agence repasse en ligne dès la confirmation. Le plan Gratuit n’a pas d’échéance.
             </BaseText>

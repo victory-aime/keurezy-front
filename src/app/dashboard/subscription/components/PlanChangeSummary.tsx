@@ -189,16 +189,14 @@ export const PlanChangeSummary = ({
       <Stack gap={3} p={5} rounded="7px" borderWidth="1px" borderColor="border">
         <Flex justifyContent="space-between" alignItems="baseline" gap={4} wrap="wrap">
           <BaseText variant={TextVariant.M} fontWeight="semibold">
-            {paid ? 'À payer aujourd’hui' : 'Rien à payer aujourd’hui'}
+            À payer aujourd’hui
           </BaseText>
-          {paid && (
-            <BaseText variant={TextVariant.XL} fontWeight="bold">
-              <BaseFormatNumber
-                value={quote.amount}
-                currencyCode={quote.currency as ENUM.COMMON.Currency}
-              />
-            </BaseText>
-          )}
+          <BaseText variant={TextVariant.XL} fontWeight="bold">
+            <BaseFormatNumber
+              value={paid ? quote.amount : 0}
+              currencyCode={quote.currency as ENUM.COMMON.Currency}
+            />
+          </BaseText>
         </Flex>
         <Stack gap={1}>
           <BaseText variant={TextVariant.S} color="fg.muted">
