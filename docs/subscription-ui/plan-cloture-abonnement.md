@@ -63,19 +63,20 @@ Terminer l'abonnement côté agence, sur un modèle unique :
 
 ### Phase 3 : paiements fiables
 **C5 [back] Rattrapage et nettoyage des paiements**
-- [ ] Job toutes les 15 min : les paiements d'abonnement `PENDING` âgés de 5 min à 48 h sont relus chez NabooPay. S'ils sont payés, l'événement de confirmation est émis (application unique) ; s'ils sont annulés ou échoués, leur statut local est mis à jour.
-- [ ] Au-delà de 48 h toujours en attente : `CANCELLED` (« abandonné »).
+- [x] Job toutes les 15 min : les paiements d'abonnement `PENDING` âgés de 5 min à 48 h sont relus chez NabooPay. S'ils sont payés, l'événement de confirmation est émis (application unique) ; s'ils sont annulés ou échoués, leur statut local est mis à jour.
+- [x] Au-delà de 48 h toujours en attente : `CANCELLED` (« abandonné »).
 - **Tests** : webhook perdu → appliqué par le job ; abandonné → annulé ; jamais appliqué deux fois.
 
-**C6 [back] E-mails du cycle de vie** (Resend, un modèle par cas, `.html` et `.md`)
-- [ ] Paiement confirmé : montant, plan, période. Pas de PDF (module facturation).
-- [ ] Abonnement expiré.
-- [ ] Downgrade appliqué : éléments désactivés et comment les réactiver.
-- [ ] Rappel 3 jours avant un downgrade programmé.
-- [ ] Clés des nouveaux modèles dans `.env` et `.env.uat`.
+**C6 [back] E-mails du cycle de vie** (Resend : finalement **un seul modèle générique** `SUBSCRIPTION_NOTICE`, texte rédigé par le backend ; le rappel de renouvellement y passe aussi)
+- [x] Paiement confirmé : montant, plan, période. Pas de PDF (module facturation).
+- [x] Abonnement expiré.
+- [x] Downgrade appliqué : éléments désactivés et comment les réactiver.
+- [x] Rappel 3 jours avant un downgrade programmé.
+- [x] Clés des nouveaux modèles dans `.env` et `.env.uat`.
 
 ### Checkpoint B
-- [ ] Paiement simulé laissé `PENDING` puis rattrapé par le job ; e-mails reçus en dev.
+- [x] Tests : rattrapage (webhook perdu, abandon à 48 h, NabooPay indisponible), avis (4 cas). Back 335 tests.
+- [ ] Dev : modèle `SUBSCRIPTION_NOTICE` créé dans Resend, e-mails reçus.
 
 ### Phase 4 : expérience
 **C7 Questionnaire optionnel** (back et front, migration 18)
