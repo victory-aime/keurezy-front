@@ -1,4 +1,6 @@
-# Plan : clôture du module abonnement (à faire maintenant)
+# Plan : clôture du module abonnement
+
+> **Terminé le 2026-10-02.** Bilan : [bilan-abonnement.md](./bilan-abonnement.md).
 
 > Décisions du 2026-10-01. Les chantiers reportés sont dans [backlog-abonnement.md](./backlog-abonnement.md).
 >
