@@ -54,7 +54,10 @@ Une note sur la page Agence explique la règle et liste ce qui manque.
 - Le staff ne peut pas modifier (403, testé) ; aucune information légale dans les réponses publiques (testé).
 - La page Agence affiche la note selon les 3 cas, sur mobile comme sur desktop.
 
-## Questions
-1. **Liste des champs** : ces 6 champs te conviennent ? Faut-il en ajouter (capital social, numéro de TVA, représentant légal) ?
-2. **Retrait de la vérification** quand la raison sociale, le NINEA ou le RCCM changent : d'accord ?
-3. **Agences existantes déjà vérifiées** sans informations légales : on leur **garde** le badge en les invitant à compléter, ou on le **retire** jusqu'à ce qu'elles complètent ?
+## Réponses validées (2026-10-02)
+1. Les 6 champs suffisent.
+2. Retrait de la vérification au changement de la raison sociale, du NINEA ou du RCCM : validé.
+3. Les agences déjà vérifiées sans informations légales repassent **non vérifiées** (migration). En dev, **Mobelite garde son badge** pour les tests.
+
+## Précision d'implémentation
+La route d'administration change le statut et la vérification en un seul appel. Elle pose donc `isVerified` selon la complétude : une agence incomplète peut être ouverte (`OPEN`) mais reste non vérifiée, et la réponse liste ce qui manque. Il n'y a pas d'erreur 409 séparée.
