@@ -57,13 +57,27 @@ describe('planDifferences', () => {
       { name: 'manage_accounting', limit: null },
     ];
     expect(planDifferences(basic, standard)).toEqual([
-      '+15 biens immobiliers',
-      'Module de comptabilité inclus',
+      { label: '+15 biens immobiliers', tone: 'gain' },
+      { label: 'Module de comptabilité inclus', tone: 'gain' },
     ]);
     expect(planDifferences(standard, basic)).toEqual([
-      '−15 biens immobiliers',
-      'Module de comptabilité non inclus',
+      { label: '−15 biens immobiliers', tone: 'loss' },
+      { label: 'Module de comptabilité non inclus', tone: 'loss' },
     ]);
+  });
+
+  it('liste les gains avant les pertes', () => {
+    const tones = planDifferences(
+      [
+        { name: 'manage_users', limit: 5 },
+        { name: 'manage_properties', limit: 5 },
+      ],
+      [
+        { name: 'manage_users', limit: 1 },
+        { name: 'manage_properties', limit: 50 },
+      ],
+    ).map((c) => c.tone);
+    expect(tones).toEqual(['gain', 'loss']);
   });
 
   it('passe en illimité, ou revient à une limite', () => {
@@ -72,13 +86,13 @@ describe('planDifferences', () => {
         [{ name: 'manage_users', limit: 5 }],
         [{ name: 'manage_users', limit: null }],
       ),
-    ).toEqual(['Collaborateurs illimités']);
+    ).toEqual([{ label: 'Collaborateurs illimités', tone: 'gain' }]);
     expect(
       planDifferences(
         [{ name: 'manage_users', limit: null }],
         [{ name: 'manage_users', limit: 1 }],
       ),
-    ).toEqual(['Jusqu’à 1 collaborateur']);
+    ).toEqual([{ label: 'Jusqu’à 1 collaborateur', tone: 'loss' }]);
   });
 });
 

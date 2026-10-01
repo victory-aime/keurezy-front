@@ -146,9 +146,16 @@ export const ChangePlanDrawer = ({
       <DrawerBackdrop />
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>
-            {step === 'choose' ? 'Changer de plan' : 'Vérifier avant de confirmer'}
-          </DrawerTitle>
+          <Stack gap={0.5}>
+            <DrawerTitle>
+              {step === 'choose' ? 'Changer de plan' : 'Vérifier avant de confirmer'}
+            </DrawerTitle>
+            {!initialTarget && (
+              <BaseText variant={TextVariant.XS} color="fg.muted">
+                Étape {step === 'choose' ? 1 : 2} sur 2
+              </BaseText>
+            )}
+          </Stack>
           <DrawerCloseTrigger disabled={busy} />
         </DrawerHeader>
 

@@ -102,36 +102,48 @@ export interface PlanFeatureLimit {
   limit: number | null;
 }
 
-/** Ce qui change entre deux plans, en mots : « +15 biens immobiliers », « Module de comptabilité inclus ». */
-export function planDifferences(current: PlanFeatureLimit[], target: PlanFeatureLimit[]): string[] {
+/** Un changement entre deux plans : gain (plus de capacité, module inclus) ou perte. */
+export interface PlanDifference {
+  label: string;
+  tone: 'gain' | 'loss';
+}
+
+/** Ce qui change entre deux plans : « +15 biens immobiliers » (gain), « Comptabilité non incluse » (perte). */
+export function planDifferences(
+  current: PlanFeatureLimit[],
+  target: PlanFeatureLimit[],
+): PlanDifference[] {
   const before = new Map(current.map((f) => [f.name, f.limit]));
   const after = new Map(target.map((f) => [f.name, f.limit]));
-  const changes: string[] = [];
+  const changes: PlanDifference[] = [];
+  const gain = (label: string) => changes.push({ label, tone: 'gain' });
+  const loss = (label: string) => changes.push({ label, tone: 'loss' });
 
   for (const [name, limit] of after) {
     const config = labelOf(name);
     if (!config) continue;
     if (!before.has(name)) {
-      changes.push(limit === null ? `${config.unlimited} inclus` : formatFeatureLimit(name, limit));
+      gain(limit === null ? `${config.unlimited} inclus` : formatFeatureLimit(name, limit));
       continue;
     }
     const previous = before.get(name)!;
     if (previous === limit) continue;
-    if (limit === null) changes.push(config.unlimited ?? name);
-    else if (previous === null) changes.push(formatFeatureLimit(name, limit));
+    if (limit === null) gain(config.unlimited ?? name);
+    else if (previous === null) loss(formatFeatureLimit(name, limit));
     else {
       const delta = limit - previous;
       const label = Math.abs(delta) === 1 ? config.singular : config.plural;
-      changes.push(`${delta > 0 ? '+' : '−'}${Math.abs(delta)} ${label}`);
+      (delta > 0 ? gain : loss)(`${delta > 0 ? '+' : '−'}${Math.abs(delta)} ${label}`);
     }
   }
   for (const name of before.keys()) {
     const config = labelOf(name);
     if (config && !after.has(name)) {
-      changes.push(`${config.unlimited ?? capitalize(config.plural ?? name)} non inclus`);
+      loss(`${config.unlimited ?? capitalize(config.plural ?? name)} non inclus`);
     }
   }
-  return changes;
+  // Gains d'abord : c'est ce qu'on lit en premier sur une carte
+  return [...changes.filter((c) => c.tone === 'gain'), ...changes.filter((c) => c.tone === 'loss')];
 }
 
 const RENEWAL_WINDOW_MS = 7 * 86_400_000;
