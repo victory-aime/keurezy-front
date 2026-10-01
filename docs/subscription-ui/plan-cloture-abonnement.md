@@ -1,0 +1,111 @@
+# Plan : clôture du module abonnement (à faire maintenant)
+
+> Décisions du 2026-10-01. Les chantiers reportés sont dans [backlog-abonnement.md](./backlog-abonnement.md).
+>
+> **Hors périmètre** : l'application mobile (réservée aux clients finaux), le back-office administrateur, la faille de `common/polling` (refonte de l'onboarding).
+
+## Objectif
+Terminer l'abonnement côté agence, sur un modèle unique :
+- quatre plans par abonnement : **Gratuit**, Basic, Standard, Premium ;
+- plus de modèle à la commission ;
+- des limites prévenues dès 80 % ;
+- des paiements qui ne se perdent pas ;
+- un cycle de vie complet par e-mail.
+
+## Décisions déjà prises
+| Sujet | Décision |
+|---|---|
+| Modèle commission | Supprimé (données de dev, schéma, code back et front). Seul l'abonnement reste. |
+| Plan Gratuit | 4ᵉ plan, l'entrée de gamme. Pas de paiement, pas d'échéance, pas de rappel, pas d'expiration. |
+| Alerte de limite | À **80 %** d'une fonctionnalité, au clic sur « Ajouter » : un pop-up montre l'usage, avec « Continuer » qui poursuit l'action demandée. À 100 %, le blocage actuel reste. |
+| Questionnaire | **Optionnel**, à la fermeture de l'agence et à la résiliation de l'abonnement, pour recueillir les raisons. |
+| Codes promo | Champ **visible mais désactivé** (« Bientôt disponible »), à des fins de design seulement. |
+| Changement de prix | Ne touche pas la période en cours. S'applique au **prochain** renouvellement (déjà le cas côté calcul ; il reste à l'afficher et à le tester). |
+| `SUBSCRIPTION_EXPIRY_ENABLED` | Présente dans `.env` (dev, `true`). À ajouter dans `.env.uat`. |
+
+## Tâches
+
+### Phase 1 : catalogue (Gratuit, fin de la commission)
+**C1 [back] Plan Gratuit**
+- [ ] Ajouter la valeur `FREE_SUB` à l'enum `Plan`. Seed : prix 0 (mensuel et annuel), limites selon Q1.
+- [ ] Un abonnement Gratuit n'a pas d'échéance : le job d'expiration et les rappels l'ignorent.
+- [ ] Passer au Gratuit est un downgrade programmé. Quitter le Gratuit est un upgrade payé plein tarif, avec une nouvelle période à partir du paiement (libellé « Changement de plan », pas « Réactivation »). Un checkout à 0 reste refusé.
+- **Tests** : devis depuis et vers le Gratuit ; aucun rappel ni expiration en Gratuit ; downgrade programmé appliqué vers le Gratuit.
+
+**C2 [back] Suppression du modèle commission** (migration 16, contraction)
+- [ ] Données de dev : les 4 agences sur un plan commission passent au Gratuit (Q2), puis les 3 plans commission sont supprimés.
+- [ ] Schéma :
+  - retirer `commissionRate` de `SubscriptionPlan` et de `Subscription` ;
+  - retirer `pricingType` (2 tables) et `planCategory` ;
+  - supprimer les enums `PricingType` et `PlanCategory` ;
+  - retirer les valeurs `*_COMMISSION` de `Plan`.
+- [ ] Code : `payment.service`, `agency.service`, `pack.dto`, `pack-admin.service`, `naboo.ts`, `subscription-change.service`, seed.
+- [ ] Avant l'UAT : contrôle en lecture seule des agences UAT encore sur un plan commission, puis même passage au Gratuit avant la migration.
+- **Tests** : suite verte. Plus aucune occurrence de `commission` hors historique des migrations.
+
+**C3 [front] Suppression du modèle commission**
+- [ ] Retirer le choix commission / abonnement de l'onboarding et du pricing (`PlanSelectMode`, branches de `PlanCard`, `PrincingSection`, `pricing.ts`), ainsi que les types, enums et traductions.
+- [ ] Afficher le plan Gratuit dans le catalogue et dans le changement de plan : « Gratuit » au lieu de « 0 F CFA », et pas de bascule mensuel / annuel pour lui.
+
+### Checkpoint A
+- [ ] Tests et builds verts. Catalogue : 4 plans. Une agence de dev passée au Gratuit voit sa page abonnement sans échéance.
+
+### Phase 2 : alerte à 80 %
+**C4 [front] Pop-up « bientôt à la limite »**
+- [ ] `useFeatureGuard` : dans l'état `NEAR_LIMIT`, un pop-up s'ouvre avant l'action. Il contient :
+  - une jauge, « 16 sur 20 biens » et « il en restera 3 après cet ajout » ;
+  - l'aperçu du plan supérieur, selon la même règle d'historique que le blocage ;
+  - le bouton **« Continuer »**, qui lance l'action d'origine ;
+  - le bouton « Voir les plans » (owner).
+- [ ] Fréquence : selon Q3.
+- [ ] Contrat de design et revue UX / accessibilité, comme pour le changement de plan.
+
+### Phase 3 : paiements fiables
+**C5 [back] Rattrapage et nettoyage des paiements**
+- [ ] Job toutes les 15 min : les paiements d'abonnement `PENDING` âgés de 5 min à 48 h sont relus chez NabooPay. S'ils sont payés, l'événement de confirmation est émis (application unique) ; s'ils sont annulés ou échoués, leur statut local est mis à jour.
+- [ ] Au-delà de 48 h toujours en attente : `CANCELLED` (« abandonné »).
+- **Tests** : webhook perdu → appliqué par le job ; abandonné → annulé ; jamais appliqué deux fois.
+
+**C6 [back] E-mails du cycle de vie** (Resend, un modèle par cas, `.html` et `.md`)
+- [ ] Paiement confirmé : montant, plan, période. Pas de PDF (module facturation).
+- [ ] Abonnement expiré.
+- [ ] Downgrade appliqué : éléments désactivés et comment les réactiver.
+- [ ] Rappel 3 jours avant un downgrade programmé.
+- [ ] Clés des nouveaux modèles dans `.env` et `.env.uat`.
+
+### Checkpoint B
+- [ ] Paiement simulé laissé `PENDING` puis rattrapé par le job ; e-mails reçus en dev.
+
+### Phase 4 : expérience
+**C7 Questionnaire optionnel** (back et front, migration 17)
+- [ ] Table `CancellationFeedback` : agence, contexte (`SUBSCRIPTION_CANCEL` | `AGENCY_CLOSE`), raison, commentaire, date.
+- [ ] Les routes de résiliation et de fermeture acceptent `{ reason?, comment? }`.
+- [ ] Une étape facultative dans les deux dialogues d'impact, avec « Passer ».
+- [ ] Raisons proposées : Q5.
+
+**C8 [front] Code promo (design seulement)**
+- [ ] Champ « Code promo » désactivé, avec le badge « Bientôt disponible », dans le récapitulatif du changement de plan. Aucun appel API.
+
+**C9 Changement de prix** (back et front)
+- [ ] Test : le renouvellement est facturé au tarif du catalogue, et la période en cours garde son prix.
+- [ ] Page abonnement : si le tarif du catalogue diffère du prix payé, afficher « Nouveau tarif de X à partir du prochain renouvellement ».
+
+### Phase 5 : mise en service
+**C10 Environnements**
+- [ ] `SUBSCRIPTION_EXPIRY_ENABLED` dans `.env.uat` (Q4), plus les clés Resend de C6.
+- [ ] Procédure UAT dans `CHANGES.md` :
+  1. déployer le code ;
+  2. migrations 15 à 17 ;
+  3. passage des agences commission au Gratuit ;
+  4. script de délai de grâce ;
+  5. flag d'expiration.
+
+### Checkpoint final
+- [ ] Audit de sécurité des phases 1 à 4, tests et builds verts, vérification dans le navigateur (mobile compris).
+
+## Questions à trancher
+1. **Limites du plan Gratuit.** Proposition : 2 biens, 2 annonces en ligne, 0 collaborateur, pas de support premium. Les quotas de facturation viendront avec le module facturation.
+2. **Agences de dev sur un plan commission** (Aminita, direct, commission, nadia immo) : passage au Gratuit, avec désactivation de ce qui dépasse ses limites (les plus anciens éléments gardés) ?
+3. **Fréquence de l'alerte à 80 %** : à chaque clic, ou une fois par session et par fonctionnalité ?
+4. **Valeur du flag en UAT** : `false` jusqu'à la procédure de mise en service (étape 5), puis `true` ?
+5. **Raisons du questionnaire.** Proposition : trop cher ; il manque des fonctionnalités ; je n'utilise pas assez la plateforme ; je passe à un autre outil ; problème technique ; fermeture de l'activité ; autre.
