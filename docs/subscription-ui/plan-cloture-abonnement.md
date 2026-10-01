@@ -94,15 +94,16 @@ Terminer l'abonnement côté agence, sur un modèle unique :
 
 ### Phase 5 : mise en service
 **C10 Environnements**
-- [ ] `SUBSCRIPTION_EXPIRY_ENABLED` dans `.env.uat` (`false`, puis `true` à l'étape 4), plus les clés Resend de C6.
-- [ ] Procédure UAT dans `CHANGES.md` :
+- [x] `SUBSCRIPTION_EXPIRY_ENABLED` dans `.env.uat` (`false`, puis `true` à l'étape 4), plus les clés Resend de C6.
+- [x] Procédure UAT dans `CHANGES.md` (section 54) :
   1. déployer le code ;
   2. migrations 15 et 16, puis passage des agences commission au Gratuit, puis 17 et 18 ;
   3. script de délai de grâce ;
   4. flag d'expiration.
 
 ### Checkpoint final
-- [ ] Audit de sécurité des phases 1 à 4, tests et builds verts, vérification dans le navigateur (mobile compris).
+- [x] Audit de sécurité des phases 1 à 4 ([security-audit.md](./security-audit.md)) ; tests et builds verts (back 341, front 76).
+- [ ] Vérification dans le navigateur (mobile compris) : alerte 80 %, questionnaire, note de tarif, champ code promo.
 
 ## Réponses validées (2026-10-01)
 1. **Plan Gratuit** : 2 biens, 2 annonces en ligne, 0 collaborateur, sans support premium.

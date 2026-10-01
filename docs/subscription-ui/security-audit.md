@@ -99,3 +99,22 @@ Aucune faille bloquante. Les vérifications manuelles du checkpoint B restent à
 | 3 | Onboarding d'un tiers rattaché à une agence | Fermé deux fois : seuls les onboardings payés s'affichent, et `initiateAgencyPayment` refuse l'e-mail d'une agence existante avant tout appel NabooPay. |
 | 4 | Déni de service | Taille de page bornée à 50 ; requêtes indexées (`agencyId, createdAt`). |
 | 5 | Dépendances, secrets | Aucun ajout. |
+
+## Clôture du module (plan Gratuit, fin de la commission, alerte 80 %, paiements, avis, questionnaire)
+
+Audit du 2026-10-02, phases 1 à 4 de [plan-cloture-abonnement.md](./plan-cloture-abonnement.md).
+
+| # | Point | Résultat |
+|---|---|---|
+| 1 | Obtenir un plan payant sans payer | Le passage immédiat sans paiement n'est possible que si le devis vaut 0 (plan au prix 0, donc le Gratuit), sans période en cours, et vers un autre plan (testé). Un checkout à 0 reste refusé ; NabooPay refuse un montant nul à l'inscription. |
+| 2 | Accès aux actions d'abonnement | Inchangé : devis, checkout, `schedule-change`, résiliation et impact passent par `assertOwner` ; staff refusé. |
+| 3 | Double application d'un paiement (webhook, polling, job de rattrapage) | Réclamation atomique sur `orderId` dans la transaction d'application (inchangée) ; le job ne fait qu'émettre la confirmation. |
+| 4 | Annulation d'un paiement réglé | Le job relit NabooPay avant d'annuler à 48 h ; un paiement réglé n'est jamais annulé, même s'il n'est pas encore appliqué (bug trouvé par un test, corrigé). NabooPay indisponible : rien n'est annulé. |
+| 5 | Bascule au Gratuit concurrente (deux instances, relance) | Réclamation par agence (`updateMany` conditionnel) dans la transaction ; un seul passage, un seul e-mail (testé). Rien n'est supprimé. |
+| 6 | Injection HTML dans les e-mails | Le modèle Resend insère `{{{…}}}` sans échappement : toutes les variables de l'avis d'abonnement sont échappées par le backend (nom d'agence fourni par l'utilisateur). **Les autres e-mails ne le sont pas** : tâche séparée proposée. |
+| 7 | Questionnaire de départ | Routes déjà réservées à l'owner ; DTO en liste blanche (`reason` dans une énumération, `comment` ≤ 1 000 caractères) ; aucune donnée personnelle demandée ; supprimé avec l'agence (cascade). Aucun accès en lecture exposé. |
+| 8 | Impact de résiliation | Compteurs seulement, owner uniquement. |
+| 9 | Stockage navigateur (alerte 80 %) | `sessionStorage` : noms de fonctionnalités uniquement. |
+| 10 | Scripts de données (`commission-to-free`, délai de grâce) | Lancés à la main par environnement, aperçu par défaut ; idempotents. |
+| 11 | Inscription au Gratuit sans paiement | **Risque nouveau** : plus de barrière de paiement à la création d'agence, donc des inscriptions en masse sont possibles. À traiter avec la refonte de l'onboarding (limitation de débit, vérification d'e-mail avant activation). |
+| 12 | Dépendances, secrets | Aucun ajout. Nouvelles clés `.env` (identifiant de modèle Resend, flag) sans secret. |

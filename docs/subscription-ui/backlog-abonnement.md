@@ -19,6 +19,7 @@
 ## 3. Refonte de l'onboarding
 - Nouveau parcours d'inscription d'agence.
 - Inclut l'inscription au **plan Gratuit sans paiement**.
+- **Limiter les inscriptions au Gratuit** (limitation de débit, e-mail vérifié avant activation) : sans paiement, des créations d'agence en masse sont possibles.
 - Corrige la faille de `GET unsecured/common/polling`, qui renvoie le mot de passe déchiffré à qui connaît l'`orderId`. Tâche déjà ouverte.
 
 ## 4. Codes promo et remises (activation)
