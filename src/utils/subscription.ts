@@ -209,3 +209,40 @@ export function nextPlanFor(
       .sort((a, b) => a.monthlyPrice - b.monthlyPrice)[0] ?? null
   );
 }
+
+/**
+ * Phrase de la jauge « bientôt à la limite » : ce qu'il restera après l'ajout demandé.
+ * Ex. « Après cet ajout, il en restera 3. » ; « Cet ajout utilisera votre dernière place. »
+ */
+export function remainingAfterAdd(usage: { used: number; limit: number | null }): string {
+  if (usage.limit === null) return '';
+  const left = Math.max(usage.limit - usage.used - 1, 0);
+  if (left === 0) return 'Cet ajout utilisera votre dernière place.';
+  return `Après cet ajout, il en restera ${left}.`;
+}
+
+const NEAR_LIMIT_SEEN_KEY = 'keurezy:near-limit-seen';
+/** Repli quand le stockage de session est indisponible (navigation privée, etc.). */
+const nearLimitSeenInMemory = new Set<string>();
+
+/** L'alerte à 80 % ne s'affiche qu'une fois par session et par fonctionnalité. */
+export function nearLimitAlreadySeen(feature: string): boolean {
+  try {
+    const seen = JSON.parse(sessionStorage.getItem(NEAR_LIMIT_SEEN_KEY) ?? '[]') as string[];
+    return seen.includes(feature);
+  } catch {
+    return nearLimitSeenInMemory.has(feature);
+  }
+}
+
+export function markNearLimitSeen(feature: string): void {
+  nearLimitSeenInMemory.add(feature);
+  try {
+    const seen = JSON.parse(sessionStorage.getItem(NEAR_LIMIT_SEEN_KEY) ?? '[]') as string[];
+    if (!seen.includes(feature)) {
+      sessionStorage.setItem(NEAR_LIMIT_SEEN_KEY, JSON.stringify([...seen, feature]));
+    }
+  } catch {
+    // Stockage indisponible : la mémoire du module suffit pour la page en cours
+  }
+}

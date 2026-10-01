@@ -53,13 +53,13 @@ Terminer l'abonnement côté agence, sur un modèle unique :
 
 ### Phase 2 : alerte à 80 %
 **C4 [front] Pop-up « bientôt à la limite »**
-- [ ] `useFeatureGuard` : dans l'état `NEAR_LIMIT`, un pop-up s'ouvre avant l'action. Il contient :
+- [x] `useFeatureGuard` : dans l'état `NEAR_LIMIT`, un pop-up s'ouvre avant l'action. Il contient :
   - une jauge, « 16 sur 20 biens » et « il en restera 3 après cet ajout » ;
   - l'aperçu du plan supérieur, selon la même règle d'historique que le blocage ;
   - le bouton **« Continuer »**, qui lance l'action d'origine ;
   - le bouton « Voir les plans » (owner).
-- [ ] Fréquence : une fois par session et par fonctionnalité.
-- [ ] Contrat de design et revue UX / accessibilité, comme pour le changement de plan.
+- [x] Fréquence : une fois par session et par fonctionnalité.
+- [x] Contrat de design et revue UX / accessibilité, comme pour le changement de plan.
 
 ### Phase 3 : paiements fiables
 **C5 [back] Rattrapage et nettoyage des paiements**

@@ -34,3 +34,31 @@ Mêmes compteurs que la page abonnement. Aucun prix ni montant payé n'est renvo
 | 2 | Données exposées au staff | `limits` ne renvoie que le plan, les compteurs et un booléen d'historique. Ni prix payé ni transaction ; les prix de l'aperçu viennent du catalogue public. |
 | 3 | IDOR | `agencyAccessControl` (identité de session) : une autre agence est refusée, testé. |
 | 4 | Dépendances, secrets | Aucun ajout. |
+
+## Alerte à 80 % (C4, plan de clôture)
+
+> Décisions du 2026-10-01 : alerte dès 80 % d'une fonctionnalité limitée, **une fois par session et par fonctionnalité** ; « Continuer » lance l'action demandée ; à 100 %, le blocage ci-dessus reste.
+
+### Contrat de design
+- **But de l'écran** : prévenir sans bloquer. L'action principale est **« Continuer »** (bouton plein) ; « Voir les plans » (owner) est secondaire ; la croix ferme sans rien lancer.
+- **Contenu** : titre « Bientôt à la limite de votre plan », icône d'information orange (le cadenas reste réservé au blocage) ; phrase d'usage ; jauge orange « 16 biens sur 20 », pourcentage, et « Après cet ajout, il en restera 3. » (« Cet ajout utilisera votre dernière place. » au dernier) ; aperçu du plan supérieur selon la même règle d'historique que le blocage.
+- **Staff** : même alerte, sans « Voir les plans », avec un texte qui renvoie vers le propriétaire.
+- **Rejeté** : une alerte à chaque clic (lassante), un toast (trop discret pour un choix), un blocage à 80 %.
+
+### Implémentation
+- `useFeatureGuard` : état `NEAR_LIMIT` du backend (même seuil que la page abonnement) → l'action est mise en attente et lancée par « Continuer ». Mémoire de session : `sessionStorage` (`keurezy:near-limit-seen`), repli en mémoire si le stockage est indisponible.
+- `LimitReachedModal` : mode « bientôt atteinte » quand `onContinue` est fourni (aperçu partagé avec le blocage).
+- Tests : `remainingAfterAdd`, mémoire par fonctionnalité, `isFreePlan`.
+
+### Revue accessibilité
+- Dialogue Chakra (focus piégé, Échap, croix nommée). Jauge `Progress` avec `aria-label` (« 16 biens utilisés sur 20 »), valeur aussi écrite en texte : l'information ne repose pas sur la couleur.
+- Ordre des boutons : secondaire puis principal, comme les autres pop-ups.
+
+### Audit de sécurité
+| # | Point | Résultat |
+|---|---|---|
+| 1 | Contournement | Sans effet : l'alerte ne bloque rien, et le backend refuse toujours au-delà de 100 %. |
+| 2 | Stockage de session | Ne contient que des noms de fonctionnalités, aucune donnée de l'agence. |
+| 3 | Dépendances | Aucun ajout. |
+
+- [ ] Vérification manuelle : agence à 80 % d'une fonctionnalité (ex. Standard avec 16 biens sur 20) ; l'alerte ne revient pas au second clic de la session.

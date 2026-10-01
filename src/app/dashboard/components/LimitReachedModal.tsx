@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Flex, Stack } from '@chakra-ui/react';
+import { Box, Flex, Progress, Stack } from '@chakra-ui/react';
 import { t } from 'i18next';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
@@ -22,6 +22,7 @@ import {
   formatFeatureLimit,
   nextPlanFor,
   planDifferences,
+  remainingAfterAdd,
 } from '_utils/subscription';
 import { DASHBOARD_ROUTES } from '../routes';
 
@@ -43,14 +44,53 @@ const toCatalog = (plans: MODELS.COMMON.ISubscriptionPlan[]): CatalogPlan[] =>
 interface LimitReachedModalProps extends ModalOpenProps {
   usage: Usage;
   limits: MODELS.ISubscriptionLimits;
+  /** Alerte à 80 % : lance l'action demandée (le pop-up ne bloque pas) */
+  onContinue?: () => void;
 }
 
+/** Jauge de l'alerte à 80 % : usage actuel et ce qu'il restera après l'ajout. */
+const NearLimitGauge = ({ usage, noun }: { usage: Usage; noun: string }) => (
+  <Stack gap={2} p={4} rounded="7px" bg="bg.subtle">
+    <Flex justifyContent="space-between" alignItems="baseline" gap={3}>
+      <BaseText variant={TextVariant.S} fontWeight="semibold">
+        {usage.used} {noun} sur {usage.limit}
+      </BaseText>
+      <BaseText variant={TextVariant.S} color="fg.muted">
+        {usage.percentage} %
+      </BaseText>
+    </Flex>
+    <Progress.Root
+      value={usage.percentage ?? 0}
+      size="sm"
+      colorPalette="orange"
+      aria-label={`${usage.used} ${noun} utilisés sur ${usage.limit}`}
+    >
+      <Progress.Track rounded="full" bg="bg.muted">
+        <Progress.Range rounded="full" />
+      </Progress.Track>
+    </Progress.Root>
+    <BaseText variant={TextVariant.S} color="fg.muted">
+      {remainingAfterAdd(usage)}
+    </BaseText>
+  </Stack>
+);
+
 /**
- * « Limite atteinte » : affiché à la place du formulaire d'ajout quand la fonctionnalité est
- * utilisée à 100 %. Aux agences sans historique de paiement, aperçu du plus petit plan qui lève
- * la limite. L'owner peut changer de plan ; le staff est renvoyé vers le propriétaire.
+ * Pop-up de limite d'un bouton « Ajouter », aux deux seuils :
+ * - **limite atteinte** (100 %) : affiché à la place du formulaire, l'action ne part pas ;
+ * - **bientôt atteinte** (80 %, avec `onContinue`) : jauge et reste après l'ajout, puis
+ *   « Continuer » lance l'action demandée.
+ * Aux agences sans historique de paiement, aperçu du plus petit plan qui lève la limite. L'owner
+ * peut changer de plan ; le staff est renvoyé vers le propriétaire.
  */
-export const LimitReachedModal = ({ isOpen, onChange, usage, limits }: LimitReachedModalProps) => {
+export const LimitReachedModal = ({
+  isOpen,
+  onChange,
+  usage,
+  limits,
+  onContinue,
+}: LimitReachedModalProps) => {
+  const near = !!onContinue;
   const router = useRouter();
   const { user } = useAuthContext();
   const isOwner = user?.role === ENUM.UserRole.OWNER;
@@ -86,16 +126,30 @@ export const LimitReachedModal = ({ isOpen, onChange, usage, limits }: LimitReac
       ? `Passer au plan ${t(`SUBSCRIPTION.PLANS.${nextRecord.name}`)}`
       : 'Voir les plans';
 
+  const footer = near
+    ? {
+        onClick: onContinue,
+        buttonSaveTitle: 'Continuer',
+        buttonCancelTitle: '',
+        onReject: isOwner ? goToPlans : undefined,
+        buttonRejectTitle: isOwner ? 'Voir les plans' : '',
+        colorRejectButton: 'neutral' as const,
+      }
+    : {
+        onClick: isOwner ? goToPlans : undefined,
+        // Chaîne vide : pas de bouton d'action pour le staff (undefined afficherait « Valider »)
+        buttonSaveTitle: cta,
+      };
+
   return (
     <BaseModal
-      title="Limite de votre plan atteinte"
+      title={near ? 'Bientôt à la limite de votre plan' : 'Limite de votre plan atteinte'}
       isOpen={isOpen}
       onChange={onChange}
       size="md"
-      icon={<Icons.Lock />}
-      onClick={isOwner ? goToPlans : undefined}
-      // Chaîne vide : pas de bouton d'action pour le staff (undefined afficherait « Valider »)
-      buttonSaveTitle={cta}
+      icon={near ? <Icons.InfoIcon /> : <Icons.Lock />}
+      iconBackgroundColor={near ? 'orange.500' : undefined}
+      {...footer}
     >
       <Stack gap={4} py={2}>
         <Stack gap={1}>
@@ -103,11 +157,17 @@ export const LimitReachedModal = ({ isOpen, onChange, usage, limits }: LimitReac
             Vous utilisez {usage.used} {noun} sur {usage.limit} inclus dans votre plan {planName}.
           </BaseText>
           <BaseText variant={TextVariant.S} color="fg.muted">
-            {isOwner
-              ? 'Pour en ajouter, passez à un plan supérieur ou désactivez un élément existant.'
-              : 'Pour en ajouter, le propriétaire de l’agence doit passer à un plan supérieur.'}
+            {near
+              ? isOwner
+                ? 'Vous pouvez continuer. Pour ne pas être bloqué ensuite, un plan supérieur offre plus de place.'
+                : 'Vous pouvez continuer. Au-delà de la limite, le propriétaire de l’agence devra passer à un plan supérieur.'
+              : isOwner
+                ? 'Pour en ajouter, passez à un plan supérieur ou désactivez un élément existant.'
+                : 'Pour en ajouter, le propriétaire de l’agence doit passer à un plan supérieur.'}
           </BaseText>
         </Stack>
+
+        {near && <NearLimitGauge usage={usage} noun={noun} />}
 
         {next && nextRecord && (
           <Stack

@@ -3,8 +3,12 @@ import {
   canRenew,
   featureLabel,
   formatFeatureLimit,
+  isFreePlan,
   keepFitsLimits,
+  markNearLimitSeen,
+  nearLimitAlreadySeen,
   nextPlanFor,
+  remainingAfterAdd,
   planDifferences,
   usageRemainingLabel,
 } from './subscription';
@@ -160,5 +164,34 @@ describe('nextPlanFor', () => {
 
   it('rien au plus haut', () => {
     expect(nextPlanFor(plans, 'premium', 'manage_users')).toBeNull();
+  });
+});
+
+describe('remainingAfterAdd', () => {
+  it('dit ce qu’il restera après l’ajout demandé', () => {
+    expect(remainingAfterAdd({ used: 16, limit: 20 })).toBe('Après cet ajout, il en restera 3.');
+  });
+
+  it('prévient quand l’ajout prend la dernière place', () => {
+    expect(remainingAfterAdd({ used: 4, limit: 5 })).toBe(
+      'Cet ajout utilisera votre dernière place.',
+    );
+  });
+});
+
+describe('alerte à 80 % : une fois par session et par fonctionnalité', () => {
+  it('se souvient de la fonctionnalité déjà signalée, pas des autres', () => {
+    expect(nearLimitAlreadySeen('manage_properties')).toBe(false);
+    markNearLimitSeen('manage_properties');
+    expect(nearLimitAlreadySeen('manage_properties')).toBe(true);
+    expect(nearLimitAlreadySeen('manage_users')).toBe(false);
+  });
+});
+
+describe('isFreePlan', () => {
+  it('reconnaît le plan Gratuit', () => {
+    expect(isFreePlan({ name: 'FREE_SUB' })).toBe(true);
+    expect(isFreePlan({ name: 'BASIC_SUB' })).toBe(false);
+    expect(isFreePlan(undefined)).toBe(false);
   });
 });
