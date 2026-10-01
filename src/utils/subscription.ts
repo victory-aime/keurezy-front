@@ -53,6 +53,8 @@ export const FEATURE_LABELS: Record<
   },
 
   PREMIUM_SUPPORT: {
+    singular: 'demande de support prioritaire',
+    plural: 'demandes de support prioritaire',
     unlimited: 'Support premium prioritaire',
   },
 };
@@ -132,8 +134,13 @@ export function planDifferences(
     else if (previous === null) loss(formatFeatureLimit(name, limit));
     else {
       const delta = limit - previous;
+      // Sans libellé comptable, la nouvelle limite plutôt qu'un écart illisible
       const label = Math.abs(delta) === 1 ? config.singular : config.plural;
-      (delta > 0 ? gain : loss)(`${delta > 0 ? '+' : '−'}${Math.abs(delta)} ${label}`);
+      (delta > 0 ? gain : loss)(
+        label
+          ? `${delta > 0 ? '+' : '−'}${Math.abs(delta)} ${label}`
+          : `${config.unlimited ?? name} : ${limit}`,
+      );
     }
   }
   for (const name of before.keys()) {

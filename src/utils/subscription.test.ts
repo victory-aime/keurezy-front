@@ -195,3 +195,13 @@ describe('isFreePlan', () => {
     expect(isFreePlan(undefined)).toBe(false);
   });
 });
+
+describe('planDifferences : libellés', () => {
+  it('ne produit jamais « undefined » (support premium chiffré)', () => {
+    const changes = planDifferences(
+      [{ name: 'premium_support', limit: 1 }],
+      [{ name: 'premium_support', limit: 5 }],
+    );
+    expect(changes).toEqual([{ label: '+4 demandes de support prioritaire', tone: 'gain' }]);
+  });
+});

@@ -167,11 +167,14 @@ export const PlanChooser = ({
               <RadioCard.Item
                 key={plan.id}
                 value={plan.id}
+                // Le plan actuel (même cycle) ne se rechoisit pas : le renouvellement a son bouton
+                disabled={isCurrent}
                 rounded="7px"
                 borderWidth="1px"
                 borderColor={isCurrent ? 'border.emphasized' : 'border'}
                 bg="bg"
-                cursor="pointer"
+                cursor={isCurrent ? 'not-allowed' : 'pointer'}
+                _disabled={{ opacity: 0.7 }}
                 transition="border-color 200ms ease, background-color 200ms ease, box-shadow 200ms ease"
                 _hover={{ borderColor: checked ? 'primary.500' : 'border.emphasized' }}
                 _checked={{
