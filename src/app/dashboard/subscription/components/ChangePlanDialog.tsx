@@ -89,10 +89,10 @@ export const ChangePlanDialog = ({
     setKeep(Object.fromEntries((initialKeep ?? []).map(({ feature, ids }) => [feature, ids])));
   }, [open, initialTarget, initialKeep, subscription.billingCycle]);
 
-  // Focus sur le titre de l'étape : les lecteurs d'écran annoncent le changement
+  // Focus sur le titre de l'étape à chaque changement (l'ouverture passe par initialFocusEl)
   useEffect(() => {
-    if (open) headingRef.current?.focus();
-  }, [step, open]);
+    headingRef.current?.focus();
+  }, [step]);
 
   const { data: allPlans, isLoading: plansLoading } = CommonModule.getAllPacksQueries({
     queryOptions: { enabled: open },
@@ -108,6 +108,27 @@ export const ChangePlanDialog = ({
     queryOptions: { enabled: open && step >= 1 && !!planId },
   });
   const quote = quoteQuery.data;
+
+  // Surplus : on présélectionne les premiers éléments dans la limite (l'owner ajuste ensuite).
+  // Sans ça, « rien gardé » passerait sans que l'owner ait choisi.
+  useEffect(() => {
+    if (!quote?.excess.length) return;
+    setKeep((previous) => {
+      const next = { ...previous };
+      for (const { feature, limit, items } of quote.excess) {
+        const known = (next[feature] ?? []).filter((id) => items.some((i) => i.id === id));
+        next[feature] = known.length ? known : items.slice(0, limit).map((i) => i.id);
+      }
+      return next;
+    });
+  }, [quote]);
+
+  // Un plan sans prix sur le nouveau cycle disparaît de la liste : on le désélectionne
+  const changeCycle = (next: ENUM.BillingCycle) => {
+    const selected = plans.find((p) => p.id === planId);
+    if (selected && !priceOn(selected, next)) setPlanId(null);
+    setCycle(next);
+  };
 
   const idempotencyKey = useMemo(
     () => crypto.randomUUID(),
@@ -143,6 +164,14 @@ export const ChangePlanDialog = ({
   const canLeaveReview = !!quote && keepFitsLimits(quote.excess, keep);
   const firstStep = initialTarget ? 1 : 0;
 
+  // Pourquoi « Continuer » est grisé : annoncé (région live toujours présente) et affiché
+  const blockedReason =
+    step === 0 && isSameAsCurrent && !canLeaveChoose
+      ? 'C’est votre plan actuel. Le renouvellement est proposé à partir de 7 jours avant l’échéance.'
+      : step === 1 && quote && !canLeaveReview
+        ? 'Votre choix dépasse la limite du nouveau plan : retirez des éléments.'
+        : '';
+
   const confirm = () => {
     if (!quote || !planId) return;
     const target: MODELS.ISubscriptionTarget = {
@@ -176,16 +205,10 @@ export const ChangePlanDialog = ({
             currentPlanId={subscription.plan.id}
             currentCycle={subscription.billingCycle}
             billingCycle={cycle}
-            onCycleChange={setCycle}
+            onCycleChange={changeCycle}
             selectedPlanId={planId}
             onSelect={setPlanId}
           />
-          {isSameAsCurrent && !canLeaveChoose && (
-            <BaseText variant={TextVariant.S} color="fg.muted" role="status" textAlign="center">
-              C’est votre plan actuel. Le renouvellement est proposé à partir de 7 jours avant
-              l’échéance.
-            </BaseText>
-          )}
         </Stack>
       );
     }
@@ -195,6 +218,7 @@ export const ChangePlanDialog = ({
           quote={quote}
           isLoading={quoteQuery.isLoading}
           isError={quoteQuery.isError}
+          isRetrying={quoteQuery.isFetching}
           onRetry={() => quoteQuery.refetch()}
           planName={planName}
           currentPeriodEnd={subscription.currentPeriodEnd}
@@ -284,34 +308,41 @@ export const ChangePlanDialog = ({
       size="full"
       motionPreset={reduceMotion ? 'none' : 'slide-in-bottom'}
       closeOnEscape={!busy}
+      initialFocusEl={() => headingRef.current}
       lazyMount
       unmountOnExit
     >
       <DialogContent rounded="none" bg="bg">
         <DialogHeader borderBottomWidth="1px" borderColor="border" py={4}>
-          <Stack gap={4} width="full" maxW="72rem" mx="auto" pr={10}>
-            <DialogTitle fontSize="lg">Changer de plan</DialogTitle>
+          <Stack gap={0} width="full" maxW="72rem" mx="auto" pr={10}>
             <PlanChangeStepper current={step} />
           </Stack>
-          <DialogCloseTrigger disabled={busy} top="4" insetEnd="4" />
+          <DialogCloseTrigger disabled={busy} top="4" insetEnd="4" aria-label="Fermer" />
         </DialogHeader>
 
         <DialogBody py={{ base: 6, md: 10 }}>
           <Stack gap={6} width="full" maxW="72rem" mx="auto">
             <Stack gap={1}>
               <BaseText variant={TextVariant.XS} color="fg.muted">
-                Étape {step + 1} sur {PLAN_CHANGE_STEPS.length}
+                Changer de plan · étape {step + 1} sur {PLAN_CHANGE_STEPS.length}
               </BaseText>
-              <Heading
-                as="h2"
-                ref={headingRef}
-                tabIndex={-1}
-                size={{ base: 'lg', md: 'xl' }}
-                fontWeight="semibold"
-                outline="none"
-              >
-                {STEP_TITLES[step]}
-              </Heading>
+              <DialogTitle asChild>
+                <Heading
+                  as="h2"
+                  ref={headingRef}
+                  tabIndex={-1}
+                  size={{ base: 'lg', md: 'xl' }}
+                  fontWeight="semibold"
+                  outline="none"
+                >
+                  {STEP_TITLES[step]}
+                </Heading>
+              </DialogTitle>
+              {blockedReason && (
+                <BaseText variant={TextVariant.S} color="fg.muted" display={{ md: 'none' }}>
+                  {blockedReason}
+                </BaseText>
+              )}
             </Stack>
             <AnimatePresence mode="wait" initial={false}>
               <MotionBox
@@ -335,7 +366,14 @@ export const ChangePlanDialog = ({
           bottom={0}
           py={3}
         >
-          <Flex width="full" maxW="72rem" mx="auto" gap={3} justifyContent="space-between">
+          <Flex
+            width="full"
+            maxW="72rem"
+            mx="auto"
+            gap={3}
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Box>
               {step > firstStep && (
                 <BaseButton
@@ -348,7 +386,19 @@ export const ChangePlanDialog = ({
                 </BaseButton>
               )}
             </Box>
-            {primary()}
+            <Flex alignItems="center" gap={3} minW={0}>
+              <BaseText
+                role="status"
+                aria-live="polite"
+                variant={TextVariant.XS}
+                color="fg.muted"
+                textAlign="right"
+                display={{ base: 'none', md: 'block' }}
+              >
+                {blockedReason}
+              </BaseText>
+              {primary()}
+            </Flex>
           </Flex>
         </DialogFooter>
       </DialogContent>

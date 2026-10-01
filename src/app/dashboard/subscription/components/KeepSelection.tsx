@@ -49,6 +49,12 @@ export const KeepSelection = ({ excess, keep, onChange, effectiveLabel }: KeepSe
           <BaseText variant={TextVariant.XS} color="fg.muted" aria-live="polite">
             {chosen.length} / {limit} sélectionné{chosen.length > 1 ? 's' : ''}
           </BaseText>
+          {chosen.length > limit && (
+            <BaseText role="alert" variant={TextVariant.XS} color="fg.error">
+              Retirez {chosen.length - limit} élément{chosen.length - limit > 1 ? 's' : ''} pour
+              rester dans la limite.
+            </BaseText>
+          )}
           <Stack gap={2} pl={1}>
             {items.map((item) => {
               const checked = chosen.includes(item.id);

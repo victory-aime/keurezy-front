@@ -141,7 +141,9 @@ export const PlanChangeSummary = ({ quote, current, target, keep }: PlanChangeSu
             </Flex>
           ) : (
             <BaseText variant={TextVariant.S} color="fg.muted">
-              Vous gardez les mêmes fonctionnalités, pour une nouvelle période.
+              {quote.kind === 'DOWNGRADE'
+                ? 'Aucune nouvelle fonctionnalité : ce plan est plus léger que le vôtre.'
+                : 'Vous gardez les mêmes fonctionnalités, pour une nouvelle période.'}
             </BaseText>
           )}
         </Block>

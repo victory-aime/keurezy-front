@@ -8,6 +8,7 @@ interface QuoteReviewProps {
   quote: MODELS.ISubscriptionQuote | undefined;
   isLoading: boolean;
   isError: boolean;
+  isRetrying?: boolean;
   onRetry: () => void;
   planName: string;
   /** Échéance actuelle, pour dire si elle change */
@@ -40,6 +41,7 @@ export const QuoteReview = ({
   quote,
   isLoading,
   isError,
+  isRetrying = false,
   onRetry,
   planName,
   currentPeriodEnd,
@@ -60,7 +62,14 @@ export const QuoteReview = ({
         <BaseText variant={TextVariant.S} color="fg.muted">
           Impossible de calculer le montant pour le moment.
         </BaseText>
-        <BaseButton variant="outline" colorType="primary" size="sm" onClick={onRetry}>
+        <BaseButton
+          variant="outline"
+          colorType="primary"
+          size="sm"
+          isLoading={isRetrying}
+          disabled={isRetrying}
+          onClick={onRetry}
+        >
           Réessayer
         </BaseButton>
       </Stack>
@@ -78,7 +87,7 @@ export const QuoteReview = ({
 
   return (
     <Stack gap={5}>
-      <BaseText as="h3" variant={TextVariant.L} fontWeight="semibold">
+      <BaseText variant={TextVariant.L} fontWeight="semibold">
         {titles[quote.kind]}
       </BaseText>
 

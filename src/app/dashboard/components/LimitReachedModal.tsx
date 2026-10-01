@@ -31,9 +31,11 @@ type Usage = MODELS.ISubscriptionLimits['usage'][number];
 const toCatalog = (plans: MODELS.COMMON.ISubscriptionPlan[]): CatalogPlan[] =>
   plans
     .filter((p) => p.planCategory === 'SUBSCRIPTION_BASED')
+    .filter((p) => p.pricings?.some((pr) => pr.billingCycle === 'MONTHLY'))
     .map((p) => ({
       id: p.id,
-      monthlyPrice: Number(p.pricings?.find((pr) => pr.billingCycle === 'MONTHLY')?.price ?? 0),
+      // Sans prix mensuel, le plan ne peut pas être comparé : il est écarté plus bas
+      monthlyPrice: Number(p.pricings?.find((pr) => pr.billingCycle === 'MONTHLY')?.price ?? NaN),
       features: p.planFeatures
         .filter((pf) => pf.feature?.isCommercial)
         .map((pf) => ({ name: pf.feature.name, limit: pf.limit ?? null })),
@@ -63,6 +65,7 @@ export const LimitReachedModal = ({ isOpen, onChange, usage, limits }: LimitReac
   const next =
     showPreview && limits.plan ? nextPlanFor(catalog, limits.plan.id, usage.feature) : null;
   const nextRecord = plans?.find((p) => p.id === next?.id);
+  const nextPricing = nextRecord?.pricings?.find((pr) => pr.billingCycle === 'MONTHLY');
   const nextLimit = next?.features.find((f) => f.name === usage.feature)?.limit ?? null;
   const extras = next
     ? planDifferences(currentPlan?.features ?? [], next.features)
@@ -125,8 +128,8 @@ export const LimitReachedModal = ({ isOpen, onChange, usage, limits }: LimitReac
               </Flex>
               <BaseText variant={TextVariant.S} fontWeight="semibold">
                 <BaseFormatNumber
-                  value={next.monthlyPrice}
-                  currencyCode={ENUM.COMMON.Currency.XOF}
+                  value={nextPricing?.price ?? next.monthlyPrice}
+                  currencyCode={(nextPricing?.currency ?? 'XOF') as ENUM.COMMON.Currency}
                 />{' '}
                 <Box as="span" color="fg.muted" fontWeight="normal">
                   / mois

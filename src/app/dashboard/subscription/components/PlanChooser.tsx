@@ -169,11 +169,8 @@ export const PlanChooser = ({
                 borderColor={isCurrent ? 'border.emphasized' : 'border'}
                 bg="bg"
                 cursor="pointer"
-                transition="border-color 200ms ease, background-color 200ms ease, box-shadow 200ms ease, transform 200ms ease"
-                _hover={{
-                  borderColor: checked ? 'primary.500' : 'border.emphasized',
-                  transform: { _motionSafe: 'translateY(-2px)' },
-                }}
+                transition="border-color 200ms ease, background-color 200ms ease, box-shadow 200ms ease"
+                _hover={{ borderColor: checked ? 'primary.500' : 'border.emphasized' }}
                 _checked={{
                   borderColor: 'primary.500',
                   bg: 'primary.500/5',
@@ -194,15 +191,19 @@ export const PlanChooser = ({
                           <RadioCard.ItemText fontWeight="semibold" fontSize="lg">
                             {t(`SUBSCRIPTION.PLANS.${plan.name}`)}
                           </RadioCard.ItemText>
-                          {isCurrent && (
+                          {isCurrentPlan && (
                             <BaseBadge
                               status={ENUM.COMMON.Status.ACTIVE}
-                              label="Plan actuel"
+                              label={
+                                isCurrent
+                                  ? 'Plan actuel'
+                                  : `Plan actuel (${currentCycle === 'YEARLY' ? 'annuel' : 'mensuel'})`
+                              }
                               variant="subtle"
                               size="sm"
                             />
                           )}
-                          {plan.popular && !isCurrent && (
+                          {plan.popular && !isCurrentPlan && (
                             <BaseBadge label="Populaire" variant="subtle" size="sm" />
                           )}
                         </Flex>
@@ -227,7 +228,14 @@ export const PlanChooser = ({
 
                     <Separator />
 
-                    <Stack as="ul" gap={2} listStyleType="none" aria-label="Inclus">
+                    {/* Mobile : limites du plan choisi seulement (cartes courtes) ; écarts toujours visibles */}
+                    <Stack
+                      as="ul"
+                      gap={2}
+                      listStyleType="none"
+                      aria-label="Inclus"
+                      display={{ base: checked ? 'flex' : 'none', lg: 'flex' }}
+                    >
                       {limits
                         .map((f) => formatFeatureLimit(f.name, f.limit))
                         .filter(Boolean)

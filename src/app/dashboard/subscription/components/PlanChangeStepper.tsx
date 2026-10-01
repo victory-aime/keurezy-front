@@ -41,13 +41,22 @@ export const PlanChangeStepper = ({ current }: { current: number }) => (
             color={done ? 'white' : active ? 'primary.500' : 'fg.muted'}
             transition="background-color 200ms ease, border-color 200ms ease"
           >
-            {done ? <Icons.Check aria-label="terminée" /> : index + 1}
+            {done ? (
+              <>
+                <Icons.Check aria-hidden />
+                <Box as="span" srOnly>
+                  Étape terminée :
+                </Box>
+              </>
+            ) : (
+              index + 1
+            )}
           </Flex>
           <BaseText
             variant={TextVariant.S}
             fontWeight={active ? 'semibold' : 'normal'}
             color={active ? 'fg' : 'fg.muted'}
-            display={{ base: active ? 'block' : 'none', md: 'block' }}
+            srOnly={{ base: !active, md: false }}
             whiteSpace="nowrap"
           >
             {label}
