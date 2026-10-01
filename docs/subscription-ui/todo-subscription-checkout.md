@@ -6,8 +6,8 @@ Vérification commune :
 - commit local après chaque tâche.
 
 ## T1 [back] : les quotas comptent les éléments actifs
-- [ ] `countPropertyAssets` ignore `isActive = false` ; `countUserSeats` ne compte que les membres actifs (+ invitations en attente) ; `countAnnonces` ne compte que les annonces `ACTIVE` (décision 1).
-- [ ] Contrôle de quota au passage en actif : annonce (`updateAnnonce` vers `ACTIVE`), membre (`team/change-status`).
+- [x] `countPropertyAssets` ignore `isActive = false` ; `countUserSeats` ne compte que les membres actifs (+ invitations en attente) ; `countAnnonces` ne compte que les annonces `ACTIVE` (décision 1).
+- [x] Contrôle de quota au passage en actif : annonce (création en ligne, `updateAnnonce` vers `ACTIVE`), membre (`team/change-status`) ; `hasRoomFor` partagé.
 - **Tests** : un élément désactivé libère sa place ; réactiver au-delà de la limite renvoie le code de capacité existant.
 - **Fichiers** : `packs/plan-feature-policy.service.ts` (+ spec), `annonce/annonce.service.ts`, `team/team.service.ts`.
 - **Taille** : M.
@@ -29,10 +29,11 @@ Vérification commune :
 
 ## T4 [back] : création du checkout et suivi
 - [ ] `PaymentsModule` exporte `NabooService`.
-- [ ] `POST agency/subscription/checkout` (owner, `@AllowWhenInactive()`) : recalcule le devis, refuse un downgrade, crée la transaction (`agencyId`, `kind`, `metadata` = plan, cycle et choix éventuel), puis renvoie `{ checkoutUrl, orderId }`. Un checkout `PENDING` identique de moins d'une heure est réutilisé.
+- [ ] Migration `14_subscription_checkout` : `payment_transaction.idempotencyKey` (unique), `subscription.scheduledAt`.
+- [ ] `POST agency/subscription/checkout` (owner, `@AllowWhenInactive()`, en-tête `Idempotency-Key` obligatoire) : recalcule le devis, refuse un downgrade, crée la transaction (`agencyId`, `kind`, `idempotencyKey`, `metadata` = plan, cycle et choix éventuel), puis renvoie `{ checkoutUrl, orderId }`. Même clé → même checkout ; même clé, autre demande → `422 IDEMPOTENCY_KEY_REUSED`. La course entre deux requêtes est tranchée par la contrainte unique.
 - [ ] `GET agency/subscription/payment?orderId` (owner) : renvoie `{ status }` ; si NabooPay dit `paid` alors qu'on est encore `PENDING`, émet l'événement de confirmation.
-- **Tests** : montant figé = devis ; réutilisation ; downgrade → 400 ; `orderId` d'une autre agence → 404.
-- **Fichiers** : `payments/payments.module.ts`, `packs/subscription.service.ts`, `packs/subscription.controller.ts`, `packs/pack.module.ts`.
+- **Tests** : montant figé = devis ; même clé → même checkout, sans second appel NabooPay ; clé réutilisée pour une autre demande → 422 ; downgrade → 400 ; `orderId` d'une autre agence → 404.
+- **Fichiers** : `prisma/schema.prisma`, migration, `payments/payments.module.ts`, `packs/subscription.service.ts`, `packs/subscription.controller.ts`, `packs/pack.module.ts`.
 - **Dépend de** : T3. **Taille** : M.
 
 ## T5 [back] : confirmation du paiement
@@ -50,13 +51,12 @@ Vérification commune :
 - **Dépend de** : T4. **Taille** : M.
 
 ## T6 [back] : downgrade programmé
-- [ ] Migration `14_subscription_schedule_at` : `scheduledAt`.
 - [ ] `POST agency/subscription/schedule-change` : choix limité aux éléments de l'agence ; `422 SELECTION_EXCEEDS_LIMIT` au-delà de la limite.
 - [ ] `DELETE agency/subscription/scheduled-change`.
 - [ ] Le job applique le downgrade quand `scheduledAt < now`, avant l'expiration : plan, prix et désactivation des éléments hors choix, en une transaction.
 - **Tests** : choix au-delà de la limite → 422 ; élément d'une autre agence → 422 ; application exacte du choix ; quotas recalculés ; annulation.
-- **Fichiers** : `prisma/schema.prisma`, migration, `packs/subscription.service.ts` (+ spec), contrôleur, `config/api.ts`.
-- **Dépend de** : T1, T3. **Taille** : M.
+- **Fichiers** : `packs/subscription.service.ts` (+ spec), contrôleur, `config/api.ts`.
+- **Dépend de** : T1, T3, T4 (migration). **Taille** : M.
 
 ## T7 [back] : rappels de renouvellement
 - [ ] Job quotidien : abonnement `ACTIVE`, sans résiliation, échéance à J-7, J-3 ou J-1, palier pas encore envoyé ; émet `subscription.renewal.due`, puis met à jour `lastRenewalReminder`.
@@ -71,7 +71,7 @@ Vérification commune :
 - [ ] Dev : downgrade programmé puis appliqué (`scheduledAt` avancé à la main).
 
 ## T8 : UI changement de plan, renouvellement et réactivation
-- [ ] Données : routes, services, requêtes (`quote`, `payment`), mutation `checkout`.
+- [ ] Données : routes, services, requêtes (`quote`, `payment`), mutation `checkout` avec un `Idempotency-Key` généré à l'ouverture de « Confirmer » et conservé pour les nouvelles tentatives.
 - [ ] Drawer « Changer de plan » (plein écran sur mobile) :
   - **Choisir** : cartes légères, plan actuel marqué, `BillingCycleToggle`, différence avec le plan actuel ;
   - **Vérifier** : « À payer aujourd'hui », échéance ;

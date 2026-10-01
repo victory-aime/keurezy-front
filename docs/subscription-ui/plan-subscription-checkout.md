@@ -33,11 +33,12 @@ Le plus risqué passe en premier : la confirmation de paiement, c'est-à-dire l'
   - Si l'application échoue, la transaction reste `PENDING`, et le prochain webhook ou polling réessaie.
   - `PaymentsModule` exporte `NabooService` pour la création du checkout.
 - **Devis en fonction pure** `quoteChange(current, target, now)`. Elle classe le changement (renouvellement, upgrade, downgrade, réactivation), calcule le montant et les dates, et sert au `GET quote` comme au `POST checkout`. Le montant est recalculé au checkout et figé dans `amount_to_pay`.
-- **Réutilisation d'un checkout en attente.** Un checkout `PENDING` de la même agence est réutilisé s'il a le même type, le même plan, le même cycle et le même montant, et qu'il a moins d'une heure. Sinon, un nouveau est créé.
-  - *ponytail : fenêtre fixe d'une heure, faute de connaître l'expiration côté NabooPay ; la caler sur la leur si elle est documentée.*
+- **Idempotence (validée le 2026-10-01)**, sur deux niveaux :
+  - **Application du paiement** : la clé est `naboo_order_id` (unique). Webhook et polling passent par la même réclamation atomique (`updateMany where naboo_order_id and status = PENDING`, compte = 1) dans la transaction qui applique. Le second arrivé ne fait rien.
+  - **Création du checkout** : le front génère un `Idempotency-Key` par intention (un par ouverture de l'étape « Confirmer ») et le renvoie à chaque tentative. Il est stocké dans `payment_transaction.idempotencyKey` (unique, migration 14). Une même clé renvoie le même checkout au lieu de créer une seconde transaction NabooPay qui pourrait être payée une deuxième fois. La même clé avec une autre demande (type, plan ou cycle) est refusée (`422 IDEMPOTENCY_KEY_REUSED`).
 - **Suivi du paiement sur une route sécurisée.** Nouvelle route `GET agency/subscription/payment?agencyId&orderId`, réservée à l'owner, qui renvoie seulement `{ status }`. Elle reprend le rattrapage (si NabooPay dit `paid`, on émet l'événement).
   - La route publique `common/polling` n'est **pas** réutilisée : elle expose le mot de passe d'onboarding (tâche séparée déjà ouverte).
-- **Date d'effet du downgrade.** Nouvelle colonne `scheduledAt` (migration 14 ; la future contraction des invitations passe en 15).
+- **Date d'effet du downgrade.** Nouvelle colonne `scheduledAt` (migration 14, avec `idempotencyKey` ; la future contraction des invitations passe en 15).
   - Raison : un renouvellement payé en avance repousse `currentPeriodEnd`, alors que le downgrade doit s'appliquer à l'ancienne échéance.
   - Le job applique le downgrade quand `scheduledAt < now`, avant l'expiration, dans une seule transaction : plan, prix, puis désactivation des éléments hors choix.
 - **Lecture seule.** `checkout` porte `@AllowWhenInactive()`, puisque la réactivation est un paiement. `schedule-change` et l'annulation du downgrade restent bloqués pendant l'expiration.
@@ -45,21 +46,16 @@ Le plus risqué passe en premier : la confirmation de paiement, c'est-à-dire l'
 - **Un upgrade annule le downgrade programmé.**
 - **Rappels.** Un job quotidien émet `subscription.renewal.due` aux paliers J-7, J-3 et J-1. Un écouteur dans `notifications/` envoie l'e-mail et la notification in-app. `lastRenewalReminder` empêche les doublons.
 
-## À valider avant l'implémentation
-1. **Quota d'annonces = annonces en ligne.** Aujourd'hui, `publish_properties` compte toutes les annonces, y compris `INACTIVE`. Désactiver une annonce ne libère donc rien, ce qui contredit la règle « désactivé = hors quota ».
-   - Proposition : compter seulement les annonces `ACTIVE`, et contrôler le quota au passage en `ACTIVE` (création et `updateAnnonce`).
-2. **Quota de collaborateurs = membres actifs + invitations en attente.** Réactiver un membre (`team/change-status`) contrôle alors le quota.
-3. **Biens désactivés :**
-   - comptés hors quota ;
-   - masqués au public (`publicAnnonceWhere` exige `property.isActive`) ;
-   - non modifiables ;
-   - réactivables par l'owner avec un contrôle de quota (nouvelle route d'activation).
-4. **Réactivation après expiration :**
-   - tout plan est possible, payé plein tarif, avec une nouvelle période à partir du paiement ;
-   - vers un plan plus petit avec du surplus, le choix des éléments gardés se fait **au checkout** et s'applique au paiement.
-5. **Activation de `SUBSCRIPTION_EXPIRY_ENABLED`** après le checkpoint B. Les agences dont la période est déjà échue expireraient dans l'heure (8 sur 14 en dev).
-   - Proposition : au moment d'activer, repousser leur échéance de 7 jours (script ponctuel), pour qu'elles reçoivent les rappels et puissent payer.
-6. **Modèle Resend « rappel de renouvellement »** à créer dans Resend. En attendant, l'e-mail est ignoré, comme les autres modèles non configurés.
+## Validé le 2026-10-01
+1. **Quota = éléments actifs**, contrôlé au passage à l'état actif (création en ligne, réactivation). La désactivation n'est jamais bloquée.
+   - annonces : en ligne (`ACTIVE`) ;
+   - collaborateurs : membres actifs + invitations en attente ;
+   - biens : `isActive`, masqués au public, non modifiables, réactivables dans la limite du plan.
+2. **Clé d'idempotence** entre webhook et polling, et à la création du checkout (voir ci-dessus).
+3. Le reste du plan, en l'état :
+   - réactivation après expiration sur tout plan, avec choix au checkout si surplus ;
+   - délai de grâce de 7 jours à l'activation du flag d'expiration ;
+   - modèle Resend à créer.
 
 ## Graphe
 ```
@@ -72,7 +68,8 @@ T1 quotas actifs ─┬─ T2 biens désactivés ──────────�
 ## Risques
 | Risque | Impact | Parade |
 |---|---|---|
-| Paiement appliqué deux fois (webhook et polling simultanés) | Élevé | Réclamation atomique `updateMany where PENDING` dans la transaction qui applique ; test de concurrence |
+| Paiement appliqué deux fois (webhook et polling simultanés) | Élevé | Clé `naboo_order_id` + réclamation atomique dans la transaction qui applique ; test de concurrence |
+| Deux checkouts payés pour une même intention (double clic, retry réseau) | Élevé | `Idempotency-Key` unique en base |
 | Montant payé inférieur au devis | Élevé | Montant figé au checkout, vérifié auprès de NabooPay avant application |
 | Downgrade appliqué à la mauvaise date après un renouvellement anticipé | Moyen | `scheduledAt` distinct de `currentPeriodEnd` ; test dédié |
 | Changement de sémantique des quotas | Moyen | Validation ci-dessus ; tests des trois compteurs ; contrôle au passage en actif |
