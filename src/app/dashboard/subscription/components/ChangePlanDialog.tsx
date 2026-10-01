@@ -1,0 +1,357 @@
+'use client';
+
+import { Box, Flex, Heading, Skeleton, Stack } from '@chakra-ui/react';
+import { AnimatePresence, useReducedMotion } from 'framer-motion';
+import { t } from 'i18next';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { BaseButton, BaseFormatNumber, BaseText, TextVariant } from '_components/custom';
+import {
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+} from '_components/ui/dialog';
+import { MotionBox } from '_constants/motion';
+import { AgencyModule, CommonModule } from '_store/state-management';
+import { ENUM, MODELS } from '_types/*';
+import { canRenew, keepFitsLimits, type PlanFeatureLimit } from '_utils/subscription';
+import { PlanChangeStepper, PLAN_CHANGE_STEPS } from './PlanChangeStepper';
+import { PlanChangeSummary } from './PlanChangeSummary';
+import { limitsOf, PlanChooser, priceOn } from './PlanChooser';
+import { QuoteReview } from './QuoteReview';
+
+type Subscription = NonNullable<MODELS.IAgencySubscriptionOverview['subscription']>;
+
+/** Commande NabooPay en cours, relue au retour sur la page (`PaymentReturn`). */
+export const PENDING_ORDER_KEY = 'keurezy.subscription.orderId';
+
+export interface ChangePlanTarget {
+  planId: string;
+  billingCycle: ENUM.BillingCycle;
+}
+
+const STEP_TITLES = [
+  'Choisissez votre plan',
+  'Vérifiez le montant',
+  'Récapitulatif avant confirmation',
+] as const;
+
+const cycleSuffix = (cycle: ENUM.BillingCycle | null) => (cycle === 'YEARLY' ? ' / an' : ' / mois');
+
+interface ChangePlanDialogProps {
+  agencyId: string;
+  subscription: Subscription;
+  /** Limites du plan actuel (page abonnement), pour la colonne « Aujourd'hui » */
+  currentLimits: PlanFeatureLimit[];
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  /** Plan déjà choisi (renouvellement, réactivation, modification d'un downgrade) : étape 2 */
+  initialTarget?: ChangePlanTarget;
+  /** Choix déjà enregistré (modification d'un downgrade programmé) */
+  initialKeep?: MODELS.SubscriptionKeep;
+  /** Après un downgrade programmé : recharger la page */
+  onScheduled: () => void;
+}
+
+/**
+ * Changer de plan, renouveler ou réactiver, en plein écran : Choisir → Vérifier → Récapitulatif.
+ * La confirmation n'existe qu'à l'étape 3. Montants et dates : devis du backend uniquement.
+ *
+ * Idempotence : une clé par intention (plan, cycle, choix) ; un double clic ou une nouvelle
+ * tentative après une erreur réseau renvoie la même clé, donc le même checkout.
+ */
+export const ChangePlanDialog = ({
+  agencyId,
+  subscription,
+  currentLimits,
+  open,
+  onOpenChange,
+  initialTarget,
+  initialKeep,
+  onScheduled,
+}: ChangePlanDialogProps) => {
+  const reduceMotion = useReducedMotion() ?? false;
+  const [cycle, setCycle] = useState<ENUM.BillingCycle>(subscription.billingCycle ?? 'MONTHLY');
+  const [planId, setPlanId] = useState<string | null>(null);
+  const [step, setStep] = useState(0);
+  const [keep, setKeep] = useState<Record<string, string[]>>({});
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  // Chaque ouverture repart de zéro (ou du plan déjà choisi)
+  useEffect(() => {
+    if (!open) return;
+    setCycle(initialTarget?.billingCycle ?? subscription.billingCycle ?? 'MONTHLY');
+    setPlanId(initialTarget?.planId ?? null);
+    setStep(initialTarget ? 1 : 0);
+    setKeep(Object.fromEntries((initialKeep ?? []).map(({ feature, ids }) => [feature, ids])));
+  }, [open, initialTarget, initialKeep, subscription.billingCycle]);
+
+  // Focus sur le titre de l'étape : les lecteurs d'écran annoncent le changement
+  useEffect(() => {
+    if (open) headingRef.current?.focus();
+  }, [step, open]);
+
+  const { data: allPlans, isLoading: plansLoading } = CommonModule.getAllPacksQueries({
+    queryOptions: { enabled: open },
+  });
+  const plans = useMemo(
+    () => (allPlans ?? []).filter((p) => p.planCategory === 'SUBSCRIPTION_BASED'),
+    [allPlans],
+  );
+  const selectedPlan = plans.find((p) => p.id === planId);
+
+  const quoteQuery = AgencyModule.getSubscriptionQuoteQueries({
+    params: { agencyId, planId: planId ?? '', billingCycle: cycle },
+    queryOptions: { enabled: open && step >= 1 && !!planId },
+  });
+  const quote = quoteQuery.data;
+
+  const idempotencyKey = useMemo(
+    () => crypto.randomUUID(),
+    // Nouvelle intention dès que la demande change ; identique pour une nouvelle tentative
+    [planId, cycle, JSON.stringify(keep), open],
+  );
+
+  const { mutate: checkout, isPending: paying } = AgencyModule.subscriptionCheckoutMutation({
+    mutationOptions: {
+      onSuccess: ({ checkoutUrl, orderId }) => {
+        try {
+          sessionStorage.setItem(PENDING_ORDER_KEY, orderId);
+        } catch {
+          // Stockage indisponible : le webhook applique quand même le paiement
+        }
+        window.location.assign(checkoutUrl);
+      },
+    },
+  });
+  const { mutate: schedule, isPending: scheduling } =
+    AgencyModule.scheduleSubscriptionChangeMutation({
+      mutationOptions: {
+        onSuccess: () => {
+          onOpenChange(false);
+          onScheduled();
+        },
+      },
+    });
+
+  const busy = paying || scheduling;
+  const isSameAsCurrent = planId === subscription.plan.id && cycle === subscription.billingCycle;
+  const canLeaveChoose = !!planId && (!isSameAsCurrent || canRenew(subscription, new Date()));
+  const canLeaveReview = !!quote && keepFitsLimits(quote.excess, keep);
+  const firstStep = initialTarget ? 1 : 0;
+
+  const confirm = () => {
+    if (!quote || !planId) return;
+    const target: MODELS.ISubscriptionTarget = {
+      agencyId,
+      planId,
+      billingCycle: cycle,
+      keep: quote.excess.map(({ feature }) => ({ feature, ids: keep[feature] ?? [] })),
+    };
+    if (quote.kind === 'DOWNGRADE') schedule({ payload: target });
+    else checkout({ payload: { target, idempotencyKey } });
+  };
+
+  const targetPricing = selectedPlan ? priceOn(selectedPlan, cycle) : undefined;
+  const planName = selectedPlan ? t(`SUBSCRIPTION.PLANS.${selectedPlan.name}`) : '';
+
+  const content = () => {
+    if (step === 0) {
+      if (plansLoading) {
+        return (
+          <Flex gap={4} direction={{ base: 'column', lg: 'row' }} aria-busy="true">
+            {[0, 1, 2].map((i) => (
+              <Skeleton key={i} height="320px" flex="1" rounded="7px" />
+            ))}
+          </Flex>
+        );
+      }
+      return (
+        <Stack gap={3}>
+          <PlanChooser
+            plans={plans}
+            currentPlanId={subscription.plan.id}
+            currentCycle={subscription.billingCycle}
+            billingCycle={cycle}
+            onCycleChange={setCycle}
+            selectedPlanId={planId}
+            onSelect={setPlanId}
+          />
+          {isSameAsCurrent && !canLeaveChoose && (
+            <BaseText variant={TextVariant.S} color="fg.muted" role="status" textAlign="center">
+              C’est votre plan actuel. Le renouvellement est proposé à partir de 7 jours avant
+              l’échéance.
+            </BaseText>
+          )}
+        </Stack>
+      );
+    }
+    if (step === 1) {
+      return (
+        <QuoteReview
+          quote={quote}
+          isLoading={quoteQuery.isLoading}
+          isError={quoteQuery.isError}
+          onRetry={() => quoteQuery.refetch()}
+          planName={planName}
+          currentPeriodEnd={subscription.currentPeriodEnd}
+          keep={keep}
+          onKeepChange={setKeep}
+        />
+      );
+    }
+    if (!quote || !selectedPlan) return null;
+    return (
+      <PlanChangeSummary
+        quote={quote}
+        keep={keep}
+        current={{
+          name: t(`SUBSCRIPTION.PLANS.${subscription.plan.name}`),
+          price:
+            subscription.price === null ? (
+              '—'
+            ) : (
+              <>
+                <BaseFormatNumber
+                  value={subscription.price}
+                  currencyCode={(subscription.currency ?? 'XOF') as ENUM.COMMON.Currency}
+                />
+                {cycleSuffix(subscription.billingCycle)}
+              </>
+            ),
+          limits: currentLimits,
+        }}
+        target={{
+          name: planName,
+          price: targetPricing ? (
+            <>
+              <BaseFormatNumber
+                value={targetPricing.price}
+                currencyCode={targetPricing.currency as ENUM.COMMON.Currency}
+              />
+              {cycleSuffix(cycle)}
+            </>
+          ) : (
+            '—'
+          ),
+          limits: limitsOf(selectedPlan),
+        }}
+      />
+    );
+  };
+
+  const primary = () => {
+    if (step === 0) {
+      return (
+        <BaseButton colorType="primary" disabled={!canLeaveChoose} onClick={() => setStep(1)}>
+          Continuer
+        </BaseButton>
+      );
+    }
+    if (step === 1) {
+      return (
+        <BaseButton colorType="primary" disabled={!canLeaveReview} onClick={() => setStep(2)}>
+          Voir le récapitulatif
+        </BaseButton>
+      );
+    }
+    return (
+      <BaseButton colorType="primary" isLoading={busy} disabled={!quote || busy} onClick={confirm}>
+        {quote?.kind === 'DOWNGRADE' ? (
+          'Programmer le changement'
+        ) : quote ? (
+          <>
+            Confirmer et payer{' '}
+            <BaseFormatNumber
+              value={quote.amount}
+              currencyCode={quote.currency as ENUM.COMMON.Currency}
+            />
+          </>
+        ) : (
+          'Confirmer'
+        )}
+      </BaseButton>
+    );
+  };
+
+  return (
+    <DialogRoot
+      open={open}
+      onOpenChange={(e) => !busy && onOpenChange(e.open)}
+      size="full"
+      motionPreset={reduceMotion ? 'none' : 'slide-in-bottom'}
+      closeOnEscape={!busy}
+      lazyMount
+      unmountOnExit
+    >
+      <DialogContent rounded="none" bg="bg">
+        <DialogHeader borderBottomWidth="1px" borderColor="border" py={4}>
+          <Stack gap={4} width="full" maxW="72rem" mx="auto" pr={10}>
+            <DialogTitle fontSize="lg">Changer de plan</DialogTitle>
+            <PlanChangeStepper current={step} />
+          </Stack>
+          <DialogCloseTrigger disabled={busy} top="4" insetEnd="4" />
+        </DialogHeader>
+
+        <DialogBody py={{ base: 6, md: 10 }}>
+          <Stack gap={6} width="full" maxW="72rem" mx="auto">
+            <Stack gap={1}>
+              <BaseText variant={TextVariant.XS} color="fg.muted">
+                Étape {step + 1} sur {PLAN_CHANGE_STEPS.length}
+              </BaseText>
+              <Heading
+                as="h2"
+                ref={headingRef}
+                tabIndex={-1}
+                size={{ base: 'lg', md: 'xl' }}
+                fontWeight="semibold"
+                outline="none"
+              >
+                {STEP_TITLES[step]}
+              </Heading>
+            </Stack>
+            <AnimatePresence mode="wait" initial={false}>
+              <MotionBox
+                key={step}
+                initial={reduceMotion ? false : { opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={reduceMotion ? undefined : { opacity: 0, x: -16 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+              >
+                {content()}
+              </MotionBox>
+            </AnimatePresence>
+          </Stack>
+        </DialogBody>
+
+        <DialogFooter
+          borderTopWidth="1px"
+          borderColor="border"
+          bg="bg"
+          position="sticky"
+          bottom={0}
+          py={3}
+        >
+          <Flex width="full" maxW="72rem" mx="auto" gap={3} justifyContent="space-between">
+            <Box>
+              {step > firstStep && (
+                <BaseButton
+                  variant="outline"
+                  colorType="neutral"
+                  disabled={busy}
+                  onClick={() => setStep(step - 1)}
+                >
+                  Retour
+                </BaseButton>
+              )}
+            </Box>
+            {primary()}
+          </Flex>
+        </DialogFooter>
+      </DialogContent>
+    </DialogRoot>
+  );
+};

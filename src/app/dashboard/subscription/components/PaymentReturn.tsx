@@ -4,7 +4,7 @@ import { Flex, Spinner } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { BaseButton, BaseText, TextVariant } from '_components/custom';
 import { AgencyModule } from '_store/state-management';
-import { PENDING_ORDER_KEY } from './ChangePlanDrawer';
+import { PENDING_ORDER_KEY } from './ChangePlanDialog';
 
 const POLL_EVERY_MS = 3_000;
 /** Au-delà, on arrête d'interroger : le webhook appliquera le paiement de toute façon */

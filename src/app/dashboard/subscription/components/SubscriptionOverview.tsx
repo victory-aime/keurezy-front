@@ -11,7 +11,7 @@ import { MODELS } from '_types/*';
 import { UserRole } from '../../../../types/enum';
 import { BillingHistory } from './BillingHistory';
 import { CancelSubscription } from './CancelSubscription';
-import { ChangePlanDrawer, type ChangePlanTarget } from './ChangePlanDrawer';
+import { ChangePlanDialog, type ChangePlanTarget } from './ChangePlanDialog';
 import { PaymentReturn } from './PaymentReturn';
 import { ScheduledChangeBanner } from './ScheduledChangeBanner';
 import { CurrentPlan } from './CurrentPlan';
@@ -46,7 +46,7 @@ export const SubscriptionOverview = () => {
     });
   const subscription = data?.subscription;
 
-  // Tiroir « Changer de plan » ; avec une cible, il s'ouvre directement sur « Vérifier »
+  // Modale « Changer de plan » ; avec une cible, il s'ouvre directement sur « Vérifier »
   const [drawer, setDrawer] = useState<{
     open: boolean;
     target?: ChangePlanTarget;
@@ -199,9 +199,12 @@ export const SubscriptionOverview = () => {
       {isOwner && agencyId && <PaymentReturn agencyId={agencyId} onSettled={reload} />}
       {body()}
       {subscription && (
-        <ChangePlanDrawer
+        <ChangePlanDialog
           agencyId={agencyId}
           subscription={subscription}
+          currentLimits={(data?.features ?? [])
+            .filter((f) => f.included)
+            .map((f) => ({ name: f.name, limit: f.limit }))}
           open={drawer.open}
           onOpenChange={(open) => setDrawer((d) => ({ ...d, open }))}
           initialTarget={drawer.target}
