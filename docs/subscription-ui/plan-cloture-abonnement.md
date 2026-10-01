@@ -27,13 +27,13 @@ Terminer l'abonnement côté agence, sur un modèle unique :
 
 ### Phase 1 : catalogue (Gratuit, fin de la commission)
 **C1 [back] Plan Gratuit**
-- [ ] Ajouter la valeur `FREE_SUB` à l'enum `Plan`. Seed : prix 0 (mensuel et annuel), limites selon Q1.
+- [ ] Ajouter la valeur `FREE_SUB` à l'enum `Plan`. Seed : prix 0 (mensuel et annuel), limites validées (2 biens, 2 annonces, 0 collaborateur).
 - [ ] Un abonnement Gratuit n'a pas d'échéance : le job d'expiration et les rappels l'ignorent.
 - [ ] Passer au Gratuit est un downgrade programmé. Quitter le Gratuit est un upgrade payé plein tarif, avec une nouvelle période à partir du paiement (libellé « Changement de plan », pas « Réactivation »). Un checkout à 0 reste refusé.
 - **Tests** : devis depuis et vers le Gratuit ; aucun rappel ni expiration en Gratuit ; downgrade programmé appliqué vers le Gratuit.
 
-**C2 [back] Suppression du modèle commission** (migration 16, contraction)
-- [ ] Données de dev : les 4 agences sur un plan commission passent au Gratuit (Q2), puis les 3 plans commission sont supprimés.
+**C2 [back] Suppression du modèle commission** (migration 17, contraction)
+- [ ] Données de dev : les 4 agences sur un plan commission passent au Gratuit, puis les 3 plans commission sont supprimés.
 - [ ] Schéma :
   - retirer `commissionRate` de `SubscriptionPlan` et de `Subscription` ;
   - retirer `pricingType` (2 tables) et `planCategory` ;
@@ -57,7 +57,7 @@ Terminer l'abonnement côté agence, sur un modèle unique :
   - l'aperçu du plan supérieur, selon la même règle d'historique que le blocage ;
   - le bouton **« Continuer »**, qui lance l'action d'origine ;
   - le bouton « Voir les plans » (owner).
-- [ ] Fréquence : selon Q3.
+- [ ] Fréquence : une fois par session et par fonctionnalité.
 - [ ] Contrat de design et revue UX / accessibilité, comme pour le changement de plan.
 
 ### Phase 3 : paiements fiables
@@ -77,11 +77,11 @@ Terminer l'abonnement côté agence, sur un modèle unique :
 - [ ] Paiement simulé laissé `PENDING` puis rattrapé par le job ; e-mails reçus en dev.
 
 ### Phase 4 : expérience
-**C7 Questionnaire optionnel** (back et front, migration 17)
+**C7 Questionnaire optionnel** (back et front, migration 18)
 - [ ] Table `CancellationFeedback` : agence, contexte (`SUBSCRIPTION_CANCEL` | `AGENCY_CLOSE`), raison, commentaire, date.
 - [ ] Les routes de résiliation et de fermeture acceptent `{ reason?, comment? }`.
 - [ ] Une étape facultative dans les deux dialogues d'impact, avec « Passer ».
-- [ ] Raisons proposées : Q5.
+- [ ] Raisons : voir les réponses validées.
 
 **C8 [front] Code promo (design seulement)**
 - [ ] Champ « Code promo » désactivé, avec le badge « Bientôt disponible », dans le récapitulatif du changement de plan. Aucun appel API.
@@ -92,20 +92,24 @@ Terminer l'abonnement côté agence, sur un modèle unique :
 
 ### Phase 5 : mise en service
 **C10 Environnements**
-- [ ] `SUBSCRIPTION_EXPIRY_ENABLED` dans `.env.uat` (Q4), plus les clés Resend de C6.
+- [ ] `SUBSCRIPTION_EXPIRY_ENABLED` dans `.env.uat` (`false`, puis `true` à l'étape 4), plus les clés Resend de C6.
 - [ ] Procédure UAT dans `CHANGES.md` :
   1. déployer le code ;
-  2. migrations 15 à 17 ;
-  3. passage des agences commission au Gratuit ;
-  4. script de délai de grâce ;
-  5. flag d'expiration.
+  2. migrations 15 et 16, puis passage des agences commission au Gratuit, puis 17 et 18 ;
+  3. script de délai de grâce ;
+  4. flag d'expiration.
 
 ### Checkpoint final
 - [ ] Audit de sécurité des phases 1 à 4, tests et builds verts, vérification dans le navigateur (mobile compris).
 
-## Questions à trancher
-1. **Limites du plan Gratuit.** Proposition : 2 biens, 2 annonces en ligne, 0 collaborateur, pas de support premium. Les quotas de facturation viendront avec le module facturation.
-2. **Agences de dev sur un plan commission** (Aminita, direct, commission, nadia immo) : passage au Gratuit, avec désactivation de ce qui dépasse ses limites (les plus anciens éléments gardés) ?
-3. **Fréquence de l'alerte à 80 %** : à chaque clic, ou une fois par session et par fonctionnalité ?
-4. **Valeur du flag en UAT** : `false` jusqu'à la procédure de mise en service (étape 5), puis `true` ?
-5. **Raisons du questionnaire.** Proposition : trop cher ; il manque des fonctionnalités ; je n'utilise pas assez la plateforme ; je passe à un autre outil ; problème technique ; fermeture de l'activité ; autre.
+## Réponses validées (2026-10-01)
+1. **Plan Gratuit** : 2 biens, 2 annonces en ligne, 0 collaborateur, sans support premium.
+2. **Agences de dev sur un plan commission** : passage au Gratuit ; ce qui dépasse est désactivé, les éléments les plus anciens sont gardés.
+3. **Alerte à 80 %** : une fois par session et par fonctionnalité.
+4. **Flag en UAT** : `false` jusqu'à l'étape 4 de la procédure, puis `true`.
+5. **Raisons du questionnaire** : trop cher ; il manque des fonctionnalités ; je n'utilise pas assez la plateforme ; je passe à un autre outil ; problème technique ; fermeture de l'activité ; autre.
+
+## Précisions d'implémentation
+- Migrations : **16** ajoute `FREE_SUB` (une valeur d'enum ajoutée ne peut pas servir dans la même transaction) ; un script passe les agences commission au Gratuit ; **17** retire la commission ; **18** crée la table du questionnaire.
+- Un abonnement Gratuit n'a ni cycle ni échéance (`currentPeriodEnd` nul) : ni rappel, ni expiration, ni résiliation.
+- Une agence expirée peut repasser au Gratuit tout de suite, sans paiement (montant 0) ; les autres y passent à l'échéance.
