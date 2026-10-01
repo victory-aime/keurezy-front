@@ -14,7 +14,8 @@ import {
 import { BillingCycleToggle } from '_component/pricing/BillingCycleToggle';
 import { ENUM, MODELS } from '_types/*';
 import { useState, useEffect } from 'react';
-import { PricingType, BillingCycle } from '../../../../types/enum';
+import { BillingCycle } from '../../../../types/enum';
+import { isFreePlan } from '_utils/subscription';
 import {
   BaseFormatNumber,
   BaseText,
@@ -47,7 +48,6 @@ interface StepPlanSelectionProps {
 }
 
 export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) => {
-  const [mode, setMode] = useState<PricingType>('SUBSCRIPTION');
   const [urlPlanResolved, setUrlPlanResolved] = useState(false);
 
   const { values, setFieldValue, errors } = useFormikContext<{
@@ -68,30 +68,14 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
       return;
     }
 
-    setMode(plan.pricingType);
-
     setFieldValue('plan.planId', plan.id);
-    setFieldValue(
-      'plan.paymentMode',
-      plan.pricingType === 'SUBSCRIPTION' ? (value.billingCycle ?? 'MONTHLY') : undefined,
-    );
+    setFieldValue('plan.paymentMode', value.billingCycle ?? 'MONTHLY');
 
     setUrlPlanResolved(true);
   }, [allPacks, value, urlPlanResolved]);
 
-  const filteredPlans = getFilteredPlans(allPacks, mode);
-  const selectedPlan = allPacks?.find((p) => p.id === values.plan?.planId);
+  const filteredPlans = getFilteredPlans(allPacks);
   const billingCycle = values.plan?.paymentMode ?? 'MONTHLY';
-
-  // ✅ Change mode
-  const handleModeChange = (nextMode: PricingType) => {
-    setMode(nextMode);
-
-    if (selectedPlan?.pricingType !== nextMode) {
-      setFieldValue('plan.planId', '');
-      setFieldValue('plan.paymentMode', undefined);
-    }
-  };
 
   // ✅ Sélection plan
   const handleSelect = ({
@@ -105,12 +89,7 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
     if (!plan) return;
 
     setFieldValue('plan.planId', planId);
-
-    if (plan.pricingType === 'SUBSCRIPTION') {
-      setFieldValue('plan.paymentMode', billingCycle ?? 'MONTHLY');
-    } else {
-      setFieldValue('plan.paymentMode', undefined);
-    }
+    setFieldValue('plan.paymentMode', billingCycle ?? 'MONTHLY');
   };
 
   // ✅ Change billing cycle
@@ -128,13 +107,11 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
         </BaseText>
 
         <HStack flexDir={'column'} gap={2} mt={2}>
-          {mode === 'SUBSCRIPTION' && (
-            <BillingCycleToggle
-              value={billingCycle}
-              onChange={handleBillingCycleChange}
-              yearlySavings={getBestYearlySavings(mode, filteredPlans)}
-            />
-          )}
+          <BillingCycleToggle
+            value={billingCycle}
+            onChange={handleBillingCycleChange}
+            yearlySavings={getBestYearlySavings(filteredPlans)}
+          />
         </HStack>
       </VStack>
 
@@ -148,10 +125,9 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
       )}
 
       {/* Plans */}
-      <SimpleGrid columns={{ base: 1, sm: 3 }} gap={6} mt={'45px'}>
+      <SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} gap={6} mt={'45px'}>
         {filteredPlans.map((plan, index) => {
-          const pricing =
-            plan.pricingType === 'SUBSCRIPTION' ? getPricing(plan, billingCycle) : null;
+          const pricing = getPricing(plan, billingCycle);
 
           return (
             <BaseCheckBoxCard
@@ -180,18 +156,10 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
                   </BaseText>
 
                   {/* 💰 PRIX */}
-                  {plan.pricingType === 'COMMISSION' ? (
-                    <Box>
-                      <Span fontSize={'xl'} fontWeight={'bold'}>
-                        <BaseFormatNumber
-                          value={(plan.commissionRate ?? 0) / 100}
-                          style="percent"
-                        />
-                      </Span>
-                      <Span fontSize={'sm'} ml={1}>
-                        par acquisition
-                      </Span>
-                    </Box>
+                  {isFreePlan(plan) ? (
+                    <Span fontSize={'xl'} fontWeight={'bold'}>
+                      Gratuit
+                    </Span>
                   ) : pricing ? (
                     <Flex alignItems={'baseline'} gap={1}>
                       <Span fontSize={'xl'} fontWeight={'bold'}>

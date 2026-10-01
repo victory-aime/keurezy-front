@@ -30,7 +30,6 @@ type Usage = MODELS.ISubscriptionLimits['usage'][number];
 /** Catalogue public réduit à ce qui sert à comparer les plans. */
 const toCatalog = (plans: MODELS.COMMON.ISubscriptionPlan[]): CatalogPlan[] =>
   plans
-    .filter((p) => p.planCategory === 'SUBSCRIPTION_BASED')
     .filter((p) => p.pricings?.some((pr) => pr.billingCycle === 'MONTHLY'))
     .map((p) => ({
       id: p.id,

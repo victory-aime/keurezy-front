@@ -1,10 +1,5 @@
 import { ENUM, MODELS } from '_types/*';
 
-interface PlanSelectProps {
-  value: ENUM.PricingType;
-  onChange: (v: ENUM.PricingType) => void;
-}
-
 interface BillingCycleToggleProps {
   value: ENUM.BillingCycle;
   onChange: (v: ENUM.BillingCycle) => void;
@@ -19,4 +14,4 @@ interface PlanCardProps {
   onSelect: (payload: { planId: string; billingCycle?: ENUM.BillingCycle }) => void;
 }
 
-export type { BillingCycleToggleProps, PlanSelectProps, PlanCardProps };
+export type { BillingCycleToggleProps, PlanCardProps };

@@ -293,16 +293,6 @@
   },
 
   "SUBSCRIPTION": {
-    "PLAN_CATEGORY": {
-      "COMMISSION_BASED": "Commission",
-      "SUBSCRIPTION_BASED": "Abonnement"
-    },
-
-    "PRICING_TYPE": {
-      "COMMISSION": "Commission",
-      "SUBSCRIPTION": "Abonnement"
-    },
-
     "BILLING_CYCLE": {
       "MONTHLY": "Mensuel",
       "YEARLY": "Annuel"
@@ -310,18 +300,12 @@
 
     "PLANS": {
       "DESCRIPTIONS": {
-        "BASIC_COMMISSION": "Idéal pour démarrer avec une faible commission.",
-        "STANDARD_COMMISSION": "Un équilibre parfait entre visibilité et rentabilité.",
-        "PREMIUM_COMMISSION": "La solution premium avec des fonctionnalités illimitées.",
-
+        "FREE_SUB": "Pour découvrir Keurezy avec quelques biens, sans paiement.",
         "BASIC_SUB": "Une formule accessible pour les petites agences.",
         "STANDARD_SUB": "Une offre complète pour les agences en croissance.",
         "PREMIUM_SUB": "Toutes les fonctionnalités avancées pour les grandes agences."
       },
-      "BASIC_COMMISSION": "Commission Débutant",
-      "STANDARD_COMMISSION": "Commission Standard",
-      "PREMIUM_COMMISSION": "Commission Entreprise",
-
+      "FREE_SUB": "Gratuit",
       "BASIC_SUB": "Abonnement Débutant",
       "STANDARD_SUB": "Abonnement Standard",
       "PREMIUM_SUB": "Abonnement Entreprise"

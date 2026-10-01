@@ -2,7 +2,7 @@ import { Box, Flex, SimpleGrid, Stack } from '@chakra-ui/react';
 import { t } from 'i18next';
 import { BaseBadge, BaseButton, BaseFormatNumber, BaseText, TextVariant } from '_components/custom';
 import { ENUM, MODELS } from '_types/*';
-import { canRenew, formatLongDate } from '_utils/subscription';
+import { canRenew, formatLongDate, isFreePlan } from '_utils/subscription';
 
 type Subscription = NonNullable<MODELS.IAgencySubscriptionOverview['subscription']>;
 
@@ -11,6 +11,13 @@ const formatDate = formatLongDate;
 /** Montant et cycle, ex. « 10 000 F CFA / mois » ; rien si le prix est inconnu. */
 const Price = ({ subscription }: { subscription: Subscription }) => {
   if (subscription.price === null) return null;
+  if (isFreePlan(subscription.plan)) {
+    return (
+      <BaseText variant={TextVariant.XL} fontWeight="semibold">
+        Gratuit
+      </BaseText>
+    );
+  }
   return (
     <Flex alignItems="baseline" gap={1}>
       <BaseText variant={TextVariant.XL} fontWeight="semibold">
@@ -123,6 +130,16 @@ export const CurrentPlan = ({
             </BaseText>
             <BaseText variant={TextVariant.S} color="fg.muted">
               Aucun renouvellement ne sera demandé.
+            </BaseText>
+          </>
+        ) : isFreePlan(subscription.plan) ? (
+          <>
+            <Eyebrow>Sans échéance</Eyebrow>
+            <BaseText variant={TextVariant.M} fontWeight="semibold">
+              Le plan Gratuit n’expire pas.
+            </BaseText>
+            <BaseText variant={TextVariant.S} color="fg.muted">
+              Aucun paiement n’est demandé. Passez à un plan supérieur pour lever ses limites.
             </BaseText>
           </>
         ) : (

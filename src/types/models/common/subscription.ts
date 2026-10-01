@@ -1,4 +1,4 @@
-import { BillingCycle, PlanCategory, PlanType, PricingType } from '../../enum';
+import { BillingCycle, PlanType } from '../../enum';
 
 export interface IPlanFeature {
   id: string;
@@ -24,10 +24,7 @@ export interface IPlanPricing {
 export interface ISubscriptionPlan {
   id: string;
   name: PlanType;
-  planCategory: PlanCategory;
-  pricingType: PricingType;
   description: string;
-  commissionRate?: number;
   pricings?: IPlanPricing[];
   planFeatures: IPlanFeature[];
   popular?: boolean;
@@ -51,8 +48,6 @@ export interface IPaymentStatus {
     agencyName: string;
     acceptTerms: boolean;
     agencyEmail: string;
-    pricingType: string;
     billingCycle: BillingCycle;
-    commissionRate: string;
   };
 }

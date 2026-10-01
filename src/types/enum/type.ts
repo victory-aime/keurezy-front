@@ -10,16 +10,12 @@ export enum PropertyType {
 }
 
 export enum PlanType {
-  BASIC_COMMISSION = 'BASIC_COMMISSION',
-  STANDARD_COMMISSION = 'STANDARD_COMMISSION',
-  PREMIUM_COMMISSION = 'PREMIUM_COMMISSION',
+  FREE_SUB = 'FREE_SUB',
   BASIC_SUB = 'BASIC_SUB',
   STANDARD_SUB = 'STANDARD_SUB',
   PREMIUM_SUB = 'PREMIUM_SUB',
 }
 
-export type PlanCategory = 'COMMISSION_BASED' | 'SUBSCRIPTION_BASED';
-export type PricingType = 'COMMISSION' | 'SUBSCRIPTION';
 export type BillingCycle = 'MONTHLY' | 'YEARLY';
 export type PlanTier = 'BASIC' | 'STANDARD' | 'PREMIUM';
 

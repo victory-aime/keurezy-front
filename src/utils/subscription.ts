@@ -148,6 +148,9 @@ export function planDifferences(
 
 const RENEWAL_WINDOW_MS = 7 * 86_400_000;
 
+/** Plan Gratuit : ni prix, ni cycle, ni échéance (pas de renouvellement ni de résiliation). */
+export const isFreePlan = (plan: { name: string } | null | undefined) => plan?.name === 'FREE_SUB';
+
 /**
  * « Renouveler » est proposé à partir de J-7 (rappels par e-mail au même moment) et après
  * expiration, jamais si une résiliation est programmée.

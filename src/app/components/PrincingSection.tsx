@@ -12,15 +12,15 @@ import { PlanCard } from './pricing/PlanCard';
 import { APP_ROUTES } from '_config/routes';
 import { getBestYearlySavings, getFilteredPlans } from '_component/pricing/functions/pricing';
 import { t } from 'i18next';
+import { isFreePlan } from '_utils/subscription';
 
 export const PricingSection = () => {
   const navigate = useRouter();
-  const [mode, setMode] = useState<ENUM.PricingType>('SUBSCRIPTION');
   const [billingCycle, setBillingCycle] = useState<ENUM.BillingCycle>('MONTHLY');
 
   const { data: allPacks } = CommonModule.getAllPacksQueries({});
 
-  const filteredPlans = getFilteredPlans(allPacks, mode);
+  const filteredPlans = getFilteredPlans(allPacks);
 
   const handleSelect = ({
     planId,
@@ -31,14 +31,12 @@ export const PricingSection = () => {
   }) => {
     const plan = allPacks?.find((p: MODELS.COMMON.ISubscriptionPlan) => p.id === planId);
     if (!plan) return;
-    const safeCycle: ENUM.BillingCycle | undefined =
-      plan.pricingType === 'SUBSCRIPTION' ? (cycle ?? 'MONTHLY') : undefined;
+    const safeCycle: ENUM.BillingCycle = cycle ?? 'MONTHLY';
     BaseToast({
       title: `Plan ${t(`SUBSCRIPTION.PLANS.${plan.name}`)} sélectionné`,
-      description:
-        plan.pricingType === 'SUBSCRIPTION'
-          ? `Facturation ${safeCycle === 'YEARLY' ? 'annuelle' : 'mensuelle'}`
-          : `Commission de ${plan.commissionRate}% par loyer`,
+      description: isFreePlan(plan)
+        ? 'Sans paiement ni engagement'
+        : `Facturation ${safeCycle === 'YEARLY' ? 'annuelle' : 'mensuelle'}`,
     });
     navigate.push(`${APP_ROUTES.AUTH.ONBOARD}?planId=${planId}&billingCycle=${safeCycle}`);
   };
@@ -67,16 +65,20 @@ export const PricingSection = () => {
         </MotionBox>
 
         <VStack textAlign={'center'}>
-          {mode === 'SUBSCRIPTION' && (
-            <BillingCycleToggle
-              value={billingCycle}
-              onChange={setBillingCycle}
-              yearlySavings={getBestYearlySavings(mode, filteredPlans)}
-            />
-          )}
+          <BillingCycleToggle
+            value={billingCycle}
+            onChange={setBillingCycle}
+            yearlySavings={getBestYearlySavings(filteredPlans)}
+          />
         </VStack>
 
-        <SimpleGrid columns={{ base: 1, sm: 3 }} gap={6} mt={'45px'} mx={'auto'} maxW={'5xl'}>
+        <SimpleGrid
+          columns={{ base: 1, sm: 2, lg: 4 }}
+          gap={6}
+          mt={'45px'}
+          mx={'auto'}
+          maxW={'6xl'}
+        >
           {filteredPlans?.map((plan, i) => (
             <PlanCard
               key={plan.id}

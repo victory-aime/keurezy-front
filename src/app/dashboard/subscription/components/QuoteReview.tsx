@@ -15,6 +15,10 @@ interface QuoteReviewProps {
   currentPeriodEnd: string | null;
   keep: Record<string, string[]>;
   onKeepChange: (keep: Record<string, string[]>) => void;
+  /** Le plan visé est le Gratuit (ni paiement, ni échéance) */
+  targetFree?: boolean;
+  /** L'agence quitte le Gratuit : un changement de plan, pas une réactivation */
+  fromFree?: boolean;
 }
 
 const Amount = ({ quote }: { quote: MODELS.ISubscriptionQuote }) => (
@@ -47,6 +51,8 @@ export const QuoteReview = ({
   currentPeriodEnd,
   keep,
   onKeepChange,
+  targetFree = false,
+  fromFree = false,
 }: QuoteReviewProps) => {
   if (isLoading) {
     return (
@@ -81,7 +87,10 @@ export const QuoteReview = ({
   const titles: Record<MODELS.SubscriptionQuoteKind, string> = {
     UPGRADE: `Passage au plan ${planName}`,
     RENEWAL: `Renouvellement du plan ${planName}`,
-    REACTIVATION: `Réactivation sur le plan ${planName}`,
+    REACTIVATION:
+      fromFree || targetFree
+        ? `Passage au plan ${planName}`
+        : `Réactivation sur le plan ${planName}`,
     DOWNGRADE: `Passage au plan ${planName} le ${start}`,
   };
 
@@ -96,8 +105,17 @@ export const QuoteReview = ({
           <>
             <Line label="À payer aujourd’hui">Rien</Line>
             <BaseText variant={TextVariant.S} color="fg.muted">
-              Vous gardez votre plan actuel jusqu’au {start}. Le nouveau plan sera à renouveler à
-              cette date.
+              Vous gardez votre plan actuel jusqu’au {start}.{' '}
+              {targetFree
+                ? 'Le plan Gratuit prend le relais à cette date, sans paiement ni échéance.'
+                : 'Le nouveau plan sera à renouveler à cette date.'}
+            </BaseText>
+          </>
+        ) : targetFree ? (
+          <>
+            <Line label="À payer aujourd’hui">Rien</Line>
+            <BaseText variant={TextVariant.S} color="fg.muted">
+              Votre agence repasse en ligne dès la confirmation. Le plan Gratuit n’a pas d’échéance.
             </BaseText>
           </>
         ) : (
@@ -130,7 +148,13 @@ export const QuoteReview = ({
           excess={quote.excess}
           keep={keep}
           onChange={onKeepChange}
-          effectiveLabel={quote.kind === 'DOWNGRADE' ? `le ${start}` : 'dès le paiement'}
+          effectiveLabel={
+            quote.kind === 'DOWNGRADE'
+              ? `le ${start}`
+              : targetFree
+                ? 'dès la confirmation'
+                : 'dès le paiement'
+          }
         />
       )}
     </Stack>

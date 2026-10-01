@@ -17,7 +17,7 @@ import {
 import { MotionBox } from '_constants/motion';
 import { AgencyModule, CommonModule } from '_store/state-management';
 import { ENUM, MODELS } from '_types/*';
-import { canRenew, keepFitsLimits, type PlanFeatureLimit } from '_utils/subscription';
+import { canRenew, isFreePlan, keepFitsLimits, type PlanFeatureLimit } from '_utils/subscription';
 import { PlanChangeStepper, PLAN_CHANGE_STEPS } from './PlanChangeStepper';
 import { PlanChangeSummary } from './PlanChangeSummary';
 import { limitsOf, PlanChooser, priceOn } from './PlanChooser';
@@ -97,10 +97,7 @@ export const ChangePlanDialog = ({
   const { data: allPlans, isLoading: plansLoading } = CommonModule.getAllPacksQueries({
     queryOptions: { enabled: open },
   });
-  const plans = useMemo(
-    () => (allPlans ?? []).filter((p) => p.planCategory === 'SUBSCRIPTION_BASED'),
-    [allPlans],
-  );
+  const plans = useMemo(() => allPlans ?? [], [allPlans]);
   const selectedPlan = plans.find((p) => p.id === planId);
 
   const quoteQuery = AgencyModule.getSubscriptionQuoteQueries({
@@ -159,7 +156,11 @@ export const ChangePlanDialog = ({
     });
 
   const busy = paying || scheduling;
-  const isSameAsCurrent = planId === subscription.plan.id && cycle === subscription.billingCycle;
+  const fromFree = isFreePlan(subscription.plan);
+  const targetFree = isFreePlan(selectedPlan);
+  // Le Gratuit n'a pas de cycle : le rechoisir n'est jamais un changement
+  const isSameAsCurrent =
+    planId === subscription.plan.id && (fromFree || cycle === subscription.billingCycle);
   const canLeaveChoose = !!planId && (!isSameAsCurrent || canRenew(subscription, new Date()));
   const canLeaveReview = !!quote && keepFitsLimits(quote.excess, keep);
   const firstStep = initialTarget ? 1 : 0;
@@ -167,7 +168,9 @@ export const ChangePlanDialog = ({
   // Pourquoi « Continuer » est grisé : annoncé (région live toujours présente) et affiché
   const blockedReason =
     step === 0 && isSameAsCurrent && !canLeaveChoose
-      ? 'C’est votre plan actuel. Le renouvellement est proposé à partir de 7 jours avant l’échéance.'
+      ? fromFree
+        ? 'C’est votre plan actuel.'
+        : 'C’est votre plan actuel. Le renouvellement est proposé à partir de 7 jours avant l’échéance.'
       : step === 1 && quote && !canLeaveReview
         ? 'Votre choix dépasse la limite du nouveau plan : retirez des éléments.'
         : '';
@@ -180,7 +183,8 @@ export const ChangePlanDialog = ({
       billingCycle: cycle,
       keep: quote.excess.map(({ feature }) => ({ feature, ids: keep[feature] ?? [] })),
     };
-    if (quote.kind === 'DOWNGRADE') schedule({ payload: target });
+    // Downgrade, ou passage immédiat au Gratuit après expiration : rien à payer
+    if (quote.kind === 'DOWNGRADE' || quote.amount === 0) schedule({ payload: target });
     else checkout({ payload: { target, idempotencyKey } });
   };
 
@@ -224,6 +228,8 @@ export const ChangePlanDialog = ({
           currentPeriodEnd={subscription.currentPeriodEnd}
           keep={keep}
           onKeepChange={setKeep}
+          targetFree={targetFree}
+          fromFree={fromFree}
         />
       );
     }
@@ -234,23 +240,26 @@ export const ChangePlanDialog = ({
         keep={keep}
         current={{
           name: t(`SUBSCRIPTION.PLANS.${subscription.plan.name}`),
-          price:
-            subscription.price === null ? (
-              '—'
-            ) : (
-              <>
-                <BaseFormatNumber
-                  value={subscription.price}
-                  currencyCode={(subscription.currency ?? 'XOF') as ENUM.COMMON.Currency}
-                />
-                {cycleSuffix(subscription.billingCycle)}
-              </>
-            ),
+          price: fromFree ? (
+            'Gratuit'
+          ) : subscription.price === null ? (
+            '—'
+          ) : (
+            <>
+              <BaseFormatNumber
+                value={subscription.price}
+                currencyCode={(subscription.currency ?? 'XOF') as ENUM.COMMON.Currency}
+              />
+              {cycleSuffix(subscription.billingCycle)}
+            </>
+          ),
           limits: currentLimits,
         }}
         target={{
           name: planName,
-          price: targetPricing ? (
+          price: targetFree ? (
+            'Gratuit'
+          ) : targetPricing ? (
             <>
               <BaseFormatNumber
                 value={targetPricing.price}
@@ -263,6 +272,7 @@ export const ChangePlanDialog = ({
           ),
           limits: limitsOf(selectedPlan),
         }}
+        targetFree={targetFree}
       />
     );
   };
@@ -286,6 +296,8 @@ export const ChangePlanDialog = ({
       <BaseButton colorType="primary" isLoading={busy} disabled={!quote || busy} onClick={confirm}>
         {quote?.kind === 'DOWNGRADE' ? (
           'Programmer le changement'
+        ) : quote && targetFree ? (
+          'Passer au plan Gratuit'
         ) : quote ? (
           <>
             Confirmer et payer{' '}

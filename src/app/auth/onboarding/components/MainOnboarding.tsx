@@ -39,6 +39,7 @@ import { useAgencyCheck } from '_context/agency-context';
 import Image from 'next/image';
 import Link from 'next/link';
 import { clientRedirect } from '_utils/client-navigate';
+import { isFreePlan } from '_utils/subscription';
 
 export const MainOnboarding = ({
   planId,
@@ -75,7 +76,7 @@ export const MainOnboarding = ({
           setOrderId(data?.order_id);
           return;
         }
-        // cas commission → direct success
+        // plan Gratuit → agence créée tout de suite
         await login({
           email: formikRef.current.values.account.email,
           password: formikRef.current.values.account.password,
@@ -162,7 +163,7 @@ export const MainOnboarding = ({
     }
   };
 
-  const completeOnboardingCommission = async () => {
+  const completeOnboardingFree = async () => {
     try {
       setIsLoading(true);
       const values = formikRef.current?.values;
@@ -186,7 +187,6 @@ export const MainOnboarding = ({
           plan: { planId: plan?.planId, billingCycle: plan?.paymentMode },
         }),
       );
-      business.documents?.forEach((file: File) => formData.append('documents', file));
       await createAgency({ payload: { data: formData as MODELS.ICreateAgency } });
     } finally {
       setIsLoading(false);
@@ -242,14 +242,14 @@ export const MainOnboarding = ({
       const plan = formikRef.current?.values?.plan;
       const selectedPlan = allPacks?.find((p: any) => p.id === plan?.planId);
 
-      if (selectedPlan?.pricingType === 'SUBSCRIPTION') {
+      if (!isFreePlan(selectedPlan)) {
         // Ouvrir la modale de confirmation avant de rediriger
         setOpenAgreePayment(true);
         return;
       }
 
-      // Plan COMMISSION → création directe sans paiement
-      await completeOnboardingCommission();
+      // Plan Gratuit → création directe sans paiement
+      await completeOnboardingFree();
       return;
     }
 

@@ -83,6 +83,8 @@ interface PlanChangeSummaryProps {
   current: { name: string; price: ReactNode; limits: PlanFeatureLimit[] };
   target: { name: string; price: ReactNode; limits: PlanFeatureLimit[] };
   keep: Record<string, string[]>;
+  /** Le plan visé est le Gratuit (ni paiement, ni échéance) */
+  targetFree?: boolean;
 }
 
 /**
@@ -90,13 +92,22 @@ interface PlanChangeSummaryProps {
  * Tout vient du devis et du catalogue : rien n'est recalculé ici. La confirmation se fait depuis
  * le pied de page de cette étape.
  */
-export const PlanChangeSummary = ({ quote, current, target, keep }: PlanChangeSummaryProps) => {
+export const PlanChangeSummary = ({
+  quote,
+  current,
+  target,
+  keep,
+  targetFree = false,
+}: PlanChangeSummaryProps) => {
   const changes = planDifferences(current.limits, target.limits);
   const gains = changes.filter((c) => c.tone === 'gain');
   const losses = changes.filter((c) => c.tone === 'loss');
   const start = formatLongDate(quote.effectiveAt);
   const end = formatLongDate(quote.newPeriodEnd);
   const immediate = quote.kind !== 'DOWNGRADE';
+  // Paiement à faire maintenant (le passage immédiat au Gratuit n'en demande pas)
+  const paid = immediate && !targetFree;
+  const effect = paid ? 'dès le paiement' : 'dès la confirmation';
   const deactivated = quote.excess
     .map((e) => ({ feature: e.feature, count: e.used - (keep[e.feature]?.length ?? 0) }))
     .filter((d) => d.count > 0);
@@ -125,7 +136,9 @@ export const PlanChangeSummary = ({ quote, current, target, keep }: PlanChangeSu
           <Icons.ArrowRight />
         </Flex>
         <PlanColumn
-          eyebrow={immediate ? 'Dès le paiement' : `À partir du ${start}`}
+          eyebrow={
+            immediate ? (paid ? 'Dès le paiement' : 'Dès la confirmation') : `À partir du ${start}`
+          }
           {...target}
           highlight
         />
@@ -161,7 +174,7 @@ export const PlanChangeSummary = ({ quote, current, target, keep }: PlanChangeSu
                 <BaseText key={d.feature} variant={TextVariant.S}>
                   {countOf(d.feature, d.count)}{' '}
                   {d.count > 1 ? 'seront désactivés' : 'sera désactivé'}{' '}
-                  {immediate ? 'dès le paiement' : `le ${start}`}. Rien n’est supprimé.
+                  {immediate ? effect : `le ${start}`}. Rien n’est supprimé.
                 </BaseText>
               ))}
             </Stack>
@@ -176,9 +189,9 @@ export const PlanChangeSummary = ({ quote, current, target, keep }: PlanChangeSu
       <Stack gap={3} p={5} rounded="7px" borderWidth="1px" borderColor="border">
         <Flex justifyContent="space-between" alignItems="baseline" gap={4} wrap="wrap">
           <BaseText variant={TextVariant.M} fontWeight="semibold">
-            {immediate ? 'À payer aujourd’hui' : 'Rien à payer aujourd’hui'}
+            {paid ? 'À payer aujourd’hui' : 'Rien à payer aujourd’hui'}
           </BaseText>
-          {immediate && (
+          {paid && (
             <BaseText variant={TextVariant.XL} fontWeight="bold">
               <BaseFormatNumber
                 value={quote.amount}
@@ -189,11 +202,17 @@ export const PlanChangeSummary = ({ quote, current, target, keep }: PlanChangeSu
         </Flex>
         <Stack gap={1}>
           <BaseText variant={TextVariant.S} color="fg.muted">
-            {immediate
+            {paid
               ? `Prise d’effet dès la confirmation du paiement. Prochaine échéance : ${end}.`
-              : `Votre plan actuel reste en place jusqu’au ${start}. Le nouveau plan sera à renouveler à cette date.`}
+              : immediate
+                ? 'Prise d’effet dès la confirmation. Le plan Gratuit n’a pas d’échéance.'
+                : `Votre plan actuel reste en place jusqu’au ${start}. ${
+                    targetFree
+                      ? 'Le plan Gratuit prend le relais à cette date, sans paiement ni échéance.'
+                      : 'Le nouveau plan sera à renouveler à cette date.'
+                  }`}
           </BaseText>
-          {immediate && (
+          {paid && (
             <Flex alignItems="center" gap={2} color="fg.muted">
               <Box aria-hidden>
                 <Icons.Lock />

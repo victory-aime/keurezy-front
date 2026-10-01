@@ -7,6 +7,7 @@ import { AgencyModule } from '_store/state-management';
 import { MODELS } from '_types/*';
 import { subscriptionCancelImpact } from '_utils/impact';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
+import { isFreePlan } from '_utils/subscription';
 
 type Subscription = NonNullable<MODELS.IAgencySubscriptionOverview['subscription']>;
 
@@ -47,7 +48,8 @@ export const CancelSubscription = ({
     mutationOptions: { onSuccess: async () => await onChanged() },
   });
 
-  if (subscription.status !== 'ACTIVE') return null;
+  // Le Gratuit n'a pas d'échéance : rien à résilier
+  if (subscription.status !== 'ACTIVE' || isFreePlan(subscription.plan)) return null;
 
   if (subscription.cancelAtPeriodEnd) {
     return (

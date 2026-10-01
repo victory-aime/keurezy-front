@@ -5,6 +5,7 @@ import { BaseBadge, BaseFormatNumber, BaseText, Icons, TextVariant } from '_comp
 import { ENUM, MODELS } from '_types/*';
 import {
   formatFeatureLimit,
+  isFreePlan,
   planDifferences,
   type PlanDifference,
   type PlanFeatureLimit,
@@ -151,12 +152,14 @@ export const PlanChooser = ({
         onValueChange={(e) => e.value && onSelect(e.value)}
         aria-label="Plans disponibles"
       >
-        <SimpleGrid columns={{ base: 1, lg: Math.min(offered.length, 3) }} gap={4}>
+        <SimpleGrid columns={{ base: 1, md: 2, xl: Math.min(offered.length, 4) }} gap={4}>
           {offered.map((plan) => {
             const pricing = priceOn(plan, billingCycle)!;
             const checked = plan.id === selectedPlanId;
             const isCurrentPlan = plan.id === currentPlanId;
-            const isCurrent = isCurrentPlan && billingCycle === currentCycle;
+            const free = isFreePlan(plan);
+            // Le Gratuit n'a pas de cycle : il est le plan actuel sur les deux
+            const isCurrent = isCurrentPlan && (free || billingCycle === currentCycle);
             const limits = limitsOf(plan);
             const changes = isCurrentPlan ? [] : planDifferences(currentLimits, limits);
 
@@ -216,13 +219,17 @@ export const PlanChooser = ({
 
                     <Flex alignItems="baseline" gap={1.5}>
                       <BaseText variant={TextVariant.XL} fontWeight="bold" whiteSpace="nowrap">
-                        <BaseFormatNumber
-                          value={pricing.price}
-                          currencyCode={pricing.currency as ENUM.COMMON.Currency}
-                        />
+                        {free ? (
+                          'Gratuit'
+                        ) : (
+                          <BaseFormatNumber
+                            value={pricing.price}
+                            currencyCode={pricing.currency as ENUM.COMMON.Currency}
+                          />
+                        )}
                       </BaseText>
                       <BaseText variant={TextVariant.S} color="fg.muted">
-                        {billingCycle === 'YEARLY' ? '/ an' : '/ mois'}
+                        {free ? 'sans échéance' : billingCycle === 'YEARLY' ? '/ an' : '/ mois'}
                       </BaseText>
                     </Flex>
 

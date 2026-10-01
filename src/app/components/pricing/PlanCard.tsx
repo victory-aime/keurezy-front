@@ -13,6 +13,7 @@ import { ENUM } from '_types/*';
 import { PlanCardProps } from './interface/pricing-types';
 import { formatLimit, getCommercialFeatures, getPricing } from './functions/pricing';
 import { t } from 'i18next';
+import { isFreePlan } from '_utils/subscription';
 
 export const PlanCard = ({
   plan,
@@ -21,12 +22,8 @@ export const PlanCard = ({
   onSelect,
   isSelected = false,
 }: PlanCardProps) => {
-  const isSubscription = plan.pricingType === 'SUBSCRIPTION';
-
-  const pricing = isSubscription ? getPricing(plan, billingCycle) : undefined;
-
-  // Subscription plan with no valid pricing → don't render
-  if (isSubscription && !pricing) return null;
+  const pricing = getPricing(plan, billingCycle);
+  if (!pricing) return null;
 
   const yearlyPricing = plan.pricings?.find((p) => p.billingCycle === 'YEARLY');
   const yearlySavings = yearlyPricing?.discountPercentage ?? null;
@@ -68,19 +65,11 @@ export const PlanCard = ({
       {/*</BaseText>*/}
 
       <Box mt={2} mb={3}>
-        {plan.pricingType === 'COMMISSION' ? (
-          <Box>
-            <Span fontSize={'xl'} fontWeight={'bold'}>
-              <BaseFormatNumber
-                value={(plan.commissionRate && plan.commissionRate / 100) ?? 0}
-                style="percent"
-              />
-            </Span>
-            <Span fontSize={'sm'} ml={1}>
-              par acquisition
-            </Span>
-          </Box>
-        ) : pricing ? (
+        {isFreePlan(plan) ? (
+          <Span fontSize={'xl'} fontWeight={'bold'}>
+            Gratuit
+          </Span>
+        ) : (
           <Flex justifyContent={'center'} alignItems={'center'} gap={1}>
             <Span fontSize={'xl'} fontWeight={'bold'}>
               <BaseFormatNumber
@@ -96,7 +85,7 @@ export const PlanCard = ({
               </Badge>
             ) : null}
           </Flex>
-        ) : null}
+        )}
       </Box>
 
       <BaseButton
@@ -106,7 +95,7 @@ export const PlanCard = ({
         onClick={() =>
           onSelect({
             planId: plan.id,
-            billingCycle: isSubscription ? billingCycle : undefined,
+            billingCycle,
           })
         }
       >

@@ -27,28 +27,29 @@ Terminer l'abonnement côté agence, sur un modèle unique :
 
 ### Phase 1 : catalogue (Gratuit, fin de la commission)
 **C1 [back] Plan Gratuit**
-- [ ] Ajouter la valeur `FREE_SUB` à l'enum `Plan`. Seed : prix 0 (mensuel et annuel), limites validées (2 biens, 2 annonces, 0 collaborateur).
-- [ ] Un abonnement Gratuit n'a pas d'échéance : le job d'expiration et les rappels l'ignorent.
-- [ ] Passer au Gratuit est un downgrade programmé. Quitter le Gratuit est un upgrade payé plein tarif, avec une nouvelle période à partir du paiement (libellé « Changement de plan », pas « Réactivation »). Un checkout à 0 reste refusé.
+- [x] Ajouter la valeur `FREE_SUB` à l'enum `Plan`. Seed : prix 0 (mensuel et annuel), limites validées (2 biens, 2 annonces, 0 collaborateur).
+- [x] Un abonnement Gratuit n'a pas d'échéance : le job d'expiration et les rappels l'ignorent.
+- [x] Passer au Gratuit est un downgrade programmé. Quitter le Gratuit est un upgrade payé plein tarif, avec une nouvelle période à partir du paiement (libellé « Changement de plan », pas « Réactivation »). Un checkout à 0 reste refusé.
 - **Tests** : devis depuis et vers le Gratuit ; aucun rappel ni expiration en Gratuit ; downgrade programmé appliqué vers le Gratuit.
 
 **C2 [back] Suppression du modèle commission** (migration 17, contraction)
-- [ ] Données de dev : les 4 agences sur un plan commission passent au Gratuit, puis les 3 plans commission sont supprimés.
-- [ ] Schéma :
+- [x] Données de dev : les 4 agences sur un plan commission passent au Gratuit, puis les 3 plans commission sont supprimés.
+- [x] Schéma :
   - retirer `commissionRate` de `SubscriptionPlan` et de `Subscription` ;
   - retirer `pricingType` (2 tables) et `planCategory` ;
   - supprimer les enums `PricingType` et `PlanCategory` ;
   - retirer les valeurs `*_COMMISSION` de `Plan`.
-- [ ] Code : `payment.service`, `agency.service`, `pack.dto`, `pack-admin.service`, `naboo.ts`, `subscription-change.service`, seed.
-- [ ] Avant l'UAT : contrôle en lecture seule des agences UAT encore sur un plan commission, puis même passage au Gratuit avant la migration.
+- [x] Code : `payment.service`, `agency.service`, `pack.dto`, `pack-admin.service`, `naboo.ts`, `subscription-change.service`, seed.
+- [x] Avant l'UAT : contrôle en lecture seule des agences UAT encore sur un plan commission, puis même passage au Gratuit avant la migration.
 - **Tests** : suite verte. Plus aucune occurrence de `commission` hors historique des migrations.
 
 **C3 [front] Suppression du modèle commission**
-- [ ] Retirer le choix commission / abonnement de l'onboarding et du pricing (`PlanSelectMode`, branches de `PlanCard`, `PrincingSection`, `pricing.ts`), ainsi que les types, enums et traductions.
-- [ ] Afficher le plan Gratuit dans le catalogue et dans le changement de plan : « Gratuit » au lieu de « 0 F CFA », et pas de bascule mensuel / annuel pour lui.
+- [x] Retirer le choix commission / abonnement de l'onboarding et du pricing (`PlanSelectMode`, branches de `PlanCard`, `PrincingSection`, `pricing.ts`), ainsi que les types, enums et traductions.
+- [x] Afficher le plan Gratuit dans le catalogue et dans le changement de plan : « Gratuit » au lieu de « 0 F CFA », et pas de bascule mensuel / annuel pour lui.
 
 ### Checkpoint A
-- [ ] Tests et builds verts. Catalogue : 4 plans. Une agence de dev passée au Gratuit voit sa page abonnement sans échéance.
+- [x] Tests et builds verts (back 321, front 71). Catalogue : 4 plans.
+- [ ] Navigateur : une agence de dev passée au Gratuit voit sa page abonnement sans échéance.
 
 ### Phase 2 : alerte à 80 %
 **C4 [front] Pop-up « bientôt à la limite »**

@@ -21,33 +21,19 @@ export const getCommercialFeatures = (
 export const formatLimit = (feature: MODELS.COMMON.IPlanFeature): string =>
   formatFeatureLimit(feature.feature?.name, feature.limit);
 
+/** Plans en vente (avec un prix), du Gratuit au plus cher. */
 export const getFilteredPlans = (
   allPacks: MODELS.COMMON.ISubscriptionPlan[] | undefined,
-  mode: ENUM.PricingType,
-): MODELS.COMMON.ISubscriptionPlan[] => {
-  if (!allPacks) return [];
-
-  const targetCategory = mode === 'COMMISSION' ? 'COMMISSION_BASED' : 'SUBSCRIPTION_BASED';
-
-  const filtered = allPacks
-    .filter((p) => p.planCategory === targetCategory)
-    .filter((p) => p.pricingType !== 'SUBSCRIPTION' || Boolean(p.pricings?.length));
-
-  const popularPlan = filtered.find((p) => p.popular);
-  const others = filtered.filter((p) => !p.popular);
-
-  if (popularPlan && others.length >= 2) {
-    return [others[1], popularPlan, others[0]];
-  }
-
-  return filtered;
-};
+): MODELS.COMMON.ISubscriptionPlan[] =>
+  (allPacks ?? [])
+    .filter((p) => Boolean(p.pricings?.length))
+    .sort(
+      (a, b) => (getPricing(a, 'MONTHLY')?.price ?? 0) - (getPricing(b, 'MONTHLY')?.price ?? 0),
+    );
 
 export const getBestYearlySavings = (
-  mode: ENUM.PricingType,
   filteredPlans: MODELS.COMMON.ISubscriptionPlan[] | undefined,
 ): number | null => {
-  if (mode !== 'SUBSCRIPTION') return null;
   if (!filteredPlans?.length) return null;
 
   return filteredPlans.reduce<number | null>((max, plan) => {
