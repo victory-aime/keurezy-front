@@ -104,7 +104,10 @@ export const UsageOverview = ({
   usage: Usage[];
   reduceMotion: boolean;
 }) => {
-  if (usage.length === 0) {
+  // Limite 0 : la fonctionnalité n'est pas incluse dans le plan (ex. collaborateurs au Gratuit),
+  // une jauge « 0 sur 0 » à 100 % n'aurait pas de sens
+  const shown = usage.filter((item) => item.limit !== 0);
+  if (shown.length === 0) {
     return (
       <BaseText variant={TextVariant.S} color="fg.muted">
         Aucune limite de consommation sur votre plan.
@@ -113,7 +116,7 @@ export const UsageOverview = ({
   }
   return (
     <Stack as="ul" gap={0} separator={<StackSeparator />} listStyleType="none">
-      {usage.map((item) => (
+      {shown.map((item) => (
         <UsageLimitItem key={item.feature} usage={item} reduceMotion={reduceMotion} />
       ))}
     </Stack>
