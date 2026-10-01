@@ -154,6 +154,8 @@ interface IAgencySubscriptionOverview {
     plan: { id: string; name: PlanType };
     billingCycle: BillingCycle | null;
     price: number | null;
+    /** Prochain renouvellement au tarif actuel du catalogue ; null pour le Gratuit */
+    nextRenewalPrice: number | null;
     currency: string | null;
     currentPeriodStart: string | null;
     currentPeriodEnd: string | null;

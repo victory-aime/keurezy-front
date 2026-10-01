@@ -157,6 +157,21 @@ export const CurrentPlan = ({
             <Box>
               <Price subscription={subscription} />
             </Box>
+            {subscription.nextRenewalPrice !== null &&
+              subscription.price !== null &&
+              subscription.nextRenewalPrice !== subscription.price &&
+              !subscription.scheduledChange && (
+                <BaseText variant={TextVariant.S} color="orange.fg">
+                  Nouveau tarif de{' '}
+                  <BaseFormatNumber
+                    value={subscription.nextRenewalPrice}
+                    currencyCode={
+                      (subscription.currency ?? undefined) as ENUM.COMMON.Currency | undefined
+                    }
+                  />{' '}
+                  à partir du prochain renouvellement. Votre période en cours garde son prix.
+                </BaseText>
+              )}
             {subscription.billingCycle && (
               <BaseText variant={TextVariant.S} color="fg.muted">
                 Renouvellement{' '}

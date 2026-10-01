@@ -1,4 +1,4 @@
-import { Box, Flex, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Badge, Box, Field, Flex, Input, SimpleGrid, Stack } from '@chakra-ui/react';
 import { t } from 'i18next';
 import type { ReactNode } from 'react';
 import { BaseFormatNumber, BaseText, Icons, TextVariant } from '_components/custom';
@@ -212,6 +212,21 @@ export const PlanChangeSummary = ({
                       : 'Le nouveau plan sera à renouveler à cette date.'
                   }`}
           </BaseText>
+          {paid && (
+            // Design seulement : les codes promo arrivent avec un module ultérieur (aucun appel API)
+            <Field.Root disabled mt={2} maxW="sm">
+              <Flex alignItems="center" gap={2}>
+                <Field.Label mb={0}>Code promo</Field.Label>
+                <Badge size="sm" variant="subtle">
+                  Bientôt disponible
+                </Badge>
+              </Flex>
+              <Input placeholder="Ex. BIENVENUE" size="sm" aria-describedby="promo-soon" />
+              <Field.HelperText id="promo-soon">
+                Les codes promo seront bientôt acceptés ici.
+              </Field.HelperText>
+            </Field.Root>
+          )}
           {paid && (
             <Flex alignItems="center" gap={2} color="fg.muted">
               <Box aria-hidden>
