@@ -91,8 +91,8 @@ Ordre : **I1 → I2 → I3 → I4**. Chaque module suit le processus habituel : 
 - Une facture d'une autre agence n'est jamais lisible (testé).
 - L'éditeur fonctionne sur mobile et sur desktop, avec un aperçu fidèle au PDF.
 
-## Questions
-1. **Coordonnées bancaires** (pour le bloc du modèle) : on ajoute des champs à l'agence (banque, IBAN ou RIB, numéro Wave ou Orange Money), ou ce bloc reste un texte libre du modèle ?
-2. **Permission du staff** : facturation autorisée par défaut pour le staff, ou à accorder explicitement par l'owner (comme les autres permissions) ?
-3. **Montant en lettres** (« dix mille francs CFA ») : utile sur vos factures ? (Je l'implémente sans dépendance si oui.)
-4. **Préfixe de numérotation** : `FAC` par défaut te convient ?
+## Réponses validées (2026-10-02)
+1. **Coordonnées bancaires** : nouveaux champs de l'agence (banque, RIB ou IBAN, numéro Wave ou Orange Money), affichés par le bloc « coordonnées bancaires » du modèle.
+2. **Staff** : la facturation est une **permission explicite**, accordée par l'owner comme les autres.
+3. **Montant en lettres** : oui (variable `facture.montant_lettres`, sans dépendance).
+4. **Préfixe** : `FAC` par défaut.
