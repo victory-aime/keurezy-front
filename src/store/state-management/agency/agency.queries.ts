@@ -228,6 +228,21 @@ const updateAgencyMutation = (args: QUERIES.MutationPayload<MODELS.IUpdateAgency
   });
 };
 
+/** Informations légales (owner) ; la réponse dit si la vérification a été retirée. */
+const updateAgencyLegalMutation = (
+  args: QUERIES.MutationPayload<
+    Partial<MODELS.IAgencyLegal>,
+    MODELS.IAgencyLegalUpdate,
+    { agencyId: string }
+  >,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.UPDATE_LEGAL],
+    mutationFn: ({ payload, params }) =>
+      agencyServiceInstance().update_legal(params!.agencyId, payload!),
+    options: args.mutationOptions,
+  });
+
 const closeAgencyMutation = (args: QUERIES.MutationPayload<any, any, MODELS.ICloseAgency>) => {
   return QUERIES.useCustomMutation({
     mutationKey: [Constants.AGENCY_KEYS.CLOSE_AGENCY],
@@ -271,6 +286,7 @@ export {
   getAgencyInfo,
   updateAgencyMutation,
   closeAgencyMutation,
+  updateAgencyLegalMutation,
   getCloseImpactQueries,
   cancelCloseMutation,
   getAgencySubscriptionInfo,

@@ -53,6 +53,35 @@ interface IAgency {
   documents: string[];
   /** Fermeture demandée par l'owner, effective à cette date (annulable d'ici là) */
   closeScheduledAt?: string | null;
+  email?: string;
+  /** Vérifiée par Keurezy, seulement avec des informations légales complètes */
+  isVerified?: boolean;
+  /** Informations légales encore manquantes (vide = complètes) */
+  legalMissing?: (keyof IAgencyLegal)[];
+  companyName?: string | null;
+  legalForm?: LegalForm | null;
+  ninea?: string | null;
+  rccm?: string | null;
+  billingAddress?: string | null;
+  billingEmail?: string | null;
+}
+
+type LegalForm = 'SARL' | 'SUARL' | 'SA' | 'SAS' | 'SASU' | 'GIE' | 'INDIVIDUAL' | 'OTHER';
+
+/** Informations légales de l'agence : jamais publiques. */
+interface IAgencyLegal {
+  companyName: string | null;
+  legalForm: LegalForm | null;
+  ninea: string | null;
+  rccm: string | null;
+  billingAddress: string | null;
+  billingEmail: string | null;
+}
+
+interface IAgencyLegalUpdate {
+  legal: IAgencyLegal;
+  legalMissing: (keyof IAgencyLegal)[];
+  isVerified: boolean;
 }
 
 interface IAgencyFilters extends IPagination {
@@ -276,4 +305,7 @@ export type {
   IAgencyCloseImpact,
   IExitFeedback,
   ExitFeedbackReason,
+  IAgencyLegal,
+  IAgencyLegalUpdate,
+  LegalForm,
 };

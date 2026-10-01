@@ -197,6 +197,11 @@ export const APIS = (baseUrl?: string) => {
         method: 'POST',
         pathBase: 'SECURED_API',
       }),
+      UPDATE_LEGAL: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/legal`,
+        method: 'PATCH',
+        pathBase: 'SECURED_API',
+      }),
       CLOSE_AGENCY: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/close`,
         method: 'POST',

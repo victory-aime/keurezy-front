@@ -130,6 +130,14 @@ export class AgencyService extends BaseApi {
       data,
     );
   }
+  /** Informations légales de l'agence (owner uniquement). */
+  update_legal(agencyId: string, data: Partial<MODELS.IAgencyLegal>) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.UPDATE_LEGAL,
+      data,
+      { params: { agencyId } },
+    );
+  }
   close_agency(data: MODELS.ICloseAgency) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().AGENCY.CLOSE_AGENCY,

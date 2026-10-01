@@ -25,6 +25,7 @@ import { ACCEPTED_TYPES } from '_components/custom/drag-drop/constant/constants'
 import { useAuthContext } from '_context/auth-context';
 import { UserRole } from '../../../../types/enum';
 import { AgencyClosureControl } from './AgencyClosureControl';
+import { AgencyLegalSection } from './AgencyLegalSection';
 
 export const AgencyInfo = () => {
   const { user } = useUserContext();
@@ -166,6 +167,13 @@ export const AgencyInfo = () => {
                   ? 'Votre agence est actuellement en cours de validation. Elle sera visible dès qu’elle aura été approuvée.'
                   : 'Votre agence est active et visible par les utilisateurs de la plateforme.'}
               </ProfileForm>
+              {agency && (
+                <AgencyLegalSection
+                  agency={agency}
+                  isOwner={isOwner}
+                  onSaved={() => refetchAgencyInfo()}
+                />
+              )}
               <ProfileForm
                 title="Documents de l'agence"
                 description="Consultez les documents officiels de votre agence (contrats, certificats, pièces administratives, etc.). Ces informations sont affichées à titre informatif."
