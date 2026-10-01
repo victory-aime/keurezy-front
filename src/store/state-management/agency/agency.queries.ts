@@ -76,6 +76,88 @@ const resumeSubscriptionMutation = (
     options: args.mutationOptions,
   });
 
+/** Devis du plan et du cycle visés ; recalculé quand la sélection change. */
+const getSubscriptionQuoteQueries = (
+  args: QUERIES.QueryPayload<MODELS.ISubscriptionQuote, undefined, MODELS.ISubscriptionTarget>,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<undefined, MODELS.ISubscriptionTarget, MODELS.ISubscriptionQuote>({
+    queryKey: [Constants.AGENCY_KEYS.SUBSCRIPTION_QUOTE, params],
+    queryFn: () => agencyServiceInstance().subscription_quote(params!),
+    options: { ...ENTITY_QUERY_OPTIONS, ...queryOptions },
+  });
+};
+
+/** Statut d'un paiement d'abonnement (suivi au retour de NabooPay). */
+const getSubscriptionPaymentQueries = (
+  args: QUERIES.QueryPayload<
+    MODELS.ISubscriptionPaymentStatus,
+    undefined,
+    { agencyId: string; orderId: string }
+  >,
+) => {
+  const { params, queryOptions } = args;
+  return QUERIES.useCustomQuery<
+    undefined,
+    { agencyId: string; orderId: string },
+    MODELS.ISubscriptionPaymentStatus
+  >({
+    queryKey: [Constants.AGENCY_KEYS.SUBSCRIPTION_PAYMENT, params],
+    queryFn: () =>
+      agencyServiceInstance().subscription_payment_status(params!.agencyId, params!.orderId),
+    options: queryOptions,
+  });
+};
+
+/** Checkout NabooPay d'un renouvellement, d'un upgrade ou d'une réactivation. */
+const subscriptionCheckoutMutation = (
+  args: QUERIES.MutationPayload<
+    { target: MODELS.ISubscriptionTarget; idempotencyKey: string },
+    MODELS.ISubscriptionCheckout
+  >,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.SUBSCRIPTION_CHECKOUT],
+    mutationFn: ({ payload }) =>
+      agencyServiceInstance().subscription_checkout(payload!.target, payload!.idempotencyKey),
+    options: args.mutationOptions,
+  });
+
+/** Programme un downgrade pour l'échéance. */
+const scheduleSubscriptionChangeMutation = (
+  args: QUERIES.MutationPayload<MODELS.ISubscriptionTarget>,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.SCHEDULE_SUBSCRIPTION_CHANGE],
+    mutationFn: ({ payload }) => agencyServiceInstance().schedule_subscription_change(payload!),
+    options: args.mutationOptions,
+  });
+
+/** Annule le downgrade programmé. */
+const cancelScheduledChangeMutation = (
+  args: QUERIES.MutationPayload<unknown, unknown, { agencyId: string }>,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.CANCEL_SCHEDULED_CHANGE],
+    mutationFn: ({ params }) => agencyServiceInstance().cancel_scheduled_change(params!.agencyId),
+    options: args.mutationOptions,
+  });
+
+/** Réactive un bien désactivé par un downgrade. */
+const activateAssetMutation = (
+  args: QUERIES.MutationPayload<
+    { type: 'PROPERTY' | 'LAND' | 'BUILDING'; id: string },
+    unknown,
+    { agencyId: string }
+  >,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.ACTIVATE_ASSET],
+    mutationFn: ({ payload, params }) =>
+      agencyServiceInstance().activate_asset(params!.agencyId, payload!),
+    options: args.mutationOptions,
+  });
+
 /** Impact de la fermeture ; chargé à l'ouverture de la confirmation. */
 const getCloseImpactQueries = (
   args: QUERIES.QueryPayload<MODELS.IAgencyCloseImpact, undefined, { agencyId: string }>,
@@ -156,6 +238,12 @@ export {
   cancelCloseMutation,
   getAgencySubscriptionInfo,
   getAgencySubscriptionQueries,
+  getSubscriptionQuoteQueries,
+  getSubscriptionPaymentQueries,
+  subscriptionCheckoutMutation,
+  scheduleSubscriptionChangeMutation,
+  cancelScheduledChangeMutation,
+  activateAssetMutation,
   getSubscriptionCancelImpactQueries,
   cancelSubscriptionMutation,
   resumeSubscriptionMutation,

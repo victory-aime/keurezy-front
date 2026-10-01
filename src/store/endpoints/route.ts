@@ -144,6 +144,42 @@ export const APIS = (baseUrl?: string) => {
         pathBase: 'SECURED_API',
         showResponse: false,
       }),
+      SUBSCRIPTION_QUOTE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/quote`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      SUBSCRIPTION_CHECKOUT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/checkout`,
+        method: 'POST',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      SUBSCRIPTION_PAYMENT: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/payment`,
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      SUBSCRIPTION_SCHEDULE_CHANGE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/schedule-change`,
+        method: 'POST',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      SUBSCRIPTION_SCHEDULED_CHANGE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/scheduled-change`,
+        method: 'DELETE',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      SUBSCRIPTION_ACTIVATE_ASSET: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/subscription/assets/activate`,
+        method: 'POST',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
       UPDATE_AGENCY: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/update`,
         method: 'POST',

@@ -1,13 +1,18 @@
 'use client';
 
-import { Skeleton, Stack } from '@chakra-ui/react';
+import { Flex, Skeleton, Stack } from '@chakra-ui/react';
 import { useReducedMotion } from 'framer-motion';
+import { useCallback, useEffect, useState } from 'react';
 import { BaseButton, BaseText, TextVariant } from '_components/custom';
 import { useAuthContext } from '_context/auth-context';
 import { useUserContext } from '_context/user-context';
 import { AgencyModule } from '_store/state-management';
+import { MODELS } from '_types/*';
 import { UserRole } from '../../../../types/enum';
 import { CancelSubscription } from './CancelSubscription';
+import { ChangePlanDrawer, type ChangePlanTarget } from './ChangePlanDrawer';
+import { PaymentReturn } from './PaymentReturn';
+import { ScheduledChangeBanner } from './ScheduledChangeBanner';
 import { CurrentPlan } from './CurrentPlan';
 import { PlanFeatures } from './PlanFeatures';
 import { Section } from './Section';
@@ -38,6 +43,35 @@ export const SubscriptionOverview = () => {
       params: { agencyId },
       queryOptions: { enabled: !!agencyId && isOwner },
     });
+  const subscription = data?.subscription;
+
+  // Tiroir « Changer de plan » ; avec une cible, il s'ouvre directement sur « Vérifier »
+  const [drawer, setDrawer] = useState<{
+    open: boolean;
+    target?: ChangePlanTarget;
+    keep?: MODELS.SubscriptionKeep;
+  }>({ open: false });
+  const openRenewal = useCallback(() => {
+    if (!subscription) return;
+    setDrawer({
+      open: true,
+      target: {
+        planId: subscription.plan.id,
+        billingCycle: subscription.billingCycle ?? 'MONTHLY',
+      },
+    });
+  }, [subscription]);
+  const reload = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  // Bandeau d'expiration → « Réactiver » : ouvre directement le paiement
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('action') !== 'reactivate' || subscription?.status !== 'INACTIVE') return;
+    window.history.replaceState(null, '', window.location.pathname);
+    openRenewal();
+  }, [subscription?.status, openRenewal]);
 
   const body = () => {
     if (!isOwner) {
@@ -80,8 +114,25 @@ export const SubscriptionOverview = () => {
     }
     return (
       <>
+        {data.subscription.scheduledChange && (
+          <ScheduledChangeBanner
+            agencyId={agencyId}
+            change={data.subscription.scheduledChange}
+            onEdit={() =>
+              setDrawer({
+                open: true,
+                target: {
+                  planId: data.subscription!.scheduledChange!.plan.id,
+                  billingCycle: data.subscription!.scheduledChange!.billingCycle,
+                },
+                keep: data.subscription!.scheduledChange!.keep,
+              })
+            }
+            onChanged={reload}
+          />
+        )}
         <Section title="Abonnement actuel" index={0} reduceMotion={reduceMotion}>
-          <CurrentPlan subscription={data.subscription} />
+          <CurrentPlan subscription={data.subscription} onRenew={openRenewal} />
           <CancelSubscription
             agencyId={agencyId}
             subscription={data.subscription}
@@ -107,15 +158,39 @@ export const SubscriptionOverview = () => {
 
   return (
     <Stack gap={5} width="full" maxW="5xl" mx="auto" pb={8}>
-      <Stack gap={1}>
-        <BaseText as="h1" variant={TextVariant.H2} fontWeight="semibold">
-          Mon abonnement
-        </BaseText>
-        <BaseText variant={TextVariant.S} color="fg.muted">
-          Gérez votre plan, votre consommation et votre facturation.
-        </BaseText>
-      </Stack>
+      <Flex
+        gap={3}
+        justifyContent="space-between"
+        alignItems={{ base: 'stretch', sm: 'flex-end' }}
+        direction={{ base: 'column', sm: 'row' }}
+      >
+        <Stack gap={1}>
+          <BaseText as="h1" variant={TextVariant.H2} fontWeight="semibold">
+            Mon abonnement
+          </BaseText>
+          <BaseText variant={TextVariant.S} color="fg.muted">
+            Gérez votre plan, votre consommation et votre facturation.
+          </BaseText>
+        </Stack>
+        {subscription && (
+          <BaseButton colorType="primary" onClick={() => setDrawer({ open: true })}>
+            Changer de plan
+          </BaseButton>
+        )}
+      </Flex>
+      {isOwner && agencyId && <PaymentReturn agencyId={agencyId} onSettled={reload} />}
       {body()}
+      {subscription && (
+        <ChangePlanDrawer
+          agencyId={agencyId}
+          subscription={subscription}
+          open={drawer.open}
+          onOpenChange={(open) => setDrawer((d) => ({ ...d, open }))}
+          initialTarget={drawer.target}
+          initialKeep={drawer.keep}
+          onScheduled={reload}
+        />
+      )}
     </Stack>
   );
 };

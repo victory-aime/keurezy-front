@@ -1,13 +1,12 @@
 import { Box, Flex, SimpleGrid, Stack } from '@chakra-ui/react';
 import { t } from 'i18next';
-import { BaseBadge, BaseFormatNumber, BaseText, TextVariant } from '_components/custom';
+import { BaseBadge, BaseButton, BaseFormatNumber, BaseText, TextVariant } from '_components/custom';
 import { ENUM, MODELS } from '_types/*';
+import { canRenew, formatLongDate } from '_utils/subscription';
 
 type Subscription = NonNullable<MODELS.IAgencySubscriptionOverview['subscription']>;
 
-/** « 30 octobre 2026 » */
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+const formatDate = formatLongDate;
 
 /** Montant et cycle, ex. « 10 000 F CFA / mois » ; rien si le prix est inconnu. */
 const Price = ({ subscription }: { subscription: Subscription }) => {
@@ -65,8 +64,16 @@ const Eyebrow = ({ children }: { children: string }) => (
  * Plan actuel et échéance, côte à côte à partir de `md`. Aucun montant n'est calculé ici :
  * prix, cycle et dates sont ceux de la souscription renvoyée par le backend.
  */
-export const CurrentPlan = ({ subscription }: { subscription: Subscription }) => {
+export const CurrentPlan = ({
+  subscription,
+  onRenew,
+}: {
+  subscription: Subscription;
+  /** Ouvre le paiement du renouvellement (ou de la réactivation après expiration) */
+  onRenew: () => void;
+}) => {
   const { currentPeriodStart: start, currentPeriodEnd: end } = subscription;
+  const renewable = canRenew(subscription, new Date());
 
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
@@ -97,8 +104,14 @@ export const CurrentPlan = ({ subscription }: { subscription: Subscription }) =>
               {end ? `Terminé le ${formatDate(end)}` : 'Aucune période en cours'}
             </BaseText>
             <BaseText variant={TextVariant.S} color="fg.muted">
-              Votre tableau de bord reste consultable.
+              Votre tableau de bord reste consultable. Réactivez votre abonnement pour remettre vos
+              annonces en ligne.
             </BaseText>
+            <Box>
+              <BaseButton colorType="primary" size="sm" onClick={onRenew}>
+                Réactiver mon abonnement
+              </BaseButton>
+            </Box>
           </>
         ) : subscription.cancelAtPeriodEnd ? (
           <>
@@ -132,6 +145,13 @@ export const CurrentPlan = ({ subscription }: { subscription: Subscription }) =>
                 Renouvellement{' '}
                 {t(`SUBSCRIPTION.BILLING_CYCLE.${subscription.billingCycle}`).toLowerCase()}
               </BaseText>
+            )}
+            {renewable && (
+              <Box>
+                <BaseButton colorType="primary" size="sm" onClick={onRenew}>
+                  Renouveler
+                </BaseButton>
+              </Box>
             )}
           </>
         )}

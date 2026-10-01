@@ -74,6 +74,48 @@ interface ISubscriptionCancelImpact {
   bookings: { upcoming: number };
 }
 
+/** Éléments gardés actifs, par fonctionnalité limitée en surplus. */
+type SubscriptionKeep = { feature: string; ids: string[] }[];
+
+type SubscriptionQuoteKind = 'RENEWAL' | 'UPGRADE' | 'DOWNGRADE' | 'REACTIVATION';
+
+/** Élément actif proposé au choix quand le plan visé est plus petit que l'usage. */
+interface ISubscriptionExcessItem {
+  id: string;
+  label: string;
+  type: 'PROPERTY' | 'LAND' | 'BUILDING' | 'ANNONCE' | 'STAFF' | 'INVITATION';
+}
+
+/** `GET agency/subscription/quote` : montant et dates calculés par le backend. */
+interface ISubscriptionQuote {
+  kind: SubscriptionQuoteKind;
+  /** À payer maintenant (XOF) ; 0 pour un downgrade */
+  amount: number;
+  currency: string;
+  effectiveAt: string;
+  newPeriodEnd: string;
+  excess: { feature: string; limit: number; used: number; items: ISubscriptionExcessItem[] }[];
+}
+
+/** Plan et cycle visés. */
+interface ISubscriptionTarget {
+  agencyId: string;
+  planId: string;
+  billingCycle: BillingCycle;
+  keep?: SubscriptionKeep;
+}
+
+/** `POST agency/subscription/checkout` */
+interface ISubscriptionCheckout {
+  checkoutUrl: string;
+  orderId: string;
+}
+
+/** `GET agency/subscription/payment` */
+interface ISubscriptionPaymentStatus {
+  status: 'PENDING' | 'PAID' | 'FAILED' | 'CANCELLED';
+}
+
 /** Réponse de `subscription/cancel` et `subscription/resume`. */
 interface ISubscriptionCancellation {
   cancelAtPeriodEnd: boolean;
@@ -93,6 +135,13 @@ interface IAgencySubscriptionOverview {
     currentPeriodEnd: string | null;
     cancelAtPeriodEnd: boolean;
     canceledAt: string | null;
+    /** Downgrade programmé pour l'échéance ; null sinon */
+    scheduledChange: {
+      plan: { id: string; name: PlanType };
+      billingCycle: BillingCycle;
+      effectiveAt: string;
+      keep: SubscriptionKeep;
+    } | null;
   } | null;
   /** Une entrée par fonctionnalité limitée ayant un compteur réel */
   usage: {
@@ -172,6 +221,13 @@ export type {
   ISubscriptionCancelImpact,
   ISubscriptionCancellation,
   SubscriptionUsageState,
+  SubscriptionKeep,
+  SubscriptionQuoteKind,
+  ISubscriptionExcessItem,
+  ISubscriptionQuote,
+  ISubscriptionTarget,
+  ISubscriptionCheckout,
+  ISubscriptionPaymentStatus,
   IAgencyStats,
   IAgencyCloseImpact,
 };

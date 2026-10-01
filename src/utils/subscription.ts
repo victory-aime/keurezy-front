@@ -3,6 +3,10 @@
  * montants viennent du backend).
  */
 
+/** « 30 octobre 2026 » */
+export const formatLongDate = (iso: string) =>
+  new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+
 /** Libellés des fonctionnalités commerciales, par nom technique en majuscules. */
 export const FEATURE_LABELS: Record<
   string,
@@ -90,4 +94,72 @@ export function usageRemainingLabel(usage: {
   if (usage.state === 'UNLIMITED') return 'Illimité';
   if (usage.state === 'REACHED' || !usage.remaining) return 'Limite atteinte';
   return `${usage.remaining} ${usage.remaining === 1 ? 'disponible' : 'disponibles'}`;
+}
+
+/** Fonctionnalité d'un plan : nom technique et limite (null = illimitée ou sans compteur). */
+export interface PlanFeatureLimit {
+  name: string;
+  limit: number | null;
+}
+
+/** Ce qui change entre deux plans, en mots : « +15 biens immobiliers », « Module de comptabilité inclus ». */
+export function planDifferences(current: PlanFeatureLimit[], target: PlanFeatureLimit[]): string[] {
+  const before = new Map(current.map((f) => [f.name, f.limit]));
+  const after = new Map(target.map((f) => [f.name, f.limit]));
+  const changes: string[] = [];
+
+  for (const [name, limit] of after) {
+    const config = labelOf(name);
+    if (!config) continue;
+    if (!before.has(name)) {
+      changes.push(limit === null ? `${config.unlimited} inclus` : formatFeatureLimit(name, limit));
+      continue;
+    }
+    const previous = before.get(name)!;
+    if (previous === limit) continue;
+    if (limit === null) changes.push(config.unlimited ?? name);
+    else if (previous === null) changes.push(formatFeatureLimit(name, limit));
+    else {
+      const delta = limit - previous;
+      const label = Math.abs(delta) === 1 ? config.singular : config.plural;
+      changes.push(`${delta > 0 ? '+' : '−'}${Math.abs(delta)} ${label}`);
+    }
+  }
+  for (const name of before.keys()) {
+    const config = labelOf(name);
+    if (config && !after.has(name)) {
+      changes.push(`${config.unlimited ?? capitalize(config.plural ?? name)} non inclus`);
+    }
+  }
+  return changes;
+}
+
+const RENEWAL_WINDOW_MS = 7 * 86_400_000;
+
+/**
+ * « Renouveler » est proposé à partir de J-7 (rappels par e-mail au même moment) et après
+ * expiration, jamais si une résiliation est programmée.
+ */
+export function canRenew(
+  subscription: {
+    status: 'ACTIVE' | 'INACTIVE';
+    currentPeriodEnd: string | null;
+    cancelAtPeriodEnd: boolean;
+  },
+  now: Date,
+): boolean {
+  if (subscription.status === 'INACTIVE') return true;
+  if (subscription.cancelAtPeriodEnd || !subscription.currentPeriodEnd) return false;
+  return new Date(subscription.currentPeriodEnd).getTime() - now.getTime() <= RENEWAL_WINDOW_MS;
+}
+
+/**
+ * Le choix couvre-t-il chaque fonctionnalité en surplus sans dépasser sa limite ? Même règle que
+ * le backend (qui la revérifie) : le bouton de confirmation reste désactivé tant que c'est faux.
+ */
+export function keepFitsLimits(
+  excess: { feature: string; limit: number }[],
+  keep: Record<string, string[]>,
+): boolean {
+  return excess.every(({ feature, limit }) => (keep[feature]?.length ?? 0) <= limit);
 }

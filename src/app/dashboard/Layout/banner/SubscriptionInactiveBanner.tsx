@@ -13,7 +13,7 @@ import { DASHBOARD_ROUTES } from '../../routes';
 /**
  * Bandeau affiché à toute l'équipe quand l'abonnement de l'agence a expiré : le backend refuse
  * alors les écritures (`SUBSCRIPTION_INACTIVE`). Même requête (et même cache) que le contrôle
- * d'accès de la sidebar. L'owner est envoyé vers sa page abonnement pour réactiver.
+ * d'accès de la sidebar. L'owner est envoyé directement au paiement de la réactivation.
  */
 export const SubscriptionInactiveBanner = () => {
   const router = useRouter();
@@ -57,9 +57,9 @@ export const SubscriptionInactiveBanner = () => {
           size="sm"
           variant="outline"
           colorType="warning"
-          onClick={() => router.push(DASHBOARD_ROUTES.SUBSCRIPTION)}
+          onClick={() => router.push(`${DASHBOARD_ROUTES.SUBSCRIPTION}?action=reactivate`)}
         >
-          Voir mon abonnement
+          Réactiver mon abonnement
         </BaseButton>
       )}
     </Flex>

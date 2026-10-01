@@ -52,6 +52,56 @@ export class AgencyService extends BaseApi {
       { params: { agencyId } },
     );
   }
+  /** Devis d'un changement de plan ou d'un renouvellement (owner uniquement). */
+  subscription_quote({ agencyId, planId, billingCycle }: MODELS.ISubscriptionTarget) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_QUOTE,
+      {},
+      { params: { agencyId, planId, billingCycle } },
+    );
+  }
+  /**
+   * Crée (ou retrouve) le checkout NabooPay. `idempotencyKey` : une clé par intention de paiement,
+   * renvoyée telle quelle à chaque nouvelle tentative pour ne jamais créer deux paiements.
+   */
+  subscription_checkout(target: MODELS.ISubscriptionTarget, idempotencyKey: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_CHECKOUT,
+      target,
+      { headers: { 'Idempotency-Key': idempotencyKey } },
+    );
+  }
+  /** Statut d'un paiement d'abonnement, au retour de NabooPay (owner uniquement). */
+  subscription_payment_status(agencyId: string, orderId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_PAYMENT,
+      {},
+      { params: { agencyId, orderId } },
+    );
+  }
+  /** Programme un downgrade pour l'échéance, avec les éléments gardés actifs. */
+  schedule_subscription_change(target: MODELS.ISubscriptionTarget) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_SCHEDULE_CHANGE,
+      target,
+    );
+  }
+  /** Annule le downgrade programmé. */
+  cancel_scheduled_change(agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_SCHEDULED_CHANGE,
+      {},
+      { params: { agencyId } },
+    );
+  }
+  /** Réactive un bien désactivé par un downgrade, dans la limite du plan. */
+  activate_asset(agencyId: string, asset: { type: 'PROPERTY' | 'LAND' | 'BUILDING'; id: string }) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_ACTIVATE_ASSET,
+      asset,
+      { params: { agencyId } },
+    );
+  }
   create_agency(data: MODELS.ICreateAgency | FormData) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().AGENCY.CREATE_AGENCY,
