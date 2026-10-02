@@ -1,8 +1,8 @@
 'use client';
 
-import { Button, Field, Flex, Input, Menu, Portal, Textarea } from '@chakra-ui/react';
+import { Field, Flex, Input, Menu, Portal, Textarea } from '@chakra-ui/react';
 import { useRef } from 'react';
-import { Icons } from '_components/custom';
+import { Icons, BaseButton } from '_components/custom';
 import { MODELS } from '_types/*';
 import { insertVariable, unknownVariables } from '_utils/invoice-template';
 
@@ -69,10 +69,10 @@ export const VariableTextField = ({
         <Field.Label mb={0}>{label}</Field.Label>
         <Menu.Root positioning={{ placement: 'bottom-end' }}>
           <Menu.Trigger asChild>
-            <Button size="xs" variant="ghost" disabled={!catalogue}>
+            <BaseButton size="xs" variant="ghost" p={2} disabled={!catalogue}>
               <Icons.PlusMinus aria-hidden />
               Insérer une variable
-            </Button>
+            </BaseButton>
           </Menu.Trigger>
           <Portal>
             <Menu.Positioner>

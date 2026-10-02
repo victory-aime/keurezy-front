@@ -20,4 +20,6 @@ export interface BaseTooltipProps {
   placement?: Placement;
   arrow?: boolean;
   show?: boolean;
+  /** Avec `show` : affiche l'élément seul, sans info-bulle (ex. libellé déjà visible) */
+  disabled?: boolean;
 }

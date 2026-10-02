@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Flex, useBreakpointValue } from '@chakra-ui/react';
-import { BaseButton, Icons } from '_components/custom';
+import { BaseButton, BaseTooltip, Icons } from '_components/custom';
 import { MobileSidebar } from './components/MobileSidebar';
 import { ASSETS } from '_assets/images';
 import Image from 'next/image';
@@ -21,7 +21,6 @@ import { cheapestPlanWith, toCatalog } from '_utils/subscription';
 import { ALL_CSA_ROUTES } from './routes/routes';
 import { RenderGroupedLinks } from './components/RenderGroupedLinks';
 import { useAuth } from '_hooks/useAuth';
-import { SideToolTip } from './components/SideToolTip';
 import { useSessionRefreshContext } from '_context/SessionRefresh-context';
 import { useMemo } from 'react';
 import { DASHBOARD_ROUTES } from '../../routes';
@@ -221,7 +220,7 @@ export const Sidebar = ({
             isLoading={isLoading || accessControlLoading}
           />
 
-          <SideToolTip disabled={sideToggled} label={'Déconnexion'}>
+          <BaseTooltip message="Déconnexion" placement="right" show disabled={sideToggled}>
             <Box
               p={3}
               borderTop="1px solid"
@@ -239,7 +238,7 @@ export const Sidebar = ({
                 {sideToggled ? 'Déconnexion' : null}
               </BaseButton>
             </Box>
-          </SideToolTip>
+          </BaseTooltip>
         </Box>
       )}
     </Box>

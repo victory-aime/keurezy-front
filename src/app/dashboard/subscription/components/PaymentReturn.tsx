@@ -1,8 +1,8 @@
 'use client';
 
-import { Flex, Spinner } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { BaseButton, BaseText, TextVariant } from '_components/custom';
+import { BaseButton, BaseText, TextVariant, Loader } from '_components/custom';
 import { AgencyModule } from '_store/state-management';
 import { PENDING_ORDER_KEY } from './ChangePlanDialog';
 
@@ -103,7 +103,7 @@ export const PaymentReturn = ({
       direction={{ base: 'column', sm: 'row' }}
     >
       <Flex gap={2} alignItems="center">
-        {!settled && !timedOut && <Spinner size="sm" />}
+        <Loader loader={!settled && !timedOut} size="sm" />
         <BaseText variant={TextVariant.S}>
           {timedOut && !settled ? MESSAGES.TIMEOUT : MESSAGES[status]}
         </BaseText>

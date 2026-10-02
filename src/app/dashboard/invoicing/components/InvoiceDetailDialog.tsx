@@ -2,7 +2,6 @@
 
 import {
   Box,
-  Button,
   Field,
   Flex,
   Grid,
@@ -288,7 +287,7 @@ export const InvoiceDetailDialog = ({
                 </BaseButton>
               )}
               {invoice.number && (
-                <Button asChild variant="outline" size="sm">
+                <BaseButton asChild variant="outline" colorType="neutral">
                   <a
                     href={invoicePdfUrl(agencyId, invoice.id, true)}
                     download={`${invoice.number}.pdf`}
@@ -296,7 +295,7 @@ export const InvoiceDetailDialog = ({
                     <Icons.Download aria-hidden />
                     Télécharger le PDF
                   </a>
-                </Button>
+                </BaseButton>
               )}
               {canManage && (invoice.status === 'ISSUED' || invoice.status === 'PAID') && (
                 <BaseButton variant="ghost" colorType="danger" onClick={() => setAction('cancel')}>

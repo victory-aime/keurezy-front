@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge, Box, Flex, Input, InputGroup, Skeleton, Stack } from '@chakra-ui/react';
+import { Box, Flex, Input, InputGroup, Skeleton, Stack } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import {
   BaseBadge,
@@ -168,14 +168,15 @@ export const InvoicesPage = () => {
               }}
             >
               {f.label}
-              <Badge
+              <BaseBadge
                 ml={1}
                 size="sm"
-                variant={active ? 'solid' : 'subtle'}
-                colorPalette={active ? 'whiteAlpha' : 'gray'}
-              >
-                {f.value === 'ALL' ? all : (counts[f.value] ?? 0)}
-              </Badge>
+                p={1}
+                minW={6}
+                color="neutral"
+                variant={active ? 'surface' : 'subtle'}
+                label={String(f.value === 'ALL' ? all : (counts[f.value] ?? 0))}
+              />
             </BaseButton>
           );
         })}

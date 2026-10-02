@@ -1,5 +1,5 @@
 'use client';
-import { Badge, Flex, HStack, Stack } from '@chakra-ui/react';
+import { Flex, HStack, Stack } from '@chakra-ui/react';
 import {
   BaseButton,
   BaseContainer,
@@ -9,6 +9,7 @@ import {
   ColumnsDataTable,
   DataTableContainer,
   Icons,
+  BaseBadge,
 } from '_components/custom';
 import { Avatar } from '_components/ui/avatar';
 import { BookingsModule } from '_store/state-management';
@@ -134,9 +135,12 @@ export const BookingsList = () => {
       cell: (booking: MODELS.IAgencyBooking) => (
         <Stack gap={1}>
           <HStack gap={2}>
-            <Badge colorPalette={'teal'} variant={'subtle'}>
-              {getRentalTypeMeta(booking.rentalType)?.label}
-            </Badge>
+            <BaseBadge
+              color="tertiary"
+              variant="subtle"
+              size="sm"
+              label={getRentalTypeMeta(booking.rentalType)?.label}
+            />
             <BaseText fontSize={'xs'} color={'fg.muted'}>
               {formatRentalDuration(booking.duration, booking.rentalType)}
             </BaseText>
@@ -208,14 +212,15 @@ export const BookingsList = () => {
               onClick={() => setStatusFilter(filter.value)}
             >
               {filter.label}
-              <Badge
+              <BaseBadge
                 ml={1}
-                size={'sm'}
-                variant={isActive ? 'solid' : 'subtle'}
-                colorPalette={isActive ? 'whiteAlpha' : 'gray'}
-              >
-                {count}
-              </Badge>
+                size="sm"
+                p={1}
+                minW={6}
+                color="neutral"
+                variant={isActive ? 'surface' : 'subtle'}
+                label={String(count)}
+              />
             </BaseButton>
           );
         })}

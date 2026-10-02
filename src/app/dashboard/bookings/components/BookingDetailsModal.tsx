@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, HStack, Separator, Stack, VStack } from '@chakra-ui/react';
+import { Box, Flex, HStack, Separator, Stack, VStack } from '@chakra-ui/react';
 import {
   BaseButton,
   BaseFormatNumber,
@@ -8,6 +8,7 @@ import {
   BaseText,
   Icons,
   ModalOpenProps,
+  BaseBadge,
 } from '_components/custom';
 import { VariablesColors } from '_theme/variables';
 import { ENUM, MODELS } from '_types/*';
@@ -164,9 +165,12 @@ export const BookingDetailsModal = ({
           <FormCard title="">
             <VStack align="stretch" gap={0} width={'full'}>
               <DetailRow label="Modalité">
-                <Badge colorPalette={'teal'} variant={'subtle'}>
-                  Location {getRentalTypeMeta(data.rentalType)?.label.toLowerCase()}
-                </Badge>
+                <BaseBadge
+                  color="tertiary"
+                  variant="subtle"
+                  size="sm"
+                  label={`Location ${getRentalTypeMeta(data.rentalType)?.label.toLowerCase()}`}
+                />
               </DetailRow>
               <DetailRow label="Début">{formatBookingDate(data.startDate, true)}</DetailRow>
               <DetailRow label="Fin (inclus)">{formatBookingDate(data.endDate, true)}</DetailRow>

@@ -24,7 +24,7 @@ export const Loader = ({ loader, showText = false, text, ...rest }: LoaderProps)
   return (
     loader && (
       <VStack gap={1}>
-        <Spinner {...rest} color={'purple.focusRing'} animationDuration="0.6s" />
+        <Spinner color="primary.solid" animationDuration="0.6s" {...rest} />
         {showText && (
           <BaseText color={'primary.500'}>{text ? text : t('COMMON.LOADING_TEXT')}</BaseText>
         )}

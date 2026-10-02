@@ -1,5 +1,4 @@
 import {
-  Badge,
   SimpleGrid,
   Box,
   Flex,
@@ -23,6 +22,7 @@ import {
   Icons,
   TextVariant,
   TextWeight,
+  BaseBadge,
 } from '_components/custom';
 import { BaseCheckBoxCard } from '_components/custom/checkbox-card/BaseCheckBoxCard';
 import {
@@ -171,7 +171,12 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
                       <Span fontSize={'sm'}>{billingCycle === 'YEARLY' ? '/an' : '/mois'}</Span>
 
                       {billingCycle === 'YEARLY' && pricing.discountPercentage && (
-                        <Badge colorPalette={'teal'}>-{pricing.discountPercentage}%</Badge>
+                        <BaseBadge
+                          color="success"
+                          variant="subtle"
+                          size="sm"
+                          label={`-${pricing.discountPercentage}%`}
+                        />
                       )}
                     </Flex>
                   ) : null}

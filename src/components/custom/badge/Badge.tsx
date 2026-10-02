@@ -79,9 +79,12 @@ export const BaseBadge: FC<Props> = ({
       {...props}
     >
       {children}
-      <BaseText variant={textSize} textTransform="capitalize">
-        {customLabel ?? resolvedLabel}
-      </BaseText>
+      {/* Contenu libre (`children`) sans libellé : pas de libellé de statut par défaut */}
+      {(customLabel ?? !children) && (
+        <BaseText variant={textSize} css={{ '&::first-letter': { textTransform: 'uppercase' } }}>
+          {customLabel ?? resolvedLabel}
+        </BaseText>
+      )}
     </Badge>
   );
 };

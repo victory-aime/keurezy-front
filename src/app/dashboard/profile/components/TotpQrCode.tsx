@@ -5,6 +5,7 @@ import {
   FormOtpInput,
   Icons,
   ModalOpenProps,
+  Loader,
 } from '_components/custom';
 import {
   QrCode,
@@ -13,7 +14,6 @@ import {
   Box,
   Circle,
   AbsoluteCenter,
-  Spinner,
   DownloadTrigger,
 } from '@chakra-ui/react';
 import { Formik } from 'formik';
@@ -93,7 +93,7 @@ export const TotpQrCode = ({ isOpen, onChange, onVerified, data }: TotpQrCodePro
               </QrCode.Frame>
               {!data?.totpURI && (
                 <AbsoluteCenter bg="bg/80" boxSize="100%">
-                  <Spinner color="primary.500" />
+                  <Loader loader />
                 </AbsoluteCenter>
               )}
             </QrCode.Root>

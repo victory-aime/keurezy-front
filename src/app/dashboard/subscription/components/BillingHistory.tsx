@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Flex, Skeleton, Stack } from '@chakra-ui/react';
+import { Box, Flex, Skeleton, Stack } from '@chakra-ui/react';
 import { t } from 'i18next';
 import { useMemo, useState } from 'react';
 import {
@@ -56,7 +56,7 @@ const StatusBadge = ({ payment }: { payment: Payment }) => (
 /** Téléchargement du reçu PDF d'un paiement payé ; rien sinon. */
 const ReceiptLink = ({ agencyId, payment }: { agencyId: string; payment: Payment }) =>
   payment.receiptNumber ? (
-    <Button asChild size="xs" variant="outline">
+    <BaseButton asChild size="xs" variant="outline" p={2}>
       <a
         href={receiptDownloadUrl(agencyId, payment.id)}
         download={`recu-${payment.receiptNumber}.pdf`}
@@ -65,7 +65,7 @@ const ReceiptLink = ({ agencyId, payment }: { agencyId: string; payment: Payment
         <Icons.Download aria-hidden />
         Reçu
       </a>
-    </Button>
+    </BaseButton>
   ) : null;
 
 const columnsFor = (agencyId: string): ColumnsDataTable[] => [

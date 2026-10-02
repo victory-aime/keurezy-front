@@ -1,13 +1,16 @@
 import { Box, Flex, VStack, Span, Text, HStack } from '@chakra-ui/react';
-import { BaseIcon, Icons, BaseText, CustomSkeletonLoader } from '_components/custom';
-import { Tag } from '_components/ui/tag';
+import {
+  BaseIcon,
+  Icons,
+  BaseText,
+  BaseTag,
+  CustomSkeletonLoader,
+  type BaseTagProps,
+} from '_components/custom';
 import { NotificationsModule } from '_store/state-management';
-import { VariablesColors } from '_theme/variables';
 import { MODELS } from '_types/*';
 import { formatCreatedAt } from 'rise-core-frontend';
 import { getNotificationUIConfig } from '../constant/notification-config';
-import { useColorMode } from '_components/ui/color-mode';
-import { useThemeColors } from '_theme/useThemeColors';
 
 export const NotificationsDisplay = ({
   request,
@@ -22,9 +25,7 @@ export const NotificationsDisplay = ({
   refetchNotificationList?: () => void;
   isLast?: boolean;
 }) => {
-  const { colorMode } = useColorMode();
   const config = getNotificationUIConfig(request?.notification?.type);
-  const { hexToRGB } = useThemeColors(config?.color);
   const IconComponent = Icons[config?.icon];
 
   const { mutateAsync: readNotification } = NotificationsModule.readNotificationMutation({
@@ -48,14 +49,9 @@ export const NotificationsDisplay = ({
       p={4}
       mb={2}
       borderRadius={'12px'}
-      borderColor={request.isRead ? 'inherit' : `${config?.color}.400`}
-      bg={
-        request.isRead
-          ? 'inherit'
-          : colorMode === 'light'
-            ? `${config?.color}.50`
-            : `${config?.color}.800`
-      }
+      // Non lue : teinte de son type (jetons de la charte, clair et sombre)
+      borderColor={request.isRead ? 'border' : `${config.color}.border`}
+      bg={request.isRead ? 'bg' : `${config.color}.subtle`}
       transition="all 0.2s ease"
       _hover={{ transform: 'translateY(-2px)' }}
     >
@@ -79,22 +75,26 @@ export const NotificationsDisplay = ({
             }
           }}
         >
-          <BaseIcon color={hexToRGB(600, 50)}>
-            <IconComponent color={VariablesColors[config?.color as keyof typeof VariablesColors]} />
+          <BaseIcon color={`${config.color}.muted`} flexShrink={0}>
+            <Box as="span" color={`${config.color}.fg`} display="flex">
+              <IconComponent aria-hidden />
+            </Box>
           </BaseIcon>
 
           <VStack alignItems={'flex-start'} gap={1} width="full">
             <HStack justifyContent="space-between" width="full">
               <BaseText fontWeight={'semibold'}>{config?.title}</BaseText>
 
-              {!request.isRead && <Tag colorPalette={config?.color}>Nouveau</Tag>}
+              {!request.isRead && (
+                <BaseTag label="Nouveau" color={config.color as BaseTagProps['color']} />
+              )}
             </HStack>
 
-            <Text color={'gray.400'} fontSize="sm">
+            <Text color="fg.muted" fontSize="sm">
               {request?.notification?.content}
             </Text>
 
-            <Span color={'gray.400'} fontSize="xs">
+            <Span color="fg.muted" fontSize="xs">
               {formatCreatedAt(request?.notification.createdAt!)}
             </Span>
           </VStack>

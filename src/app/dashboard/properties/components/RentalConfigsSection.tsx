@@ -1,5 +1,5 @@
 'use client';
-import { Badge, Box, Flex, HStack, Separator, SimpleGrid, VStack } from '@chakra-ui/react';
+import { Box, Flex, HStack, Separator, SimpleGrid, VStack } from '@chakra-ui/react';
 import { FieldArray, FormikErrors, useFormikContext } from 'formik';
 import {
   BaseButton,
@@ -10,6 +10,7 @@ import {
   Icons,
   TextVariant,
   TextWeight,
+  BaseBadge,
 } from '_components/custom';
 import { BaseCheckBoxCard } from '_components/custom/checkbox-card/BaseCheckBoxCard';
 import { CONSTANTS, ENUM, MODELS } from '_types/index';
@@ -197,13 +198,21 @@ export const RentalConfigsSection = ({ isLoading }: { isLoading?: boolean }) => 
                   <BaseText variant={TextVariant.M} weight={TextWeight.SemiBold}>
                     Location {meta.label.toLowerCase()}
                   </BaseText>
-                  <Badge colorPalette={'teal'} variant={'subtle'}>
-                    par {meta.unit}
-                  </Badge>
+                  <BaseBadge
+                    color="tertiary"
+                    variant="subtle"
+                    size="sm"
+                    p={1}
+                    label={`par ${meta.unit}`}
+                  />
                   {hasErrors && (
-                    <Badge colorPalette={'red'} variant={'subtle'}>
-                      À compléter
-                    </Badge>
+                    <BaseBadge
+                      color="danger"
+                      variant="subtle"
+                      size="sm"
+                      p={1}
+                      label="À compléter"
+                    />
                   )}
                 </HStack>
                 <FormSwitch

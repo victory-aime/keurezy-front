@@ -1,7 +1,7 @@
 'use client';
 
-import { Center, Flex, Spinner, useBreakpointValue } from '@chakra-ui/react';
-import { BaseContainer, FloatSwitchColorMode } from '_components/custom';
+import { Center, Flex, useBreakpointValue } from '@chakra-ui/react';
+import { BaseContainer, FloatSwitchColorMode, Loader } from '_components/custom';
 
 export const Container = ({
   children,
@@ -16,7 +16,7 @@ export const Container = ({
     <Flex flex={1} h="100%" width="100%">
       {isLoading ? (
         <Center alignItems={'center'} justifyContent={'center'} height={'100vh'} width={'100%'}>
-          <Spinner color="primary.500" animationDuration="0.4s" size={'xl'} />
+          <Loader loader size="xl" />
         </Center>
       ) : (
         <BaseContainer

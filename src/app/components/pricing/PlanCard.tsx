@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, Float, For, List, Span } from '@chakra-ui/react';
+import { Box, Flex, Float, For, List, Span } from '@chakra-ui/react';
 import {
   BaseBadge,
   BaseText,
@@ -46,14 +46,14 @@ export const PlanCard = ({
       width={'full'}
     >
       {isSelected && (
-        <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground">
-          Vous avez sélectionné ce plan
-        </Badge>
+        <Float placement={'top-center'}>
+          <BaseBadge label="Plan sélectionné" color="primary" variant="solid" />
+        </Float>
       )}
 
       {!isSelected && plan.popular && (
         <Float placement={'top-center'}>
-          <BaseBadge label="Populaire" borderRadius={'full'} />
+          <BaseBadge label="Populaire" color="primary" variant="solid" />
         </Float>
       )}
       <BaseText variant={TextVariant.L} weight={TextWeight.SemiBold}>
@@ -80,9 +80,12 @@ export const PlanCard = ({
             <Span fontSize={'sm'}>{billingCycle === 'YEARLY' ? '/an' : '/mois'}</Span>
 
             {billingCycle === 'YEARLY' && yearlySavings ? (
-              <Badge variant="solid" colorPalette={'teal'}>
-                Économie -{yearlySavings}%
-              </Badge>
+              <BaseBadge
+                color="success"
+                variant="subtle"
+                size="sm"
+                label={`Économie -${yearlySavings}%`}
+              />
             ) : null}
           </Flex>
         )}

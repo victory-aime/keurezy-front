@@ -1,8 +1,7 @@
-import { Accordion, Badge, Box, Flex, Icon, VStack } from '@chakra-ui/react';
+import { Accordion, Box, Flex, Icon, VStack } from '@chakra-ui/react';
 import { useIsActive } from '../hooks/useIsActive';
 import { SidebarNavGroupProps } from '../types';
-import { BaseText } from '_components/custom';
-import { SideToolTip } from './SideToolTip';
+import { BaseText, BaseBadge, BaseTooltip, TextVariant } from '_components/custom';
 import { LockedNavLink } from './LockedNavLink';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
@@ -82,7 +81,13 @@ export const SidebarGroup = ({
                   }
 
                   return (
-                    <SideToolTip key={i} label={t(item.label)} disabled={isCollapsed}>
+                    <BaseTooltip
+                      key={i}
+                      message={t(item.label)}
+                      placement="right"
+                      show
+                      disabled={isCollapsed}
+                    >
                       <MotionFlex
                         position="relative"
                         transition={{
@@ -153,25 +158,29 @@ export const SidebarGroup = ({
                               </BaseText>
 
                               {item.badge && (
-                                <Badge
-                                  borderRadius="full"
-                                  fontSize="0.8em"
-                                  bgColor={hexToRGB(500, 0.8)}
-                                  color={'white'}
-                                >
-                                  {item.badge}
-                                </Badge>
+                                <BaseBadge
+                                  color="primary"
+                                  variant="solid"
+                                  size="sm"
+                                  p={1}
+                                  label={String(item.badge)}
+                                />
                               )}
                               {item.highlight && (
-                                <Badge fontSize="0.6em" colorPalette={'red'}>
-                                  NEW
-                                </Badge>
+                                <BaseBadge
+                                  color="danger"
+                                  variant="subtle"
+                                  size="sm"
+                                  p={1}
+                                  label="Nouveau"
+                                  textSize={TextVariant.XXS}
+                                />
                               )}
                             </MotionFlex>
                           )}
                         </AnimatePresence>
                       </MotionFlex>
-                    </SideToolTip>
+                    </BaseTooltip>
                   );
                 })}
               </VStack>

@@ -123,10 +123,3 @@ export interface AuthContextType {
   isLoading?: boolean;
   refetchSession?: (() => Promise<void>) | undefined;
 }
-
-export interface SideToolTipProps {
-  children: ReactNode;
-  label: string;
-  placement?: 'left' | 'right' | 'top' | 'bottom';
-  disabled?: boolean;
-}

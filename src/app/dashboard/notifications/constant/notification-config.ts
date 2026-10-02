@@ -1,5 +1,4 @@
-import { ColorPalette } from '@chakra-ui/react';
-import { Icons } from '_components/custom';
+import { Icons, variantColorType } from '_components/custom';
 import { ENUM } from '_types/*';
 
 export const notificationUIConfig: Record<
@@ -7,48 +6,49 @@ export const notificationUIConfig: Record<
   {
     title: string;
     icon: keyof typeof Icons;
-    color: ColorPalette;
+    /** Palette de la charte */
+    color: variantColorType;
   }
 > = {
   BOOKING: {
     title: 'Réservation',
     icon: 'Calendar',
-    color: 'teal',
+    color: 'tertiary',
   },
   VISIT: {
     title: 'Nouvelle visite',
     icon: 'Calendar',
-    color: 'purple',
+    color: 'primary',
   },
   LEAD: {
     title: 'Nouvelle demande',
     icon: 'Request',
-    color: 'blue',
+    color: 'info',
   },
   MESSAGE: {
     title: 'Nouveau message',
     icon: 'Chat',
-    color: 'teal',
+    color: 'tertiary',
   },
   PAYMENT: {
     title: 'Paiement reçu',
     icon: 'CreditCard',
-    color: 'green',
+    color: 'success',
   },
   MAINTENANCE: {
     title: 'Maintenance',
     icon: 'Wrench',
-    color: 'orange',
+    color: 'warning',
   },
   TICKET: {
     title: 'Reclamation',
     icon: 'Wrench',
-    color: 'yellow',
+    color: 'secondary',
   },
   SYSTEM: {
     title: 'Notification système',
     icon: 'BellOff',
-    color: 'cyan',
+    color: 'neutral',
   },
 };
 

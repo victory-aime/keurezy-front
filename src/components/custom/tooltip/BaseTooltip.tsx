@@ -12,6 +12,7 @@ export const BaseTooltip: FC<BaseTooltipProps> = ({
   placement = 'top',
   arrow,
   show,
+  disabled = false,
 }) => {
   const id = useId();
   const { t } = useTranslation();
@@ -31,6 +32,7 @@ export const BaseTooltip: FC<BaseTooltipProps> = ({
         openDelay={100}
         closeDelay={100}
         lazyMount
+        disabled={disabled}
       >
         {children}
       </Tooltip>

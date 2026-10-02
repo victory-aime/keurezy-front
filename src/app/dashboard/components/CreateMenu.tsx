@@ -1,9 +1,9 @@
 'use client';
 
-import { Box, Button, Menu, Portal } from '@chakra-ui/react';
+import { Box, Menu, Portal } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { ReactNode } from 'react';
-import { Icons } from '_components/custom';
+import { Icons, BaseButton } from '_components/custom';
 import { usePermissions } from '_hooks/usePermissions';
 import { useFeatureGuard } from '_hooks/useFeatureGuard';
 import { createActions, CreateActionIcon } from './create-actions';
@@ -40,12 +40,8 @@ export const CreateMenu = () => {
     <>
       <Menu.Root positioning={{ placement: 'bottom-end' }}>
         <Menu.Trigger asChild>
-          <Button
+          <BaseButton
             data-tour="quick-actions"
-            // Nuances du thème (pas de tokens sémantiques `primary.solid` dans ce projet)
-            bg="primary.500"
-            color="white"
-            _hover={{ bg: 'primary.600' }}
             size={{ base: 'sm', md: 'md' }}
             aria-label="Créer"
             px={{ base: 2, md: 4 }}
@@ -54,7 +50,7 @@ export const CreateMenu = () => {
             <Box as="span" display={{ base: 'none', md: 'inline' }}>
               Créer
             </Box>
-          </Button>
+          </BaseButton>
         </Menu.Trigger>
         <Portal>
           <Menu.Positioner>
