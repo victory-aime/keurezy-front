@@ -3,6 +3,7 @@ import { useIsActive } from '../hooks/useIsActive';
 import { SidebarNavGroupProps } from '../types';
 import { BaseText } from '_components/custom';
 import { SideToolTip } from './SideToolTip';
+import { LockedNavLink } from './LockedNavLink';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
 import { MotionBox, MotionFlex } from '_constants/motion';
@@ -68,6 +69,17 @@ export const SidebarGroup = ({
                     router.push(item.path);
                     mobileCloseDrawer?.();
                   };
+
+                  if (item.locked) {
+                    return (
+                      <LockedNavLink
+                        key={i}
+                        item={item}
+                        showLabel={isCollapsed}
+                        mobileCloseDrawer={mobileCloseDrawer}
+                      />
+                    );
+                  }
 
                   return (
                     <SideToolTip key={i} label={t(item.label)} disabled={isCollapsed}>

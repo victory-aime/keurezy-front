@@ -63,3 +63,10 @@ Spec : [spec.md](./spec.md), règles « Quotas (I3) ». Demande du 2026-10-02 : 
 - [x] **Fonctionnalités de votre plan** : seulement celles que le plan inclut (plus de cadenas).
 - [x] **Permissions en double** : les fonctionnalités d'un même module (Facturation, Équipe, Annonces…) sont fusionnées, chaque permission n'apparaît qu'une fois, un module vide n'est pas affiché (testé). Nouveau sélecteur en arbre, sans menu déroulant : cocher un module coche toutes ses permissions, en cocher une partie le rend indéterminé ; compteur « 2/3 » ; libellés lisibles (description de la permission) ; récapitulatif aligné.
 - [x] **Menu** : l'icône s'anime au survol d'un lien (coupée si le système réduit les animations).
+
+## Modules verrouillés avec aperçu animé (2026-10-02)
+- [x] Maquette validée : https://claude.ai/artifact/EnvLUmVvjf8X9JZ7QKtcpv
+- [x] Un lien de module hors plan qui a un aperçu (`preview`) reste dans le menu, grisé avec un cadenas ; sans aperçu il est masqué. La page reste protégée par `PlanFeatureGate`.
+- [x] Carte (HoverCard Chakra) au survol, au focus clavier et au toucher ; fermée en quittant le lien ou avec Échap : nom du module, plan le moins cher qui l'inclut (calculé depuis le catalogue public, testé), aperçu animé en boucle (coupé si le système réduit les animations), une phrase d'accroche, « Voir les plans » (ouvre le changement de plan sur ce plan) pour l'owner, invitation à demander au propriétaire pour le staff.
+- [x] Aperçus : Collaborateurs et Invitations (équipe, permissions, invitation envoyée) ; Statistiques (barres et courbe), page remise dans le menu (groupe Analyse, `view_reports`).
+- [ ] Reste à faire si souhaité : la page Statistiques est encore sommaire (biens, visites, tickets) ; « Mises en avant » n'a pas encore de page, donc pas de lien.

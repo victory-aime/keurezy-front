@@ -21,25 +21,13 @@ import {
   type CatalogPlan,
   formatFeatureLimit,
   nextPlanFor,
+  toCatalog,
   planDifferences,
   remainingAfterAdd,
 } from '_utils/subscription';
 import { DASHBOARD_ROUTES } from '../routes';
 
 type Usage = MODELS.ISubscriptionLimits['usage'][number];
-
-/** Catalogue public réduit à ce qui sert à comparer les plans. */
-const toCatalog = (plans: MODELS.COMMON.ISubscriptionPlan[]): CatalogPlan[] =>
-  plans
-    .filter((p) => p.pricings?.some((pr) => pr.billingCycle === 'MONTHLY'))
-    .map((p) => ({
-      id: p.id,
-      // Sans prix mensuel, le plan ne peut pas être comparé : il est écarté plus bas
-      monthlyPrice: Number(p.pricings?.find((pr) => pr.billingCycle === 'MONTHLY')?.price ?? NaN),
-      features: p.planFeatures
-        .filter((pf) => pf.feature?.isCommercial)
-        .map((pf) => ({ name: pf.feature.name, limit: pf.limit ?? null })),
-    }));
 
 interface LimitReachedModalProps extends ModalOpenProps {
   usage: Usage;

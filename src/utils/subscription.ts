@@ -206,8 +206,45 @@ export function keepFitsLimits(
 /** Plan du catalogue, réduit à ce qui sert à le comparer. */
 export interface CatalogPlan {
   id: string;
+  /** Nom technique (FREE_SUB…), libellé par `SUBSCRIPTION.PLANS.<name>` */
+  name?: string;
   monthlyPrice: number;
   features: PlanFeatureLimit[];
+}
+
+/** Catalogue public réduit à ce qui sert à comparer les plans (plans sans prix mensuel écartés). */
+export function toCatalog(
+  plans: {
+    id: string;
+    name: string;
+    pricings?: { billingCycle: string; price: number | string }[];
+    planFeatures: { limit?: number | null; feature: { name: string; isCommercial?: boolean } }[];
+  }[],
+): CatalogPlan[] {
+  return plans
+    .filter((p) => p.pricings?.some((pr) => pr.billingCycle === 'MONTHLY'))
+    .map((p) => ({
+      id: p.id,
+      name: p.name,
+      monthlyPrice: Number(p.pricings?.find((pr) => pr.billingCycle === 'MONTHLY')?.price ?? NaN),
+      features: p.planFeatures
+        .filter((pf) => pf.feature?.isCommercial)
+        .map((pf) => ({ name: pf.feature.name, limit: pf.limit ?? null })),
+    }));
+}
+
+/**
+ * Plan le moins cher qui inclut une fonctionnalité (limite non nulle) : celui qu'on propose
+ * quand elle est verrouillée. null si aucun plan ne l'inclut.
+ */
+export function cheapestPlanWith(plans: CatalogPlan[], feature: string): CatalogPlan | null {
+  return (
+    plans
+      .filter((p) =>
+        p.features.some((f) => f.name === feature && (f.limit === null || f.limit > 0)),
+      )
+      .sort((a, b) => a.monthlyPrice - b.monthlyPrice)[0] ?? null
+  );
 }
 
 /**

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   canRenew,
   featureLabel,
+  cheapestPlanWith,
   formatFeatureLimit,
   isFreePlan,
   keepFitsLimits,
@@ -235,5 +236,29 @@ describe('planDifferences : limites à 0', () => {
     expect(planDifferences(free, [{ name: 'manage_users', limit: 1 }])).toEqual([
       { label: 'Jusqu’à 1 collaborateur', tone: 'gain' },
     ]);
+  });
+});
+
+describe('cheapestPlanWith', () => {
+  const plans = [
+    {
+      id: 'p',
+      name: 'PREMIUM_SUB',
+      monthlyPrice: 18000,
+      features: [{ name: 'manage_users', limit: null }],
+    },
+    { id: 'f', name: 'FREE_SUB', monthlyPrice: 0, features: [{ name: 'manage_users', limit: 0 }] },
+    {
+      id: 'b',
+      name: 'BASIC_SUB',
+      monthlyPrice: 5000,
+      features: [{ name: 'manage_users', limit: 1 }],
+    },
+  ];
+  it('le moins cher avec une limite non nulle', () => {
+    expect(cheapestPlanWith(plans, 'manage_users')?.id).toBe('b');
+  });
+  it('null si aucun plan ne l’inclut', () => {
+    expect(cheapestPlanWith(plans, 'view_reports')).toBeNull();
   });
 });

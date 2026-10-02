@@ -98,6 +98,8 @@ import {
   LuWallet,
   LuUserCog,
   LuSettings2,
+  LuChartColumn,
+  LuChartLine,
 } from 'react-icons/lu';
 import { BsCalendar3, BsSliders } from 'react-icons/bs';
 import { CiGrid31 } from 'react-icons/ci';
@@ -233,11 +235,13 @@ export const NavIcons = {
   Profile: LuUserRound,
   Security: LuShieldCheck,
   Notifications: LuBell,
+  Stats: LuChartColumn,
   // Titres des groupes
   GroupAssets: LuLandmark,
   GroupActivity: LuBriefcase,
   GroupBilling: LuWallet,
   GroupTeam: LuUserCog,
   GroupAgency: LuSettings2,
+  GroupAnalytics: LuChartLine,
   GroupAccount: LuUserRound,
 };

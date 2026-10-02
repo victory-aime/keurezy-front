@@ -7,7 +7,8 @@ import { NavIcons } from '_components/custom';
  * Menu du tableau de bord, par usage : le quotidien d'abord, puis le patrimoine, l'activité
  * avec les clients, la facturation, l'équipe, l'agence et le compte. Chaque lien a sa propre
  * icône ; `permission` masque un lien au staff qui n'y a pas droit, `feature` le masque quand le
- * plan ne l'inclut pas (et `PlanFeatureGate` protège la page), `ownerOnly` le réserve au propriétaire.
+ * plan ne l'inclut pas, ou le montre verrouillé avec un aperçu animé s'il a un `preview` (la page
+ * reste protégée par `PlanFeatureGate`), `ownerOnly` le réserve au propriétaire.
  */
 export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
   {
@@ -103,6 +104,8 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
       {
         label: 'Collaborateurs',
         feature: 'manage_users',
+        preview: 'team',
+        pitch: 'Invitez votre équipe et choisissez précisément ce que chacun peut voir et faire.',
         path: DASHBOARD_ROUTES.TEAM.LIST,
         icon: NavIcons.Team,
         permission: AppPermissions.USERS.VIEW,
@@ -110,9 +113,27 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
       {
         label: 'Invitations',
         feature: 'manage_users',
+        preview: 'team',
+        pitch:
+          'Invitez un collaborateur par e-mail : il rejoint l’agence avec les permissions choisies.',
         path: DASHBOARD_ROUTES.INVITATIONS.LIST,
         icon: NavIcons.Invitations,
         permission: AppPermissions.USERS.VIEW,
+      },
+    ],
+  },
+  {
+    title: 'Analyse',
+    icon: NavIcons.GroupAnalytics,
+    links: [
+      {
+        label: 'Statistiques',
+        path: DASHBOARD_ROUTES.STATS,
+        icon: NavIcons.Stats,
+        feature: 'view_reports',
+        permission: AppPermissions.REPORTS.VIEW,
+        preview: 'stats',
+        pitch: 'L’activité de votre agence en graphiques : biens, visites et demandes, d’un coup d’œil.',
       },
     ],
   },

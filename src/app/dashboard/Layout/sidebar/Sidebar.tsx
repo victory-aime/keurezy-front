@@ -15,7 +15,9 @@ import {
   BookingsModule,
   NotificationsModule,
   ChatModule,
+  CommonModule,
 } from '_store/state-management';
+import { cheapestPlanWith, toCatalog } from '_utils/subscription';
 import { ALL_CSA_ROUTES } from './routes/routes';
 import { RenderGroupedLinks } from './components/RenderGroupedLinks';
 import { useAuth } from '_hooks/useAuth';
@@ -44,7 +46,10 @@ export const Sidebar = ({
   const { user: authUser } = useAuthContext();
   const isOwner = authUser?.role === ENUM.UserRole.OWNER;
   const { hasPermission } = usePermissions();
-  const { canAccess, isLoading: accessControlLoading } = useAccessControl();
+  const { canAccess, hasFeature, isLoading: accessControlLoading } = useAccessControl();
+  // Catalogue public des plans : nomme le plan qui débloque un module verrouillé
+  const { data: plans } = CommonModule.getAllPacksQueries({});
+  const catalog = useMemo(() => toCatalog(plans ?? []), [plans]);
   const agencyId = user?.agencyId;
   const userId = user?.ownerId ?? user?.staffId;
 
@@ -124,9 +129,19 @@ export const Sidebar = ({
             // Réservé au propriétaire (le backend refuse aussi le staff)
             if (link.ownerOnly && !isOwner) return null;
 
-            // Module d'un plan supérieur ou permission manquante : lien masqué (la page est
-            // aussi protégée par `PlanFeatureGate` si l'URL est saisie directement)
-            if (!canAccess({ feature: link.feature, permission: link.permission })) return null;
+            // Module d'un plan supérieur : verrouillé avec un aperçu animé s'il en a un, sinon
+            // masqué (la page reste protégée par `PlanFeatureGate`)
+            if (link.feature && !hasFeature(link.feature)) {
+              if (!link.preview) return null;
+              const plan = cheapestPlanWith(catalog, link.feature);
+              return {
+                ...link,
+                locked: true,
+                unlockPlan: plan?.name ? { id: plan.id, name: plan.name } : null,
+              };
+            }
+            // Permission manquante : lien masqué
+            if (!canAccess({ permission: link.permission })) return null;
 
             const badgeValue = badgesByPath[link.path as keyof typeof badgesByPath];
 
@@ -149,7 +164,7 @@ export const Sidebar = ({
          */
         .filter((group) => group.links.length > 0)
     );
-  }, [badgesByPath, canAccess, isLoading, accessControlLoading, isOwner]);
+  }, [badgesByPath, canAccess, hasFeature, catalog, isLoading, accessControlLoading, isOwner]);
 
   return (
     <Box>

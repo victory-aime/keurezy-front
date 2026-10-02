@@ -1,6 +1,7 @@
 import { MODELS } from '_types/*';
 import { Session } from 'better-auth';
 import React, { ReactNode } from 'react';
+import type { LockedPreview } from './components/LockedFeaturePreview';
 
 export interface IMobileSidebar {
   isOpen: boolean;
@@ -18,6 +19,8 @@ export interface ILink {
   viewBox?: string;
 }
 
+export type SidebarLink = INavItem;
+
 interface INavItem {
   label: string;
   path: string;
@@ -29,6 +32,16 @@ interface INavItem {
   highlight?: boolean;
   /** Visible uniquement par le propriétaire de l'agence (ex. abonnement et facturation) */
   ownerOnly?: boolean;
+  /**
+   * Module hors plan montré verrouillé (cadenas et aperçu animé au survol) plutôt que masqué.
+   * Sans aperçu, un lien hors plan est masqué.
+   */
+  preview?: LockedPreview;
+  /** Ce que le module apporte, en une phrase (carte d'aperçu) */
+  pitch?: string;
+  /** Calculés par le menu : module verrouillé et plan le moins cher qui l'inclut */
+  locked?: boolean;
+  unlockPlan?: { id: string; name: string } | null;
 }
 
 export interface SidebarNavGroupProps {

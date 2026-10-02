@@ -11,9 +11,6 @@ import { planFeatureForPath } from '_utils/permissions';
 import { DASHBOARD_ROUTES } from '../../routes';
 import { ALL_CSA_ROUTES } from '../sidebar/routes/routes';
 
-/** Pages sans lien dans le menu, mais réservées à un plan. */
-const EXTRA_GATED = [{ path: DASHBOARD_ROUTES.STATS, feature: 'view_reports' }];
-
 /**
  * Protège les pages d'un module absent du plan, même quand l'URL est saisie directement : la
  * page n'est pas affichée, un écran explique pourquoi. Même règle que le menu (le backend refuse
@@ -26,7 +23,11 @@ export const PlanFeatureGate = ({ children }: { children: ReactNode }) => {
   const isOwner = user?.role === ENUM.UserRole.OWNER;
   const { hasFeature, isLoading } = useAccessControl();
   const feature = useMemo(
-    () => planFeatureForPath(pathname, [...ALL_CSA_ROUTES.flatMap((g) => g.links), ...EXTRA_GATED]),
+    () =>
+      planFeatureForPath(
+        pathname,
+        ALL_CSA_ROUTES.flatMap((g) => g.links),
+      ),
     [pathname],
   );
 
