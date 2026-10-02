@@ -199,6 +199,67 @@ const invoiceStampMutation = (
     options: args.mutationOptions,
   });
 
+/** Factures de l'agence, une page à la fois. */
+const getInvoicesQueries = (
+  args: QUERIES.QueryPayload<MODELS.IInvoiceList, undefined, MODELS.IInvoiceListParams>,
+) =>
+  QUERIES.useCustomQuery<undefined, MODELS.IInvoiceListParams, MODELS.IInvoiceList>({
+    queryKey: [Constants.AGENCY_KEYS.INVOICES, args.params],
+    queryFn: () => agencyServiceInstance().invoices(args.params!),
+    options: args.queryOptions,
+  });
+
+const getInvoiceQueries = (
+  args: QUERIES.QueryPayload<MODELS.IInvoice, undefined, { agencyId: string; id: string }>,
+) =>
+  QUERIES.useCustomQuery<undefined, { agencyId: string; id: string }, MODELS.IInvoice>({
+    queryKey: [Constants.AGENCY_KEYS.INVOICE, args.params],
+    queryFn: () => agencyServiceInstance().invoice(args.params!.agencyId, args.params!.id),
+    options: args.queryOptions,
+  });
+
+const getInvoiceableBookingsQueries = (
+  args: QUERIES.QueryPayload<MODELS.IInvoiceableBooking[], undefined, { agencyId: string }>,
+) =>
+  QUERIES.useCustomQuery<undefined, { agencyId: string }, MODELS.IInvoiceableBooking[]>({
+    queryKey: [Constants.AGENCY_KEYS.INVOICEABLE_BOOKINGS, args.params],
+    queryFn: () => agencyServiceInstance().invoiceable_bookings(args.params!.agencyId),
+    options: args.queryOptions,
+  });
+
+const saveInvoiceMutation = (
+  args: QUERIES.MutationPayload<
+    { bookingId?: string; draft?: MODELS.IInvoiceDraft },
+    MODELS.IInvoice,
+    { agencyId: string; id?: string }
+  >,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.SAVE_INVOICE],
+    mutationFn: ({ payload, params }) =>
+      agencyServiceInstance().save_invoice(params!.agencyId, payload!, params!.id),
+    options: args.mutationOptions,
+  });
+
+const invoiceActionMutation = (
+  args: QUERIES.MutationPayload<
+    { action: 'issue' | 'pay' | 'cancel' | 'delete'; body?: object },
+    MODELS.IInvoice,
+    { agencyId: string; id: string }
+  >,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.INVOICE_ACTION],
+    mutationFn: ({ payload, params }) =>
+      agencyServiceInstance().invoice_action(
+        params!.agencyId,
+        params!.id,
+        payload!.action,
+        payload!.body,
+      ),
+    options: args.mutationOptions,
+  });
+
 /** Historique de facturation, une page à la fois. */
 const getSubscriptionPaymentsQueries = (
   args: QUERIES.QueryPayload<
@@ -366,6 +427,11 @@ export {
   deleteInvoiceTemplateMutation,
   updateInvoiceSettingsMutation,
   invoiceStampMutation,
+  getInvoicesQueries,
+  getInvoiceQueries,
+  getInvoiceableBookingsQueries,
+  saveInvoiceMutation,
+  invoiceActionMutation,
   getCloseImpactQueries,
   cancelCloseMutation,
   getAgencySubscriptionInfo,

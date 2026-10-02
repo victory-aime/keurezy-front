@@ -656,3 +656,88 @@ export function subscriptionCancelImpact(impact: ISubscriptionCancelImpact): Imp
     ],
   };
 }
+
+/** Émission d'un brouillon : numéro attribué et contenu figé. */
+export function invoiceIssueImpact(invoice: {
+  ttc: number;
+  /** Préfixe des numéros de l'agence */
+  prefix: string;
+}): ImpactSummary {
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'warning',
+        title: 'Ce qui change',
+        items: [
+          `Le numéro suivant de l’agence est attribué (${invoiceNumberHint(invoice.prefix)}).`,
+          `La facture de ${formatFcfa(invoice.ttc)} ne pourra plus être modifiée ni supprimée.`,
+          'En cas d’erreur, vous l’annulerez puis en émettrez une nouvelle.',
+        ],
+      },
+      {
+        tone: 'success',
+        title: 'Ce qui est figé',
+        items: [
+          'Client, lignes, TVA, modèle et informations de l’agence, tels qu’aujourd’hui.',
+          'Le PDF restera identique, même si le modèle ou l’agence changent ensuite.',
+        ],
+      },
+    ],
+  };
+}
+
+const invoiceNumberHint = (prefix: string) => `${prefix}-${new Date().getFullYear()}-…`;
+
+/** Annulation d'une facture émise ou payée. */
+export function invoiceCancelImpact(invoice: {
+  number: string;
+  ttc: number;
+  paid: boolean;
+}): ImpactSummary {
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'warning',
+        title: 'Ce qui change',
+        items: [
+          `La facture ${invoice.number} (${formatFcfa(invoice.ttc)}) passe au statut Annulée.`,
+          'Son PDF porte la mention « ANNULÉE ».',
+          ...(invoice.paid
+            ? [
+                'Le paiement enregistré n’est pas remboursé automatiquement : réglez-le avec le client.',
+              ]
+            : []),
+        ],
+      },
+      {
+        tone: 'success',
+        title: 'Ce qui est conservé',
+        items: [
+          `Le numéro ${invoice.number} reste attribué (la numérotation ne se réutilise pas).`,
+          'La facture reste dans la liste, avec votre motif.',
+        ],
+      },
+    ],
+  };
+}
+
+/** Suppression d'un brouillon (aucun numéro attribué). */
+export function invoiceDeleteImpact(invoice: { clientName: string; ttc: number }): ImpactSummary {
+  return {
+    blocked: false,
+    groups: [
+      {
+        tone: 'danger',
+        title: 'Ce qui sera supprimé',
+        items: [`Le brouillon pour ${invoice.clientName} (${formatFcfa(invoice.ttc)}).`],
+      },
+      {
+        tone: 'success',
+        title: 'Ce qui ne change pas',
+        items: ['Aucun numéro n’a été attribué : la numérotation n’a pas de trou.'],
+      },
+    ],
+  };
+}

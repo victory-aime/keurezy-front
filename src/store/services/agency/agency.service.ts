@@ -179,6 +179,58 @@ export class AgencyService extends BaseApi {
     data.append('stamp', file);
     return this.apiService.invoke(config.INVOICE_STAMP_UPLOAD, data, { params: { agencyId } });
   }
+  /** Factures de l'agence (paginées, filtrées par statut ou recherche). */
+  invoices({ agencyId, ...query }: MODELS.IInvoiceListParams) {
+    const params = Object.fromEntries(
+      Object.entries({ agencyId, ...query }).filter(([, v]) => v !== undefined && v !== ''),
+    );
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.INVOICES,
+      {},
+      { params },
+    );
+  }
+  invoice(agencyId: string, id: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.INVOICE_DETAIL,
+      {},
+      { params: { agencyId, id } },
+    );
+  }
+  invoiceable_bookings(agencyId: string) {
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().AGENCY.INVOICE_BOOKINGS,
+      {},
+      { params: { agencyId } },
+    );
+  }
+  /** Nouveau brouillon (depuis une réservation ou libre), ou modification si `id` est fourni. */
+  save_invoice(
+    agencyId: string,
+    data: { bookingId?: string; draft?: MODELS.IInvoiceDraft },
+    id?: string,
+  ) {
+    const config = this.applicationContext.getApiConfig().AGENCY;
+    return id
+      ? this.apiService.invoke(config.INVOICE_UPDATE, data.draft, { params: { agencyId, id } })
+      : this.apiService.invoke(config.INVOICE_CREATE, data, { params: { agencyId } });
+  }
+  /** Action sur une facture : émettre, payer, annuler ou supprimer (brouillon). */
+  invoice_action(
+    agencyId: string,
+    id: string,
+    action: 'issue' | 'pay' | 'cancel' | 'delete',
+    body: object = {},
+  ) {
+    const config = this.applicationContext.getApiConfig().AGENCY;
+    const endpoint = {
+      issue: config.INVOICE_ISSUE,
+      pay: config.INVOICE_PAY,
+      cancel: config.INVOICE_CANCEL,
+      delete: config.INVOICE_DELETE,
+    }[action];
+    return this.apiService.invoke(endpoint, body, { params: { agencyId, id } });
+  }
   /** Informations légales de l'agence (owner uniquement). */
   update_legal(agencyId: string, data: Partial<MODELS.IAgencyLegal>) {
     return this.apiService.invoke(

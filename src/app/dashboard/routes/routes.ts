@@ -36,6 +36,7 @@ export const DASHBOARD_ROUTES = {
   SECURITY: `${APP_ROUTES.DASHBOARD}/security`,
   SUBSCRIPTION: `${APP_ROUTES.DASHBOARD}/subscription`,
   INVOICING: {
+    LIST: `${APP_ROUTES.DASHBOARD}/invoicing/invoices`,
     TEMPLATES: `${APP_ROUTES.DASHBOARD}/invoicing/templates`,
   },
   INTEGRATIONS_PROVIDER: `${APP_ROUTES.DASHBOARD}/integrations`,

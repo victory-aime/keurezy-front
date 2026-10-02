@@ -12,7 +12,13 @@ import type { InvoicePreview } from './useInvoicePreview';
  * Pendant un recalcul, l'aperçu précédent reste affiché (atténué) pour éviter les sauts.
  * En cas d'échec du backend, « Réessayer » relance la génération.
  */
-export const InvoicePreviewPane = ({ url, loading, error, retry }: InvoicePreview) => {
+export const InvoicePreviewPane = ({
+  url,
+  loading,
+  error,
+  retry,
+  caption = 'Aperçu avec des données d’exemple',
+}: InvoicePreview & { caption?: string }) => {
   const box = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
 
@@ -27,7 +33,7 @@ export const InvoicePreviewPane = ({ url, loading, error, retry }: InvoicePrevie
     <Stack gap={2} width="full">
       <Flex justifyContent="space-between" alignItems="center">
         <BaseText variant={TextVariant.XS} color="fg.muted">
-          Aperçu avec des données d’exemple
+          {caption}
         </BaseText>
         <Flex alignItems="center" gap={2}>
           <BaseText variant={TextVariant.XS} color="fg.muted" role="status" aria-live="polite">

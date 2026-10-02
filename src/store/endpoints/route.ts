@@ -229,6 +229,54 @@ export const APIS = (baseUrl?: string) => {
         method: 'PATCH',
         pathBase: 'SECURED_API',
       }),
+      INVOICES: api({
+        path: '/invoicing/invoices',
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      INVOICE_BOOKINGS: api({
+        path: '/invoicing/invoices/bookings',
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      INVOICE_DETAIL: api({
+        path: '/invoicing/invoices/detail',
+        method: 'GET',
+        pathBase: 'SECURED_API',
+        showResponse: false,
+      }),
+      INVOICE_CREATE: api({
+        path: '/invoicing/invoices',
+        method: 'POST',
+        pathBase: 'SECURED_API',
+      }),
+      INVOICE_UPDATE: api({
+        path: '/invoicing/invoices',
+        method: 'PATCH',
+        pathBase: 'SECURED_API',
+      }),
+      INVOICE_DELETE: api({
+        path: '/invoicing/invoices',
+        method: 'DELETE',
+        pathBase: 'SECURED_API',
+      }),
+      INVOICE_ISSUE: api({
+        path: '/invoicing/invoices/issue',
+        method: 'POST',
+        pathBase: 'SECURED_API',
+      }),
+      INVOICE_PAY: api({
+        path: '/invoicing/invoices/pay',
+        method: 'POST',
+        pathBase: 'SECURED_API',
+      }),
+      INVOICE_CANCEL: api({
+        path: '/invoicing/invoices/cancel',
+        method: 'POST',
+        pathBase: 'SECURED_API',
+      }),
       INVOICE_STAMP_UPLOAD: api({
         path: '/invoicing/stamp',
         method: 'POST',
