@@ -1,6 +1,7 @@
 'use client';
 
-import { Badge, Box, Flex, Input, InputGroup, Skeleton, Stack } from '@chakra-ui/react';
+import { Badge, Box, Flex, IconButton, Input, InputGroup, Skeleton, Stack } from '@chakra-ui/react';
+import { Tooltip } from '_components/ui/tooltip';
 import { useEffect, useMemo, useState } from 'react';
 import {
   BaseBadge,
@@ -16,7 +17,7 @@ import {
 import { useUserContext } from '_context/user-context';
 import { AgencyModule } from '_store/state-management';
 import { ENUM, MODELS } from '_types/*';
-import { INVOICE_STATUS, isOverdue, shortDate } from '_utils/invoice';
+import { INVOICE_STATUS, invoicePdfUrl, isOverdue, shortDate } from '_utils/invoice';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
 import { InvoiceDetailDialog } from './InvoiceDetailDialog';
@@ -47,7 +48,7 @@ const Total = ({ item }: { item: Item }) => (
   <BaseFormatNumber value={item.totalTtc} currencyCode={ENUM.COMMON.Currency.XOF} />
 );
 
-const columnsFor = (open: (id: string) => void): ColumnsDataTable[] => [
+const columnsFor = (open: (id: string) => void, agencyId: string): ColumnsDataTable[] => [
   {
     header: 'Numéro',
     accessor: 'fullObject',
@@ -66,6 +67,20 @@ const columnsFor = (open: (id: string) => void): ColumnsDataTable[] => [
   { header: 'Échéance', accessor: 'fullObject', cell: (i: Item) => shortDate(i.dueAt) },
   { header: 'Total TTC', accessor: 'fullObject', cell: (i: Item) => <Total item={i} /> },
   { header: 'Statut', accessor: 'fullObject', cell: (i: Item) => <StatusBadges item={i} /> },
+  {
+    header: '',
+    accessor: 'fullObject',
+    cell: (i: Item) =>
+      i.number ? (
+        <Tooltip content="Télécharger le PDF" showArrow openDelay={150} closeDelay={50}>
+          <IconButton asChild variant="ghost" size="sm" aria-label={`Télécharger ${i.number}`}>
+            <a href={invoicePdfUrl(agencyId, i.id, true)} download={`${i.number}.pdf`}>
+              <Icons.Download />
+            </a>
+          </IconButton>
+        </Tooltip>
+      ) : undefined,
+  },
 ];
 
 /**
@@ -107,7 +122,7 @@ export const InvoicesPage = () => {
     queryOptions: { enabled: !!agencyId },
   });
   const open = (id: string) => setDetail((d) => ({ id, key: d.key + 1 }));
-  const columns = useMemo(() => columnsFor(open), []);
+  const columns = useMemo(() => columnsFor(open, agencyId), [agencyId]);
   const items = data?.content ?? [];
   const counts = data?.counts ?? {};
   const all = Object.values(counts).reduce((sum, n) => sum + (n ?? 0), 0);

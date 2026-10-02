@@ -91,6 +91,8 @@ interface IInvoice {
   cancelledAt: string | null;
   cancelReason: string | null;
   createdAt: string;
+  /** Envois par e-mail, du plus récent au plus ancien (absent à la création) */
+  emails?: { recipient: string; sentAt: string }[];
 }
 
 interface IInvoiceListItem {

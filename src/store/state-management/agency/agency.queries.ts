@@ -243,7 +243,7 @@ const saveInvoiceMutation = (
 
 const invoiceActionMutation = (
   args: QUERIES.MutationPayload<
-    { action: 'issue' | 'pay' | 'cancel' | 'delete'; body?: object },
+    { action: 'issue' | 'pay' | 'cancel' | 'delete' | 'send'; body?: object },
     MODELS.IInvoice,
     { agencyId: string; id: string }
   >,

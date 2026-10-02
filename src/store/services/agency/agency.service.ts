@@ -215,11 +215,11 @@ export class AgencyService extends BaseApi {
       ? this.apiService.invoke(config.INVOICE_UPDATE, data.draft, { params: { agencyId, id } })
       : this.apiService.invoke(config.INVOICE_CREATE, data, { params: { agencyId } });
   }
-  /** Action sur une facture : émettre, payer, annuler ou supprimer (brouillon). */
+  /** Action sur une facture : émettre, payer, annuler, supprimer (brouillon) ou envoyer par e-mail. */
   invoice_action(
     agencyId: string,
     id: string,
-    action: 'issue' | 'pay' | 'cancel' | 'delete',
+    action: 'issue' | 'pay' | 'cancel' | 'delete' | 'send',
     body: object = {},
   ) {
     const config = this.applicationContext.getApiConfig().AGENCY;
@@ -228,6 +228,7 @@ export class AgencyService extends BaseApi {
       pay: config.INVOICE_PAY,
       cancel: config.INVOICE_CANCEL,
       delete: config.INVOICE_DELETE,
+      send: config.INVOICE_SEND,
     }[action];
     return this.apiService.invoke(endpoint, body, { params: { agencyId, id } });
   }

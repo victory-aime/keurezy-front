@@ -19,9 +19,11 @@ import {
   BaseFormatNumber,
   BaseModal,
   BaseText,
+  BaseToast,
   Icons,
   ModalOpenProps,
   TextVariant,
+  ToastStatus,
 } from '_components/custom';
 import { AgencyModule } from '_store/state-management';
 import { ENUM, MODELS } from '_types/*';
@@ -36,12 +38,13 @@ import {
 import { invoiceCancelImpact, invoiceDeleteImpact, invoiceIssueImpact } from '_utils/impact';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 import { InvoicePreviewPane } from '../templates/components/InvoicePreviewPane';
+import { InvoiceSendDialog } from './InvoiceSendDialog';
 import { usePdfDocument } from './usePdfDocument';
 import { useFeatureGuard } from '../../../hooks/useFeatureGuard';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
 
-type Action = 'issue' | 'pay' | 'cancel' | 'delete';
+type Action = 'issue' | 'pay' | 'cancel' | 'delete' | 'send';
 
 const Money = ({ value }: { value: number }) => (
   <BaseFormatNumber value={value} currencyCode={ENUM.COMMON.Currency.XOF} />
@@ -133,6 +136,7 @@ const PayDialog = ({
 /**
  * Détail d'une facture : PDF (brouillon : mention BROUILLON), informations et actions selon le
  * statut. Brouillon : modifier, supprimer, émettre. Émise : payée, annuler. Payée : annuler.
+ * Émise ou payée : envoi (et renvoi) par e-mail au client, PDF joint.
  * Chaque action irréversible montre d'abord ce qu'elle entraîne.
  */
 export const InvoiceDetailDialog = ({
@@ -174,6 +178,9 @@ export const InvoiceDetailDialog = ({
         onChanged();
         if (done === 'delete') return onClose();
         refetch();
+        if (done === 'send') {
+          return BaseToast({ title: 'Facture envoyée', type: ToastStatus.SUCCESS });
+        }
         pdf.retry();
       },
     },
@@ -236,6 +243,12 @@ export const InvoiceDetailDialog = ({
               {invoice.cancelledAt && (
                 <Row label="Annulée le">{shortDate(invoice.cancelledAt)}</Row>
               )}
+              {invoice.emails?.[0] && (
+                <Row label="Envoyée le">
+                  {shortDate(invoice.emails[0].sentAt)} à {invoice.emails[0].recipient}
+                  {invoice.emails.length > 1 && ` (${invoice.emails.length} envois)`}
+                </Row>
+              )}
             </Stack>
             {invoice.cancelReason && (
               <Box p={3} rounded="7px" bg="bg.muted">
@@ -270,6 +283,12 @@ export const InvoiceDetailDialog = ({
                 <BaseButton colorType="primary" onClick={() => setAction('pay')}>
                   <Icons.Check aria-hidden />
                   Marquer comme payée
+                </BaseButton>
+              )}
+              {canManage && (invoice.status === 'ISSUED' || invoice.status === 'PAID') && (
+                <BaseButton variant="outline" colorType="primary" onClick={() => setAction('send')}>
+                  <Icons.Send aria-hidden />
+                  {invoice.emails?.length ? 'Renvoyer par e-mail' : 'Envoyer par e-mail'}
                 </BaseButton>
               )}
               {invoice.number && (
@@ -349,6 +368,14 @@ export const InvoiceDetailDialog = ({
                 </Field.HelperText>
               </Field.Root>
             </ActionImpactDialog>
+          )}
+          {action === 'send' && (
+            <InvoiceSendDialog
+              invoice={invoice}
+              onClose={() => setAction(null)}
+              onConfirm={(body) => run(body)}
+              isSubmitting={isPending}
+            />
           )}
           {action === 'pay' && (
             <PayDialog

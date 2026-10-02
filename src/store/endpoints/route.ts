@@ -277,6 +277,11 @@ export const APIS = (baseUrl?: string) => {
         method: 'POST',
         pathBase: 'SECURED_API',
       }),
+      INVOICE_SEND: api({
+        path: '/invoicing/invoices/send',
+        method: 'POST',
+        pathBase: 'SECURED_API',
+      }),
       INVOICE_STAMP_UPLOAD: api({
         path: '/invoicing/stamp',
         method: 'POST',
