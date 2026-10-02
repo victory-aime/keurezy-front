@@ -17,6 +17,8 @@ import { useUserContext } from '_context/user-context';
 import { AgencyModule } from '_store/state-management';
 import { ENUM, MODELS } from '_types/*';
 import { INVOICE_STATUS, isOverdue, shortDate } from '_utils/invoice';
+import { usePermissions } from '../../../hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
 import { InvoiceDetailDialog } from './InvoiceDetailDialog';
 import { InvoiceEditorDialog } from './InvoiceEditorDialog';
 
@@ -73,6 +75,7 @@ const columnsFor = (open: (id: string) => void): ColumnsDataTable[] => [
 export const InvoicesPage = () => {
   const { user } = useUserContext();
   const agencyId = user?.agencyId ?? '';
+  const canManage = usePermissions().hasPermission(AppPermissions.INVOICES.MANAGE);
   const [filter, setFilter] = useState<Filter>('ALL');
   const [search, setSearch] = useState('');
   const [q, setQ] = useState('');
@@ -129,9 +132,11 @@ export const InvoicesPage = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </InputGroup>
-        <BaseButton colorType="primary" onClick={() => setEditor({ open: true, editing: null })}>
-          Nouvelle facture
-        </BaseButton>
+        {canManage && (
+          <BaseButton colorType="primary" onClick={() => setEditor({ open: true, editing: null })}>
+            Nouvelle facture
+          </BaseButton>
+        )}
       </Flex>
 
       <Flex gap={2} flexWrap="wrap" role="group" aria-label="Filtrer par statut">

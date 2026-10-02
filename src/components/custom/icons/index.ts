@@ -76,6 +76,28 @@ import {
   LuHeartHandshake,
   LuMaximize,
   LuSend,
+  LuLayoutDashboard,
+  LuHouse,
+  LuLandPlot,
+  LuMegaphone,
+  LuCalendarCheck,
+  LuCalendarClock,
+  LuMessagesSquare,
+  LuReceipt,
+  LuPalette,
+  LuUsers,
+  LuUserPlus,
+  LuStore,
+  LuCreditCard,
+  LuPlug,
+  LuUserRound,
+  LuShieldCheck,
+  LuBell,
+  LuLandmark,
+  LuBriefcase,
+  LuWallet,
+  LuUserCog,
+  LuSettings2,
 } from 'react-icons/lu';
 import { BsCalendar3, BsSliders } from 'react-icons/bs';
 import { CiGrid31 } from 'react-icons/ci';
@@ -186,4 +208,36 @@ export const Icons = {
   VoicePlay: IoPlay,
   VoicePause: IoPause,
   Mic: IoMic,
+};
+
+/**
+ * Icônes du menu latéral : un seul jeu (Lucide, trait identique) et une icône par entrée, pour
+ * que chaque lien se reconnaisse d'un coup d'œil, même menu replié.
+ */
+export const NavIcons = {
+  Dashboard: LuLayoutDashboard,
+  Properties: LuHouse,
+  Buildings: LuBuilding2,
+  Lands: LuLandPlot,
+  Annonces: LuMegaphone,
+  Bookings: LuCalendarCheck,
+  Visits: LuCalendarClock,
+  Messages: LuMessagesSquare,
+  Invoices: LuReceipt,
+  InvoiceTemplates: LuPalette,
+  Team: LuUsers,
+  Invitations: LuUserPlus,
+  Agency: LuStore,
+  Subscription: LuCreditCard,
+  Integrations: LuPlug,
+  Profile: LuUserRound,
+  Security: LuShieldCheck,
+  Notifications: LuBell,
+  // Titres des groupes
+  GroupAssets: LuLandmark,
+  GroupActivity: LuBriefcase,
+  GroupBilling: LuWallet,
+  GroupTeam: LuUserCog,
+  GroupAgency: LuSettings2,
+  GroupAccount: LuUserRound,
 };

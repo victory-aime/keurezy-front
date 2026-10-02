@@ -1,6 +1,6 @@
 'use client';
 
-import { VStack, HStack, Flex, FileUploadRootProvider } from '@chakra-ui/react';
+import { chakra, VStack, HStack, Flex, FileUploadRootProvider } from '@chakra-ui/react';
 import {
   FormTextInput,
   BaseButton,
@@ -26,6 +26,8 @@ import { useAuthContext } from '_context/auth-context';
 import { UserRole } from '../../../../types/enum';
 import { AgencyClosureControl } from './AgencyClosureControl';
 import { AgencyLegalSection } from './AgencyLegalSection';
+import { usePermissions } from '../../../hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
 
 export const AgencyInfo = () => {
   const { user } = useUserContext();
@@ -38,6 +40,8 @@ export const AgencyInfo = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user: authUser } = useAuthContext();
   const isOwner = authUser?.role === UserRole.OWNER;
+  // Profil public de l'agence : owner, ou staff avec la permission (le backend la vérifie aussi)
+  const canEdit = usePermissions().hasPermission(AppPermissions.AGENCY.UPDATE);
 
   const [initialAgencyValues, setInitialAgencyValues] = useState<MODELS.IAgency>(
     {} as MODELS.IAgency,
@@ -117,11 +121,23 @@ export const AgencyInfo = () => {
             <BaseContainer
               gap={8}
               title="Informations de l'agence"
-              description="Modifiez et mettez à jour les informations publiques de votre agence."
+              description={
+                canEdit
+                  ? 'Modifiez et mettez à jour les informations publiques de votre agence.'
+                  : 'Informations publiques de votre agence, en lecture seule : leur modification demande la permission « Modifier le profil de l’agence ».'
+              }
               loader={loadInfo}
               border={'none'}
             >
-              <Flex width={'full'} gap={5} mt={5} flexDirection={{ base: 'column', md: 'row' }}>
+              <chakra.fieldset
+                disabled={!canEdit}
+                display="flex"
+                minW={0}
+                width={'full'}
+                gap={5}
+                mt={5}
+                flexDirection={{ base: 'column', md: 'row' }}
+              >
                 <Flex width={{ base: 'full', md: '1/4' }}>
                   <BaseUploadImageFile
                     getFileUploaded={(files) => setFieldValue('agencyLogo', files)}
@@ -155,7 +171,7 @@ export const AgencyInfo = () => {
                     />
                   </HStack>
                 </VStack>
-              </Flex>
+              </chakra.fieldset>
 
               <ProfileForm
                 title="Status de l'agence"
@@ -214,11 +230,13 @@ export const AgencyInfo = () => {
                 </ProfileForm>
               )}
             </BaseContainer>
-            <Flex width="full" alignItems="flex-end" justifyContent="flex-end">
-              <BaseButton colorType="success" onClick={() => handleSubmit()}>
-                {t('Sauvegarder les changements')}
-              </BaseButton>
-            </Flex>
+            {canEdit && (
+              <Flex width="full" alignItems="flex-end" justifyContent="flex-end">
+                <BaseButton colorType="success" onClick={() => handleSubmit()}>
+                  {t('Sauvegarder les changements')}
+                </BaseButton>
+              </Flex>
+            )}
             <DocumentPreviewModal onChange={setIsOpen} isOpen={isOpen} data={selectedDoc} />
           </FileUploadRootProvider>
         );

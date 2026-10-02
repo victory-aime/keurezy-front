@@ -21,6 +21,7 @@ import { StampSection } from './StampSection';
 import { TemplateCard } from './TemplateCard';
 import { TemplateEditorDialog } from './TemplateEditorDialog';
 import { useInvoicePreview } from './useInvoicePreview';
+import { useFeatureGuard } from '../../../../hooks/useFeatureGuard';
 
 type Template = MODELS.IInvoiceTemplate;
 
@@ -122,6 +123,7 @@ export const InvoiceTemplatesPage = () => {
   const { user } = useUserContext();
   const { user: authUser } = useAuthContext();
   const isOwner = authUser?.role === UserRole.OWNER;
+  const { guard, limitModal } = useFeatureGuard('invoice_templates');
   const agencyId = user?.agencyId ?? '';
   const [editor, setEditor] = useState<{ open: boolean; editing: Template | null }>({
     open: false,
@@ -179,7 +181,7 @@ export const InvoiceTemplatesPage = () => {
             {isOwner && (
               <BaseButton
                 colorType="primary"
-                onClick={() => setEditor({ open: true, editing: null })}
+                onClick={() => guard(() => setEditor({ open: true, editing: null }))}
               >
                 Nouveau modèle
               </BaseButton>
@@ -193,7 +195,12 @@ export const InvoiceTemplatesPage = () => {
                 isDefaultChoice={template.id === data.settings.defaultTemplateId}
                 isOwner={isOwner}
                 onPreview={() => setPreviewed(template)}
-                onEdit={() => setEditor({ open: true, editing: template })}
+                // Personnaliser un modèle commun crée une copie : elle compte dans le quota
+                onEdit={() =>
+                  template.isDefault
+                    ? guard(() => setEditor({ open: true, editing: template }))
+                    : setEditor({ open: true, editing: template })
+                }
                 onMakeDefault={() =>
                   updateSettings({
                     payload: { defaultTemplateId: template.id },
@@ -215,6 +222,7 @@ export const InvoiceTemplatesPage = () => {
           />
         </Stack>
       )}
+      {limitModal}
       <PreviewModal agencyId={agencyId} template={previewed} onClose={() => setPreviewed(null)} />
       <BaseModal
         isOpen={!!toDelete}

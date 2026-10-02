@@ -268,9 +268,11 @@
       "TICKETS": "Support client",
       "SUPPORT": "Support prioritaire",
       "MARKETING": "Marketing",
-      "MESSAGING": "Messagerie"
+      "MESSAGING": "Messagerie",
+      "BOOKINGS": "Réservations",
+      "INVOICING": "Facturation",
+      "AGENCY": "Agence"
     },
-
     "FEATURE_LIST": {
       "MANAGE_PROPERTIES": "Gérer les biens immobiliers",
       "MANAGE_PROPERTY_TYPES": "Gérer les types de biens",
@@ -288,7 +290,11 @@
       "MANAGE_TICKETS": "Gérer les tickets de support",
       "PREMIUM_SUPPORT": "Bénéficier d'un support prioritaire",
       "MANAGE_INVITATIONS": "Gérer les invitations",
-      "MANAGE_CONVERSATIONS": "Échanger avec les clients"
+      "MANAGE_CONVERSATIONS": "Échanger avec les clients",
+      "MANAGE_BOOKINGS": "Traiter les réservations",
+      "MANAGE_INVOICES": "Facturer les clients",
+      "INVOICE_TEMPLATES": "Personnaliser les modèles de facture",
+      "MANAGE_AGENCY": "Gérer le profil de l'agence"
     }
   },
 

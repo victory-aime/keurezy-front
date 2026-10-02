@@ -7,7 +7,12 @@ import { markNearLimitSeen, nearLimitAlreadySeen } from '_utils/subscription';
 import { LimitReachedModal } from '../dashboard/components/LimitReachedModal';
 
 /** Fonctionnalités limitées qui ont un bouton « Ajouter ». */
-export type LimitedFeature = 'manage_properties' | 'publish_properties' | 'manage_users';
+export type LimitedFeature =
+  | 'manage_properties'
+  | 'publish_properties'
+  | 'manage_users'
+  | 'manage_invoices'
+  | 'invoice_templates';
 
 /**
  * Garde d'un bouton « Ajouter » :

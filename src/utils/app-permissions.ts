@@ -44,6 +44,13 @@ export const AppPermissions = {
     RESEND: 'resend_invitation',
     CANCEL: 'cancel_invitation',
   },
+  INVOICES: {
+    VIEW: 'view_invoices',
+    MANAGE: 'manage_invoices',
+  },
+  AGENCY: {
+    UPDATE: 'update_agency',
+  },
   REPORTS: {
     VIEW: 'view_reports',
     EXPORT: 'export_reports',

@@ -205,3 +205,14 @@ describe('planDifferences : libellés', () => {
     expect(changes).toEqual([{ label: '+4 demandes de support prioritaire', tone: 'gain' }]);
   });
 });
+
+describe('formatFeatureLimit : facturation', () => {
+  it('quota mensuel de factures et modèles non inclus', () => {
+    expect(formatFeatureLimit('manage_invoices', 30)).toBe('Jusqu’à 30 factures émises par mois');
+    expect(formatFeatureLimit('invoice_templates', 1)).toBe(
+      'Jusqu’à 1 modèle de facture personnalisé',
+    );
+    expect(formatFeatureLimit('invoice_templates', 0)).toBe('Non inclus dans ce plan');
+    expect(formatFeatureLimit('manage_invoices', null)).toBe('Factures illimitées');
+  });
+});

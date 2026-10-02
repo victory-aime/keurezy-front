@@ -37,6 +37,9 @@ import { invoiceCancelImpact, invoiceDeleteImpact, invoiceIssueImpact } from '_u
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 import { InvoicePreviewPane } from '../templates/components/InvoicePreviewPane';
 import { usePdfDocument } from './usePdfDocument';
+import { useFeatureGuard } from '../../../hooks/useFeatureGuard';
+import { usePermissions } from '../../../hooks/usePermissions';
+import { AppPermissions } from '_utils/app-permissions';
 
 type Action = 'issue' | 'pay' | 'cancel' | 'delete';
 
@@ -146,6 +149,9 @@ export const InvoiceDetailDialog = ({
   onChanged: () => void;
 }) => {
   const [action, setAction] = useState<Action | null>(null);
+  // Lecture seule sans `manage_invoices` ; quota mensuel contrôlé avant d'ouvrir l'émission
+  const canManage = usePermissions().hasPermission(AppPermissions.INVOICES.MANAGE);
+  const { guard, limitModal } = useFeatureGuard('manage_invoices');
   const [reason, setReason] = useState('');
   const { data: invoice, refetch } = AgencyModule.getInvoiceQueries({
     params: { agencyId, id: invoiceId ?? '' },
@@ -241,9 +247,9 @@ export const InvoiceDetailDialog = ({
             )}
 
             <Stack gap={2}>
-              {invoice.status === 'DRAFT' && (
+              {canManage && invoice.status === 'DRAFT' && (
                 <>
-                  <BaseButton colorType="primary" onClick={() => setAction('issue')}>
+                  <BaseButton colorType="primary" onClick={() => guard(() => setAction('issue'))}>
                     Émettre la facture
                   </BaseButton>
                   <BaseButton variant="outline" colorType="primary" onClick={() => onEdit(invoice)}>
@@ -260,7 +266,7 @@ export const InvoiceDetailDialog = ({
                   </BaseButton>
                 </>
               )}
-              {invoice.status === 'ISSUED' && (
+              {canManage && invoice.status === 'ISSUED' && (
                 <BaseButton colorType="primary" onClick={() => setAction('pay')}>
                   <Icons.Check aria-hidden />
                   Marquer comme payée
@@ -277,7 +283,7 @@ export const InvoiceDetailDialog = ({
                   </a>
                 </Button>
               )}
-              {(invoice.status === 'ISSUED' || invoice.status === 'PAID') && (
+              {canManage && (invoice.status === 'ISSUED' || invoice.status === 'PAID') && (
                 <BaseButton variant="ghost" colorType="danger" onClick={() => setAction('cancel')}>
                   Annuler la facture
                 </BaseButton>
@@ -285,6 +291,7 @@ export const InvoiceDetailDialog = ({
             </Stack>
           </Stack>
 
+          {limitModal}
           <ActionImpactDialog
             isOpen={action === 'issue'}
             onChange={closeAction}

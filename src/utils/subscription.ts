@@ -52,6 +52,18 @@ export const FEATURE_LABELS: Record<
     unlimited: 'Statistiques des annonces',
   },
 
+  MANAGE_INVOICES: {
+    singular: 'facture émise par mois',
+    plural: 'factures émises par mois',
+    unlimited: 'Factures illimitées',
+  },
+
+  INVOICE_TEMPLATES: {
+    singular: 'modèle de facture personnalisé',
+    plural: 'modèles de facture personnalisés',
+    unlimited: 'Modèles de facture personnalisés illimités',
+  },
+
   PREMIUM_SUPPORT: {
     singular: 'demande de support prioritaire',
     plural: 'demandes de support prioritaire',
@@ -80,6 +92,7 @@ export function formatFeatureLimit(name: string | undefined, limit: number | nul
 
   // Feature sans limite numérique
   if (limit === null) return config.unlimited ?? '';
+  if (limit === 0) return 'Non inclus dans ce plan';
 
   // Cas simple sans pluralisation
   if (!config.singular && !config.plural) return `${limit} ${config.unlimited}`;
