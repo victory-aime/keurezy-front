@@ -133,7 +133,8 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
         feature: 'view_reports',
         permission: AppPermissions.REPORTS.VIEW,
         preview: 'stats',
-        pitch: 'L’activité de votre agence en graphiques : biens, visites et demandes, d’un coup d’œil.',
+        pitch:
+          'L’activité de votre agence en graphiques : biens, visites et demandes, d’un coup d’œil.',
       },
     ],
   },
