@@ -1,6 +1,6 @@
 'use client';
 
-import { Field, Flex, HStack, Input, SimpleGrid, Skeleton, Stack } from '@chakra-ui/react';
+import { Field, Flex, HStack, Input, SimpleGrid, Stack } from '@chakra-ui/react';
 import { useState } from 'react';
 import {
   BaseButton,
@@ -10,6 +10,7 @@ import {
   Icons,
   ModalOpenProps,
   TextVariant,
+  CustomSkeletonLoader,
 } from '_components/custom';
 import { useAuthContext } from '_context/auth-context';
 import { useUserContext } from '_context/user-context';
@@ -158,7 +159,7 @@ export const InvoiceTemplatesPage = () => {
       {isLoading || !data ? (
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={4} aria-busy="true">
           {[0, 1, 2].map((i) => (
-            <Skeleton key={i} height="150px" rounded="7px" />
+            <CustomSkeletonLoader key={i} type="DEFAULT" height="150px" />
           ))}
         </SimpleGrid>
       ) : (

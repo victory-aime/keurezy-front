@@ -8,11 +8,16 @@ import {
   NativeSelect,
   RadioCard,
   SimpleGrid,
-  Skeleton,
   Stack,
 } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
-import { BaseButton, BaseFormatNumber, BaseText, TextVariant } from '_components/custom';
+import {
+  BaseButton,
+  BaseFormatNumber,
+  BaseText,
+  TextVariant,
+  CustomSkeletonLoader,
+} from '_components/custom';
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -61,7 +66,7 @@ const BookingPicker = ({
     params: { agencyId },
     queryOptions: { enabled: !!agencyId },
   });
-  if (isLoading) return <Skeleton height="120px" rounded="7px" />;
+  if (isLoading) return <CustomSkeletonLoader type="DEFAULT" height="120px" />;
   if (!data?.length) {
     return (
       <BaseText variant={TextVariant.S} color="fg.muted">

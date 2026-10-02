@@ -1,8 +1,14 @@
 'use client';
 
-import { Box, Flex, Skeleton, Stack, VStack } from '@chakra-ui/react';
+import { Box, Flex, Stack, VStack } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { BaseModal, BaseText, Icons, ModalOpenProps } from '_components/custom';
+import {
+  BaseModal,
+  BaseText,
+  Icons,
+  ModalOpenProps,
+  CustomSkeletonLoader,
+} from '_components/custom';
 import { variantColorType } from '_components/custom/button/interface/button';
 import { useColorMode } from '_components/ui/color-mode';
 import { ImpactGroup, ImpactSummary, ImpactTone } from '_utils/impact';
@@ -110,8 +116,8 @@ export function ActionImpactDialog({
       <VStack gap={3} width="full" aria-busy={isLoadingImpact}>
         {isLoadingImpact || !summary ? (
           <>
-            <Skeleton height="72px" width="full" rounded="lg" />
-            <Skeleton height="48px" width="full" rounded="lg" />
+            <CustomSkeletonLoader type="DEFAULT" height="72px" width="full" radius="lg" />
+            <CustomSkeletonLoader type="DEFAULT" height="48px" width="full" radius="lg" />
           </>
         ) : (
           summary.groups.map((group) => <ImpactGroupBlock key={group.title} group={group} />)

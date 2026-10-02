@@ -1,10 +1,16 @@
 'use client';
 
-import { Box, Flex, Skeleton, Stack } from '@chakra-ui/react';
+import { Box, Flex, Stack } from '@chakra-ui/react';
 import { AnimatePresence, useReducedMotion } from 'framer-motion';
 import { t } from 'i18next';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { BaseButton, BaseFormatNumber, BaseText, TextVariant } from '_components/custom';
+import {
+  BaseButton,
+  BaseFormatNumber,
+  BaseText,
+  TextVariant,
+  CustomSkeletonLoader,
+} from '_components/custom';
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -201,7 +207,9 @@ export const ChangePlanDialog = ({
         return (
           <Flex gap={4} direction={{ base: 'column', lg: 'row' }} aria-busy="true">
             {[0, 1, 2].map((i) => (
-              <Skeleton key={i} height="320px" flex="1" rounded="7px" />
+              <Box key={i} flex="1">
+                <CustomSkeletonLoader type="DEFAULT" height="320px" />
+              </Box>
             ))}
           </Flex>
         );

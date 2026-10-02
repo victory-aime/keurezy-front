@@ -1,6 +1,6 @@
 import { MODELS } from '_types/*';
 import { Session } from 'better-auth';
-import React, { ReactNode } from 'react';
+import React from 'react';
 import type { LockedPreview } from './components/LockedFeaturePreview';
 
 export interface IMobileSidebar {

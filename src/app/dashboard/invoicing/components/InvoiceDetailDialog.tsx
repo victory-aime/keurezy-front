@@ -1,16 +1,6 @@
 'use client';
 
-import {
-  Box,
-  Field,
-  Flex,
-  Grid,
-  Input,
-  NativeSelect,
-  Skeleton,
-  Stack,
-  Textarea,
-} from '@chakra-ui/react';
+import { Box, Field, Flex, Grid, Input, NativeSelect, Stack, Textarea } from '@chakra-ui/react';
 import { useState } from 'react';
 import {
   BaseBadge,
@@ -23,6 +13,7 @@ import {
   ModalOpenProps,
   TextVariant,
   ToastStatus,
+  CustomSkeletonLoader,
 } from '_components/custom';
 import { AgencyModule } from '_store/state-management';
 import { ENUM, MODELS } from '_types/*';
@@ -201,7 +192,7 @@ export const InvoiceDetailDialog = ({
       ignoreFooter
     >
       {!invoice || !status ? (
-        <Skeleton height="420px" rounded="7px" />
+        <CustomSkeletonLoader type="DEFAULT" height="420px" />
       ) : (
         <Grid templateColumns={{ base: '1fr', lg: 'minmax(0, 1fr) 320px' }} gap={6}>
           <InvoicePreviewPane {...pdf} caption="Document PDF" />

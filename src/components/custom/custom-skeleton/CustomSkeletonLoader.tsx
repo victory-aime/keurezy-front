@@ -17,7 +17,9 @@ export const CustomSkeletonLoader: FunctionComponent<CustomSkeletonLoaderProps> 
   count = 4,
   radius = '7px',
 }) => {
-  const DefaultBlockLoader = <Skeleton height={height} variant={variant} />;
+  const DefaultBlockLoader = (
+    <Skeleton height={height} width={width} rounded={radius ?? '7px'} variant={variant} />
+  );
 
   const TableLoader = (
     <Table.Root minH={height} mt={8}>

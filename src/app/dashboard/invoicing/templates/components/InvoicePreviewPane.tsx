@@ -1,10 +1,10 @@
 'use client';
 
-import { Box, Flex, Skeleton, Stack } from '@chakra-ui/react';
+import { Box, Flex, Stack } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { Document, Page } from 'react-pdf';
 import '../../../../lib/pdf-worker';
-import { BaseButton, BaseText, Icons, TextVariant } from '_components/custom';
+import { BaseButton, BaseText, Icons, TextVariant, CustomSkeletonLoader } from '_components/custom';
 import type { InvoicePreview } from './useInvoicePreview';
 
 /**
@@ -59,7 +59,11 @@ export const InvoicePreviewPane = ({
         aspectRatio={210 / 297}
       >
         {url && width > 0 ? (
-          <Document file={url} loading={<Skeleton height="full" />} error=" ">
+          <Document
+            file={url}
+            loading={<CustomSkeletonLoader type="DEFAULT" height="100%" />}
+            error=" "
+          >
             <Page
               pageNumber={1}
               width={width}
@@ -78,7 +82,7 @@ export const InvoicePreviewPane = ({
             </BaseButton>
           </Stack>
         ) : (
-          <Skeleton height="full" aria-label="Chargement de l’aperçu" />
+          <CustomSkeletonLoader type="DEFAULT" height="100%" />
         )}
       </Box>
     </Stack>

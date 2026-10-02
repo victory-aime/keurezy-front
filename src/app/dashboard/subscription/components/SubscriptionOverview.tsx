@@ -1,9 +1,9 @@
 'use client';
 
-import { Flex, Skeleton, Stack } from '@chakra-ui/react';
+import { Flex, Stack } from '@chakra-ui/react';
 import { useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { BaseButton, BaseText, TextVariant } from '_components/custom';
+import { BaseButton, BaseText, TextVariant, CustomSkeletonLoader } from '_components/custom';
 import { useAuthContext } from '_context/auth-context';
 import { useUserContext } from '_context/user-context';
 import { AgencyModule } from '_store/state-management';
@@ -22,9 +22,9 @@ import { UsageOverview } from './UsageOverview';
 /** Squelette de la page pendant le chargement. */
 const OverviewSkeleton = () => (
   <Stack gap={4} aria-busy="true" aria-label="Chargement de votre abonnement">
-    <Skeleton height="180px" rounded="7px" />
-    <Skeleton height="220px" rounded="7px" />
-    <Skeleton height="160px" rounded="7px" />
+    <CustomSkeletonLoader type="DEFAULT" height="180px" />
+    <CustomSkeletonLoader type="DEFAULT" height="220px" />
+    <CustomSkeletonLoader type="DEFAULT" height="160px" />
   </Stack>
 );
 

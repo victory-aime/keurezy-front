@@ -1,9 +1,9 @@
 'use client';
 
-import { Center, Skeleton, Stack } from '@chakra-ui/react';
+import { Center, Stack } from '@chakra-ui/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { ReactNode, useMemo } from 'react';
-import { BaseButton, BaseText, Icons, TextVariant } from '_components/custom';
+import { BaseButton, BaseText, Icons, TextVariant, CustomSkeletonLoader } from '_components/custom';
 import { useAuthContext } from '_context/auth-context';
 import { useAccessControl } from '_hooks/useAccessControl';
 import { ENUM } from '_types/*';
@@ -32,7 +32,7 @@ export const PlanFeatureGate = ({ children }: { children: ReactNode }) => {
   );
 
   if (!feature) return <>{children}</>;
-  if (isLoading) return <Skeleton height="320px" rounded="7px" aria-busy="true" />;
+  if (isLoading) return <CustomSkeletonLoader type="DEFAULT" height="320px" />;
   if (hasFeature(feature)) return <>{children}</>;
 
   return (

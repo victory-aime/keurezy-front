@@ -1,5 +1,11 @@
-import { Flex, Skeleton, Stack } from '@chakra-ui/react';
-import { BaseButton, BaseFormatNumber, BaseText, TextVariant } from '_components/custom';
+import { Flex, Stack } from '@chakra-ui/react';
+import {
+  BaseButton,
+  BaseFormatNumber,
+  BaseText,
+  TextVariant,
+  CustomSkeletonLoader,
+} from '_components/custom';
 import { ENUM, MODELS } from '_types/*';
 import { formatLongDate } from '_utils/subscription';
 import { KeepSelection } from './KeepSelection';
@@ -57,8 +63,8 @@ export const QuoteReview = ({
   if (isLoading) {
     return (
       <Stack gap={3} aria-busy="true" aria-label="Calcul du montant">
-        <Skeleton height="24px" width="60%" />
-        <Skeleton height="72px" rounded="7px" />
+        <CustomSkeletonLoader type="DEFAULT" height="24px" width="60%" />
+        <CustomSkeletonLoader type="DEFAULT" height="72px" />
       </Stack>
     );
   }

@@ -1,17 +1,17 @@
 'use client';
 
-import { Box, Flex, Input, InputGroup, Skeleton, Stack } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
+import { Formik } from 'formik';
 import { useEffect, useMemo, useState } from 'react';
 import {
   BaseBadge,
   BaseButton,
   BaseContainer,
   BaseFormatNumber,
-  BaseText,
   ColumnsDataTable,
   DataTableContainer,
+  FormTextInput,
   Icons,
-  TextVariant,
 } from '_components/custom';
 import { useUserContext } from '_context/user-context';
 import { AgencyModule } from '_store/state-management';
@@ -133,18 +133,20 @@ export const InvoicesPage = () => {
       gap={6}
     >
       <Flex justifyContent="space-between" gap={3} wrap="wrap" width="full" p={4}>
-        <InputGroup
-          startElement={<Icons.Search aria-hidden />}
-          maxW={{ base: 'full', sm: '320px' }}
-        >
-          <Input
-            type="search"
-            aria-label="Rechercher une facture"
-            placeholder="Numéro ou client"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </InputGroup>
+        <Formik initialValues={{ search: '' }} onSubmit={() => undefined}>
+          <Box width={{ base: 'full', sm: '320px' }}>
+            <FormTextInput
+              name="search"
+              type="search"
+              aria-label="Rechercher une facture"
+              placeholder="Numéro ou client"
+              leftAccessory={<Icons.Search aria-hidden />}
+              onChangeFunction={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearch(e.target.value)
+              }
+            />
+          </Box>
+        </Formik>
         {canManage && (
           <BaseButton colorType="primary" onClick={() => setEditor({ open: true, editing: null })}>
             Nouvelle facture
@@ -182,105 +184,27 @@ export const InvoicesPage = () => {
         })}
       </Flex>
 
-      {isLoading ? (
-        <Stack gap={2} width="full" aria-busy="true" aria-label="Chargement des factures">
-          {[0, 1, 2].map((i) => (
-            <Skeleton key={i} height="44px" rounded="7px" />
-          ))}
-        </Stack>
-      ) : !items.length ? (
-        <Stack gap={3} py={10} alignItems="center" textAlign="center" width="full" role="status">
-          <BaseText fontWeight="semibold">
-            {q || filter !== 'ALL'
-              ? 'Aucune facture ne correspond'
-              : 'Aucune facture pour le moment'}
-          </BaseText>
-          <BaseText variant={TextVariant.S} color="fg.muted" maxW="28rem">
-            {q || filter !== 'ALL'
-              ? 'Modifiez la recherche ou le filtre.'
-              : 'Créez votre première facture depuis une réservation confirmée, ou une facture libre.'}
-          </BaseText>
-        </Stack>
-      ) : (
-        <Box width="full">
-          <Box hideBelow="md">
-            <DataTableContainer
-              data={items}
-              columns={columns}
-              paginationData={{
-                lazy: true,
-                currentPage: page,
-                totalDataPerPage: PAGE_SIZE,
-                totalItems: data?.totalItems,
-                totalPages: data?.totalPages,
-                onLazyLoad: (index: number) => setPage(index),
-              }}
-              hidePagination={(data?.totalPages ?? 1) <= 1}
-            />
-          </Box>
-          <Stack hideFrom="md" gap={0} as="ul" listStyleType="none">
-            {items.map((i) => (
-              <Box
-                as="li"
-                key={i.id}
-                borderBottomWidth="1px"
-                borderColor="border"
-                _last={{ borderBottomWidth: 0 }}
-              >
-                <Stack
-                  as="button"
-                  width="full"
-                  textAlign="start"
-                  gap={1}
-                  py={3}
-                  onClick={() => open(i.id)}
-                  aria-label={`Ouvrir la facture ${i.number ?? 'brouillon'} de ${i.clientName}`}
-                >
-                  <Flex justifyContent="space-between" alignItems="baseline" gap={3}>
-                    <BaseText variant={TextVariant.S} fontWeight="semibold">
-                      {i.number ?? 'Brouillon'}
-                    </BaseText>
-                    <BaseText variant={TextVariant.S} fontWeight="semibold">
-                      <Total item={i} />
-                    </BaseText>
-                  </Flex>
-                  <Flex justifyContent="space-between" alignItems="center" gap={3}>
-                    <BaseText variant={TextVariant.XS} color="fg.muted">
-                      {i.clientName} · échéance {shortDate(i.dueAt)}
-                    </BaseText>
-                    <StatusBadges item={i} />
-                  </Flex>
-                </Stack>
-              </Box>
-            ))}
-            {(data?.totalPages ?? 1) > 1 && (
-              <Flex mt={3} gap={2} justifyContent="space-between" alignItems="center">
-                <BaseButton
-                  size="sm"
-                  variant="outline"
-                  colorType="neutral"
-                  disabled={page <= 1}
-                  onClick={() => setPage(page - 1)}
-                >
-                  Précédente
-                </BaseButton>
-                <BaseText variant={TextVariant.XS} color="fg.muted">
-                  Page {page} sur {data?.totalPages}
-                </BaseText>
-                <BaseButton
-                  size="sm"
-                  variant="outline"
-                  colorType="neutral"
-                  disabled={page >= (data?.totalPages ?? 1)}
-                  onClick={() => setPage(page + 1)}
-                >
-                  Suivante
-                </BaseButton>
-              </Flex>
-            )}
-          </Stack>
-        </Box>
-      )}
+      <DataTableContainer
+        data={items}
+        columns={columns}
+        isLoading={isLoading}
+        isOpenSelect
+        onOpenSelectRow={(i: Item) => open(i.id)}
+        notFoundTitle={
+          q || filter !== 'ALL'
+            ? 'Aucune facture ne correspond : modifiez la recherche ou le filtre.'
+            : 'Aucune facture pour le moment. Créez la première depuis une réservation confirmée, ou une facture libre.'
+        }
+        paginationData={{
+          lazy: true,
+          currentPage: page,
+          totalDataPerPage: PAGE_SIZE,
+          totalItems: data?.totalItems,
+          totalPages: data?.totalPages,
+          onLazyLoad: (index: number) => setPage(index),
+        }}
+        hidePagination={(data?.totalPages ?? 1) <= 1}
+      />
 
       <InvoiceEditorDialog
         agencyId={agencyId}
