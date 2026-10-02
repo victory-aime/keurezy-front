@@ -17,12 +17,12 @@ Spec : [spec.md](./spec.md), règles « Factures (I2) ». Plan : [plan.md](./pla
 - [x] Service : liste paginée (statut, recherche), détail, réservations facturables, création (libre ou depuis une réservation), modification et suppression d'un brouillon, émission, payée, annulée, PDF.
 - [x] Rendu : `watermark` (« BROUILLON » ou « ANNULÉE ») ; données figées → `InvoiceRenderData`.
 - [x] Contrôleur `secured/invoicing/invoices` avec `@RequirePermission('manage_invoices')`.
-- [x] Tests : facture d'une autre agence introuvable ; brouillon seul modifiable ; émission figée (modèle ou agence modifiés ensuite : PDF inchangé) ; annulation sans motif refusée ; transitions interdites.
+- [x] Tests : facture d'une autre agence introuvable ; brouillon seul modifiable ; émission figée (modèle ou agence modifiés ensuite : PDF inchangé) ; transitions interdites (payer un brouillon, annuler un brouillon) ; date de paiement ni future ni antérieure à l'émission. Motif d'annulation obligatoire par le DTO (3 à 500 caractères).
 
 ## Web
 - [x] Types, routes, service, requêtes et mutations.
 - [x] Page « Factures » : onglets par statut, recherche, tableau (numéro, client, date, échéance, total, statut), actions.
-- [x] Création et modification d'un brouillon (plein écran) : source (réservation ou libre), client, lignes, échéance, modèle ; totaux en direct ; aperçu PDF.
+- [x] Création et modification d'un brouillon (plein écran) : source (réservation ou libre), client, lignes, échéance, modèle ; totaux en direct (le PDF du brouillon est dans le détail).
 - [x] Détail : PDF, émettre (confirmation : numéro attribué, plus modifiable), marquer payée, annuler (motif), supprimer un brouillon.
 - [x] Menu : « Factures » (owner pour l'instant, staff avec I3).
 
