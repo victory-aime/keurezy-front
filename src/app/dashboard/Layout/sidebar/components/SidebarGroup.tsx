@@ -5,12 +5,8 @@ import { BaseText } from '_components/custom';
 import { SideToolTip } from './SideToolTip';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { Icons } from '_components/custom';
-import { UpgradePlanModal } from './UpgradePlanModal';
-import { MotionFlex } from '_constants/motion';
-import { AnimatePresence } from 'framer-motion';
-import { useAppTheme } from '_context/theme-context';
+import { MotionBox, MotionFlex } from '_constants/motion';
+import { AnimatePresence, useReducedMotion, type Variants } from 'framer-motion';
 import { useThemeColors } from '_theme/useThemeColors';
 
 export const SidebarGroup = ({
@@ -24,7 +20,11 @@ export const SidebarGroup = ({
   mobileCloseDrawer?: () => void;
 }) => {
   const { hexToRGB } = useThemeColors();
-  const [openUpgradeModal, setOpenUpgradeModal] = useState(false);
+  // Animation de l'icône au survol, coupée si l'utilisateur réduit les animations
+  const reduceMotion = useReducedMotion();
+  const iconHover: Variants = reduceMotion
+    ? {}
+    : { hover: { rotate: [0, -12, 10, 0], scale: 1.15, transition: { duration: 0.45 } } };
 
   const router = useRouter();
   const { t } = useTranslation();
@@ -65,34 +65,20 @@ export const SidebarGroup = ({
                   const isHighlighted = item.highlight;
 
                   const handleClick = () => {
-                    if (item.disabled) {
-                      setOpenUpgradeModal(true);
-                      return;
-                    }
                     router.push(item.path);
                     mobileCloseDrawer?.();
                   };
 
                   return (
-                    <SideToolTip
-                      key={i}
-                      label={item.disabled ? 'Disponible dans un plan supérieur' : t(item.label)}
-                      disabled={isCollapsed && !item.disabled}
-                    >
+                    <SideToolTip key={i} label={t(item.label)} disabled={isCollapsed}>
                       <MotionFlex
                         position="relative"
                         transition={{
                           duration: 0.45,
                           ease: [0.22, 1, 0.36, 1],
                         }}
-                        whileHover={
-                          item.disabled
-                            ? {}
-                            : {
-                                scale: 0.97,
-                              }
-                        }
-                        whileTap={!item.disabled ? { scale: 0.98 } : {}}
+                        whileHover="hover"
+                        whileTap={{ scale: 0.98 }}
                         align="center"
                         width="full"
                         gap={3}
@@ -101,24 +87,11 @@ export const SidebarGroup = ({
                         borderRadius="md"
                         justifyContent={isCollapsed ? 'center' : 'flex-start'}
                         bg={isActive ? hexToRGB(500, 0.2) : 'transparent'}
-                        color={
-                          item.disabled
-                            ? 'gray.400'
-                            : isActive || isHighlighted
-                              ? 'primary.600'
-                              : 'gray.600'
-                        }
+                        color={isActive || isHighlighted ? 'primary.600' : 'gray.600'}
                         fontWeight={isActive || isHighlighted ? 'semibold' : 'normal'}
-                        cursor={item.disabled ? 'not-allowed' : 'pointer'}
-                        opacity={item.disabled ? 0.5 : 1}
+                        cursor="pointer"
                         onClick={handleClick}
-                        _hover={
-                          item.disabled
-                            ? {}
-                            : {
-                                bg: hexToRGB(500, 0.08),
-                              }
-                        }
+                        _hover={{ bg: hexToRGB(500, 0.08), color: 'primary.600' }}
                       >
                         {isHighlighted && (
                           <Box
@@ -131,7 +104,9 @@ export const SidebarGroup = ({
                             bg={'primary.500'}
                           />
                         )}
-                        <Icon as={item.icon} size={'xs'} />
+                        <MotionBox display="flex" variants={iconHover} aria-hidden>
+                          <Icon as={item.icon} size={'xs'} />
+                        </MotionBox>
 
                         <AnimatePresence initial={false}>
                           {isCollapsed && (
@@ -180,7 +155,6 @@ export const SidebarGroup = ({
                                   NEW
                                 </Badge>
                               )}
-                              {item.disabled && <Icon as={Icons.Lock} color="gray" />}
                             </MotionFlex>
                           )}
                         </AnimatePresence>
@@ -193,7 +167,6 @@ export const SidebarGroup = ({
           </Accordion.ItemContent>
         </Accordion.Item>
       </Accordion.Root>
-      <UpgradePlanModal onChange={setOpenUpgradeModal} isOpen={openUpgradeModal} />
     </main>
   );
 };

@@ -55,3 +55,11 @@ Spec : [spec.md](./spec.md), règles « Quotas (I3) ». Demande du 2026-10-02 : 
 | 4 | Clients sur les routes partagées | `staffOnly` : un client n'est pas bloqué par le garde, le service ne lui montre que ses données (testé). |
 | 5 | Images d'une facture émise | Copiées en base à l'émission (empreinte SHA-256, dédoublonnées), relues sans réseau ; l'ancien cachet peut être supprimé de Cloudinary sans effet sur les factures (testé). Seul un identifiant d'URL Cloudinary est accepté pour la suppression. |
 | 6 | Volume de `invoice_asset` | Images de 2 Mo au plus, une seule copie par image quelle que soit le nombre de factures. |
+
+## Retours du 2026-10-02 (après vérification)
+- [x] **Modules d'un plan supérieur** : lien masqué dans le menu (plus grisé) ; page protégée par `PlanFeatureGate` si l'URL est saisie directement (écran « non incluse dans votre plan », « Voir les plans » pour l'owner). Une limite à 0 vaut « non incluse » (ex. Collaborateurs et Invitations au plan Gratuit). La page est trouvée par le lien du menu au plus long préfixe (testé) ; Statistiques exige `view_reports`.
+- [x] **« Non inclus » en double** au changement de plan (Gratuit : collaborateurs et modèles à 0) : une limite à 0 n'affiche plus de ligne ; dans les écarts entre plans elle vaut « absente », une seule ligne « … non inclus » par fonctionnalité (testé).
+- [x] **Utilisation** : plus de jauge pour une limite à 0 (modèles personnalisés au Gratuit).
+- [x] **Fonctionnalités de votre plan** : seulement celles que le plan inclut (plus de cadenas).
+- [x] **Permissions en double** : les fonctionnalités d'un même module (Facturation, Équipe, Annonces…) sont fusionnées, chaque permission n'apparaît qu'une fois, un module vide n'est pas affiché (testé). Nouveau sélecteur en arbre, sans menu déroulant : cocher un module coche toutes ses permissions, en cocher une partie le rend indéterminé ; compteur « 2/3 » ; libellés lisibles (description de la permission) ; récapitulatif aligné.
+- [x] **Menu** : l'icône s'anime au survol d'un lien (coupée si le système réduit les animations).

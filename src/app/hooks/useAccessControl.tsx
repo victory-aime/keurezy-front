@@ -23,10 +23,15 @@ export const useAccessControl = () => {
   });
 
   /**
-   * 🔥 Set pour perf O(1)
+   * Fonctionnalités réellement disponibles : incluses dans le plan avec une limite non nulle
+   * (une limite à 0, comme les collaborateurs du plan Gratuit, vaut « non incluse »).
    */
   const featureSet = useMemo(() => {
-    return new Set(data?.features?.map((f: { name: string }) => f.name) ?? []);
+    return new Set(
+      data?.features
+        ?.filter((f: { limit: number | null }) => f.limit !== 0)
+        .map((f: { name: string }) => f.name) ?? [],
+    );
   }, [data]);
 
   function hasFeature(feature?: string) {
@@ -46,6 +51,7 @@ export const useAccessControl = () => {
 
   return {
     canAccess,
+    hasFeature,
     isLoading,
   };
 };

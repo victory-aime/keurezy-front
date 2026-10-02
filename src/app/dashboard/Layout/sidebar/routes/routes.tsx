@@ -6,8 +6,8 @@ import { NavIcons } from '_components/custom';
 /**
  * Menu du tableau de bord, par usage : le quotidien d'abord, puis le patrimoine, l'activité
  * avec les clients, la facturation, l'équipe, l'agence et le compte. Chaque lien a sa propre
- * icône ; `permission` masque un lien au staff qui n'y a pas droit, `feature` le grise quand le
- * plan ne l'inclut pas, `ownerOnly` le réserve au propriétaire.
+ * icône ; `permission` masque un lien au staff qui n'y a pas droit, `feature` le masque quand le
+ * plan ne l'inclut pas (et `PlanFeatureGate` protège la page), `ownerOnly` le réserve au propriétaire.
  */
 export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
   {
@@ -37,18 +37,21 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
       },
       {
         label: 'Bâtiments',
+        feature: 'manage_properties',
         path: DASHBOARD_ROUTES.BUILDING.LIST,
         icon: NavIcons.Buildings,
         permission: AppPermissions.BUILDING.MANAGE,
       },
       {
         label: 'Terrains',
+        feature: 'manage_properties',
         path: DASHBOARD_ROUTES.LAND.LIST,
         icon: NavIcons.Lands,
         permission: AppPermissions.LAND.MANAGE,
       },
       {
         label: 'Annonces',
+        feature: 'publish_properties',
         path: DASHBOARD_ROUTES.ANNONCES.LIST,
         icon: NavIcons.Annonces,
         highlight: true,
@@ -99,12 +102,14 @@ export const ALL_CSA_ROUTES: SidebarNavGroupProps[] = [
     links: [
       {
         label: 'Collaborateurs',
+        feature: 'manage_users',
         path: DASHBOARD_ROUTES.TEAM.LIST,
         icon: NavIcons.Team,
         permission: AppPermissions.USERS.VIEW,
       },
       {
         label: 'Invitations',
+        feature: 'manage_users',
         path: DASHBOARD_ROUTES.INVITATIONS.LIST,
         icon: NavIcons.Invitations,
         permission: AppPermissions.USERS.VIEW,

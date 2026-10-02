@@ -124,22 +124,14 @@ export const Sidebar = ({
             // Réservé au propriétaire (le backend refuse aussi le staff)
             if (link.ownerOnly && !isOwner) return null;
 
-            const hasFeatureAccess = canAccess({
-              feature: link.feature,
-            });
-
-            const hasPermissionAccess = link.permission ? hasPermission(link.permission) : true;
-
-            // ❌ feature OK mais pas permission → HIDE
-            if (hasFeatureAccess && !hasPermissionAccess) {
-              return null;
-            }
+            // Module d'un plan supérieur ou permission manquante : lien masqué (la page est
+            // aussi protégée par `PlanFeatureGate` si l'URL est saisie directement)
+            if (!canAccess({ feature: link.feature, permission: link.permission })) return null;
 
             const badgeValue = badgesByPath[link.path as keyof typeof badgesByPath];
 
             return {
               ...link,
-              disabled: !hasFeatureAccess,
               badge: typeof badgeValue === 'number' && badgeValue > 0 ? badgeValue : undefined,
             };
           })
@@ -157,7 +149,7 @@ export const Sidebar = ({
          */
         .filter((group) => group.links.length > 0)
     );
-  }, [badgesByPath, canAccess, hasPermission, isLoading, isOwner]);
+  }, [badgesByPath, canAccess, isLoading, accessControlLoading, isOwner]);
 
   return (
     <Box>

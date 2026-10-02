@@ -106,8 +106,8 @@ export const UsageOverview = ({
 }) => {
   // Limite 0 : la fonctionnalité n'est pas incluse dans le plan (ex. collaborateurs au Gratuit),
   // une jauge « 0 sur 0 » à 100 % n'aurait pas de sens
-  // Une limite à 0 (non incluse) ne s'affiche que si l'agence la dépasse (après un downgrade)
-  const shown = usage.filter((item) => item.limit !== 0 || item.used > 0);
+  // Limite à 0 : la fonctionnalité n'existe pas dans le plan, pas de jauge
+  const shown = usage.filter((item) => item.limit !== 0);
   if (shown.length === 0) {
     return (
       <BaseText variant={TextVariant.S} color="fg.muted">

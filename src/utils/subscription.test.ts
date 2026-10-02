@@ -212,7 +212,28 @@ describe('formatFeatureLimit : facturation', () => {
     expect(formatFeatureLimit('invoice_templates', 1)).toBe(
       'Jusqu’à 1 modèle de facture personnalisé',
     );
-    expect(formatFeatureLimit('invoice_templates', 0)).toBe('Non inclus dans ce plan');
+    expect(formatFeatureLimit('invoice_templates', 0)).toBe('');
     expect(formatFeatureLimit('manage_invoices', null)).toBe('Factures illimitées');
+  });
+});
+
+describe('planDifferences : limites à 0', () => {
+  it('une limite à 0 vaut « non inclus », une seule fois par fonctionnalité', () => {
+    const premium = [
+      { name: 'manage_users', limit: null },
+      { name: 'invoice_templates', limit: null },
+    ];
+    const free = [
+      { name: 'manage_users', limit: 0 },
+      { name: 'invoice_templates', limit: 0 },
+    ];
+    const labels = planDifferences(premium, free).map((c) => c.label);
+    expect(labels).toEqual([
+      'Collaborateurs non inclus',
+      'Modèles de facture personnalisés non inclus',
+    ]);
+    expect(planDifferences(free, [{ name: 'manage_users', limit: 1 }])).toEqual([
+      { label: 'Jusqu’à 1 collaborateur', tone: 'gain' },
+    ]);
   });
 });

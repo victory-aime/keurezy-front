@@ -43,9 +43,12 @@ const FeatureItem = ({ feature }: { feature: Feature }) => {
   );
 };
 
-/** « Fonctionnalités de votre plan » : incluses d'abord, puis celles des autres plans. */
+/**
+ * « Fonctionnalités de votre plan » : seulement celles que le plan inclut (une limite à 0 vaut
+ * « non incluse »). Les autres plans se découvrent depuis « Changer de plan ».
+ */
 export const PlanFeatures = ({ features }: { features: Feature[] }) => {
-  const sorted = [...features].sort((a, b) => Number(b.included) - Number(a.included));
+  const sorted = features.filter((f) => f.included && f.limit !== 0);
   return (
     <SimpleGrid as="ul" columns={{ base: 1, md: 2 }} gap={4} listStyleType="none">
       {sorted.map((feature) => (

@@ -23,13 +23,6 @@ export interface ISelectedCheckboxElement {
   permissions: ISelectedPermission[];
 }
 
-export interface ICheckboxGroup {
-  checkBoxGroup: ICheckboxElement;
-  defaultValue?: ISelectedCheckboxElement;
-  onSelectGroupElement: (elt: ISelectedCheckboxElement) => void;
-  checkBoxColor?: string;
-}
-
 export interface ICollapseCheckBoxGroup {
   groupList: ICheckboxElement[];
   onChange: (data: ISelectedCheckboxElement[]) => void;

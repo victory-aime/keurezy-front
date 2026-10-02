@@ -92,7 +92,8 @@ export function formatFeatureLimit(name: string | undefined, limit: number | nul
 
   // Feature sans limite numérique
   if (limit === null) return config.unlimited ?? '';
-  if (limit === 0) return 'Non inclus dans ce plan';
+  // Limite à 0 : la fonctionnalité n'existe pas dans ce plan, rien à afficher
+  if (limit === 0) return '';
 
   // Cas simple sans pluralisation
   if (!config.singular && !config.plural) return `${limit} ${config.unlimited}`;
@@ -128,8 +129,11 @@ export function planDifferences(
   current: PlanFeatureLimit[],
   target: PlanFeatureLimit[],
 ): PlanDifference[] {
-  const before = new Map(current.map((f) => [f.name, f.limit]));
-  const after = new Map(target.map((f) => [f.name, f.limit]));
+  // Une limite à 0 vaut « non incluse » : traitée comme une fonctionnalité absente du plan
+  const included = (features: PlanFeatureLimit[]) =>
+    new Map(features.filter((f) => f.limit !== 0).map((f) => [f.name, f.limit]));
+  const before = included(current);
+  const after = included(target);
   const changes: PlanDifference[] = [];
   const gain = (label: string) => changes.push({ label, tone: 'gain' });
   const loss = (label: string) => changes.push({ label, tone: 'loss' });
@@ -159,7 +163,7 @@ export function planDifferences(
   for (const name of before.keys()) {
     const config = labelOf(name);
     if (config && !after.has(name)) {
-      loss(`${config.unlimited ?? capitalize(config.plural ?? name)} non inclus`);
+      loss(`${config.plural ? capitalize(config.plural) : (config.unlimited ?? name)} non inclus`);
     }
   }
   // Gains d'abord : c'est ce qu'on lit en premier sur une carte

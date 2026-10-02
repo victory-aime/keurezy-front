@@ -5,6 +5,7 @@ import { Container } from './container/Container';
 import { useAuthContext } from '_context/auth-context';
 import { Sidebar } from './sidebar/Sidebar';
 import { Footer } from './footer/Footer';
+import { PlanFeatureGate } from './plan-gate/PlanFeatureGate';
 import { SidebarInset } from './sidebar/components/SidebarInset';
 import { Header } from './header/Header';
 import { GuidedTour } from './guide-tour/GuidedTour';
@@ -209,7 +210,9 @@ export const Layout: FunctionComponent<{
               sideToggled={isSidebarOpen}
               onShowSidebar={() => setSidebarOpen((prev) => !prev)}
             />
-            <Container isLoading={isLoading}>{children}</Container>
+            <Container isLoading={isLoading}>
+              <PlanFeatureGate>{children}</PlanFeatureGate>
+            </Container>
             <Footer />
           </SidebarInset>
         </main>

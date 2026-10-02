@@ -34,9 +34,8 @@ export const EmailNotVerifiedBanner = ({
             fontSize={{ base: 'sm', sm: 'md' }}
             color={colorMode === 'light' ? 'red.700' : 'white'}
           >
-            Votre e-mail n’est pas encore vérifié. Vérifiez votre boîte mail : tant que l’e-mail
-            du propriétaire n’est pas vérifié, les annonces de l’agence restent invisibles du
-            public.
+            Votre e-mail n’est pas encore vérifié. Vérifiez votre boîte mail : tant que l’e-mail du
+            propriétaire n’est pas vérifié, les annonces de l’agence restent invisibles du public.
           </Text>
 
           {onResend && (

@@ -46,7 +46,12 @@ export const SelectedPermissionsRecap = ({
             {/* Permissions list */}
             <HStack wrap={'wrap'}>
               {group.permissions.map((perm) => (
-                <BaseTag key={perm.id} fontSize="sm" color="orange" label={perm.name} />
+                <BaseTag
+                  key={perm.id}
+                  fontSize="sm"
+                  color="orange"
+                  label={perm.description || perm.name}
+                />
               ))}
             </HStack>
           </Flex>
