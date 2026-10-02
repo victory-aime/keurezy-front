@@ -47,7 +47,7 @@ export const STATUS_META_AGENDA: Record<
   },
   cancelled: {
     label: 'Annulée',
-    dotColor: 'red.500',
+    dotColor: 'danger.solid',
     chipBg: 'red.50',
     chipColor: 'red.700',
     chipBorderColor: 'red.200',

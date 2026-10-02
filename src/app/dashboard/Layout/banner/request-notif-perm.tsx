@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Flex, Text, Box } from '@chakra-ui/react';
-import { BaseButton, BaseIcon, Icons } from '_components/custom';
+import { Flex, Box } from '@chakra-ui/react';
+import { BaseButton, BaseIcon, Icons, BaseText } from '_components/custom';
 import { MotionFlex } from '_constants/motion';
 import { getAppNotifPreference } from '../../../helpers/push-notif';
 
@@ -50,14 +50,14 @@ export const RequestUserPushNotifPermission = ({
           </BaseIcon>
 
           <Box flex={1} minW={0}>
-            <Text fontSize="sm" fontWeight="600" color="fg">
+            <BaseText fontSize="sm" fontWeight="600" color="fg">
               {isReactivation ? 'Notifications désactivées' : 'Restez informé en temps réel'}
-            </Text>
-            <Text fontSize="xs" color="fg.muted">
+            </BaseText>
+            <BaseText fontSize="xs" color="fg.muted">
               {isReactivation
                 ? 'Réactivez-les pour ne rien manquer'
                 : 'Activez les notifications push'}
-            </Text>
+            </BaseText>
           </Box>
         </Flex>
 

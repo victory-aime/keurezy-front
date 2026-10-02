@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Box, Progress, Flex, HStack, Text, Span } from '@chakra-ui/react';
+import { Box, Progress, Flex, HStack, Span } from '@chakra-ui/react';
 import {
   BaseButton,
   BaseModal,
@@ -395,9 +395,9 @@ export const MainOnboarding = ({
             </Link>
 
             <HStack gap={4}>
-              <Text fontSize="sm" display={{ base: 'none', sm: 'block' }}>
+              <BaseText fontSize="sm" display={{ base: 'none', sm: 'block' }}>
                 Étape {step + 1} / {TOTAL_ONBOARD_STEPS}
-              </Text>
+              </BaseText>
               <Box w="128px">
                 <Progress.Root
                   size="sm"
@@ -441,14 +441,14 @@ export const MainOnboarding = ({
                     >
                       {i < step ? <Icons.Check size={13} /> : i + 1}
                     </Flex>
-                    <Text
+                    <BaseText
                       fontSize="xs"
                       fontWeight="medium"
                       display={{ base: 'none', md: 'block' }}
                       color={i === step ? 'primary.500' : i < step ? 'tertiary.500' : 'gray.500'}
                     >
                       {label}
-                    </Text>
+                    </BaseText>
                   </HStack>
                 </MotionBox>
                 {i < TOTAL_ONBOARD_STEPS - 1 && (

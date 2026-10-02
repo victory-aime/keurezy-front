@@ -1,5 +1,5 @@
-import { Flex, HStack, Circle, Box, VStack, Grid, Text } from '@chakra-ui/react';
-import { Icons, BaseTag } from '_components/custom';
+import { Flex, HStack, Circle, Box, VStack, Grid } from '@chakra-ui/react';
+import { Icons, BaseTag, BaseText } from '_components/custom';
 import { useColorModeValue } from '_components/ui/color-mode';
 import { ENUM } from '_types/*';
 import { MotionBox } from '_constants/motion';
@@ -99,15 +99,15 @@ export const DashboardMockup = ({
           <Circle size="10px" bg="green.400" />
         </HStack>
         <Flex flex={1} alignItems={'center'} justifyContent={'center'} mx={4}>
-          <Text px={3} py={1} fontSize={'xs'} color={'gray.400'}>
+          <BaseText px={3} py={1} fontSize={'xs'} color={'gray.400'}>
             app.Keurezy.com/dashboard
-          </Text>
+          </BaseText>
         </Flex>
 
         {notifications && (
           <Box position="relative">
             <Icons.Bell size={16} color="gray" />
-            <Circle size="8px" bg="red.500" position="absolute" top="0" right="0" />
+            <Circle size="8px" bg="danger.solid" position="absolute" top="0" right="0" />
           </Box>
         )}
       </Flex>
@@ -138,19 +138,21 @@ export const DashboardMockup = ({
           {/* Header */}
           <Flex justify="space-between" mb={6}>
             <Box>
-              <Text fontWeight="semibold">Bonjour, {userName} 👋</Text>
+              <BaseText fontSize="inherit" fontWeight="semibold">
+                Bonjour, {userName} 👋
+              </BaseText>
               <HStack mt={1} gap={2}>
                 <BaseTag color="purple" label={role} borderRadius={'full'} />
-                <Text fontSize="xs" color={textMuted}>
+                <BaseText fontSize="xs" color={textMuted}>
                   {company}
-                </Text>
+                </BaseText>
               </HStack>
             </Box>
 
             {location && (
               <HStack fontSize="xs" color={textMuted}>
                 <Icons.World />
-                <Text>{location}</Text>
+                <BaseText fontSize="inherit">{location}</BaseText>
               </HStack>
             )}
           </Flex>
@@ -169,24 +171,26 @@ export const DashboardMockup = ({
               >
                 <Flex justify="space-between" mb={2}>
                   <kpi.icon size={14} color="gray" />
-                  <Text fontSize="xs" color="green.400">
+                  <BaseText fontSize="xs" color="green.400">
                     {kpi.trend}
-                  </Text>
+                  </BaseText>
                 </Flex>
 
-                <Text fontWeight="bold">{kpi.value}</Text>
-                <Text fontSize="xs" color={textMuted}>
+                <BaseText fontSize="inherit" fontWeight="bold">
+                  {kpi.value}
+                </BaseText>
+                <BaseText fontSize="xs" color={textMuted}>
                   {kpi.label}
-                </Text>
+                </BaseText>
               </MotionBox>
             ))}
           </Grid>
 
           {/* Chart */}
           <Box mt={6} bg={muted} p={4} rounded="xl">
-            <Text fontSize="sm" fontWeight="medium" mb={4}>
+            <BaseText fontSize="sm" fontWeight="medium" mb={4}>
               Revenus mensuels ({currency})
-            </Text>
+            </BaseText>
 
             <Flex align="flex-end" h="100px" gap={1}>
               {barHeights.map((h, i) => (

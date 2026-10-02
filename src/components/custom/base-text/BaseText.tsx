@@ -5,12 +5,15 @@ import { TextVariant, TextWeight } from './';
 interface BaseTextProps extends TextProps {
   variant?: TextVariant;
   weight?: TextWeight;
+  /** Ex. titre d'étape qui reçoit le focus (React 19 : `ref` est une prop) */
+  ref?: React.Ref<HTMLElement>;
 }
 
 export const BaseText: React.FC<BaseTextProps> = ({
   variant = TextVariant.M,
   weight = TextWeight.Regular,
   children,
+  ref,
   ...props
 }) => {
   const sizeMap: Record<TextVariant, string> = {
@@ -38,7 +41,12 @@ export const BaseText: React.FC<BaseTextProps> = ({
   };
 
   return (
-    <Text fontSize={sizeMap[variant]} fontWeight={weightMap[weight]} {...props}>
+    <Text
+      ref={ref as React.Ref<HTMLParagraphElement>}
+      fontSize={sizeMap[variant]}
+      fontWeight={weightMap[weight]}
+      {...props}
+    >
       {children}
     </Text>
   );

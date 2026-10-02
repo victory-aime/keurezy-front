@@ -1,10 +1,10 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { Box, Flex, Image, Link, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Link } from '@chakra-ui/react';
 import { getTimeValue } from 'rise-core-frontend';
 import { useColorMode } from '_components/ui/color-mode';
-import { Icons } from '_components/custom';
+import { Icons, BaseText } from '_components/custom';
 import { VariablesColors } from '_theme/variables';
 import { ENUM, MODELS } from '_types/';
 import { MessageBubbleProps } from '../interface/chat';
@@ -68,12 +68,12 @@ function Attachments({
         >
           <Icons.LuFile size={22} />
           <Box minW={0} flex={1}>
-            <Text fontSize="sm" fontWeight="600" truncate>
+            <BaseText fontSize="sm" fontWeight="600" truncate>
               {document.fileName}
-            </Text>
-            <Text fontSize="xs" opacity={0.75}>
+            </BaseText>
+            <BaseText fontSize="xs" opacity={0.75}>
               PDF{document.fileSize ? ` · ${formatFileSize(document.fileSize)}` : ''}
-            </Text>
+            </BaseText>
           </Box>
           <Icons.Download size={16} />
         </Link>
@@ -112,9 +112,9 @@ export function MessageBubble({
 
   const footer = (
     <Flex alignItems={'center'} justifyContent={'flex-end'} gap={1}>
-      <Text mt={isVoiceOnly ? 0 : 1} fontSize="x-small" fontWeight={'medium'}>
+      <BaseText mt={isVoiceOnly ? 0 : 1} fontSize="x-small" fontWeight={'medium'}>
         {getTimeValue(message.createdAt)}
-      </Text>
+      </BaseText>
       {isOwn && !failed && <MessageStatusIcon status={message.status} />}
     </Flex>
   );
@@ -122,9 +122,9 @@ export function MessageBubble({
   return (
     <Flex direction="column" align={isOwn ? 'flex-end' : 'flex-start'} mb={1.5}>
       {senderLabel && (
-        <Text fontSize="2xs" color="fg.muted" mb={0.5} px={2}>
+        <BaseText fontSize="2xs" color="fg.muted" mb={0.5} px={2}>
           {senderLabel}
-        </Text>
+        </BaseText>
       )}
       <Box
         maxW="70%"
@@ -146,9 +146,14 @@ export function MessageBubble({
           />
         )}
         {message.content && (
-          <Text fontSize="sm" fontWeight={'medium'} wordBreak="break-word" whiteSpace="pre-wrap">
+          <BaseText
+            fontSize="sm"
+            fontWeight={'medium'}
+            wordBreak="break-word"
+            whiteSpace="pre-wrap"
+          >
             {message.content}
-          </Text>
+          </BaseText>
         )}
         {!isVoiceOnly && footer}
       </Box>
@@ -157,11 +162,11 @@ export function MessageBubble({
         <Flex align="center" gap={3} mt={1}>
           <Flex align="center" gap={1}>
             <Icons.InfoIcon color={VariablesColors.danger} />
-            <Text fontSize="2xs" color="red.500">
+            <BaseText fontSize="2xs" color="danger.solid">
               Non envoyé
-            </Text>
+            </BaseText>
           </Flex>
-          <Text
+          <BaseText
             as="button"
             fontSize="2xs"
             fontWeight="600"
@@ -169,10 +174,10 @@ export function MessageBubble({
             onClick={() => onRetry(message)}
           >
             Réessayer
-          </Text>
-          <Text as="button" fontSize="2xs" color="fg.muted" onClick={() => onDiscard(message)}>
+          </BaseText>
+          <BaseText as="button" fontSize="2xs" color="fg.muted" onClick={() => onDiscard(message)}>
             Supprimer
-          </Text>
+          </BaseText>
         </Flex>
       )}
     </Flex>

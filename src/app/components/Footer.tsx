@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Heading, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Box, Container, Flex, SimpleGrid, Stack } from '@chakra-ui/react';
 import { BaseText, Icons, TextVariant } from '_components/custom';
 import { hexToRGB } from '_theme/colors';
 import { VariablesColors } from '_theme/variables';
@@ -18,9 +18,9 @@ export const Footer = () => {
           <Stack spaceY={1}>
             <Flex alignItems={'center'} gap={2}>
               <Icons.Home color={VariablesColors.primary} width={45} height={45} />
-              <Heading size="md" textTransform={'capitalize'}>
+              <BaseText as="h2" fontWeight="semibold" fontSize="md" textTransform={'capitalize'}>
                 Keurezy
-              </Heading>
+              </BaseText>
             </Flex>
             <BaseText variant={TextVariant.S} color={'whiteAlpha.600'}>
               La plateforme moderne de gestion locative qui simplifie la vie des propriétaires et

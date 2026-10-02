@@ -2,9 +2,7 @@ import {
   Box,
   VStack,
   Flex,
-  Heading,
   HStack,
-  Text,
   useBreakpointValue,
   FileUploadRootProvider,
 } from '@chakra-ui/react';
@@ -56,10 +54,11 @@ export const StepBusiness = ({ initialDocUrls }: { initialDocUrls?: string[] }) 
               <Icons.Target size={11} />
               Agence
             </Flex>
-            <Heading fontSize={{ base: '2xl', sm: '3xl', lg: '4xl' }} fontWeight={'bold'}>
+            <BaseText as="h2" fontSize={{ base: '2xl', sm: '3xl', lg: '4xl' }} fontWeight={'bold'}>
               Parlez-nous de votre Agence
-            </Heading>
-            <Text
+            </BaseText>
+            <BaseText
+              fontSize="inherit"
               bgClip={'text'}
               gradientFrom={'primary.400'}
               gradientVia={'primary.500'}
@@ -68,7 +67,7 @@ export const StepBusiness = ({ initialDocUrls }: { initialDocUrls?: string[] }) 
               color={'transparent'}
             >
               Le tableau de bord reflète instantanément vos choix
-            </Text>
+            </BaseText>
           </VStack>
 
           <OnboardCardWrapper>

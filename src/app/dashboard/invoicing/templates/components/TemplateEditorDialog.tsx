@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Field, Flex, Grid, Heading, Input, Stack } from '@chakra-ui/react';
+import { Box, Field, Flex, Grid, Input, Stack } from '@chakra-ui/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { BaseButton, BaseText, TextVariant } from '_components/custom';
 import {
@@ -192,16 +192,16 @@ export const TemplateEditorDialog = ({
                   sur {STEPS.length - firstStep}
                 </BaseText>
                 <DialogTitle asChild>
-                  <Heading
+                  <BaseText
                     as="h2"
                     ref={headingRef}
                     tabIndex={-1}
-                    size={{ base: 'lg', md: 'xl' }}
+                    fontSize={{ base: 'lg', md: 'xl' }}
                     fontWeight="semibold"
                     outline="none"
                   >
                     {TITLES[step]}
-                  </Heading>
+                  </BaseText>
                 </DialogTitle>
               </Stack>
               {content()}

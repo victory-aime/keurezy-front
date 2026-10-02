@@ -1,5 +1,5 @@
-import { Box, VStack, Flex, Heading, Text } from '@chakra-ui/react';
-import { Icons, FormTextInput } from '_components/custom';
+import { Box, VStack, Flex } from '@chakra-ui/react';
+import { Icons, FormTextInput, BaseText } from '_components/custom';
 import { hexToRGB } from '_theme/colors';
 import { useFormikContext } from 'formik';
 import { DashboardMockup } from './DashboardMockup';
@@ -31,14 +31,16 @@ export const StepUserAccount = () => {
             <Icons.Setting size={11} />
             Configuration
           </Flex>
-          <Heading
+          <BaseText
+            as="h2"
             fontSize={{ base: '2xl', sm: '3xl', lg: '4xl' }}
             fontWeight={'bold'}
             lineHeight={1.1}
           >
             Configurons votre compte ensemble
-          </Heading>
-          <Text
+          </BaseText>
+          <BaseText
+            fontSize="inherit"
             bgClip={'text'}
             gradientFrom={'primary.400'}
             gradientVia={'primary.500'}
@@ -47,7 +49,7 @@ export const StepUserAccount = () => {
             color={'transparent'}
           >
             Vos informations apparaîtront en direct dans l'aperçu
-          </Text>
+          </BaseText>
         </VStack>
 
         <OnboardCardWrapper>

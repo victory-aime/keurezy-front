@@ -324,7 +324,7 @@ export const Settings = () => {
               <ProfileForm
                 title="PROFILE.DANGER_ZONE.TITLE"
                 description="PROFILE.DANGER_ZONE.DESC"
-                borderColor={'red.500'}
+                borderColor={'danger.solid'}
                 borderWidth={1.5}
                 borderRadius={'7px'}
               >

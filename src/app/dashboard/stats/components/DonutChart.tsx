@@ -2,8 +2,8 @@
 
 import { Chart, useChart } from '@chakra-ui/charts';
 import { Pie, PieChart, ResponsiveContainer, Tooltip, Cell } from 'recharts';
-import { Box, Text } from '@chakra-ui/react';
-import { CustomSkeletonLoader } from '_components/custom';
+import { Box } from '@chakra-ui/react';
+import { CustomSkeletonLoader, BaseText } from '_components/custom';
 import { NoDataAnimation } from '_components/custom/data-table/NoDataAnimation';
 
 export type DonutDataItem = {
@@ -34,9 +34,9 @@ export default function DonutChart({ title, data, isLoading }: DonutChartProps) 
 
   return (
     <Box p={5} borderRadius="2xl" shadow="sm" width="full">
-      <Text fontSize="lg" fontWeight="bold" mb={4}>
+      <BaseText fontSize="lg" fontWeight="bold" mb={4}>
         {title}
-      </Text>
+      </BaseText>
       <Chart.Root chart={chart} maxH="320px">
         <ResponsiveContainer width="100%" height={320}>
           <PieChart>

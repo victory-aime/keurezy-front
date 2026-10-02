@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Flex, Input, InputGroup, Text } from '@chakra-ui/react';
+import { Box, Flex, Input, InputGroup } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { ChatModule } from '_store/state-management';
 import { useUserContext } from '_context/user-context';
@@ -67,9 +67,9 @@ export function ConversationList({ activeConversationId, onSelect }: Conversatio
           <BaseText fontSize="lg" fontWeight="700">
             Messages
           </BaseText>
-          <Text fontSize="xs" color="fg.muted">
+          <BaseText fontSize="xs" color="fg.muted">
             {unreadTotal > 0 ? `${unreadTotal} non lu${unreadTotal > 1 ? 's' : ''}` : 'À jour'}
-          </Text>
+          </BaseText>
         </Flex>
 
         <InputGroup startElement={<Icons.Search size={16} />}>
@@ -132,14 +132,14 @@ export function ConversationList({ activeConversationId, onSelect }: Conversatio
               <Icons.Chat size={24} strokeWidth={1.5} color="var(--chakra-colors-fg-subtle)" />
             </Box>
             <Box textAlign="center">
-              <Text fontSize="sm" fontWeight="500" mb={1}>
+              <BaseText fontSize="sm" fontWeight="500" mb={1}>
                 {debouncedSearch || filter === 'UNREAD' ? 'Aucun résultat' : 'Aucune conversation'}
-              </Text>
-              <Text fontSize="xs" color="fg.muted">
+              </BaseText>
+              <BaseText fontSize="xs" color="fg.muted">
                 {debouncedSearch || filter === 'UNREAD'
                   ? 'Modifiez la recherche ou le filtre.'
                   : 'Les clients vous écrivent depuis vos annonces. Vous pouvez aussi contacter un client depuis une réservation.'}
-              </Text>
+              </BaseText>
             </Box>
           </Flex>
         )}
@@ -173,25 +173,25 @@ export function ConversationList({ activeConversationId, onSelect }: Conversatio
 
               <Box flex={1} minW={0}>
                 <Flex justify="space-between" align="baseline" gap={2}>
-                  <Text fontSize="sm" fontWeight={showUnread ? '700' : '500'} truncate>
+                  <BaseText fontSize="sm" fontWeight={showUnread ? '700' : '500'} truncate>
                     {client.name}
-                  </Text>
-                  <Text
+                  </BaseText>
+                  <BaseText
                     fontSize="xs"
                     color={showUnread ? 'primary.500' : 'fg.subtle'}
                     flexShrink={0}
                   >
                     {formatConversationDate(conversation.lastMessageAt ?? conversation.createdAt)}
-                  </Text>
+                  </BaseText>
                 </Flex>
 
-                <Text fontSize="xs" color="fg.muted" truncate>
+                <BaseText fontSize="xs" color="fg.muted" truncate>
                   {property.title}
                   {booking ? ` · ${getBookingStatusLabel(booking.status)}` : ''}
-                </Text>
+                </BaseText>
 
                 <Flex justify="space-between" align="center" gap={2} mt={0.5}>
-                  <Text
+                  <BaseText
                     fontSize="xs"
                     color={showUnread ? 'fg' : 'fg.muted'}
                     fontWeight={showUnread ? '600' : 'normal'}
@@ -202,7 +202,7 @@ export function ConversationList({ activeConversationId, onSelect }: Conversatio
                       conversation,
                       isLastMessageMine ? lastMessage?.senderId : undefined,
                     )}
-                  </Text>
+                  </BaseText>
 
                   {showUnread ? (
                     <Box

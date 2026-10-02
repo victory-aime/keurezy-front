@@ -1,9 +1,9 @@
 'use client';
 
 import { MouseEvent, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { Avatar } from '_components/ui/avatar';
-import { Icons } from '_components/custom';
+import { Icons, BaseText } from '_components/custom';
 import { formatDuration, voiceWaveform } from '../utils/chat';
 
 const BAR_COUNT = 30;
@@ -143,14 +143,14 @@ export function VoiceNotePlayer({
         </Flex>
 
         <Flex align="center" justify="space-between">
-          <Text
+          <BaseText
             fontSize="x-small"
             fontWeight="medium"
             opacity={0.75}
             fontVariantNumeric="tabular-nums"
           >
             {formatDuration(playing || elapsed > 0 ? elapsed : total)}
-          </Text>
+          </BaseText>
           {footer}
         </Flex>
       </Flex>

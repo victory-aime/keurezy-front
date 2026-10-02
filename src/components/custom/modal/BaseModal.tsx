@@ -74,7 +74,7 @@ const BaseModal = ({
             {icon && (
               <BaseIcon
                 borderRadius={'7px'}
-                color={modalType === 'alertdialog' ? 'red.500' : iconBackgroundColor}
+                color={modalType === 'alertdialog' ? 'danger.solid' : iconBackgroundColor}
               >
                 {icon}
               </BaseIcon>

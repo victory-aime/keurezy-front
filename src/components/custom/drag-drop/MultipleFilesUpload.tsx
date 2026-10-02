@@ -70,7 +70,7 @@ export const MultipleFilesUpload = ({
                       </BaseText>
                     )}
                   </Stack>
-                  <FileUpload.ItemDeleteTrigger p="0.5" rounded="full" bg="red.500">
+                  <FileUpload.ItemDeleteTrigger p="0.5" rounded="full" bg="danger.solid">
                     <HiX color={VariablesColors.white} />
                   </FileUpload.ItemDeleteTrigger>
                 </HStack>

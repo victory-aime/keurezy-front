@@ -61,13 +61,13 @@ export const FormTimePicker = ({
           size={'md'}
           variant={variant}
           disabled={true}
-          _placeholder={{ color: isError ? 'red.500' : 'gray.400' }}
+          _placeholder={{ color: isError ? 'danger.solid' : 'gray.400' }}
           width={'full'}
         />
       )}
       {isError && (
         <Flex gap={1} mt={1} alignItems={'center'}>
-          <Field.ErrorIcon width={2.5} height={2.5} color={'red.500'} />
+          <Field.ErrorIcon width={2.5} height={2.5} color={'danger.solid'} />
           <Field.ErrorText>{error}</Field.ErrorText>
         </Flex>
       )}

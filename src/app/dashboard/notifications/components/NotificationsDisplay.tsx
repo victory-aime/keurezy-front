@@ -1,4 +1,4 @@
-import { Box, Flex, VStack, Span, Text, HStack } from '@chakra-ui/react';
+import { Box, Flex, VStack, Span, HStack } from '@chakra-ui/react';
 import {
   BaseIcon,
   Icons,
@@ -90,9 +90,9 @@ export const NotificationsDisplay = ({
               )}
             </HStack>
 
-            <Text color="fg.muted" fontSize="sm">
+            <BaseText color="fg.muted" fontSize="sm">
               {request?.notification?.content}
-            </Text>
+            </BaseText>
 
             <Span color="fg.muted" fontSize="xs">
               {formatCreatedAt(request?.notification.createdAt!)}

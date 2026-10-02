@@ -87,7 +87,7 @@ export const UploadImageFile = ({
                   <Float placement="bottom-end" offsetX="3" offsetY="3" key={file.name}>
                     <FileUpload.Item
                       rounded="full"
-                      bg="red.500"
+                      bg="danger.solid"
                       p="1"
                       borderColor="none"
                       width="auto"
@@ -115,7 +115,7 @@ export const UploadImageFile = ({
                 cursor={'pointer'}
               >
                 <Circle
-                  bg="red.500"
+                  bg="danger.solid"
                   p="1"
                   borderColor="none"
                   width="auto"

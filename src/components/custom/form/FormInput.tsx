@@ -132,9 +132,9 @@ const FormTextInput = ({
             placeholder={t(placeholder)}
             borderRadius={customRadius ?? '12px'}
             border={'1px solid'}
-            borderColor={isError ? 'red.500' : 'inherit'}
-            _focus={{ borderColor: isError ? 'red.500' : 'primary.500' }}
-            _placeholder={{ color: isError ? 'red.500' : 'gray.400' }}
+            borderColor={isError ? 'danger.solid' : 'inherit'}
+            _focus={{ borderColor: isError ? 'danger.solid' : 'primary.500' }}
+            _placeholder={{ color: isError ? 'danger.solid' : 'gray.400' }}
             variant={'outline'}
             //bg={"bg.muted"}
             readOnly={isReadOnly}
@@ -150,7 +150,7 @@ const FormTextInput = ({
 
       {isError && (
         <Flex gap={1} mt={1} alignItems={'center'}>
-          <Field.ErrorIcon width={2.5} height={2.5} color={'red.500'} />
+          <Field.ErrorIcon width={2.5} height={2.5} color={'danger.solid'} />
           <Field.ErrorText>{error}</Field.ErrorText>
         </Flex>
       )}

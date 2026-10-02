@@ -40,7 +40,12 @@ export const MultipleFileImageList = ({
           <FileUpload.ItemGroup key={index} asChild>
             <FileUpload.Item p="2" width="auto" key={file.name} file={file} pos="relative">
               <Float>
-                <FileUpload.ItemDeleteTrigger p="0.5" rounded="l1" bg="red.500" borderWidth="1px">
+                <FileUpload.ItemDeleteTrigger
+                  p="0.5"
+                  rounded="l1"
+                  bg="danger.solid"
+                  borderWidth="1px"
+                >
                   <HiX color={VariablesColors.white} />
                 </FileUpload.ItemDeleteTrigger>
               </Float>

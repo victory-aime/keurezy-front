@@ -1,6 +1,6 @@
 'use client';
 
-import { Center, Text, VStack } from '@chakra-ui/react';
+import { Center, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { ReactNode } from 'react';
 import Image from 'next/image';
@@ -8,7 +8,7 @@ import { ASSETS } from '_assets/images';
 import { motion } from 'framer-motion';
 import { MotionBox, MotionVStack } from '_constants/motion';
 import { useColorMode } from '_components/ui/color-mode';
-import { FloatSwitchColorMode } from '_components/custom';
+import { FloatSwitchColorMode, BaseText } from '_components/custom';
 import { AnimatedCheckmark } from '../onboarding/components/AnimatedCheck';
 
 export const AuthBoxContainer = ({
@@ -67,9 +67,9 @@ export const AuthBoxContainer = ({
             />
           </motion.div>
 
-          <Text fontSize="xl" textAlign="center">
+          <BaseText fontSize="xl" textAlign="center">
             {t(title)}
-          </Text>
+          </BaseText>
 
           <VStack fontSize="sm" color="gray.500" textAlign="center">
             {description}

@@ -1,4 +1,4 @@
-import { Flex, Group, Separator, Stack, Text } from '@chakra-ui/react';
+import { Flex, Group, Separator, Stack } from '@chakra-ui/react';
 import { Menu, Portal } from '@chakra-ui/react';
 import {
   BaseText,
@@ -125,7 +125,8 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
                         name={user?.name}
                         src={user?.image ?? 'https://avatar.iran.liara.run/public'}
                       />
-                      <Text
+                      <BaseText
+                        fontSize="inherit"
                         truncate
                         lineBreak={'auto'}
                         lineClamp={1}
@@ -133,7 +134,7 @@ export const Header = ({ onShowSidebar, sideToggled }: SideBarProps) => {
                         textTransform={'capitalize'}
                       >
                         {user?.name}
-                      </Text>
+                      </BaseText>
                     </Flex>
                   </Menu.Trigger>
                   <Portal>

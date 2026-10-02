@@ -2,8 +2,8 @@
 
 import { JSX, useRef, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { BaseButton, BaseContainer, Icons } from '_components/custom';
-import { Box, Flex, HStack, Span, Text } from '@chakra-ui/react';
+import { BaseButton, BaseContainer, Icons, BaseText } from '_components/custom';
+import { Box, Flex, HStack, Span } from '@chakra-ui/react';
 import { Formik } from 'formik';
 import { MotionBox, MotionFlex } from '_constants/motion';
 import { InviteStep1 } from './InviteTeamStep1';
@@ -164,13 +164,14 @@ export const MainTeamInvite = () => {
                   >
                     {i < step ? <Icons.Check /> : <s.icon />}
                   </MotionFlex>
-                  <Text
+                  <BaseText
+                    fontSize="inherit"
                     fontWeight="medium"
                     display={{ base: 'none', md: 'block' }}
                     color={i === step ? 'primary.500' : i < step ? 'tertiary.500' : 'gray.500'}
                   >
                     {s.title}
-                  </Text>
+                  </BaseText>
                 </HStack>
                 {i < TOTAL_INVITE_TEAM_STEPS - 1 && (
                   <Box

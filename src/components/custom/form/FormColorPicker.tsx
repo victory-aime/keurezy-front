@@ -126,9 +126,9 @@ export const FormColorPicker: FC<FormColorPickerProps> = ({
               }}
               borderRadius={'7px'}
               border={'1px solid'}
-              borderColor={isError ? 'red.500' : 'bg.muted'}
+              borderColor={isError ? 'danger.solid' : 'bg.muted'}
               _focus={{ borderColor: 'primary.500' }}
-              _placeholder={{ color: isError ? 'red.500' : 'gray.400' }}
+              _placeholder={{ color: isError ? 'danger.solid' : 'gray.400' }}
               pl={3}
               mt={'5px'}
               bg={'bg.muted'}

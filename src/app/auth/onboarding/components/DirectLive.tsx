@@ -1,4 +1,5 @@
-import { HStack, Box, Text } from '@chakra-ui/react';
+import { HStack, Box } from '@chakra-ui/react';
+import { BaseText } from '_components/custom';
 import { MotionBox } from '_constants/motion';
 
 export const DirectLive = () => {
@@ -12,9 +13,9 @@ export const DirectLive = () => {
         gap={2}
       >
         <Box h="8px" w="8px" borderRadius="full" bg="tertiary.400" />
-        <Text fontSize="xs" color="tertiary.500">
+        <BaseText fontSize="xs" color="tertiary.500">
           Aperçu en direct
-        </Text>
+        </BaseText>
       </MotionBox>
     </HStack>
   );

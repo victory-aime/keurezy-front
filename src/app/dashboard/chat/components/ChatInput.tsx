@@ -1,8 +1,8 @@
 'use client';
 
-import { Box, Flex, Image, Text, Textarea } from '@chakra-ui/react';
+import { Box, Flex, Image, Textarea } from '@chakra-ui/react';
 import { useRef, useState, KeyboardEvent, ChangeEvent, useEffect } from 'react';
-import { Icons, BaseIconButton } from '_components/custom';
+import { Icons, BaseIconButton, BaseText } from '_components/custom';
 import { toaster } from '_components/ui/toaster';
 import { ChatModule } from '_store/state-management';
 import { ChatInputProps } from '../interface/chat';
@@ -69,9 +69,9 @@ export function ChatInput({ onSend, onTyping, canReply }: ChatInputProps) {
   if (!canReply) {
     return (
       <Flex px={4} py={3} borderTop="1px solid" borderColor="inherit" justify="center">
-        <Text fontSize="xs" color="fg.muted">
+        <BaseText fontSize="xs" color="fg.muted">
           Lecture seule : la permission de répondre aux clients ne vous a pas été attribuée.
-        </Text>
+        </BaseText>
       </Flex>
     );
   }
@@ -105,9 +105,9 @@ export function ChatInput({ onSend, onTyping, canReply }: ChatInputProps) {
               ) : (
                 <Icons.LuFile size={18} />
               )}
-              <Text fontSize="xs" truncate>
+              <BaseText fontSize="xs" truncate>
                 {file.name}
-              </Text>
+              </BaseText>
               <BaseIconButton
                 label={`Retirer ${file.name}`}
                 size="2xs"

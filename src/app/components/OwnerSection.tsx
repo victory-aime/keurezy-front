@@ -1,4 +1,4 @@
-import { Box, Flex, SimpleGrid, Span, VStack, Text, Container } from '@chakra-ui/react';
+import { Box, Flex, SimpleGrid, Span, VStack, Container } from '@chakra-ui/react';
 import { BaseButton, BaseIcon, BaseText, Icons, TextVariant } from '_components/custom';
 import { APP_ROUTES } from '_config/routes';
 import { Colors, hexToRGB } from '_theme/colors';
@@ -218,9 +218,9 @@ export const OwnerSection = () => {
               <VStack gap={4} align="stretch">
                 {/* Chart */}
                 <Box>
-                  <Text fontSize="xs" color="gray.500" fontWeight="medium" mb={2}>
+                  <BaseText fontSize="xs" color="gray.500" fontWeight="medium" mb={2}>
                     Revenus mensuels ({ENUM.COMMON.Currency.XOF})
-                  </Text>
+                  </BaseText>
 
                   <Flex align="flex-end" gap={1.5} h="112px">
                     {[55, 70, 60, 85, 75, 90, 82, 95, 88, 92, 98, 94].map((h, i) => (
@@ -254,7 +254,7 @@ export const OwnerSection = () => {
                     {
                       label: 'Impayés',
                       val: '1.2%',
-                      color: 'red.500',
+                      color: 'danger.solid',
                     },
                     {
                       label: 'Croissance',
@@ -269,12 +269,12 @@ export const OwnerSection = () => {
                       p={3}
                       textAlign="center"
                     >
-                      <Text fontSize="lg" fontWeight="bold" color={s.color}>
+                      <BaseText fontSize="lg" fontWeight="bold" color={s.color}>
                         {s.val}
-                      </Text>
-                      <Text fontSize="xs" color="gray.500">
+                      </BaseText>
+                      <BaseText fontSize="xs" color="gray.500">
                         {s.label}
-                      </Text>
+                      </BaseText>
                     </Box>
                   ))}
                 </SimpleGrid>
@@ -309,13 +309,13 @@ export const OwnerSection = () => {
                   <feature.icon size={20} color={feature.iconColor} />
                 </BaseIcon>
 
-                <Text fontSize="sm" fontWeight="semibold" mb={1}>
+                <BaseText fontSize="sm" fontWeight="semibold" mb={1}>
                   {feature.title}
-                </Text>
+                </BaseText>
 
-                <Text fontSize="xs" color="gray.500" lineHeight="relaxed">
+                <BaseText fontSize="xs" color="gray.500" lineHeight="relaxed">
                   {feature.description}
-                </Text>
+                </BaseText>
               </MotionBox>
             ))}
           </SimpleGrid>

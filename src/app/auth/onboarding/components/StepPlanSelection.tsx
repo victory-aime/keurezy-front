@@ -203,7 +203,13 @@ export const StepPlanSelection = ({ value, allPacks }: StepPlanSelectionProps) =
 
       {errors?.plan?.planId && !values?.plan?.planId && (
         <FieldRoot>
-          <Flex gap={1} mt={1} alignItems={'center'} justifyContent={'center'} color={'red.500'}>
+          <Flex
+            gap={1}
+            mt={1}
+            alignItems={'center'}
+            justifyContent={'center'}
+            color={'danger.solid'}
+          >
             <FieldErrorIcon width={2.5} height={2.5} />
             <BaseText>{errors?.plan?.planId}</BaseText>
           </Flex>

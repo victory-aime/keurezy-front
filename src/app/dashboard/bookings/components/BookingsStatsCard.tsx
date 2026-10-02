@@ -32,7 +32,7 @@ export const BookingsStatsCard = ({
         title: 'Refusées / annulées',
         value: byStatus(ENUM.BookingStatus.REJECTED, ENUM.BookingStatus.CANCELLED).length,
         icon: <Icons.Close />,
-        iconBgColor: 'red.500',
+        iconBgColor: 'danger.solid',
       },
       {
         title: 'Montant confirmé',

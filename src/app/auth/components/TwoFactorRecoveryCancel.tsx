@@ -58,7 +58,7 @@ export const TwoFactorRecoveryCancel = ({ token }: { token?: string }) => {
           Ce n’est pas moi : annuler la demande
         </BaseButton>
         {!token && (
-          <BaseText fontSize="sm" color="red.500">
+          <BaseText fontSize="sm" color="danger.solid">
             Lien incomplet : ouvrez le lien exact reçu par e-mail.
           </BaseText>
         )}

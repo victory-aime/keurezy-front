@@ -103,7 +103,7 @@ export const FormDateTimePicker = memo(
         {label && (
           <DatePicker.Label display="flex" gap="6px" fontSize="12px">
             {label}
-            {required && <BaseText color="red"> *</BaseText>}
+            {required && <BaseText color="danger.solid"> *</BaseText>}
           </DatePicker.Label>
         )}
 

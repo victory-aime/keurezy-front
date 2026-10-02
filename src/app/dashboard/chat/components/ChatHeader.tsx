@@ -1,8 +1,8 @@
 'use client';
 
-import { Flex, Text, Box, Image, Link } from '@chakra-ui/react';
+import { Flex, Box, Image, Link } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { BaseIcon, BaseTag, Icons } from '_components/custom';
+import { BaseIcon, BaseTag, Icons, BaseText } from '_components/custom';
 import { Avatar } from '_components/ui/avatar';
 import { useChatPresence } from '_hooks/chat/useChatPresence';
 import { DASHBOARD_ROUTES } from '../../routes/routes';
@@ -42,14 +42,14 @@ export function ChatHeader({ conversation, onBack }: ChatHeaderProps) {
         <Avatar size="sm" name={client?.name} />
 
         <Box flex={1} minW={0}>
-          <Text fontSize="sm" fontWeight="600" truncate>
+          <BaseText fontSize="sm" fontWeight="600" truncate>
             {client?.name ?? 'Client'}
-          </Text>
+          </BaseText>
           <Flex align="center" gap={1.5}>
             <Box w="6px" h="6px" rounded="full" bg={isOnline ? 'green.500' : 'gray.400'} />
-            <Text fontSize="xs" color="fg.muted">
+            <BaseText fontSize="xs" color="fg.muted">
               {isOnline ? 'En ligne' : 'Hors ligne'}
-            </Text>
+            </BaseText>
           </Flex>
         </Box>
 
@@ -91,14 +91,14 @@ export function ChatHeader({ conversation, onBack }: ChatHeaderProps) {
             </BaseIcon>
           )}
           <Box flex={1} minW={0}>
-            <Text fontSize="sm" fontWeight="600" truncate>
+            <BaseText fontSize="sm" fontWeight="600" truncate>
               {property.title}
-            </Text>
-            <Text fontSize="xs" color="fg.muted" truncate>
+            </BaseText>
+            <BaseText fontSize="xs" color="fg.muted" truncate>
               {booking
                 ? `Réservation du ${formatBookingDate(booking.startDate)} au ${formatBookingDate(booking.endDate)}`
                 : 'Demande d’informations, sans réservation'}
-            </Text>
+            </BaseText>
           </Box>
           {booking && (
             <Flex align="center" gap={2}>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Flex, Heading, Skeleton, Stack } from '@chakra-ui/react';
+import { Box, Flex, Skeleton, Stack } from '@chakra-ui/react';
 import { AnimatePresence, useReducedMotion } from 'framer-motion';
 import { t } from 'i18next';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -343,16 +343,16 @@ export const ChangePlanDialog = ({
                 Changer de plan · étape {step + 1} sur {PLAN_CHANGE_STEPS.length}
               </BaseText>
               <DialogTitle asChild>
-                <Heading
+                <BaseText
                   as="h2"
                   ref={headingRef}
                   tabIndex={-1}
-                  size={{ base: 'lg', md: 'xl' }}
+                  fontSize={{ base: 'lg', md: 'xl' }}
                   fontWeight="semibold"
                   outline="none"
                 >
                   {STEP_TITLES[step]}
-                </Heading>
+                </BaseText>
               </DialogTitle>
               {blockedReason && (
                 <BaseText variant={TextVariant.S} color="fg.muted" display={{ md: 'none' }}>

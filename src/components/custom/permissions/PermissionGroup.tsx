@@ -138,7 +138,7 @@ export const PermissionListGroup: FC<ICollapseCheckBoxGroup> = memo(
         <Field.Root id="permissions" invalid={!!errorMessage && !!isTouched}>
           {errorMessage && isTouched && (
             <Flex gap={1} mt={1} alignItems="center">
-              <Field.ErrorIcon width={2.5} height={2.5} color="red.500" />
+              <Field.ErrorIcon width={2.5} height={2.5} color="danger.solid" />
               <Field.ErrorText>{errorMessage}</Field.ErrorText>
             </Flex>
           )}

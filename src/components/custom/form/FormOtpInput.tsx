@@ -82,7 +82,9 @@ export const FormOtpInput: FC<OtpInputProps> = ({
           : 'bg'
       }
       // Case vide toujours visible (clair comme sombre) ; l'état se lit aussi à la couleur du chiffre
-      borderColor={isError ? 'red.500' : field.value?.[index] ? 'primary.500' : 'border.emphasized'}
+      borderColor={
+        isError ? 'danger.solid' : field.value?.[index] ? 'primary.500' : 'border.emphasized'
+      }
       borderWidth={1.5}
       fontWeight={'semibold'}
       _focusVisible={{
@@ -102,7 +104,7 @@ export const FormOtpInput: FC<OtpInputProps> = ({
       {label && (
         <Field.Label display="flex" gap="6px" fontSize={{ base: '14px', md: '12px' }}>
           {t(label)}
-          {required && <BaseText color="red"> * </BaseText>}
+          {required && <BaseText color="danger.solid"> * </BaseText>}
         </Field.Label>
       )}
 
@@ -141,7 +143,7 @@ export const FormOtpInput: FC<OtpInputProps> = ({
 
       {isError && (
         <Flex gap={1} mt={1} alignItems="center">
-          <Field.ErrorIcon width={4} height={4} color="red.500" />
+          <Field.ErrorIcon width={4} height={4} color="danger.solid" />
           <Field.ErrorText>{error}</Field.ErrorText>
         </Flex>
       )}

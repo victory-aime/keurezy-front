@@ -130,7 +130,7 @@ export const FormDatePicker = memo(
             {label && (
               <DatePicker.Label display="flex" gap="6px" fontSize="12px">
                 {t(label)}
-                {required && <BaseText color="red"> *</BaseText>}
+                {required && <BaseText color="danger.solid"> *</BaseText>}
               </DatePicker.Label>
             )}
 
@@ -205,7 +205,7 @@ export const FormDatePicker = memo(
 
         {isError && (
           <Flex gap={1} mt={1} alignItems="center">
-            <Field.ErrorIcon width={2.5} height={2.5} color="red.500" />
+            <Field.ErrorIcon width={2.5} height={2.5} color="danger.solid" />
             <Field.ErrorText>
               {typeof error === 'string'
                 ? error

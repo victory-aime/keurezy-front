@@ -11,8 +11,8 @@ import {
   YAxis,
   Legend,
 } from 'recharts';
-import { Box, Text } from '@chakra-ui/react';
-import { CustomSkeletonLoader } from '_components/custom';
+import { Box } from '@chakra-ui/react';
+import { CustomSkeletonLoader, BaseText } from '_components/custom';
 import { NoDataAnimation } from '_components/custom/data-table/NoDataAnimation';
 
 export type LineSeriesItem = {
@@ -45,9 +45,9 @@ export default function LineChart({ title, data, xKey, series, isLoading }: Line
 
   return (
     <Box p={5} borderRadius="2xl" shadow="sm" width="full">
-      <Text fontSize="lg" fontWeight="bold" mb={4}>
+      <BaseText fontSize="lg" fontWeight="bold" mb={4}>
         {title}
-      </Text>
+      </BaseText>
       <Chart.Root chart={chart} maxH="360px">
         <ResponsiveContainer width="100%" height={340}>
           <RechartsLineChart data={chart.data}>

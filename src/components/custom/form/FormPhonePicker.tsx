@@ -65,7 +65,7 @@ export const FormPhonePicker = ({
           ) : (
             <>
               {t(label)}
-              {required && <BaseText color="red"> * </BaseText>}
+              {required && <BaseText color="danger.solid"> * </BaseText>}
             </>
           )}
         </Field.Label>
@@ -133,7 +133,7 @@ export const FormPhonePicker = ({
 
       {isError && (
         <Flex gap={1} mt={1} alignItems="center">
-          <Field.ErrorIcon width={2.5} height={2.5} color={'red.500'} />
+          <Field.ErrorIcon width={2.5} height={2.5} color={'danger.solid'} />
           <Field.ErrorText>{error}</Field.ErrorText>
         </Flex>
       )}

@@ -4,7 +4,6 @@ import {
   Flex,
   Grid,
   Separator,
-  Text,
   HStack,
   SimpleGrid,
   VStack,
@@ -70,7 +69,7 @@ export const HeroSection = () => {
             >
               La Gestion locative
               <br />
-              <Text>
+              <BaseText fontSize="inherit" fontWeight="inherit">
                 <Span
                   bgClip={'text'}
                   gradientFrom={'primary.400'}
@@ -82,11 +81,11 @@ export const HeroSection = () => {
                   Intelligente
                 </Span>{' '}
                 pour tous
-              </Text>
+              </BaseText>
             </Box>
 
             {/* Description */}
-            <Text
+            <BaseText
               fontSize="lg"
               color="gray.500"
               maxW="lg"
@@ -96,7 +95,7 @@ export const HeroSection = () => {
             >
               Une expérience fluide pour louer, gérer et développer vos investissements immobiliers.
               Locataires et propriétaires, tout est réuni sur une seule plateforme
-            </Text>
+            </BaseText>
 
             {/* Buttons */}
             <Flex flexDirection={{ base: 'column', sm: 'row' }} gap={4} mb={10}>
@@ -147,9 +146,9 @@ export const HeroSection = () => {
                 <Box w={3} h={3} borderRadius="full" bg="red.400" opacity={0.6} />
                 <Box w={3} h={3} borderRadius="full" bg="yellow.400" opacity={0.6} />
                 <Box w={3} h={3} borderRadius="full" bg="green.400" opacity={0.6} />
-                <Text ml={2} fontSize="xs" color="gray.500">
+                <BaseText ml={2} fontSize="xs" color="gray.500">
                   my-immo.dashboard.app
-                </Text>
+                </BaseText>
               </Flex>
 
               <Box p={6}>
@@ -167,17 +166,17 @@ export const HeroSection = () => {
                       p={4}
                       bg={colorMode === 'light' ? `${kpi.color}.100` : `${kpi.color}.900`}
                     >
-                      <Text
+                      <BaseText
                         fontSize="xs"
                         fontWeight="medium"
                         opacity={0.7}
                         color={`${kpi.color}.600`}
                       >
                         {kpi.label}
-                      </Text>
-                      <Text fontSize="xl" fontWeight="bold" mt={1} color={`${kpi.color}.700`}>
+                      </BaseText>
+                      <BaseText fontSize="xl" fontWeight="bold" mt={1} color={`${kpi.color}.700`}>
                         {kpi.value}
-                      </Text>
+                      </BaseText>
                     </Box>
                   ))}
                 </SimpleGrid>
@@ -216,17 +215,17 @@ export const HeroSection = () => {
                     justify="space-between"
                     width={'full'}
                   >
-                    <Text fontSize="xs" color="gray.500" fontWeight="medium">
+                    <BaseText fontSize="xs" color="gray.500" fontWeight="medium">
                       Activité récente
-                    </Text>
+                    </BaseText>
 
                     <VStack align="start" gap={2} width={'full'}>
                       {['Loyer reçu', 'Nouveau bail', 'Maintenance'].map((item) => (
                         <HStack key={item} gap={2}>
                           <Box w={1.5} h={1.5} borderRadius="full" bg="purple.400" />
-                          <Text fontSize="xs" color="gray.500">
+                          <BaseText fontSize="xs" color="gray.500">
                             {item}
-                          </Text>
+                          </BaseText>
                         </HStack>
                       ))}
                     </VStack>
@@ -256,11 +255,11 @@ export const HeroSection = () => {
 
 const StatBlock = ({ value, label }: { value: string; label: string }) => (
   <Box>
-    <Text fontSize="2xl" fontWeight="bold">
+    <BaseText fontSize="2xl" fontWeight="bold">
       {value}
-    </Text>
-    <Text fontSize="sm" color="gray.500">
+    </BaseText>
+    <BaseText fontSize="sm" color="gray.500">
       {label}
-    </Text>
+    </BaseText>
   </Box>
 );

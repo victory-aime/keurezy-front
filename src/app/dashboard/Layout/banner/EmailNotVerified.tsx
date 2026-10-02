@@ -1,7 +1,7 @@
 'use client';
 
-import { Box, Flex, Text } from '@chakra-ui/react';
-import { BaseButton } from '_components/custom';
+import { Box, Flex } from '@chakra-ui/react';
+import { BaseButton, BaseText } from '_components/custom';
 import { useColorMode } from '_components/ui/color-mode';
 import { EmailContainer } from './email-container';
 
@@ -30,13 +30,13 @@ export const EmailNotVerifiedBanner = ({
           gap={4}
           flexDir={{ base: 'column', sm: 'row' }}
         >
-          <Text
+          <BaseText
             fontSize={{ base: 'sm', sm: 'md' }}
             color={colorMode === 'light' ? 'red.700' : 'white'}
           >
             Votre e-mail n’est pas encore vérifié. Vérifiez votre boîte mail : tant que l’e-mail du
             propriétaire n’est pas vérifié, les annonces de l’agence restent invisibles du public.
-          </Text>
+          </BaseText>
 
           {onResend && (
             <BaseButton

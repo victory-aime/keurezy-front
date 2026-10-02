@@ -115,7 +115,7 @@ const FormSelect: FC<FullSelectProps> = ({
                     ),
                   )}
                   {field.value?.[0] ? null : (
-                    <BaseText fontSize={'14px'} color={isError ? 'red.500' : 'inherit'}>
+                    <BaseText fontSize={'14px'} color={isError ? 'danger.solid' : 'inherit'}>
                       {placeholder}
                     </BaseText>
                   )}
@@ -123,7 +123,7 @@ const FormSelect: FC<FullSelectProps> = ({
               ) : (
                 <SelectValueText
                   placeholder={t(placeholder)}
-                  color={isError ? 'red.500' : 'inherit'}
+                  color={isError ? 'danger.solid' : 'inherit'}
                   fontSize={'14px'}
                 />
               )}
@@ -148,12 +148,12 @@ const FormSelect: FC<FullSelectProps> = ({
                     size="lg"
                     height={'40px'}
                     variant={'outline'}
-                    borderColor={isError ? 'red.500' : 'inherit'}
+                    borderColor={isError ? 'danger.solid' : 'inherit'}
                     borderRadius={'12px'}
                     shadow={'xs'}
-                    _placeholder={{ color: isError ? 'red.500' : 'gray.400' }}
+                    _placeholder={{ color: isError ? 'danger.solid' : 'gray.400' }}
                     fontSize={{ base: '16px', md: '12px' }}
-                    _focus={{ borderColor: isError ? 'red.500' : 'bg.muted' }}
+                    _focus={{ borderColor: isError ? 'danger.solid' : 'bg.muted' }}
                     readOnly={isReadOnly}
                     disabled={isDisabled}
                     value={searchTerm}
@@ -189,7 +189,7 @@ const FormSelect: FC<FullSelectProps> = ({
       </SelectRoot>
       {isError && (
         <Flex gap={1} mt={1} alignItems={'center'}>
-          <Field.ErrorIcon width={2.5} height={2.5} color={'red.500'} />
+          <Field.ErrorIcon width={2.5} height={2.5} color={'danger.solid'} />
           <Field.ErrorText>{error}</Field.ErrorText>
         </Flex>
       )}

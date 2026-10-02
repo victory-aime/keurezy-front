@@ -31,7 +31,7 @@ export const FormSlider: FC<DefaultProps> = ({
         <Field.Label display={'flex'} gap={'6px'} fontSize={{ base: '16px', lg: '18px' }}>
           {label}
           {required ? (
-            <Text color={'red'}> * </Text>
+            <Text color="danger.solid"> * </Text>
           ) : isNumber ? (
             <Flex ml={3} gap={2} alignItems={'center'}>
               <BaseFormatNumber value={field?.value[0]} />

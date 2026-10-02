@@ -1,8 +1,8 @@
 ﻿'use client';
 
 import { ReactNode } from 'react';
-import { Box, Flex, Stack, Text } from '@chakra-ui/react';
-import { CustomSkeletonLoader } from '_components/custom';
+import { Box, Flex, Stack } from '@chakra-ui/react';
+import { CustomSkeletonLoader, BaseText } from '_components/custom';
 
 type KpiCardProps = {
   title: string;
@@ -30,21 +30,21 @@ export default function KpiCard({
   return (
     <Box bg="white" p={5} borderRadius="2xl" shadow="sm" width="full">
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
-        <Text fontSize="sm" fontWeight="medium" color="gray.500">
+        <BaseText fontSize="sm" fontWeight="medium" color="gray.500">
           {title}
-        </Text>
+        </BaseText>
         {icon && <Box color={color}>{icon}</Box>}
       </Flex>
 
       <Stack gap={1}>
-        <Text fontSize="3xl" fontWeight="bold" color={color}>
+        <BaseText fontSize="3xl" fontWeight="bold" color={color}>
           {value}
           {unit ? ` ${unit}` : ''}
-        </Text>
+        </BaseText>
         {description && (
-          <Text fontSize="sm" color="gray.500">
+          <BaseText fontSize="sm" color="gray.500">
             {description}
-          </Text>
+          </BaseText>
         )}
       </Stack>
     </Box>

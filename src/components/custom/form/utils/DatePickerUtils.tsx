@@ -24,12 +24,12 @@ export const DatePickerInputContainer = memo(
     <DatePicker.Input
       borderRadius="12px"
       border="1px solid"
-      borderColor={isError ? 'red.500' : 'inherit'}
+      borderColor={isError ? 'danger.solid' : 'inherit'}
       _focus={{
-        borderColor: isError ? 'red.500' : 'primary.500',
+        borderColor: isError ? 'danger.solid' : 'primary.500',
       }}
       _placeholder={{
-        color: isError ? 'red.500' : 'gray.400',
+        color: isError ? 'danger.solid' : 'gray.400',
       }}
       fontSize="sm"
       {...props}
@@ -87,8 +87,8 @@ export const DatePickerInputByMode = memo(
             return (
               <DatePicker.Trigger unstyled asChild width={'full'}>
                 <DatePickerValueContainer
-                  borderColor={isError ? 'red.500' : 'gray.200'}
-                  color={isError ? 'red.500' : 'gray.400'}
+                  borderColor={isError ? 'danger.solid' : 'gray.200'}
+                  color={isError ? 'danger.solid' : 'gray.400'}
                 >
                   <DatePicker.ValueText placeholder={placeholder}>
                     {({ value, index, remove }) => (

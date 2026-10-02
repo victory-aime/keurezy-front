@@ -4,7 +4,6 @@ import {
   Box,
   Field,
   Flex,
-  Heading,
   Input,
   NativeSelect,
   RadioCard,
@@ -220,16 +219,16 @@ export const InvoiceEditorDialog = ({
               {current?.bookingReference && ` · réservation ${current.bookingReference}`}
             </BaseText>
             <DialogTitle asChild>
-              <Heading
+              <BaseText
                 as="h2"
                 ref={headingRef}
                 tabIndex={-1}
-                size={{ base: 'lg', md: 'xl' }}
+                fontSize={{ base: 'lg', md: 'xl' }}
                 fontWeight="semibold"
                 outline="none"
               >
                 {step === 'source' ? 'Que voulez-vous facturer ?' : 'Client, lignes et échéance'}
-              </Heading>
+              </BaseText>
             </DialogTitle>
           </Stack>
           <DialogCloseTrigger disabled={saving} top="4" insetEnd="4" aria-label="Fermer" />
