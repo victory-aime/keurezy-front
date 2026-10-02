@@ -4,10 +4,10 @@ import { Box, Flex } from '@chakra-ui/react';
 import { Formik } from 'formik';
 import { useEffect, useMemo, useState } from 'react';
 import {
-  BaseBadge,
   BaseButton,
   BaseContainer,
   BaseFormatNumber,
+  BaseTag,
   ColumnsDataTable,
   DataTableContainer,
   FormTextInput,
@@ -36,10 +36,8 @@ const FILTERS: { value: Filter; label: string }[] = [
 
 const StatusBadges = ({ item }: { item: Item }) => (
   <Flex gap={1} wrap="wrap">
-    <BaseBadge {...INVOICE_STATUS[item.status]} variant="subtle" size="sm" />
-    {isOverdue(item) && (
-      <BaseBadge status={ENUM.COMMON.Status.WARNING} label="En retard" variant="subtle" size="sm" />
-    )}
+    <BaseTag {...INVOICE_STATUS[item.status]} size="sm" />
+    {isOverdue(item) && <BaseTag status={ENUM.COMMON.Status.WARNING} label="En retard" size="sm" />}
   </Flex>
 );
 
@@ -67,7 +65,7 @@ const columnsFor = (open: (id: string) => void, agencyId: string): ColumnsDataTa
   { header: 'Total TTC', accessor: 'fullObject', cell: (i: Item) => <Total item={i} /> },
   { header: 'Statut', accessor: 'fullObject', cell: (i: Item) => <StatusBadges item={i} /> },
   {
-    header: '',
+    header: 'Action',
     accessor: 'actions',
     actions: [
       {
@@ -160,8 +158,7 @@ export const InvoicesPage = () => {
           return (
             <BaseButton
               key={f.value}
-              size="sm"
-              colorType="primary"
+              colorType={active ? 'primary' : 'neutral'}
               variant={active ? 'solid' : 'outline'}
               aria-pressed={active}
               onClick={() => {
@@ -170,12 +167,10 @@ export const InvoicesPage = () => {
               }}
             >
               {f.label}
-              <BaseBadge
+              <BaseTag
                 ml={1}
                 size="sm"
-                p={1}
-                minW={6}
-                color="neutral"
+                colorPalette={active ? 'primary' : 'gray'}
                 variant={active ? 'surface' : 'subtle'}
                 label={String(f.value === 'ALL' ? all : (counts[f.value] ?? 0))}
               />

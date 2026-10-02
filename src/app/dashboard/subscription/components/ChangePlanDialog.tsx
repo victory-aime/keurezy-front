@@ -252,9 +252,7 @@ export const ChangePlanDialog = ({
         keep={keep}
         current={{
           name: t(`SUBSCRIPTION.PLANS.${subscription.plan.name}`),
-          price: fromFree ? (
-            'Gratuit'
-          ) : subscription.price === null ? (
+          price: fromFree ? null : subscription.price === null ? (
             '—'
           ) : (
             <>

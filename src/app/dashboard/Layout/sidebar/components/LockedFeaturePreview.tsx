@@ -91,24 +91,26 @@ const Tick = ({ label, delay, done = true }: { label: string; delay?: string; do
 
 /** Collaborateurs : l'équipe arrive, des permissions se cochent, l'invitation part. */
 const TeamPreview = () => (
-  <Flex position="absolute" inset="14px" gap="14px">
-    <Stack gap="8px" width="104px">
+  <Flex position="absolute" inset="14px" gap="14px" width="full">
+    <Stack gap="8px" width="120px">
       <Box {...caption}>Équipe</Box>
       <Flex>
         <Avatar initials="AD" bg="primary.500" color="white" delay="kzp-d1" first />
         <Avatar initials="MS" bg="orange.400" color="orange.950" delay="kzp-d2" />
         <Avatar initials="KN" bg="teal.600" color="white" delay="kzp-d3" />
+        <Avatar initials="NY" bg="yellow.600" color="white" delay="kzp-d3" />
       </Flex>
       <Box
         className="kzp-toast"
         mt="auto"
         fontSize="10px"
         fontWeight="semibold"
-        bg="gray.900"
+        bg="teal.500"
         color="white"
         rounded="7px"
         px="8px"
         py="6px"
+        width="fit-content"
       >
         Invitation envoyée
       </Box>
@@ -182,7 +184,7 @@ const StatsPreview = () => (
 export const LockedFeaturePreview = ({ preview }: { preview: LockedPreview }) => (
   <Box
     aria-hidden
-    height="156px"
+    height="170px"
     rounded="10px"
     bg="bg.subtle"
     borderWidth="1px"

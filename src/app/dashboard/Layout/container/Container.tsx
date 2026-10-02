@@ -10,7 +10,7 @@ export const Container = ({
   children: React.ReactNode;
   isLoading?: boolean;
 }) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useBreakpointValue({ base: false, sm: true });
 
   return (
     <Flex flex={1} h="100%" width="100%">
@@ -28,7 +28,7 @@ export const Container = ({
           {children}
         </BaseContainer>
       )}
-      {isMobile && <FloatSwitchColorMode />}
+      <FloatSwitchColorMode />
     </Flex>
   );
 };

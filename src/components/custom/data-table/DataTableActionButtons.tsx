@@ -1,4 +1,4 @@
-import { HStack, Menu, Portal } from '@chakra-ui/react';
+import { HStack, IconButton, Menu, Portal } from '@chakra-ui/react';
 import {
   ActionButtonsProps,
   Loader,
@@ -226,18 +226,19 @@ export const DataTableActionButtons = <T,>({ actions, item }: ActionButtonsProps
                     {isLoading ? (
                       <Loader loader size="xs" />
                     ) : (
-                      <BaseButton
+                      <BaseIconButton
                         colorType={config.colorType}
                         variant="surface"
                         size="xs"
                         width="full"
-                        justifyContent="flex-start"
-                        p={2}
                         disabled={isDisabled}
-                        leftIcon={<Icon aria-hidden />}
+                        label={action.title ?? t(config.tooltip)}
+                        hideTooltip
+                        p={2}
                       >
+                        <Icon />
                         {action.title ?? t(config.tooltip)}
-                      </BaseButton>
+                      </BaseIconButton>
                     )}
                   </HStack>
                 </Menu.Item>

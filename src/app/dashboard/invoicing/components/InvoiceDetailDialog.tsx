@@ -5,7 +5,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useState } from 'react';
 import {
-  BaseBadge,
   BaseButton,
   BaseFormatNumber,
   BaseModal,
@@ -19,6 +18,7 @@ import {
   FormDatePicker,
   FormSelect,
   FormTextArea,
+  BaseTag,
 } from '_components/custom';
 import { AgencyModule } from '_store/state-management';
 import { ENUM, MODELS } from '_types/*';
@@ -213,14 +213,9 @@ export const InvoiceDetailDialog = ({
 
           <Stack gap={5}>
             <Flex gap={2} wrap="wrap">
-              <BaseBadge status={status.status} label={status.label} variant="subtle" size="sm" />
+              <BaseTag status={status.status} label={status.label} />
               {isOverdue(invoice) && (
-                <BaseBadge
-                  status={ENUM.COMMON.Status.WARNING}
-                  label="En retard"
-                  variant="subtle"
-                  size="sm"
-                />
+                <BaseTag status={ENUM.COMMON.Status.WARNING} label="En retard" />
               )}
             </Flex>
 

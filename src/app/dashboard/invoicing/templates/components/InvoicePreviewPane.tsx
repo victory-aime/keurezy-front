@@ -40,8 +40,13 @@ export const InvoicePreviewPane = ({
             {loading ? 'Mise à jour…' : error ? 'Aperçu indisponible' : ''}
           </BaseText>
           {error && url && !loading && (
-            <BaseButton size="xs" variant="ghost" colorType="primary" onClick={retry}>
-              <Icons.Refresh aria-hidden />
+            <BaseButton
+              size="xs"
+              variant="ghost"
+              colorType="primary"
+              onClick={retry}
+              leftIcon={<Icons.Refresh aria-hidden />}
+            >
               Réessayer
             </BaseButton>
           )}
@@ -61,7 +66,7 @@ export const InvoicePreviewPane = ({
         {url && width > 0 ? (
           <Document
             file={url}
-            loading={<CustomSkeletonLoader type="DEFAULT" height="100%" />}
+            loading={<CustomSkeletonLoader type="FORM" height="100%" />}
             error=" "
           >
             <Page
@@ -82,7 +87,7 @@ export const InvoicePreviewPane = ({
             </BaseButton>
           </Stack>
         ) : (
-          <CustomSkeletonLoader type="DEFAULT" height="100%" />
+          <CustomSkeletonLoader type="FORM" height="100%" width="100%" />
         )}
       </Box>
     </Stack>

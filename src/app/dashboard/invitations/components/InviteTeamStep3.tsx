@@ -6,8 +6,9 @@ import { Flex, Stack, VStack } from '@chakra-ui/react';
 import { BaseTag, BaseText } from '_components/custom';
 import { ISelectPermissions, IInviteTeamUserInfo } from '../constants/team';
 import { MODELS } from '_types/*';
-import { useGroupedPermissions } from '_hooks/useGroupedPermissions';
 import { SelectedPermissionsRecap } from '../../components/SelectedPermissionsRecap';
+import { useMemo } from 'react';
+import { mergePermissionGroups } from '_utils/permissions';
 
 export const InviteTeamStep3 = ({
   permissions,
@@ -21,7 +22,7 @@ export const InviteTeamStep3 = ({
     permissions: ISelectPermissions[];
   }>();
 
-  const groupedPermissions = useGroupedPermissions(permissions, values?.permissions);
+  const groups = useMemo(() => mergePermissionGroups(permissions ?? []), [permissions]);
 
   return (
     <MotionBox
@@ -34,13 +35,13 @@ export const InviteTeamStep3 = ({
         <VStack gap={3} alignItems={'flex-start'} width={'full'} p={3}>
           <Flex alignItems={'flex-start'} gap={3} width={'full'} mt={4}>
             <Avatar name={values?.account?.name} size={'lg'} />
-            <Stack gap={0}>
+            <Stack gap={0} alignItems={'flex-start'}>
               <BaseText fontWeight="bold">{values?.account?.name}</BaseText>
               <BaseText color="gray.500">{values?.account?.email}</BaseText>
               <BaseTag color="green" label={values?.account?.role} />
             </Stack>
           </Flex>
-          <SelectedPermissionsRecap permissions={groupedPermissions} />
+          <SelectedPermissionsRecap permissions={groups} />
         </VStack>
       </FormCard>
     </MotionBox>

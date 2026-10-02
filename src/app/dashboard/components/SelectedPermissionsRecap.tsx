@@ -17,6 +17,8 @@ export const SelectedPermissionsRecap = ({
 }) => {
   if (!permissions) return <NoDataAnimation notFoundTitle="Aucune permissions disponible" />;
 
+  console.log('SelectedPermissionsRecap permissions:', permissions);
+
   return (
     <VStack gap={3} alignItems={'flex-start'} width={'full'}>
       <Flex alignItems={'center'} gap={2} mb={2} mt={4}>

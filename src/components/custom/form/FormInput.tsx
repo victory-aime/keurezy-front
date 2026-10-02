@@ -29,6 +29,7 @@ const FormTextInput = ({
   isLoading,
   onChangeFunction,
   currency = ENUM.COMMON.Currency.XAF,
+  inputRef,
   ...rest
 }: TextInputProps) => {
   const { t } = useTranslation();
@@ -112,6 +113,7 @@ const FormTextInput = ({
           }
         >
           <Input
+            ref={inputRef}
             {...field}
             {...rest}
             name={field.name}

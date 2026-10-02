@@ -50,6 +50,7 @@ export const LockedNavLink = ({
       openDelay={150}
       closeDelay={120}
       positioning={{ placement: 'right-start', gutter: 14 }}
+      size="lg"
       lazyMount
       unmountOnExit
     >
@@ -121,11 +122,11 @@ export const LockedNavLink = ({
       </HoverCard.Trigger>
       <Portal>
         <HoverCard.Positioner>
-          <HoverCard.Content width="320px" p={4} rounded="14px" boxShadow="lg">
+          <HoverCard.Content minW="380px" ml={3} p={4} rounded="14px" boxShadow="lg">
             <HoverCard.Arrow>
               <HoverCard.ArrowTip />
             </HoverCard.Arrow>
-            <Stack gap={3}>
+            <Stack gap={3} width="full">
               <Flex alignItems="center" gap={2} wrap="wrap">
                 <BaseText fontWeight="bold">{label}</BaseText>
                 {planName && (

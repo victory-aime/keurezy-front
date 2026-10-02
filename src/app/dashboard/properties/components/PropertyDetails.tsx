@@ -99,9 +99,17 @@ export const PropertyDetails = ({ propertyId, onClose }: PropertyDetailsProps) =
                   <BaseText fontSize="sm">
                     {CONSTANTS.rentalTypes.find((type) => type.value === config.rentalType)
                       ?.label ?? config.rentalType}
-                    {!config.isActive && ' (inactive)'}
                   </BaseText>
-                  <BaseFormatNumber value={Number(config.price)} />
+                  <Stack direction="row" align="center" gap={2}>
+                    <BaseFormatNumber value={Number(config.price)} />
+                    {!config.isActive && (
+                      <BaseTag
+                        fontSize="sm"
+                        label={ENUM.COMMON.Status.INACTIVE}
+                        colorPalette="red"
+                      />
+                    )}
+                  </Stack>
                 </Flex>
               ))}
             </Stack>

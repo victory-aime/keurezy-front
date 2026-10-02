@@ -1,7 +1,14 @@
 'use client';
 
 import { Box, Flex, HStack, Stack } from '@chakra-ui/react';
-import { BaseBadge, BaseText, Icons, TextVariant, BaseIconButton } from '_components/custom';
+import {
+  BaseBadge,
+  BaseText,
+  Icons,
+  TextVariant,
+  BaseIconButton,
+  BaseTag,
+} from '_components/custom';
 import { MODELS } from '_types/*';
 import { COLOR_ROLES, colorName, FONT_OPTIONS, LAYOUT_OPTIONS } from '_utils/invoice-template';
 
@@ -44,9 +51,9 @@ export const TemplateCard = ({
     bg="bg"
   >
     <Stack gap={1}>
-      <Flex alignItems="center" gap={2} wrap="wrap">
+      <Flex alignItems="center" gap={2} wrap="wrap" justifyContent="space-between">
         <BaseText fontWeight="semibold">{template.name}</BaseText>
-        {isDefaultChoice && <BaseBadge label="Par défaut" variant="subtle" size="sm" />}
+        {isDefaultChoice && <BaseTag label="Par défaut" colorPalette={'primary'} />}
       </Flex>
       <BaseText variant={TextVariant.S} color="fg.muted">
         {template.description ?? customDescription(template.config)}
@@ -89,12 +96,16 @@ export const TemplateCard = ({
         <Icons.View aria-hidden />
       </BaseIconButton>
       {isOwner && (
-        <BaseIconButton label={template.isDefault ? 'Personnaliser' : 'Modifier'} onClick={onEdit}>
+        <BaseIconButton
+          label={template.isDefault ? 'Personnaliser' : 'Modifier'}
+          onClick={onEdit}
+          colorType="info"
+        >
           <Icons.Edit aria-hidden />
         </BaseIconButton>
       )}
       {isOwner && !isDefaultChoice && (
-        <BaseIconButton label="Choisir ce modèle" onClick={onMakeDefault}>
+        <BaseIconButton label="Choisir ce modèle" onClick={onMakeDefault} colorType="tertiary">
           <Icons.Check aria-hidden />
         </BaseIconButton>
       )}

@@ -37,7 +37,7 @@ const getTagContent = (
 
 export const BaseTag: FC<BaseTagProps> = ({
   children,
-  variant = 'subtle',
+  variant = 'solid',
   label: customLabel,
   color = 'neutral' as BaseTagProps['color'],
   iconPosition = 'start',

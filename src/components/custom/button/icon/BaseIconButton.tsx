@@ -18,11 +18,11 @@ export interface BaseIconButtonProps extends Omit<IconButtonProps, 'aria-label'>
  * Bouton icône de l'application : couleurs de la charte (comme `BaseButton`), état désactivé
  * lisible, info-bulle et `aria-label` tirés du même libellé. `asChild` accepte un lien
  * (`<a download>`).
- */
+ *   */
 export const BaseIconButton: FC<BaseIconButtonProps> = ({
   label,
   colorType = 'neutral',
-  variant = 'ghost',
+  variant = 'surface',
   size = 'sm',
   isLoading = false,
   hideTooltip = false,
@@ -35,7 +35,6 @@ export const BaseIconButton: FC<BaseIconButtonProps> = ({
       aria-label={label}
       variant={variant}
       size={size}
-      rounded="md"
       {...variantStyles(colorType, variant)}
       _disabled={disabledStyle(variant)}
       disabled={disabled || isLoading}

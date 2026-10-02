@@ -1,4 +1,4 @@
-import { VStack, Flex, HStack, Span } from '@chakra-ui/react';
+import { VStack, Flex, HStack, Span, StackProps } from '@chakra-ui/react';
 import { BaseText } from '_components/custom';
 import React from 'react';
 
@@ -7,12 +7,13 @@ export const DetailsModalSection = ({
   icon,
   title,
   children,
+  ...rest
 }: {
   icon: React.ReactNode;
   title: string;
   children: React.ReactNode;
-}) => (
-  <VStack alignItems="flex-start" width="full">
+} & StackProps) => (
+  <VStack alignItems="flex-start" width="full" {...rest}>
     <Flex alignItems="center" gap={2} color="primary.500">
       {icon}
       <BaseText fontWeight="semibold">{title}</BaseText>

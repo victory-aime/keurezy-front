@@ -1,4 +1,5 @@
 import { AgencyRole } from '../enum';
+import { Status } from '../enum/common';
 
 /** `GET invite/preview` : ce que l'invité voit avant d'accepter (lecture seule). */
 export interface IInvitationPreview {
@@ -30,4 +31,17 @@ export interface ICreateInvitation {
     role: AgencyRole;
     permissions: { permissionId: string; granted: boolean }[];
   };
+}
+
+export interface IInvitationList {
+  id: string;
+  email: string;
+  token: string;
+  agencyId: string;
+  agencyRole: 'AGENT';
+  createdAt: Date;
+  name: string;
+  status: Status;
+  invitedBy: string;
+  expiresAt: Date;
 }

@@ -3,7 +3,13 @@
 import { Flex, Stack } from '@chakra-ui/react';
 import { useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { BaseButton, BaseText, TextVariant, CustomSkeletonLoader } from '_components/custom';
+import {
+  BaseButton,
+  BaseText,
+  TextVariant,
+  CustomSkeletonLoader,
+  BaseContainer,
+} from '_components/custom';
 import { useAuthContext } from '_context/auth-context';
 import { useUserContext } from '_context/user-context';
 import { AgencyModule } from '_store/state-management';
@@ -21,10 +27,10 @@ import { UsageOverview } from './UsageOverview';
 
 /** Squelette de la page pendant le chargement. */
 const OverviewSkeleton = () => (
-  <Stack gap={4} aria-busy="true" aria-label="Chargement de votre abonnement">
-    <CustomSkeletonLoader type="DEFAULT" height="180px" />
-    <CustomSkeletonLoader type="DEFAULT" height="220px" />
-    <CustomSkeletonLoader type="DEFAULT" height="160px" />
+  <Stack gap={4} aria-busy="true" aria-label="Chargement de votre abonnement" width="full" mt={2}>
+    <CustomSkeletonLoader type="FORM" height="180px" width="100%" />
+    <CustomSkeletonLoader type="FORM" height="220px" width="100%" />
+    <CustomSkeletonLoader type="FORM" height="160px" width="100%" />
   </Stack>
 );
 
@@ -175,43 +181,36 @@ export const SubscriptionOverview = () => {
   };
 
   return (
-    <Stack gap={5} width="full" maxW="5xl" mx="auto" pb={8}>
-      <Flex
-        gap={3}
-        justifyContent="space-between"
-        alignItems={{ base: 'stretch', sm: 'flex-end' }}
-        direction={{ base: 'column', sm: 'row' }}
-      >
-        <Stack gap={1}>
-          <BaseText as="h1" variant={TextVariant.H2} fontWeight="semibold">
-            Mon abonnement
-          </BaseText>
-          <BaseText variant={TextVariant.S} color="fg.muted">
-            Gérez votre plan, votre consommation et votre facturation.
-          </BaseText>
-        </Stack>
+    <BaseContainer
+      title="Mon abonnement"
+      description="Gérez votre plan, votre consommation et votre facturation."
+      border="none"
+      withActionButtons
+      actionsButtonProps={{
+        validatePermission: !!subscription,
+        icon: <></>,
+        validateTitle: 'Changer de plan',
+        onClick: () => setDrawer({ open: true }),
+      }}
+    >
+      <Stack gap={5} width="full" mt={'30px'}>
+        {isOwner && agencyId && <PaymentReturn agencyId={agencyId} onSettled={reload} />}
+        {body()}
         {subscription && (
-          <BaseButton colorType="primary" onClick={() => setDrawer({ open: true })}>
-            Changer de plan
-          </BaseButton>
+          <ChangePlanDialog
+            agencyId={agencyId}
+            subscription={subscription}
+            currentLimits={(data?.features ?? [])
+              .filter((f) => f.included)
+              .map((f) => ({ name: f.name, limit: f.limit }))}
+            open={drawer.open}
+            onOpenChange={(open) => setDrawer((d) => ({ ...d, open }))}
+            initialTarget={drawer.target}
+            initialKeep={drawer.keep}
+            onScheduled={reload}
+          />
         )}
-      </Flex>
-      {isOwner && agencyId && <PaymentReturn agencyId={agencyId} onSettled={reload} />}
-      {body()}
-      {subscription && (
-        <ChangePlanDialog
-          agencyId={agencyId}
-          subscription={subscription}
-          currentLimits={(data?.features ?? [])
-            .filter((f) => f.included)
-            .map((f) => ({ name: f.name, limit: f.limit }))}
-          open={drawer.open}
-          onOpenChange={(open) => setDrawer((d) => ({ ...d, open }))}
-          initialTarget={drawer.target}
-          initialKeep={drawer.keep}
-          onScheduled={reload}
-        />
-      )}
-    </Stack>
+      </Stack>
+    </BaseContainer>
   );
 };

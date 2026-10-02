@@ -32,15 +32,7 @@ const PermissionModule = ({
   const label = t('PERMISSIONS.MODULES.' + group.category);
 
   return (
-    <Stack
-      as="fieldset"
-      gap={0}
-      rounded="7px"
-      borderWidth="1px"
-      borderColor={count ? 'primary.500/40' : 'border'}
-      bg="bg"
-      transition="border-color 150ms ease"
-    >
+    <Stack as="fieldset" gap={0}>
       <Flex
         as="legend"
         width="full"
@@ -50,12 +42,16 @@ const PermissionModule = ({
         justifyContent="space-between"
         gap={3}
         bg="bg.muted"
-        roundedTop="7px"
+        rounded="7px"
+        borderWidth="1px"
+        borderColor={count ? 'primary.500/40' : 'border'}
+        transition="border-color 150ms ease"
       >
         <Checkbox
           checked={all ? true : count ? 'indeterminate' : false}
           onCheckedChange={() => onToggle(ids, !all)}
           colorPalette="primary"
+          cursor="pointer"
         >
           <BaseText fontWeight="semibold">{label}</BaseText>
         </Checkbox>
@@ -72,9 +68,7 @@ const PermissionModule = ({
               colorPalette="primary"
               alignItems="flex-start"
             >
-              <BaseText variant={TextVariant.S}>
-                {permission.description || permission.name}
-              </BaseText>
+              <BaseText variant={TextVariant.S}>{permission.description}</BaseText>
             </Checkbox>
           </Box>
         ))}

@@ -1,8 +1,16 @@
 'use client';
 
-import { Field, Flex, Input, Menu, Portal, Textarea } from '@chakra-ui/react';
+import { Flex, Menu, Portal, Stack } from '@chakra-ui/react';
+import { useField } from 'formik';
 import { useRef } from 'react';
-import { Icons, BaseButton } from '_components/custom';
+import {
+  BaseButton,
+  BaseText,
+  FormTextArea,
+  FormTextInput,
+  Icons,
+  TextVariant,
+} from '_components/custom';
 import { MODELS } from '_types/*';
 import { insertVariable, unknownVariables } from '_utils/invoice-template';
 
@@ -15,29 +23,33 @@ const GROUP_LABELS: Record<string, string> = {
 };
 
 /**
- * Texte d'un modèle avec insertion guidée de variables : le menu insère `{{groupe.cle}}` au
- * curseur. Les variables hors catalogue sont signalées tout de suite (le backend les refuse).
+ * Texte d'un modèle (champ Formik `name`) avec insertion guidée de variables : le menu insère
+ * `{{groupe.cle}}` au curseur. Les variables hors catalogue sont signalées tout de suite (le
+ * backend les refuse).
  */
 export const VariableTextField = ({
+  name,
   label,
-  value,
-  onChange,
   maxLength,
   multiline,
   catalogue,
 }: {
+  name: string;
   label: string;
-  value: string;
-  onChange: (value: string) => void;
   maxLength: number;
   multiline: boolean;
   catalogue: MODELS.IInvoiceVariables | undefined;
 }) => {
   const input = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
-  const unknown = catalogue ? unknownVariables(value, catalogue) : [];
+  const validate = (text: string) => {
+    const unknown = catalogue ? unknownVariables(text ?? '', catalogue) : [];
+    return unknown.length ? `Variable inconnue : ${unknown.join(', ')}` : undefined;
+  };
+  const [field, , { setValue, setTouched }] = useField<string>(name);
 
   const insert = (variable: string) => {
     const element = input.current;
+    const value = field.value ?? '';
     const { text, cursor } = insertVariable(
       value,
       {
@@ -47,7 +59,8 @@ export const VariableTextField = ({
       variable,
     );
     if (text.length > maxLength) return;
-    onChange(text);
+    setValue(text);
+    setTouched(true, false);
     // Curseur replacé après la variable insérée
     requestAnimationFrame(() => {
       element?.focus();
@@ -55,18 +68,9 @@ export const VariableTextField = ({
     });
   };
 
-  const fieldProps = {
-    ref: input,
-    value,
-    maxLength,
-    onChange: (e: React.ChangeEvent<HTMLInputElement & HTMLTextAreaElement>) =>
-      onChange(e.target.value),
-  };
-
   return (
-    <Field.Root invalid={unknown.length > 0}>
-      <Flex width="full" justifyContent="space-between" alignItems="center" gap={2}>
-        <Field.Label mb={0}>{label}</Field.Label>
+    <Stack gap={1}>
+      <Flex justifyContent="flex-end">
         <Menu.Root positioning={{ placement: 'bottom-end' }}>
           <Menu.Trigger asChild>
             <BaseButton size="xs" variant="ghost" p={2} disabled={!catalogue}>
@@ -96,19 +100,28 @@ export const VariableTextField = ({
           </Portal>
         </Menu.Root>
       </Flex>
-      {multiline ? <Textarea rows={3} {...fieldProps} /> : <Input {...fieldProps} />}
-      <Flex width="full" justifyContent="space-between" gap={2}>
-        {unknown.length > 0 ? (
-          <Field.ErrorText>Variable inconnue : {unknown.join(', ')}</Field.ErrorText>
-        ) : (
-          <Field.HelperText>
-            Les variables sont remplacées par les données de la facture.
-          </Field.HelperText>
-        )}
-        <Field.HelperText flexShrink={0}>
-          {value.length}/{maxLength}
-        </Field.HelperText>
-      </Flex>
-    </Field.Root>
+      {multiline ? (
+        <FormTextArea
+          name={name}
+          label={label}
+          rows={3}
+          maxCharacters={maxLength}
+          validate={validate}
+          inputRef={input}
+          autoresize={false}
+        />
+      ) : (
+        <FormTextInput
+          name={name}
+          label={label}
+          maxLength={maxLength}
+          validate={validate}
+          inputRef={input}
+        />
+      )}
+      <BaseText variant={TextVariant.XS} color="fg.muted">
+        Les variables sont remplacées par les données de la facture.
+      </BaseText>
+    </Stack>
   );
 };

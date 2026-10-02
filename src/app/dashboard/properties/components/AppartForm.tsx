@@ -176,7 +176,7 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
           isLoading={fetchLoading}
         >
           <FormErrorFocus />
-          <VStack gap={3} alignItems={'stretch'} width={'full'}>
+          <VStack gap={3} alignItems={'stretch'} width={'full'} mb={4}>
             {/* ==================== 1. INFORMATIONS PRINCIPALES ==================== */}
             <FormCard
               title="Informations principales"

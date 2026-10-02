@@ -57,7 +57,6 @@ export const StampSection = ({
           borderWidth="1px"
           borderStyle={stampUrl ? 'solid' : 'dashed'}
           borderColor="border.emphasized"
-          bg="white"
           alignItems="center"
           justifyContent="center"
           p={2}
@@ -101,7 +100,7 @@ export const StampSection = ({
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => pick(e.target.files?.[0])}
               />
               <BaseButton
-                size="sm"
+                mt={1}
                 variant="outline"
                 colorType="primary"
                 isLoading={isPending}
@@ -113,9 +112,10 @@ export const StampSection = ({
               </BaseButton>
               {stampUrl && (
                 <BaseButton
-                  size="sm"
-                  variant="ghost"
+                  mt={1}
                   colorType="danger"
+                  variant="outline"
+                  isLoading={isPending}
                   disabled={isPending}
                   onClick={() => mutate({ payload: undefined, params: { agencyId } })}
                 >

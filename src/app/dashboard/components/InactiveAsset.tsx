@@ -18,12 +18,7 @@ export const assetStatusColumn: ColumnsDataTable = {
   accessor: 'fullObject',
   cell: (row?: AssetRow) =>
     isInactiveAsset(row) ? (
-      <BaseBadge
-        status={ENUM.COMMON.Status.INACTIVE}
-        label="Désactivé"
-        variant="subtle"
-        size="sm"
-      />
+      <BaseTag status={ENUM.COMMON.Status.INACTIVE} label="Désactivé" variant="subtle" size="sm" />
     ) : (
       <BaseTag status={row?.status as ENUM.COMMON.Status} />
     ),

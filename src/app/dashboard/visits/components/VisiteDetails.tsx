@@ -1,12 +1,5 @@
-import { Box, HStack, VStack, Flex, Separator } from '@chakra-ui/react';
-import {
-  BaseModal,
-  Icons,
-  BaseText,
-  BaseTag,
-  BaseFormatNumber,
-  ModalOpenProps,
-} from '_components/custom';
+import { Box, HStack, VStack, Flex, Separator, Span } from '@chakra-ui/react';
+import { BaseModal, Icons, BaseText, BaseFormatNumber, ModalOpenProps } from '_components/custom';
 import { ENUM } from '_types/*';
 import { formatDisplayDate, getTimeValue } from 'rise-core-frontend';
 import { FormCard } from '../../components/FormCard';
@@ -43,21 +36,18 @@ export const VisitDetails = ({
       onEdit={onEdit}
       onDelete={onDelete}
     >
-      <Box p={1.5}>
-        <HStack gap={3} justifyContent={'space-between'}>
-          <HStack>
-            <Icons.Calendar />
-            <BaseText fontWeight="semibold">{formatDisplayDate(data?.scheduledAt)}</BaseText>
-            <BaseText color="gray.500">
-              {getTimeValue(data?.startTime!)} - {getTimeValue(data?.endTime!)}
-            </BaseText>
-          </HStack>
-          <BaseTag status={data?.status} />
-        </HStack>
-      </Box>
-
       <FormCard title="" loader={isLoading}>
         <VStack align="stretch" gap={0} width={'full'}>
+          <Flex py={2} justify="space-between">
+            <BaseText color="gray.500">Programmé</BaseText>
+            <BaseText fontWeight="semibold">
+              {formatDisplayDate(data?.scheduledAt)}{' '}
+              <Span color="gray.500" fontWeight="normal">
+                - {getTimeValue(data?.startTime!)} - {getTimeValue(data?.endTime!)}
+              </Span>
+            </BaseText>
+          </Flex>
+          <Separator />
           <Flex py={2} justify="space-between">
             <BaseText color="gray.500">Bien concerné</BaseText>
             <BaseText>{data?.property?.title ?? 'N/A'}</BaseText>
@@ -76,7 +66,7 @@ export const VisitDetails = ({
           </Flex>
           <Separator />
         </VStack>
-        <DetailsModalSection icon={<Icons.User />} title="Informations sur le prospect">
+        <DetailsModalSection icon={<Icons.User />} title="Informations sur le prospect" mt={4}>
           <Flex width="full" alignItems={'flex-start'} gap={4} mt={2} mb={2}>
             <DetailsInfoItem icon={<Icons.User />} label={'Nom'} value={data?.client?.user?.name} />
             <DetailsInfoItem
@@ -91,7 +81,7 @@ export const VisitDetails = ({
             />
           </Flex>
         </DetailsModalSection>
-        <DetailsModalSection icon={<Icons.Chat />} title="Message du candidat">
+        <DetailsModalSection icon={<Icons.Chat />} title="Message du candidat" mt={4}>
           <Box
             width="full"
             p={4}

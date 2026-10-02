@@ -1,58 +1,104 @@
 'use client';
 
+import { createListCollection, Flex, RadioCard, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Formik } from 'formik';
+import { useEffect, useMemo, useState } from 'react';
+import * as Yup from 'yup';
 import {
-  Box,
-  Field,
-  Flex,
-  Input,
-  NativeSelect,
-  RadioCard,
-  SimpleGrid,
-  Stack,
-} from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
-import {
-  BaseButton,
   BaseFormatNumber,
+  BaseModal,
+  BaseRadioCard,
   BaseText,
-  TextVariant,
   CustomSkeletonLoader,
+  FormDatePicker,
+  FormSelect,
+  FormTextInput,
+  Icons,
+  ModalOpenProps,
+  TextVariant,
 } from '_components/custom';
-import {
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-} from '_components/ui/dialog';
 import { AgencyModule } from '_store/state-management';
 import { ENUM, MODELS } from '_types/*';
 import { invoiceTotals, isoDay, shortDate } from '_utils/invoice';
-import { EMPTY_LINE, InvoiceLinesField, lineValid } from './InvoiceLinesField';
+import { EMPTY_LINE, InvoiceLinesField, LINE_SCHEMA } from './InvoiceLinesField';
 
 type Source = 'booking' | 'free';
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+/** Valeur du sélecteur de modèle pour « modèle par défaut de l'agence » */
+const DEFAULT_TEMPLATE = 'DEFAULT';
 
-const emptyDraft = (): MODELS.IInvoiceDraft => ({
-  client: { name: '', email: '', phone: '', address: '' },
-  lines: [{ ...EMPTY_LINE }],
-  dueAt: isoDay(15),
+/** Formulaire d'un brouillon : le modèle est une liste (sélecteur), le reste suit le brouillon. */
+type DraftValues = Omit<MODELS.IInvoiceDraft, 'templateId'> & { templateId: string[] };
+
+const DRAFT_SCHEMA = Yup.object({
+  client: Yup.object({
+    name: Yup.string()
+      .trim()
+      .required('Indiquez le nom du client.')
+      .min(2, 'Indiquez le nom du client.')
+      .max(120),
+    email: Yup.string().trim().email('Adresse e-mail invalide.').max(254),
+    phone: Yup.string().trim().max(30),
+    address: Yup.string().trim().max(300),
+  }),
+  lines: Yup.array().of(LINE_SCHEMA).min(1),
+  dueAt: Yup.string().required('Indiquez l’échéance.'),
 });
 
-const draftOf = (invoice: MODELS.IInvoice): MODELS.IInvoiceDraft => ({
-  templateId: invoice.templateId ?? undefined,
-  client: { ...invoice.client },
-  lines: invoice.lines.map((l) => ({ ...l })),
-  dueAt: invoice.dueAt.slice(0, 10),
+const valuesOf = (invoice: MODELS.IInvoice | null): DraftValues =>
+  invoice
+    ? {
+        templateId: [invoice.templateId ?? DEFAULT_TEMPLATE],
+        client: {
+          name: invoice.client.name,
+          email: invoice.client.email ?? '',
+          phone: invoice.client.phone ?? '',
+          address: invoice.client.address ?? '',
+        },
+        lines: invoice.lines.map((l) => ({ ...l, period: l.period ?? '' })),
+        dueAt: invoice.dueAt.slice(0, 10),
+      }
+    : {
+        templateId: [DEFAULT_TEMPLATE],
+        client: { name: '', email: '', phone: '', address: '' },
+        lines: [{ ...EMPTY_LINE }],
+        dueAt: isoDay(15),
+      };
+
+const payloadOf = (values: DraftValues): MODELS.IInvoiceDraft => ({
+  templateId: values.templateId[0] === DEFAULT_TEMPLATE ? undefined : values.templateId[0],
+  client: values.client,
+  lines: values.lines.map((l) => ({
+    ...l,
+    quantity: Number(l.quantity),
+    unitPrice: Number(l.unitPrice),
+    period: l.period?.trim() || null,
+  })),
+  dueAt: values.dueAt.slice(0, 10),
 });
 
 const Money = ({ value }: { value: number }) => (
   <BaseFormatNumber value={value} currencyCode={ENUM.COMMON.Currency.XOF} />
 );
 
-/** Réservations à facturer : la plus récente d'abord, factures déjà créées signalées. */
+const SOURCES = [
+  {
+    value: 'booking',
+    label: 'Depuis une réservation',
+    icon: <Icons.Calendar />,
+    desc: 'Client, bien, période, montant et caution préremplis.',
+  },
+  {
+    value: 'free',
+    label: 'Facture libre',
+    icon: <Icons.Edit />,
+    desc: 'Toute autre prestation : vous saisissez le client et les lignes.',
+  },
+];
+
+/**
+ * Réservations à facturer : la plus récente d'abord, factures déjà créées signalées. Liste de
+ * cartes à choix unique (une description par carte : `BaseRadioCard` n'en montre qu'une).
+ */
 const BookingPicker = ({
   agencyId,
   value,
@@ -80,6 +126,7 @@ const BookingPicker = ({
       onValueChange={(e) => e.value && onChange(e.value)}
       aria-label="Réservation à facturer"
       size="sm"
+      colorPalette="primary"
     >
       <Stack gap={2} maxH="420px" overflowY="auto" pr={1}>
         {data.map((b) => (
@@ -103,6 +150,41 @@ const BookingPicker = ({
         ))}
       </Stack>
     </RadioCard.Root>
+  );
+};
+
+/** Totaux d'un brouillon, au taux de TVA de l'agence, recalculés à la saisie. */
+const Totals = ({ lines, vatRate }: { lines: MODELS.IInvoiceLine[]; vatRate: number }) => {
+  const totals = invoiceTotals(lines, vatRate);
+  const row = (label: string, value: number, strong = false) => (
+    <Flex justifyContent="space-between" gap={4} pt={strong ? 1 : 0}>
+      <BaseText
+        as="dt"
+        variant={TextVariant.S}
+        color={strong ? undefined : 'fg.muted'}
+        fontWeight={strong ? 'semibold' : undefined}
+      >
+        {label}
+      </BaseText>
+      <BaseText as="dd" variant={TextVariant.S} fontWeight={strong ? 'semibold' : undefined}>
+        <Money value={value} />
+      </BaseText>
+    </Flex>
+  );
+  return (
+    <Stack
+      as="dl"
+      gap={1}
+      minW={{ md: '260px' }}
+      p={4}
+      rounded="7px"
+      bg="bg.muted"
+      aria-label="Totaux"
+    >
+      {row('Total HT', totals.ht)}
+      {row(vatRate ? `TVA (${vatRate} %)` : 'TVA non applicable', totals.vat)}
+      {row('Total TTC', totals.ttc, true)}
+    </Stack>
   );
 };
 
@@ -131,14 +213,22 @@ export const InvoiceEditorDialog = ({
   const [step, setStep] = useState<'source' | 'form'>('source');
   const [source, setSource] = useState<Source>('booking');
   const [bookingId, setBookingId] = useState<string | null>(null);
-  const [draft, setDraft] = useState<MODELS.IInvoiceDraft>(emptyDraft);
-  const headingRef = useRef<HTMLHeadingElement>(null);
 
   const { data: templates } = AgencyModule.getInvoiceTemplatesQueries({
     params: { agencyId },
     queryOptions: { enabled: open && !!agencyId },
   });
   const vatRate = templates?.settings.vatRate ?? 0;
+  const templateList = useMemo(
+    () =>
+      createListCollection({
+        items: [
+          { value: DEFAULT_TEMPLATE, label: 'Modèle par défaut de l’agence' },
+          ...(templates?.templates ?? []).map((t) => ({ value: t.id, label: t.name })),
+        ],
+      }),
+    [templates],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -146,12 +236,7 @@ export const InvoiceEditorDialog = ({
     setStep(editing ? 'form' : 'source');
     setSource('booking');
     setBookingId(null);
-    setDraft(editing ? draftOf(editing) : emptyDraft());
   }, [open, editing]);
-
-  useEffect(() => {
-    headingRef.current?.focus();
-  }, [step]);
 
   const { mutate: save, isPending: saving } = AgencyModule.saveInvoiceMutation({
     mutationOptions: {
@@ -159,7 +244,6 @@ export const InvoiceEditorDialog = ({
         if (step === 'source') {
           // Brouillon prérempli depuis la réservation : on passe à sa vérification
           setCurrent(invoice);
-          setDraft(draftOf(invoice));
           setStep('form');
           return;
         }
@@ -169,292 +253,132 @@ export const InvoiceEditorDialog = ({
     },
   });
 
-  const totals = invoiceTotals(draft.lines, vatRate);
-  const email = draft.client.email?.trim() ?? '';
-  const blockedReason =
-    step === 'source'
-      ? source === 'booking' && !bookingId
-        ? 'Choisissez une réservation.'
-        : ''
-      : draft.client.name.trim().length < 2
-        ? 'Indiquez le nom du client.'
-        : email && !EMAIL.test(email)
-          ? 'Adresse e-mail du client invalide.'
-          : !draft.lines.every(lineValid)
-            ? 'Complétez chaque ligne (désignation, quantité, prix entier).'
-            : !draft.dueAt
-              ? 'Indiquez l’échéance.'
-              : '';
+  const onDialogChange = ((o: boolean) =>
+    !o && !saving && onOpenChange(false)) as ModalOpenProps['onChange'];
+  const context = [
+    current ? 'Brouillon de facture' : 'Nouvelle facture',
+    current?.bookingReference && `réservation ${current.bookingReference}`,
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
-  const next = () => {
-    if (blockedReason) return;
-    if (step === 'source') {
-      if (source === 'booking' && bookingId) {
-        save({ payload: { bookingId }, params: { agencyId } });
-      } else {
-        setStep('form');
-      }
-      return;
-    }
-    const payload: MODELS.IInvoiceDraft = {
-      ...draft,
-      templateId: draft.templateId || undefined,
-      lines: draft.lines.map((l) => ({ ...l, period: l.period?.trim() || null })),
-    };
-    save({ payload: { draft: payload }, params: { agencyId, id: current?.id } });
-  };
-
-  const setClient = (patch: Partial<MODELS.IInvoiceClient>) =>
-    setDraft((d) => ({ ...d, client: { ...d.client, ...patch } }));
+  if (step === 'source') {
+    return (
+      <BaseModal
+        isOpen={open}
+        onChange={onDialogChange}
+        size="full"
+        title="Que voulez-vous facturer ?"
+        description={context}
+        icon={<Icons.Payment />}
+        buttonCancelTitle="Annuler"
+        colorCancelButton="neutral"
+        buttonSaveTitle="Continuer"
+        saveDisabled={source === 'booking' && !bookingId}
+        isLoading={saving}
+        onClick={() =>
+          source === 'booking' && bookingId
+            ? save({ payload: { bookingId }, params: { agencyId } })
+            : setStep('form')
+        }
+      >
+        <Stack width="full" maxW="64rem" mx="auto" gap={5}>
+          <BaseRadioCard
+            items={SOURCES}
+            value={source}
+            onValueChange={({ value }) => setSource(value as Source)}
+            aria-label="Source de la facture"
+          />
+          {source === 'booking' && (
+            <BookingPicker agencyId={agencyId} value={bookingId} onChange={setBookingId} />
+          )}
+        </Stack>
+      </BaseModal>
+    );
+  }
 
   return (
-    <DialogRoot
-      open={open}
-      onOpenChange={(e) => !saving && onOpenChange(e.open)}
-      size="full"
-      initialFocusEl={() => headingRef.current}
-      lazyMount
-      unmountOnExit
+    <Formik
+      // Remonté quand le brouillon change (création depuis une réservation, autre brouillon)
+      key={current?.id ?? 'new'}
+      initialValues={valuesOf(current)}
+      validationSchema={DRAFT_SCHEMA}
+      onSubmit={(values) =>
+        save({ payload: { draft: payloadOf(values) }, params: { agencyId, id: current?.id } })
+      }
     >
-      <DialogContent rounded="none" bg="bg">
-        <DialogHeader borderBottomWidth="1px" borderColor="border" py={4}>
-          <Stack gap={0} width="full" maxW="64rem" mx="auto" pr={10}>
-            <BaseText variant={TextVariant.XS} color="fg.muted">
-              {current ? 'Brouillon de facture' : 'Nouvelle facture'}
-              {current?.bookingReference && ` · réservation ${current.bookingReference}`}
-            </BaseText>
-            <DialogTitle asChild>
-              <BaseText
-                as="h2"
-                ref={headingRef}
-                tabIndex={-1}
-                fontSize={{ base: 'lg', md: 'xl' }}
-                fontWeight="semibold"
-                outline="none"
-              >
-                {step === 'source' ? 'Que voulez-vous facturer ?' : 'Client, lignes et échéance'}
-              </BaseText>
-            </DialogTitle>
-          </Stack>
-          <DialogCloseTrigger disabled={saving} top="4" insetEnd="4" aria-label="Fermer" />
-        </DialogHeader>
-
-        <DialogBody py={{ base: 6, md: 8 }}>
+      {({ values, handleSubmit, setFieldValue }) => (
+        <BaseModal
+          isOpen={open}
+          onChange={onDialogChange}
+          size="full"
+          title="Client, lignes et échéance"
+          description={context}
+          icon={<Icons.Payment />}
+          buttonCancelTitle="Annuler"
+          colorCancelButton="neutral"
+          buttonRejectTitle={current ? '' : 'Retour'}
+          colorRejectButton="neutral"
+          onReject={() => setStep('source')}
+          buttonSaveTitle="Enregistrer le brouillon"
+          isLoading={saving}
+          onClick={() => handleSubmit()}
+        >
           <Stack width="full" maxW="64rem" mx="auto" gap={8}>
-            {step === 'source' ? (
-              <Stack gap={5}>
-                <RadioCard.Root
-                  value={source}
-                  onValueChange={(e) => e.value && setSource(e.value as Source)}
-                  aria-label="Source de la facture"
-                >
-                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={3}>
-                    <RadioCard.Item value="booking">
-                      <RadioCard.ItemHiddenInput />
-                      <RadioCard.ItemControl>
-                        <RadioCard.ItemContent>
-                          <RadioCard.ItemText>Depuis une réservation</RadioCard.ItemText>
-                          <RadioCard.ItemDescription>
-                            Client, bien, période, montant et caution préremplis.
-                          </RadioCard.ItemDescription>
-                        </RadioCard.ItemContent>
-                        <RadioCard.ItemIndicator />
-                      </RadioCard.ItemControl>
-                    </RadioCard.Item>
-                    <RadioCard.Item value="free">
-                      <RadioCard.ItemHiddenInput />
-                      <RadioCard.ItemControl>
-                        <RadioCard.ItemContent>
-                          <RadioCard.ItemText>Facture libre</RadioCard.ItemText>
-                          <RadioCard.ItemDescription>
-                            Toute autre prestation : vous saisissez le client et les lignes.
-                          </RadioCard.ItemDescription>
-                        </RadioCard.ItemContent>
-                        <RadioCard.ItemIndicator />
-                      </RadioCard.ItemControl>
-                    </RadioCard.Item>
-                  </SimpleGrid>
-                </RadioCard.Root>
-                {source === 'booking' && (
-                  <BookingPicker agencyId={agencyId} value={bookingId} onChange={setBookingId} />
-                )}
-              </Stack>
-            ) : (
-              <>
-                <Stack gap={4} as="fieldset">
-                  <BaseText as="legend" fontWeight="semibold" mb={2}>
-                    Client
-                  </BaseText>
-                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-                    <Field.Root required>
-                      <Field.Label>
-                        Nom ou raison sociale <Field.RequiredIndicator />
-                      </Field.Label>
-                      <Input
-                        value={draft.client.name}
-                        maxLength={120}
-                        autoComplete="off"
-                        onChange={(e) => setClient({ name: e.target.value })}
-                      />
-                    </Field.Root>
-                    <Field.Root invalid={!!email && !EMAIL.test(email)}>
-                      <Field.Label>E-mail</Field.Label>
-                      <Input
-                        type="email"
-                        value={draft.client.email ?? ''}
-                        maxLength={254}
-                        autoComplete="off"
-                        onChange={(e) => setClient({ email: e.target.value })}
-                      />
-                      <Field.HelperText>Pour lui envoyer la facture.</Field.HelperText>
-                    </Field.Root>
-                    <Field.Root>
-                      <Field.Label>Téléphone</Field.Label>
-                      <Input
-                        type="tel"
-                        value={draft.client.phone ?? ''}
-                        maxLength={30}
-                        autoComplete="off"
-                        onChange={(e) => setClient({ phone: e.target.value })}
-                      />
-                    </Field.Root>
-                    <Field.Root>
-                      <Field.Label>Adresse</Field.Label>
-                      <Input
-                        value={draft.client.address ?? ''}
-                        maxLength={300}
-                        autoComplete="off"
-                        onChange={(e) => setClient({ address: e.target.value })}
-                      />
-                    </Field.Root>
-                  </SimpleGrid>
-                </Stack>
-
-                <InvoiceLinesField
-                  lines={draft.lines}
-                  onChange={(lines) => setDraft((d) => ({ ...d, lines }))}
-                />
-
-                <Flex
-                  gap={8}
-                  direction={{ base: 'column', md: 'row' }}
-                  justifyContent="space-between"
-                >
-                  <SimpleGrid columns={{ base: 1, sm: 2 }} gap={4} flex="1" maxW="32rem">
-                    <Field.Root required>
-                      <Field.Label>
-                        Échéance <Field.RequiredIndicator />
-                      </Field.Label>
-                      <Input
-                        type="date"
-                        value={draft.dueAt}
-                        onChange={(e) => setDraft((d) => ({ ...d, dueAt: e.target.value }))}
-                      />
-                    </Field.Root>
-                    <Field.Root>
-                      <Field.Label>Modèle</Field.Label>
-                      <NativeSelect.Root>
-                        <NativeSelect.Field
-                          value={draft.templateId ?? ''}
-                          onChange={(e) =>
-                            setDraft((d) => ({ ...d, templateId: e.target.value || undefined }))
-                          }
-                        >
-                          <option value="">Modèle par défaut de l’agence</option>
-                          {templates?.templates.map((t) => (
-                            <option key={t.id} value={t.id}>
-                              {t.name}
-                            </option>
-                          ))}
-                        </NativeSelect.Field>
-                        <NativeSelect.Indicator />
-                      </NativeSelect.Root>
-                    </Field.Root>
-                  </SimpleGrid>
-
-                  <Stack
-                    as="dl"
-                    gap={1}
-                    minW={{ md: '260px' }}
-                    p={4}
-                    rounded="7px"
-                    bg="bg.muted"
-                    aria-label="Totaux"
-                  >
-                    <Flex justifyContent="space-between" gap={4}>
-                      <BaseText as="dt" variant={TextVariant.S} color="fg.muted">
-                        Total HT
-                      </BaseText>
-                      <BaseText as="dd" variant={TextVariant.S}>
-                        <Money value={totals.ht} />
-                      </BaseText>
-                    </Flex>
-                    <Flex justifyContent="space-between" gap={4}>
-                      <BaseText as="dt" variant={TextVariant.S} color="fg.muted">
-                        {vatRate ? `TVA (${vatRate} %)` : 'TVA non applicable'}
-                      </BaseText>
-                      <BaseText as="dd" variant={TextVariant.S}>
-                        <Money value={totals.vat} />
-                      </BaseText>
-                    </Flex>
-                    <Flex justifyContent="space-between" gap={4} pt={1}>
-                      <BaseText as="dt" fontWeight="semibold">
-                        Total TTC
-                      </BaseText>
-                      <BaseText as="dd" fontWeight="semibold">
-                        <Money value={totals.ttc} />
-                      </BaseText>
-                    </Flex>
-                  </Stack>
-                </Flex>
-              </>
-            )}
-          </Stack>
-        </DialogBody>
-
-        <DialogFooter borderTopWidth="1px" borderColor="border" bg="bg" py={3}>
-          <Flex
-            width="full"
-            maxW="64rem"
-            mx="auto"
-            gap={3}
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Box>
-              {step === 'form' && !current && (
-                <BaseButton
-                  variant="outline"
-                  colorType="neutral"
-                  disabled={saving}
-                  onClick={() => setStep('source')}
-                >
-                  Retour
-                </BaseButton>
-              )}
-            </Box>
-            <Flex alignItems="center" gap={3} minW={0}>
-              <BaseText
-                role="status"
-                aria-live="polite"
-                variant={TextVariant.XS}
-                color="fg.muted"
-                display={{ base: 'none', md: 'block' }}
-              >
-                {blockedReason}
+            <Stack gap={4} as="fieldset">
+              <BaseText as="legend" fontWeight="semibold" mb={2}>
+                Client
               </BaseText>
-              <BaseButton
-                colorType="primary"
-                isLoading={saving}
-                disabled={!!blockedReason || saving}
-                onClick={next}
-              >
-                {step === 'source' ? 'Continuer' : 'Enregistrer le brouillon'}
-              </BaseButton>
+              <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+                <FormTextInput
+                  required
+                  name="client.name"
+                  label="Nom ou raison sociale"
+                  maxLength={120}
+                  autoComplete="off"
+                />
+                <FormTextInput
+                  name="client.email"
+                  type="email"
+                  label="E-mail"
+                  maxLength={254}
+                  autoComplete="off"
+                  infoMessage="Pour lui envoyer la facture."
+                />
+                <FormTextInput
+                  name="client.phone"
+                  type="tel"
+                  label="Téléphone"
+                  maxLength={30}
+                  autoComplete="off"
+                />
+                <FormTextInput
+                  name="client.address"
+                  label="Adresse"
+                  maxLength={300}
+                  autoComplete="off"
+                />
+              </SimpleGrid>
+            </Stack>
+
+            <InvoiceLinesField />
+
+            <Flex gap={8} direction={{ base: 'column', md: 'row' }} justifyContent="space-between">
+              <SimpleGrid columns={{ base: 1, sm: 2 }} gap={4} flex="1" maxW="32rem">
+                <FormDatePicker required name="dueAt" label="Échéance" />
+                <FormSelect
+                  name="templateId"
+                  label="Modèle"
+                  listItems={templateList}
+                  setFieldValue={setFieldValue}
+                  isClearable={false}
+                />
+              </SimpleGrid>
+              <Totals lines={values.lines} vatRate={vatRate} />
             </Flex>
-          </Flex>
-        </DialogFooter>
-      </DialogContent>
-    </DialogRoot>
+          </Stack>
+        </BaseModal>
+      )}
+    </Formik>
   );
 };

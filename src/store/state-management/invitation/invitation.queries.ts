@@ -8,7 +8,7 @@ const getAllInvitationByAgency = (
 ) => {
   const { params, queryOptions } = args;
 
-  return QUERIES.useCustomQuery<undefined, MODELS.IAgencyCommonParams, any[]>({
+  return QUERIES.useCustomQuery<undefined, MODELS.IAgencyCommonParams, MODELS.IInvitationList[]>({
     queryKey: [Constants.INVITE_KEYS.INVITATION_AGENCY_LIST, params],
     queryFn: () => invitationServiceInstance().getAllInvitationsByAgency(params?.agencyId!),
     options: queryOptions,

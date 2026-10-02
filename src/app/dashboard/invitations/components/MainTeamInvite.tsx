@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX, useRef, useState } from 'react';
+import React, { JSX, useRef, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { BaseButton, BaseContainer, Icons, BaseText } from '_components/custom';
 import { Box, Flex, HStack, Span } from '@chakra-ui/react';
@@ -146,7 +146,7 @@ export const MainTeamInvite = () => {
         >
           <Flex alignItems={'center'} gap={5} mt={5}>
             {INVITE_TEAM_STEPS.map((s, i) => (
-              <>
+              <React.Fragment key={i}>
                 <HStack gap={2}>
                   <MotionFlex
                     align="center"
@@ -183,7 +183,7 @@ export const MainTeamInvite = () => {
                     transition="all 0.3s"
                   />
                 )}
-              </>
+              </React.Fragment>
             ))}
           </Flex>
 
@@ -213,28 +213,30 @@ export const MainTeamInvite = () => {
               gap={3}
               h="80px"
               align="center"
-              justify="space-between"
+              justify={step !== TOTAL_INVITE_TEAM_STEPS - 1 ? 'center' : 'space-between'}
             >
-              <BaseButton
-                variant="outline"
-                isDisabled={step === TOTAL_INVITE_TEAM_STEPS - 1 || isCreateInvitationPending}
-                onClick={() => {
-                  if (step === 0) {
-                    navigate.push(DASHBOARD_ROUTES.INVITATIONS.LIST);
-                  } else {
-                    goBack();
-                  }
-                }}
-                leftIcon={<Icons.IoIosArrowRoundBack size={16} />}
-              >
-                <Span display={{ base: 'none', sm: 'inline' }}>
-                  {step === 0 ? (
-                    'Annuler'
-                  ) : (
-                    <Span display={{ base: 'none', sm: 'inline' }}>Précédent</Span>
-                  )}
-                </Span>
-              </BaseButton>
+              {step === TOTAL_INVITE_TEAM_STEPS - 1 && (
+                <BaseButton
+                  variant="outline"
+                  isDisabled={step === TOTAL_INVITE_TEAM_STEPS - 1 || isCreateInvitationPending}
+                  onClick={() => {
+                    if (step === 0) {
+                      navigate.push(DASHBOARD_ROUTES.INVITATIONS.LIST);
+                    } else {
+                      goBack();
+                    }
+                  }}
+                  leftIcon={<Icons.IoIosArrowRoundBack size={16} />}
+                >
+                  <Span display={{ base: 'none', sm: 'inline' }}>
+                    {step === 0 ? (
+                      'Annuler'
+                    ) : (
+                      <Span display={{ base: 'none', sm: 'inline' }}>Précédent</Span>
+                    )}
+                  </Span>
+                </BaseButton>
+              )}
 
               <BaseButton
                 onClick={goNext}

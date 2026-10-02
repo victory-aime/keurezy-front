@@ -14,6 +14,7 @@ import { AppPermissions } from '_utils/app-permissions';
 import { invitationCancelImpact, invitationResendImpact } from '_utils/impact';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 import { useFeatureGuard } from '_hooks/useFeatureGuard';
+import { formatDisplayDate } from 'rise-core-frontend';
 
 export const InvitationsList = () => {
   const { hasPermission } = usePermissions();
@@ -75,6 +76,11 @@ export const InvitationsList = () => {
       accessor: 'fullObject',
       cell: (value) =>
         generateAuditCell(t, { userId: value?.invitedBy, timestamp: value?.createdAt }, user?.id),
+    },
+    {
+      header: 'Expire le',
+      accessor: 'expiresAt',
+      cell: (value) => formatDisplayDate(value),
     },
     {
       header: 'Statut',

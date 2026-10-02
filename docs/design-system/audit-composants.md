@@ -39,9 +39,24 @@ Demande du 2026-10-02 : les écrans ne respectent pas la direction design. Il fa
 Chaque phase : build, tests, commit. Vérification visuelle dans le navigateur à la fin (clair et sombre).
 
 ## Tâches
-- [ ] Phase 1 : charte et boutons
-- [ ] Phase 2 : `BaseIconButton`
-- [ ] Phase 3 : badges, tags, boutons, info-bulles, chargement
-- [ ] Phase 4 : textes
-- [ ] Phase 5 : listes, états vides, squelettes
-- [ ] Phase 6 : formulaires
+- [x] Phase 1 : charte et boutons (jetons sémantiques par palette, texte lisible calculé, `neutral` corrigé, désactivé par variante, badges sans survol).
+- [x] Phase 2 : `BaseIconButton` (21 usages remplacés, actions de ligne du tableau aux couleurs de la charte ; une colonne d'actions vide n'affiche plus un menu « … » vide).
+- [x] Phase 3 : badges, tags, boutons, info-bulles (`BaseTooltip` gagne `disabled`, l'info-bulle maison du menu est supprimée), chargement, notifications aux couleurs de la charte.
+- [x] Phase 4 : `BaseText` partout (26 fichiers), `ref` accepté ; rouge des erreurs de formulaire = `danger`.
+- [x] Phase 5 : factures et historique de facturation sur `DataTableContainer` (actions de ligne, chargement, vide) ; `CustomSkeletonLoader` partout.
+- [x] Phase 6 : Formik et champs `Form*` (envoi, paiement, annulation de facture, questionnaire de départ, codes de secours, réglages de facturation, code promo, recherches, éditeurs de facture et de modèle).
+
+## Composants enrichis (pas de nouveau composant en double)
+- `BaseIconButton` (nouveau, il manquait) : icône + info-bulle + `aria-label`, couleurs de la charte.
+- `BaseBadge` : `color` libre, contenu libre (`children`), majuscule initiale seulement.
+- `BaseTooltip` : `disabled`. `BaseText` : `ref`. `FormDatePicker` : `maxDate`. `FormTextInput` / `FormTextArea` : `inputRef` (insertion au curseur), `rows` ; le texte d'aide de `FormTextArea` s'affiche enfin (il était toujours vide).
+- i18n : `nsSeparator: false`, un « : » dans un libellé n'est plus tronqué.
+
+## Exceptions assumées
+- Zone de saisie du chat : composeur (Entrée pour envoyer, hauteur automatique), pas un champ de formulaire.
+- Choix en cartes avec une description par carte ou une carte indisponible (réservation à facturer, mise en page, police, signature) : `RadioCard` Chakra aux couleurs de la charte ; `BaseRadioCard` n'affiche qu'une description et ne gère pas les cartes indisponibles.
+- Composants internes de la bibliothèque (`components/custom`) : ils s'appuient sur Chakra par nature.
+
+## Vérifications
+- Tests 113, build OK. Page de contrôle visuel (toutes couleurs × variantes, actives et désactivées, clair et sombre) vérifiée dans le navigateur puis supprimée.
+- [ ] Vérification dans le navigateur, connecté : listes (factures, historique), éditeurs de facture et de modèle, dialogues (envoi, paiement, annulation, résiliation, fermeture), menu latéral, mode sombre.

@@ -1,4 +1,4 @@
-import { Accordion, Box, Flex, Icon, VStack } from '@chakra-ui/react';
+import { Accordion, Badge, Box, Flex, Icon, VStack } from '@chakra-ui/react';
 import { useIsActive } from '../hooks/useIsActive';
 import { SidebarNavGroupProps } from '../types';
 import { BaseText, BaseBadge, BaseTooltip, TextVariant } from '_components/custom';
@@ -162,17 +162,19 @@ export const SidebarGroup = ({
                                   color="primary"
                                   variant="solid"
                                   size="sm"
-                                  p={1}
+                                  px={2}
+                                  py={1}
                                   label={String(item.badge)}
                                 />
                               )}
                               {item.highlight && (
                                 <BaseBadge
                                   color="danger"
-                                  variant="subtle"
-                                  size="sm"
-                                  p={1}
-                                  label="Nouveau"
+                                  label="New"
+                                  borderRadius="md"
+                                  variant="plain"
+                                  px={2}
+                                  py={1}
                                   textSize={TextVariant.XXS}
                                 />
                               )}

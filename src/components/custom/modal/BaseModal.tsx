@@ -81,7 +81,7 @@ const BaseModal = ({
             )}
             <VStack gap={0} alignItems={'flex-start'}>
               <BaseText variant={TextVariant.S}>{t(title)}</BaseText>
-              <BaseText variant={TextVariant.S} fontWeight={'light'} color={'gray.400'}>
+              <BaseText variant={TextVariant.S} fontWeight={'light'} color={'fg.muted'}>
                 {t(description)}
               </BaseText>
             </VStack>

@@ -3,8 +3,7 @@ export const boxStyle = {
   borderColor: 'border',
   shadowSize: 'md',
   borderRadius: '7px',
-  padding: '3',
-  mb: '5',
+  padding: '4',
   width: '100%',
   overflow: 'auto',
 };

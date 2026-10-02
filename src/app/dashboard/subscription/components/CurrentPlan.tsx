@@ -1,6 +1,6 @@
 import { Box, Flex, SimpleGrid, Stack } from '@chakra-ui/react';
 import { t } from 'i18next';
-import { BaseBadge, BaseButton, BaseFormatNumber, BaseText, TextVariant } from '_components/custom';
+import { BaseButton, BaseFormatNumber, BaseText, TextVariant, BaseTag } from '_components/custom';
 import { ENUM, MODELS } from '_types/*';
 import { canRenew, formatLongDate, isFreePlan } from '_utils/subscription';
 
@@ -39,12 +39,12 @@ const Price = ({ subscription }: { subscription: Subscription }) => {
 const StatusBadge = ({ subscription }: { subscription: Subscription }) => {
   if (subscription.status === 'INACTIVE') {
     return (
-      <BaseBadge status={ENUM.COMMON.Status.INACTIVE} label="Inactif" variant="subtle" size="sm" />
+      <BaseTag status={ENUM.COMMON.Status.INACTIVE} label="Inactif" variant="subtle" size="sm" />
     );
   }
   if (subscription.cancelAtPeriodEnd) {
     return (
-      <BaseBadge
+      <BaseTag
         status={ENUM.COMMON.Status.PENDING}
         label="Résiliation programmée"
         variant="subtle"
@@ -52,7 +52,7 @@ const StatusBadge = ({ subscription }: { subscription: Subscription }) => {
       />
     );
   }
-  return <BaseBadge status={ENUM.COMMON.Status.ACTIVE} label="Actif" variant="subtle" size="sm" />;
+  return <BaseTag status={ENUM.COMMON.Status.ACTIVE} label="Actif" variant="subtle" size="sm" />;
 };
 
 /** Petit libellé au-dessus d'une valeur. */

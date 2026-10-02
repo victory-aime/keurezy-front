@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import { t } from 'i18next';
 import type { ReactNode } from 'react';
 import {
-  BaseBadge,
+  BaseTag,
   BaseFormatNumber,
   BaseText,
   FormTextInput,
@@ -222,9 +222,9 @@ export const PlanChangeSummary = ({
             // Design seulement : les codes promo arrivent avec un module ultérieur (aucun appel API)
             <Formik initialValues={{ promo: '' }} onSubmit={() => undefined}>
               <Stack gap={1} mt={2} maxW="sm">
-                <BaseBadge
+                <BaseTag
                   alignSelf="flex-start"
-                  color="neutral"
+                  colorPalette="neutral"
                   variant="subtle"
                   size="sm"
                   p={1}

@@ -129,23 +129,25 @@ export const BookingDetailsModal = ({
           p={4}
           width={'full'}
         >
-          <HStack alignItems={'flex-start'}>
-            <BaseIcon>
-              <Icons.User />
-            </BaseIcon>
-            <Stack gap={0}>
-              <BaseText textTransform={'capitalize'}>
-                {data?.client?.name ?? 'Client supprimé'}
-              </BaseText>
-              <BaseText fontSize={'sm'} color={'gray.500'}>
-                {data?.client?.email}
-              </BaseText>
-              {data?.client?.phone && (
-                <BaseText fontSize={'sm'} color={'gray.500'}>
-                  {data.client.phone}
+          <HStack alignItems={'flex-start'} justifyContent={'space-between'}>
+            <HStack>
+              <BaseIcon>
+                <Icons.User />
+              </BaseIcon>
+              <Stack gap={0}>
+                <BaseText textTransform={'capitalize'}>
+                  {data?.client?.name ?? 'Client supprimé'}
                 </BaseText>
-              )}
-            </Stack>
+                <BaseText fontSize={'sm'} color={'gray.500'}>
+                  {data?.client?.email}
+                </BaseText>
+                {data?.client?.phone && (
+                  <BaseText fontSize={'sm'} color={'gray.500'}>
+                    {data.client.phone}
+                  </BaseText>
+                )}
+              </Stack>
+            </HStack>
             {data?.client && hasPermission(AppPermissions.CONVERSATIONS.VIEW) && (
               <BaseButton
                 ml={'auto'}
@@ -165,10 +167,9 @@ export const BookingDetailsModal = ({
           <FormCard title="">
             <VStack align="stretch" gap={0} width={'full'}>
               <DetailRow label="Modalité">
-                <BaseBadge
-                  color="tertiary"
+                <BaseTag
+                  colorPalette="tertiary"
                   variant="subtle"
-                  size="sm"
                   label={`Location ${getRentalTypeMeta(data.rentalType)?.label.toLowerCase()}`}
                 />
               </DetailRow>
@@ -199,12 +200,12 @@ export const BookingDetailsModal = ({
             </VStack>
 
             {closingReason && (
-              <DetailsModalSection icon={<Icons.Close />} title="Motif">
+              <DetailsModalSection icon={<Icons.Close />} title="Motif" mt={4}>
                 <BaseText color={'fg.muted'}>{closingReason}</BaseText>
               </DetailsModalSection>
             )}
 
-            <DetailsModalSection icon={<Icons.Chat />} title="Message du client">
+            <DetailsModalSection icon={<Icons.Chat />} title="Message du client" mt={4}>
               <Box
                 width="full"
                 p={4}

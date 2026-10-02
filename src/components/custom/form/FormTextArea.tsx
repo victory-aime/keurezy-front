@@ -21,6 +21,8 @@ const FormTextArea: FC<FormTextAreaProps> = ({
   helperMessage,
   autoresize = true,
   maxCharacters,
+  inputRef,
+  rows,
 }) => {
   const { t } = useTranslation();
   const fieldHookConfig = {
@@ -56,6 +58,8 @@ const FormTextArea: FC<FormTextAreaProps> = ({
         </Field.Label>
       )}
       <Textarea
+        ref={inputRef}
+        rows={rows}
         {...field}
         //bg={"bg.muted"}
         size={'xl'}

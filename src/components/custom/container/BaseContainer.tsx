@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Stack, VStack, FlexProps } from '@chakra-ui/react';
+import { Box, Flex, HStack, Stack, FlexProps } from '@chakra-ui/react';
 import { boxStyle } from './style';
 import { BaseText, TextVariant } from '../base-text';
 import { ActionsButton } from '../button';

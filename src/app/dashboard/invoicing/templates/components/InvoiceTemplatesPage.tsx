@@ -1,6 +1,6 @@
 'use client';
 
-import { Flex, HStack, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Flex, HStack, SimpleGrid, Stack, VStack } from '@chakra-ui/react';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup';
@@ -14,6 +14,7 @@ import {
   TextVariant,
   CustomSkeletonLoader,
   FormTextInput,
+  BaseDrawer,
 } from '_components/custom';
 import { useAuthContext } from '_context/auth-context';
 import { useUserContext } from '_context/user-context';
@@ -126,15 +127,18 @@ const PreviewModal = ({
 }) => {
   const preview = useInvoicePreview(agencyId, template?.config ?? null, !!template);
   return (
-    <BaseModal
+    <BaseDrawer
+      isFullHeight
+      size="xl"
+      icon={<Icons.View />}
       isOpen={!!template}
       onChange={((open: boolean) => !open && onClose()) as ModalOpenProps['onChange']}
       title={template ? `Aperçu : ${template.name}` : ''}
-      size="lg"
       ignoreFooter
+      closeOnInteractOutside={false}
     >
       <InvoicePreviewPane {...preview} />
-    </BaseModal>
+    </BaseDrawer>
   );
 };
 
@@ -179,13 +183,19 @@ export const InvoiceTemplatesPage = () => {
       gap={6}
     >
       {isLoading || !data ? (
-        <SimpleGrid columns={{ base: 1, md: 3 }} gap={4} aria-busy="true">
+        <VStack
+          gap={3}
+          mt={'30px'}
+          width="full"
+          alignItems="flex-start"
+          flexDirection={{ base: 'row', sm: 'column' }}
+        >
           {[0, 1, 2].map((i) => (
-            <CustomSkeletonLoader key={i} type="DEFAULT" height="150px" />
+            <CustomSkeletonLoader key={i} type="FORM" width="100%" height="150px" />
           ))}
-        </SimpleGrid>
+        </VStack>
       ) : (
-        <Stack gap={6} width="full">
+        <Stack gap={6} width="full" mt="30px">
           <InvoiceSettingsCard
             key={`${data.settings.vatRate}-${data.settings.invoicePrefix}`}
             agencyId={agencyId}

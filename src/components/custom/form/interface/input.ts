@@ -36,12 +36,15 @@ interface TextInputProps extends HTMLChakraProps<'input'> {
   isLoading?: boolean;
   onChangeFunction?: any;
   currency?: string;
+  /** Accès au champ (ex. insertion au curseur) */
+  inputRef?: React.Ref<HTMLInputElement & HTMLTextAreaElement>;
 }
 
 interface FormTextAreaProps extends TextInputProps {
   minHeight?: string;
   autoresize?: boolean;
   maxCharacters?: number;
+  rows?: number;
 }
 
 interface FullSelectProps {

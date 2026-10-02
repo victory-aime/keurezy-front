@@ -3,7 +3,7 @@
 import { t } from 'i18next';
 import { useMemo, useState } from 'react';
 import {
-  BaseBadge,
+  BaseTag,
   BaseFormatNumber,
   ColumnsDataTable,
   DataTableContainer,
@@ -45,7 +45,7 @@ const Amount = ({ payment }: { payment: Payment }) => (
 );
 
 const StatusBadge = ({ payment }: { payment: Payment }) => (
-  <BaseBadge {...STATUS[payment.status]} variant="subtle" size="sm" />
+  <BaseTag {...STATUS[payment.status]} variant="subtle" size="sm" />
 );
 
 const columnsFor = (agencyId: string): ColumnsDataTable[] => [

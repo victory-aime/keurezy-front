@@ -100,6 +100,7 @@ export function ActionImpactDialog({
       title={title}
       description={subject}
       icon={blocked ? <Icons.Lock /> : <Icons.Warn />}
+      iconBackgroundColor={blocked ? 'red.500' : 'yellow.500'}
       buttonCancelTitle="Retour"
       buttonSaveTitle={confirmTitle}
       colorSaveButton={confirmColor}

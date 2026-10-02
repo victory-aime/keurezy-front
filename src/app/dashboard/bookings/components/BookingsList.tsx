@@ -9,7 +9,6 @@ import {
   ColumnsDataTable,
   DataTableContainer,
   Icons,
-  BaseBadge,
 } from '_components/custom';
 import { Avatar } from '_components/ui/avatar';
 import { BookingsModule } from '_store/state-management';
@@ -135,12 +134,7 @@ export const BookingsList = () => {
       cell: (booking: MODELS.IAgencyBooking) => (
         <Stack gap={1}>
           <HStack gap={2}>
-            <BaseBadge
-              color="tertiary"
-              variant="subtle"
-              size="sm"
-              label={getRentalTypeMeta(booking.rentalType)?.label}
-            />
+            <BaseTag colorPalette="tertiary" label={getRentalTypeMeta(booking.rentalType)?.label} />
             <BaseText fontSize={'xs'} color={'fg.muted'}>
               {formatRentalDuration(booking.duration, booking.rentalType)}
             </BaseText>
@@ -205,21 +199,16 @@ export const BookingsList = () => {
           return (
             <BaseButton
               key={filter.value}
-              size={'sm'}
-              colorType={'primary'}
+              colorType={isActive ? 'primary' : 'neutral'}
               variant={isActive ? 'solid' : 'outline'}
               withGradient={isActive}
               onClick={() => setStatusFilter(filter.value)}
             >
               {filter.label}
-              <BaseBadge
-                ml={1}
-                size="sm"
-                p={1}
-                minW={6}
-                color="neutral"
+              <BaseTag
+                colorPalette={isActive ? 'primary' : 'gray'}
                 variant={isActive ? 'surface' : 'subtle'}
-                label={String(count)}
+                label={count}
               />
             </BaseButton>
           );
@@ -231,6 +220,11 @@ export const BookingsList = () => {
         columns={columns}
         isLoading={isLoading}
         hidePagination={visibleBookings.length <= 1}
+        isOpenSelect
+        onOpenSelectRow={(row) => {
+          setSelected(row);
+          setOpenDetails(true);
+        }}
       />
 
       <BookingDetailsModal

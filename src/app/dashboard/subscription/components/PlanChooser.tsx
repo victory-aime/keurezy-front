@@ -1,7 +1,7 @@
 import { Box, Flex, RadioCard, SegmentGroup, Separator, SimpleGrid, Stack } from '@chakra-ui/react';
 import { t } from 'i18next';
 import { useMemo } from 'react';
-import { BaseBadge, BaseFormatNumber, BaseText, Icons, TextVariant } from '_components/custom';
+import { BaseFormatNumber, BaseTag, BaseText, Icons, TextVariant } from '_components/custom';
 import { ENUM, MODELS } from '_types/*';
 import {
   formatFeatureLimit,
@@ -128,6 +128,7 @@ export const PlanChooser = ({
         <SegmentGroup.Items
           flex="1"
           justifyContent="center"
+          _checked={{ bgColor: 'primary.500' }}
           items={[
             { value: 'MONTHLY', label: 'Mensuel' },
             {
@@ -198,19 +199,18 @@ export const PlanChooser = ({
                             {t(`SUBSCRIPTION.PLANS.${plan.name}`)}
                           </RadioCard.ItemText>
                           {isCurrentPlan && (
-                            <BaseBadge
+                            <BaseTag
                               status={ENUM.COMMON.Status.ACTIVE}
                               label={
                                 isCurrent
                                   ? 'Plan actuel'
                                   : `Plan actuel (${currentCycle === 'YEARLY' ? 'annuel' : 'mensuel'})`
                               }
-                              variant="subtle"
-                              size="sm"
+                              colorPalette="tertiary"
                             />
                           )}
                           {plan.popular && !isCurrentPlan && (
-                            <BaseBadge label="Populaire" variant="subtle" size="sm" />
+                            <BaseTag label="Populaire" colorPalette="primary" size="sm" />
                           )}
                         </Flex>
                         <RadioCard.ItemDescription fontSize="sm" color="fg.muted">
