@@ -148,7 +148,7 @@ const colors: Colors = {
     200: { value: '#E5E7EB' },
     300: { value: '#D1D5DB' },
     400: { value: '#9CA3AF' },
-    500: { value: '#C2C7CA' },
+    500: { value: '#6B7280' },
     600: { value: '#4B5563' },
     700: { value: '#374151' },
     800: { value: '#1F2937' },

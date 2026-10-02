@@ -2,7 +2,7 @@ import { Badge } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { Props } from './interface/badge';
 import { BaseText, TextVariant } from '../base-text';
-import { variantColorType, useVariantStyles } from '../button';
+import { variantColorType, variantStyles } from '../button';
 import { useTranslation } from 'react-i18next';
 
 const getBadgeContent = (
@@ -61,28 +61,24 @@ export const BaseBadge: FC<Props> = ({
 
   const { variant: resolvedVariant, label: resolvedLabel } = getBadgeContent(status, type, t);
 
-  const { bg, gradient, hover, textColor } = useVariantStyles(resolvedVariant, variant, true);
-
-  const isSubtle = variant === 'subtle';
-  // Subtle : fond teinté de la couleur du statut (vert pour Actif…), pas de la couleur du thème
-  const backgroundColor = isSubtle ? bg : (gradient ?? bg ?? 'none');
+  // Couleurs de la charte, sans effet de survol : un badge n'est pas cliquable. `color` remplace
+  // la couleur déduite du statut (badge libre : « Populaire », « Nouveau »…).
+  const look = {
+    ...variantStyles(color ?? resolvedVariant, variant),
+    _hover: undefined,
+    _active: undefined,
+  };
 
   return (
     <Badge
-      {...props}
       variant={variant}
       size={props.size ?? 'lg'}
-      borderColor={isSubtle ? textColor : undefined}
-      bg={backgroundColor}
-      borderRadius={props.borderRadius ?? 'full'}
-      p={props.p ?? 2}
-      color={textColor}
-      _hover={{ background: hover ?? `${bg}CC` }}
-      _active={{
-        background: hover ?? `${bg}AA`,
-      }}
-      _disabled={{ background: 'gray.300', cursor: 'not-allowed' }}
+      {...look}
+      borderRadius="full"
+      p={2}
+      {...props}
     >
+      {children}
       <BaseText variant={textSize} textTransform="capitalize">
         {customLabel ?? resolvedLabel}
       </BaseText>

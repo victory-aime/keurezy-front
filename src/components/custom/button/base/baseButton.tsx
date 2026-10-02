@@ -1,56 +1,90 @@
-import { BadgeProps, Button, ButtonProps, HStack } from '@chakra-ui/react';
+import { Button, ButtonProps, HStack, SystemStyleObject } from '@chakra-ui/react';
 import React, { FC } from 'react';
-import { ButtonBaseProps, VariantColorStyle, variantColorType } from '_components/custom';
+import { ButtonBaseProps, variantColorType } from '_components/custom';
 import { LoadingDots } from '../animation/loadingDots';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '_theme/useThemeColors';
 
+/** `overlay` n'a pas d'échelle de teintes : il prend les couleurs du gris neutre. */
+const paletteOf = (colorType: variantColorType) =>
+  colorType === 'overlay' ? 'neutral' : colorType;
+
 /**
- * ✅ Hook dynamique basé sur le theme runtime
+ * Désactivé : gris du thème (clair et sombre), lisible, sans effet de survol ni d'appui.
+ * Pleine et discrète gardent un fond ; contour et surface gardent leur bord ; fantôme et texte
+ * restent sans fond.
  */
-const useVariantStyles = (
+const disabledStyle = (variant: ButtonProps['variant']): SystemStyleObject => {
+  const base: SystemStyleObject = {
+    color: 'fg.muted',
+    opacity: 1,
+    cursor: 'not-allowed',
+    boxShadow: 'none',
+  };
+  const look: SystemStyleObject =
+    variant === 'outline' || variant === 'surface'
+      ? { ...base, bg: 'transparent', borderColor: 'border.emphasized' }
+      : variant === 'ghost' || variant === 'plain'
+        ? { ...base, bg: 'transparent', borderColor: 'transparent' }
+        : { ...base, bg: 'bg.emphasized', backgroundImage: 'none', borderColor: 'transparent' };
+  return { ...look, _hover: look, _active: look };
+};
+
+/**
+ * Couleurs d'une variante, lues dans les jetons de la charte (`{palette}.solid`, `.contrast`,
+ * `.fg`, `.subtle`, `.muted`…) : lisibles en clair comme en sombre, texte foncé sur les
+ * couleurs claires (jaune, turquoise). Partagé par les boutons et les badges.
+ */
+export const variantStyles = (
   colorType: variantColorType,
-  variant: ButtonProps['variant'] | BadgeProps['variant'] = 'solid',
-  withGradient: boolean = false,
-): VariantColorStyle => {
-  const { getColor, getGradient, getHoverGradient } = useThemeColors(colorType);
-
-  const color = getColor(500);
-  const textColor = variant === 'outline' || variant === 'plain' ? color : 'white';
-  const gradient = getGradient(400, 500);
-  const hover = getHoverGradient(800, 900);
-
+  variant: ButtonProps['variant'] = 'solid',
+): SystemStyleObject => {
+  const c = paletteOf(colorType);
   switch (variant) {
-    case 'subtle':
-      return {
-        bg: `${color}20`,
-        textColor: color,
-        gradient: 'none',
-        hover: `${color}30`,
-      };
-
-    case 'plain':
-      return {
-        bg: 'transparent',
-        textColor: color,
-        gradient: 'none',
-        hover: `${color}20`,
-      };
-
     case 'outline':
       return {
         bg: 'transparent',
-        textColor: color,
-        gradient: 'none',
-        hover: `${color}20`,
+        color: `${c}.fg`,
+        borderWidth: '1px',
+        borderColor: `${c}.solid`,
+        _hover: { bg: `${c}.subtle` },
+        _active: { bg: `${c}.muted` },
       };
-
+    case 'surface':
+      return {
+        bg: `${c}.subtle`,
+        color: `${c}.fg`,
+        borderWidth: '1px',
+        borderColor: `${c}.muted`,
+        _hover: { bg: `${c}.muted` },
+        _active: { bg: `${c}.emphasized` },
+      };
+    case 'subtle':
+      return {
+        bg: `${c}.muted`,
+        color: `${c}.fg`,
+        _hover: { bg: `${c}.emphasized` },
+        _active: { bg: `${c}.emphasized` },
+      };
+    case 'ghost':
+      return {
+        bg: 'transparent',
+        color: `${c}.fg`,
+        _hover: { bg: `${c}.subtle` },
+        _active: { bg: `${c}.muted` },
+      };
+    case 'plain':
+      return {
+        bg: 'transparent',
+        color: `${c}.fg`,
+        _hover: { textDecoration: 'underline' },
+      };
     default:
       return {
-        bg: withGradient ? gradient : color,
-        textColor,
-        gradient: withGradient ? gradient : 'none',
-        hover: withGradient ? hover : `${color}CC`,
+        bg: `${c}.solid`,
+        color: `${c}.contrast`,
+        _hover: { bg: `${c}.solid/85` },
+        _active: { bg: `${c}.solid/75` },
       };
   }
 };
@@ -59,7 +93,7 @@ const BaseButton: FC<ButtonBaseProps> = ({
   children,
   withGradient = false,
   rightIcon,
-  colorType = 'primary', // ⚠️ pour future extension multi-color
+  colorType = 'primary',
   isLoading = false,
   isDisabled = false,
   leftIcon,
@@ -67,31 +101,20 @@ const BaseButton: FC<ButtonBaseProps> = ({
   ...rest
 }) => {
   const { t } = useTranslation();
-
-  const { bg, gradient, hover, textColor } = useVariantStyles(colorType, variant, withGradient);
-  const isOutline = variant === 'outline';
+  const { getGradient, getHoverGradient } = useThemeColors(paletteOf(colorType));
+  const gradient = withGradient && (variant === 'solid' || !variant);
 
   const commonProps = {
     position: 'relative' as const,
-    borderColor: isOutline ? textColor : undefined,
     variant,
-    bg: variant === 'solid' ? (withGradient ? gradient : bg) : undefined,
-    color: textColor,
-    border: isOutline ? '1px solid' : undefined,
-    _hover: {
-      background: isOutline ? hover : withGradient ? hover : `${bg}CC`,
-    },
-    _active: {
-      background: isOutline ? hover : withGradient ? hover : `${bg}AA`,
-    },
-    // Contraste lisible (≈ 5:1) : Chakra ajoute sinon une opacité de 0.4 sur un texte déjà clair
-    _disabled: {
-      background: variant === 'plain' ? 'transparent' : 'gray.200',
-      color: 'gray.600',
-      opacity: 1,
-      cursor: 'not-allowed',
-      borderColor: 'gray.300',
-    },
+    ...variantStyles(colorType, variant),
+    ...(gradient && {
+      bgImage: getGradient(400, 500),
+      _hover: { bgImage: getHoverGradient(800, 900) },
+      _active: { bgImage: getHoverGradient(800, 900) },
+    }),
+    // En chargement, le bouton garde ses couleurs (il est désactivé le temps de la requête)
+    _disabled: isLoading ? { opacity: 1, cursor: 'progress' } : disabledStyle(variant),
     borderRadius: '12px',
     padding: '20px',
     loading: isLoading,
@@ -127,4 +150,4 @@ const BaseButton: FC<ButtonBaseProps> = ({
   return <Button {...commonProps}>{children}</Button>;
 };
 
-export { BaseButton, useVariantStyles };
+export { BaseButton };

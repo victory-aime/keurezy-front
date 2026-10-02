@@ -39,7 +39,7 @@ export const BaseTag: FC<BaseTagProps> = ({
   children,
   variant = 'subtle',
   label: customLabel,
-  color = 'red',
+  color = 'neutral' as BaseTagProps['color'],
   iconPosition = 'start',
   icon: customIcon,
   onCloseIconTrigger,
@@ -60,7 +60,7 @@ export const BaseTag: FC<BaseTagProps> = ({
     <Tag.Root
       variant={variant}
       colorPalette={colorPalette}
-      _disabled={{ background: 'gray.300', cursor: 'not-allowed' }}
+      _disabled={{ bg: 'bg.emphasized', color: 'fg.muted', cursor: 'not-allowed' }}
       px={2}
       py={1}
       {...props}

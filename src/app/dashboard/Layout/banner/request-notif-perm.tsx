@@ -64,9 +64,9 @@ export const RequestUserPushNotifPermission = ({
         <Flex mt={4} justify="flex-end" gap={2}>
           <BaseButton
             variant="plain"
+            colorType="neutral"
             size="sm"
             onClick={dismiss}
-            color="fg.muted"
             fontSize="xs"
             px={2}
             isDisabled={isLoading}

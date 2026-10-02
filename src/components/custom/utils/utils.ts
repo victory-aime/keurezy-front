@@ -25,10 +25,11 @@ const STATUS_META: Partial<Record<ENUM.COMMON.Status, variantColorType>> = {
 } as const satisfies Partial<Record<ENUM.COMMON.Status, variantColorType>>;
 
 const VARIANT_CONFIG: Partial<Record<variantColorType, { colorPalette: ColorPalette }>> = {
-  success: { colorPalette: 'green' },
-  danger: { colorPalette: 'red' },
-  warning: { colorPalette: 'orange' },
-  info: { colorPalette: 'blue' },
+  // Palettes de la charte (jetons sémantiques du thème)
+  success: { colorPalette: 'success' as ColorPalette },
+  danger: { colorPalette: 'danger' as ColorPalette },
+  warning: { colorPalette: 'warning' as ColorPalette },
+  info: { colorPalette: 'info' as ColorPalette },
 };
 
 const STATUS_ICONS: Partial<Record<ENUM.COMMON.Status, React.ElementType>> = {
@@ -47,7 +48,7 @@ const STATUS_ICONS: Partial<Record<ENUM.COMMON.Status, React.ElementType>> = {
 
 const getStatusColor = (status: ENUM.COMMON.Status): ColorPalette => {
   const variant = STATUS_META[status];
-  return VARIANT_CONFIG[variant ?? 'info']?.colorPalette ?? 'gray';
+  return VARIANT_CONFIG[variant ?? 'info']?.colorPalette ?? ('neutral' as ColorPalette);
 };
 
 export { STATUS_ICONS, STATUS_META, VARIANT_CONFIG, getStatusColor };

@@ -147,7 +147,6 @@ export const BaseAgenda = <TMeta = Record<string, unknown>,>({
             borderWidth={1}
             colorType="neutral"
             variant="outline"
-            color="gray"
             onClick={handleToday}
             aria-label="Aller à aujourd'hui"
           >

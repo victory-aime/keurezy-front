@@ -1,5 +1,5 @@
 import { Flex, Box } from '@chakra-ui/react';
-export const LoadingDots = ({ color = 'white' }: { color?: string }) => {
+export const LoadingDots = ({ color = 'currentColor' }: { color?: string }) => {
   return (
     <Flex alignItems={'center'} justifyContent={'center'} gap={'5px'}>
       {[...Array(3)].map((_, i) => (

@@ -3,6 +3,7 @@ import { keyframes, animations } from './animations';
 import { breakpoints } from './breakpoints';
 import { buildColors, colors } from './colors';
 import { generateShades } from './generate-shades';
+import { paletteSemanticTokens } from './palettes';
 
 export function buildTheme(primaryHex?: string) {
   // Si on a une couleur custom, on génère ses shades
@@ -26,6 +27,8 @@ export function buildTheme(primaryHex?: string) {
           body: { value: 'var(--font-lato)' },
         },
       },
+      // Palettes de la charte en `colorPalette` (clair et sombre, texte lisible sur la teinte pleine)
+      semanticTokens: { colors: paletteSemanticTokens(dynamicColors) },
     },
     globalCss: {
       '&::-webkit-scrollbar': { width: '4px', height: '4px' },
