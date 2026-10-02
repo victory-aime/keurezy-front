@@ -184,6 +184,21 @@ const updateInvoiceSettingsMutation = (
     options: args.mutationOptions,
   });
 
+/** Envoie le cachet de l'agence (payload : image) ou le retire (payload absent). */
+const invoiceStampMutation = (
+  args: QUERIES.MutationPayload<
+    File | undefined,
+    { stampUrl: string | null },
+    { agencyId: string }
+  >,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.INVOICE_STAMP],
+    mutationFn: ({ payload, params }) =>
+      agencyServiceInstance().invoice_stamp(params!.agencyId, payload ?? undefined),
+    options: args.mutationOptions,
+  });
+
 /** Historique de facturation, une page à la fois. */
 const getSubscriptionPaymentsQueries = (
   args: QUERIES.QueryPayload<
@@ -350,6 +365,7 @@ export {
   saveInvoiceTemplateMutation,
   deleteInvoiceTemplateMutation,
   updateInvoiceSettingsMutation,
+  invoiceStampMutation,
   getCloseImpactQueries,
   cancelCloseMutation,
   getAgencySubscriptionInfo,

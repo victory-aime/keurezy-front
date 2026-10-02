@@ -4,21 +4,15 @@ import { Box, Flex, Skeleton, Stack } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { Document, Page } from 'react-pdf';
 import '../../../../lib/pdf-worker';
-import { BaseText, TextVariant } from '_components/custom';
+import { BaseButton, BaseText, Icons, TextVariant } from '_components/custom';
+import type { InvoicePreview } from './useInvoicePreview';
 
 /**
  * Aperçu d'une facture : première page du PDF rendu par le backend, à la largeur du conteneur.
  * Pendant un recalcul, l'aperçu précédent reste affiché (atténué) pour éviter les sauts.
+ * En cas d'échec du backend, « Réessayer » relance la génération.
  */
-export const InvoicePreviewPane = ({
-  url,
-  loading,
-  error,
-}: {
-  url: string | null;
-  loading: boolean;
-  error: boolean;
-}) => {
+export const InvoicePreviewPane = ({ url, loading, error, retry }: InvoicePreview) => {
   const box = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
 
@@ -35,9 +29,17 @@ export const InvoicePreviewPane = ({
         <BaseText variant={TextVariant.XS} color="fg.muted">
           Aperçu avec des données d’exemple
         </BaseText>
-        <BaseText variant={TextVariant.XS} color="fg.muted" role="status" aria-live="polite">
-          {loading ? 'Mise à jour…' : error ? 'Aperçu indisponible' : ''}
-        </BaseText>
+        <Flex alignItems="center" gap={2}>
+          <BaseText variant={TextVariant.XS} color="fg.muted" role="status" aria-live="polite">
+            {loading ? 'Mise à jour…' : error ? 'Aperçu indisponible' : ''}
+          </BaseText>
+          {error && url && !loading && (
+            <BaseButton size="xs" variant="ghost" colorType="primary" onClick={retry}>
+              <Icons.Refresh aria-hidden />
+              Réessayer
+            </BaseButton>
+          )}
+        </Flex>
       </Flex>
       <Box
         ref={box}
@@ -60,11 +62,15 @@ export const InvoicePreviewPane = ({
             />
           </Document>
         ) : error ? (
-          <Flex height="full" alignItems="center" justifyContent="center" p={6}>
+          <Stack height="full" alignItems="center" justifyContent="center" gap={3} p={6}>
             <BaseText variant={TextVariant.S} color="fg.muted" textAlign="center">
-              L’aperçu n’a pas pu être généré. Vérifiez les textes, puis réessayez.
+              L’aperçu n’a pas pu être généré. Le service est peut-être momentanément indisponible.
             </BaseText>
-          </Flex>
+            <BaseButton size="sm" variant="outline" colorType="primary" onClick={retry}>
+              <Icons.Refresh aria-hidden />
+              Réessayer
+            </BaseButton>
+          </Stack>
         ) : (
           <Skeleton height="full" aria-label="Chargement de l’aperçu" />
         )}

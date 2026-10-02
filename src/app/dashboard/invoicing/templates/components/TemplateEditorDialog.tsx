@@ -38,6 +38,8 @@ interface TemplateEditorDialogProps {
   templates: MODELS.IInvoiceTemplate[];
   /** Modèle modifié ; absent pour un nouveau modèle (étape « Base » en premier) */
   editing?: MODELS.IInvoiceTemplate | null;
+  /** L'agence a téléversé un cachet (style « Cachet scanné » disponible) */
+  hasStamp: boolean;
   onSaved: (template: MODELS.IInvoiceTemplate) => void;
 }
 
@@ -52,6 +54,7 @@ export const TemplateEditorDialog = ({
   onOpenChange,
   templates,
   editing,
+  hasStamp,
   onSaved,
 }: TemplateEditorDialogProps) => {
   const firstStep = editing ? 1 : 0;
@@ -136,7 +139,7 @@ export const TemplateEditorDialog = ({
     if (!config) return null;
     if (step === 1) return <StepLayout config={config} onChange={change} />;
     if (step === 2) return <StepColors config={config} onChange={change} />;
-    if (step === 3) return <StepContent config={config} onChange={change} />;
+    if (step === 3) return <StepContent config={config} onChange={change} hasStamp={hasStamp} />;
     if (step === 4) return <StepTexts config={config} onChange={change} catalogue={catalogue} />;
     return (
       <Stack gap={5}>

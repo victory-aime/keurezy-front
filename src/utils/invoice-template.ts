@@ -36,8 +36,65 @@ export const BLOCK_LABELS: Record<keyof Config['blocks'], { label: string; hint:
     label: 'Coordonnées de paiement',
     hint: 'Banque, RIB, Wave ou Orange Money (page Agence)',
   },
-  signature: { label: 'Signature et cachet', hint: 'Cadre en bas de la facture' },
+  signature: { label: 'Signature et cachet', hint: 'Zone en bas à droite de la facture' },
 };
+
+/** Contenu de la zone « Signature et cachet ». */
+export const SIGNATURE_STYLES: {
+  value: MODELS.InvoiceSignatureStyle;
+  label: string;
+  description: string;
+}[] = [
+  {
+    value: 'BOX',
+    label: 'Cadre vide',
+    description: 'Signé et tamponné à la main, après impression.',
+  },
+  {
+    value: 'IMAGE',
+    label: 'Cachet scanné',
+    description: 'Votre cachet ou signature, téléversé sur la page Modèles de facture.',
+  },
+  {
+    value: 'GENERATED',
+    label: 'Cachet généré',
+    description: 'Dessiné avec votre raison sociale, adresse, NINEA et RCCM : aucun scan.',
+  },
+];
+
+/** Rôle des couleurs d'un modèle, tel que le rendu PDF les applique. */
+export const COLOR_ROLES: { key: 'primaryColor' | 'accentColor'; label: string; usage: string }[] =
+  [
+    { key: 'primaryColor', label: 'Couleur principale', usage: 'Titres, en-tête et tableau' },
+    { key: 'accentColor', label: 'Couleur d’accent', usage: 'Total à payer et intitulés' },
+  ];
+
+/** Nom courant d'une couleur #RRGGBB (« Noir », « Violet »…), pour la décrire sans code. */
+export function colorName(hex: string): string {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const light = (max + min) / 2;
+  const sat = max === min ? 0 : (max - min) / (1 - Math.abs(2 * light - 1));
+  if (light < 0.2) return 'Noir';
+  if (light > 0.92) return 'Blanc';
+  if (sat < 0.15) return 'Gris';
+  const d = max - min;
+  const hue =
+    (max === r ? ((g - b) / d + 6) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60;
+  const names: [number, string][] = [
+    [15, 'Rouge'],
+    [45, 'Orange'],
+    [65, 'Jaune'],
+    [160, 'Vert'],
+    [195, 'Turquoise'],
+    [250, 'Bleu'],
+    [290, 'Violet'],
+    [335, 'Rose'],
+    [360, 'Rouge'],
+  ];
+  return names.find(([limit]) => hue < limit)![1];
+}
 
 export const TEXT_FIELDS: {
   key: keyof Config['texts'];

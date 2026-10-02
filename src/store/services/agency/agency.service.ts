@@ -170,6 +170,15 @@ export class AgencyService extends BaseApi {
       { params: { agencyId } },
     );
   }
+  /** Cachet ou signature scanné (owner) : envoi d'une image, ou retrait si `file` est absent. */
+  invoice_stamp(agencyId: string, file?: File) {
+    const config = this.applicationContext.getApiConfig().AGENCY;
+    if (!file)
+      return this.apiService.invoke(config.INVOICE_STAMP_DELETE, {}, { params: { agencyId } });
+    const data = new FormData();
+    data.append('stamp', file);
+    return this.apiService.invoke(config.INVOICE_STAMP_UPLOAD, data, { params: { agencyId } });
+  }
   /** Informations légales de l'agence (owner uniquement). */
   update_legal(agencyId: string, data: Partial<MODELS.IAgencyLegal>) {
     return this.apiService.invoke(

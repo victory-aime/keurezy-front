@@ -1,9 +1,8 @@
 'use client';
 
-import { Box, Field, Flex, HStack, Input, SimpleGrid, Skeleton, Stack } from '@chakra-ui/react';
+import { Field, Flex, HStack, Input, SimpleGrid, Skeleton, Stack } from '@chakra-ui/react';
 import { useState } from 'react';
 import {
-  BaseBadge,
   BaseButton,
   BaseContainer,
   BaseModal,
@@ -16,9 +15,10 @@ import { useAuthContext } from '_context/auth-context';
 import { useUserContext } from '_context/user-context';
 import { AgencyModule } from '_store/state-management';
 import { MODELS } from '_types/*';
-import { LAYOUT_OPTIONS } from '_utils/invoice-template';
 import { UserRole } from '../../../../../types/enum';
 import { InvoicePreviewPane } from './InvoicePreviewPane';
+import { StampSection } from './StampSection';
+import { TemplateCard } from './TemplateCard';
 import { TemplateEditorDialog } from './TemplateEditorDialog';
 import { useInvoicePreview } from './useInvoicePreview';
 
@@ -114,75 +114,6 @@ const PreviewModal = ({
   );
 };
 
-/** Carte d'un modèle : couleur, mise en page, badges et actions. */
-const TemplateCard = ({
-  template,
-  isDefaultChoice,
-  isOwner,
-  onPreview,
-  onEdit,
-  onMakeDefault,
-  onDelete,
-}: {
-  template: Template;
-  isDefaultChoice: boolean;
-  isOwner: boolean;
-  onPreview: () => void;
-  onEdit: () => void;
-  onMakeDefault: () => void;
-  onDelete: () => void;
-}) => (
-  <Stack
-    gap={3}
-    p={4}
-    rounded="7px"
-    borderWidth="1px"
-    borderColor={isDefaultChoice ? 'primary.500' : 'border'}
-    bg="bg"
-  >
-    <Flex gap={2} aria-hidden>
-      <Box flex="3" height="8px" rounded="full" bg={template.config.primaryColor} />
-      <Box flex="1" height="8px" rounded="full" bg={template.config.accentColor} />
-    </Flex>
-    <Stack gap={1}>
-      <Flex alignItems="center" gap={2} wrap="wrap">
-        <BaseText fontWeight="semibold">{template.name}</BaseText>
-        {template.isDefault && <BaseBadge label="Commun" variant="subtle" size="sm" />}
-        {isDefaultChoice && <BaseBadge label="Par défaut" variant="subtle" size="sm" />}
-      </Flex>
-      <BaseText variant={TextVariant.S} color="fg.muted">
-        Mise en page {LAYOUT_OPTIONS.find((l) => l.value === template.config.layout)?.label}
-      </BaseText>
-    </Stack>
-    <Flex gap={2} wrap="wrap" mt="auto">
-      <BaseButton size="sm" variant="outline" colorType="neutral" onClick={onPreview}>
-        Aperçu
-      </BaseButton>
-      {isOwner && (
-        <BaseButton size="sm" variant="outline" colorType="primary" onClick={onEdit}>
-          {template.isDefault ? 'Personnaliser' : 'Modifier'}
-        </BaseButton>
-      )}
-      {isOwner && !isDefaultChoice && (
-        <BaseButton size="sm" variant="ghost" colorType="neutral" onClick={onMakeDefault}>
-          Utiliser par défaut
-        </BaseButton>
-      )}
-      {isOwner && !template.isDefault && (
-        <BaseButton
-          size="sm"
-          variant="ghost"
-          colorType="danger"
-          onClick={onDelete}
-          aria-label={`Supprimer le modèle ${template.name}`}
-        >
-          <Icons.Trash aria-hidden />
-        </BaseButton>
-      )}
-    </Flex>
-  </Stack>
-);
-
 /**
  * « Modèles de facture » : les 3 modèles communs et ceux de l'agence, le modèle proposé par
  * défaut, les réglages de facturation et l'éditeur guidé. Gestion réservée à l'owner.
@@ -218,7 +149,7 @@ export const InvoiceTemplatesPage = () => {
   return (
     <BaseContainer
       title="Modèles de facture"
-      description="Choisissez la présentation de vos factures. Les modèles communs restent disponibles ; personnalisez-les ou créez les vôtres."
+      description="Choisissez la présentation de vos factures : partez d’un des trois modèles proposés, personnalisez-le ou créez le vôtre."
       border="none"
       gap={6}
     >
@@ -236,6 +167,12 @@ export const InvoiceTemplatesPage = () => {
             settings={data.settings}
             isOwner={isOwner}
             onSaved={() => refetch()}
+          />
+          <StampSection
+            agencyId={agencyId}
+            stampUrl={data.settings.stampUrl}
+            isOwner={isOwner}
+            onChanged={() => refetch()}
           />
           <Flex justifyContent="space-between" alignItems="center" gap={3} wrap="wrap">
             <BaseText fontWeight="semibold">Modèles</BaseText>
@@ -273,6 +210,7 @@ export const InvoiceTemplatesPage = () => {
             onOpenChange={(open) => setEditor((e) => ({ ...e, open }))}
             templates={data.templates}
             editing={editor.editing}
+            hasStamp={!!data.settings.stampUrl}
             onSaved={() => refetch()}
           />
         </Stack>

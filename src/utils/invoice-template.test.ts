@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { insertVariable, unknownVariables } from './invoice-template';
+import { colorName, insertVariable, unknownVariables } from './invoice-template';
 
 const catalogue = { client: { nom: 'Nom du client' }, facture: { echeance: 'Échéance' } };
 
@@ -28,4 +28,18 @@ describe('insertVariable', () => {
       'Bonjour {{client.nom}}',
     );
   });
+});
+
+describe('colorName', () => {
+  it.each([
+    ['#1f2937', 'Noir'],
+    ['#111827', 'Noir'],
+    ['#673ab6', 'Violet'],
+    ['#f59e0b', 'Orange'],
+    ['#6b7280', 'Gris'],
+    ['#2563eb', 'Bleu'],
+    ['#16a34a', 'Vert'],
+    ['#dc2626', 'Rouge'],
+    ['#ffffff', 'Blanc'],
+  ])('%s → %s', (hex, name) => expect(colorName(hex)).toBe(name));
 });

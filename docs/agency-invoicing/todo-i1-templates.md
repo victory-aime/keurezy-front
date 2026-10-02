@@ -50,3 +50,20 @@ Vérification : back `pnpm test`, `pnpm build`, `CHANGES.md` ; web `tsc`, `pnpm 
 | 5 | Modèles communs | Jamais modifiés ni supprimés par une agence (copie, `409`, testé). |
 | 6 | Déni de service par l'aperçu | Rendu en mémoire d'une page d'exemple ; limite de débit globale de l'API. À surveiller si l'éditeur est très utilisé. |
 | 7 | Dépendances | Aucun ajout (pdfkit et react-pdf déjà présents). |
+
+## Ajouts après la première vérification (cachet, aperçu, cartes)
+- [x] **Cachet et signature**, deux façons au choix, par modèle (étape Contenu, si la zone « Signature et cachet » est affichée) :
+  - *Cachet scanné* : image PNG ou JPEG (1 Mo) téléversée par l'owner, stockée sur Cloudinary (`agency.invoiceStampUrl`, migration 22) ;
+  - *Cachet généré* (l'alternative sans scan) : tampon dessiné par le backend avec la raison sociale, l'adresse, le NINEA et le RCCM ;
+  - *Cadre vide* : à signer à la main (comportement initial, valeur par défaut des anciens modèles).
+  - Le modèle commun Moderne utilise le cachet généré.
+  - Écarté : la signature électronique certifiée (PAdES, certificat d'un prestataire agréé), lourde et payante ; à étudier si une agence en a besoin pour des marchés publics.
+- [x] Aperçu indisponible (erreur du backend) : bouton « Réessayer » qui relance la génération.
+- [x] Cartes de modèle : badge « Commun » retiré ; description de chaque modèle commun (servie par le backend) ; couleurs nommées avec leur rôle (« Noir → couleur principale : titres, en-tête et tableau ») ; actions en icônes avec libellé au survol (Aperçu, Personnaliser, Choisir ce modèle, Supprimer).
+- [x] Tests : back 396, web 91 ; build OK ; cachet généré rendu et relu en PDF.
+
+| # | Point (cachet) | Résultat |
+|---|---|---|
+| 8 | Fichier envoyé | Owner seulement (`403`, testé) ; 1 Mo et un seul fichier (multer) ; type vérifié sur la signature binaire PNG/JPEG, pas sur le nom ni le type annoncé (`422`, testé). |
+| 9 | Image relue pour le PDF | Même chargeur que le logo : HTTPS, `res.cloudinary.com` seulement, sans redirection. Image illisible : cadre vide, la facture est quand même produite (testé). |
+| 10 | Ancienne image | Laissée sur Cloudinary quand elle est remplacée ou retirée (fichier orphelin, sans lien public dans l'application). Nettoyage possible plus tard. |

@@ -13,13 +13,14 @@ import {
   Stack,
   Switch,
 } from '@chakra-ui/react';
-import { BaseBadge, BaseText, TextVariant } from '_components/custom';
+import { BaseText, TextVariant } from '_components/custom';
 import { MODELS } from '_types/*';
 import {
   BLOCK_LABELS,
   COLUMN_LABELS,
   FONT_OPTIONS,
   LAYOUT_OPTIONS,
+  SIGNATURE_STYLES,
   TEXT_FIELDS,
 } from '_utils/invoice-template';
 import { VariableTextField } from './VariableTextField';
@@ -52,12 +53,10 @@ export const StepBase = ({
           <RadioCard.ItemControl>
             <Stack gap={2} flex="1">
               <Box height="8px" rounded="full" bg={template.config.primaryColor} aria-hidden />
-              <Flex alignItems="center" gap={2} wrap="wrap">
-                <RadioCard.ItemText fontWeight="semibold">{template.name}</RadioCard.ItemText>
-                {template.isDefault && <BaseBadge label="Commun" variant="subtle" size="sm" />}
-              </Flex>
+              <RadioCard.ItemText fontWeight="semibold">{template.name}</RadioCard.ItemText>
               <RadioCard.ItemDescription>
-                {LAYOUT_OPTIONS.find((l) => l.value === template.config.layout)?.label}
+                {template.description ??
+                  `Mise en page ${LAYOUT_OPTIONS.find((l) => l.value === template.config.layout)?.label.toLowerCase()}`}
               </RadioCard.ItemDescription>
             </Stack>
             <RadioCard.ItemIndicator />
@@ -176,8 +175,16 @@ export const StepColors = ({ config, onChange }: { config: Config; onChange: Cha
   </Stack>
 );
 
-/** Étape « Contenu » : colonnes du tableau et blocs. */
-export const StepContent = ({ config, onChange }: { config: Config; onChange: Change }) => (
+/** Étape « Contenu » : colonnes du tableau, blocs et contenu de la zone de signature. */
+export const StepContent = ({
+  config,
+  onChange,
+  hasStamp,
+}: {
+  config: Config;
+  onChange: Change;
+  hasStamp: boolean;
+}) => (
   <Stack gap={6}>
     <Stack gap={3} as="fieldset">
       <BaseText as="legend" fontWeight="semibold">
@@ -224,6 +231,39 @@ export const StepContent = ({ config, onChange }: { config: Config; onChange: Ch
         </Checkbox.Root>
       ))}
     </Stack>
+    {config.blocks.signature && (
+      <RadioCard.Root
+        value={config.signatureStyle ?? 'BOX'}
+        onValueChange={(e) =>
+          e.value && onChange({ signatureStyle: e.value as MODELS.InvoiceSignatureStyle })
+        }
+        aria-label="Zone Signature et cachet"
+        size="sm"
+      >
+        <RadioCard.Label>Dans la zone « Signature et cachet »</RadioCard.Label>
+        <Stack gap={2}>
+          {SIGNATURE_STYLES.map((style) => {
+            const unavailable = style.value === 'IMAGE' && !hasStamp;
+            return (
+              <RadioCard.Item key={style.value} value={style.value} disabled={unavailable}>
+                <RadioCard.ItemHiddenInput />
+                <RadioCard.ItemControl>
+                  <RadioCard.ItemContent>
+                    <RadioCard.ItemText>{style.label}</RadioCard.ItemText>
+                    <RadioCard.ItemDescription>
+                      {unavailable
+                        ? 'Téléversez d’abord votre cachet, section « Cachet et signature » de la page.'
+                        : style.description}
+                    </RadioCard.ItemDescription>
+                  </RadioCard.ItemContent>
+                  <RadioCard.ItemIndicator />
+                </RadioCard.ItemControl>
+              </RadioCard.Item>
+            );
+          })}
+        </Stack>
+      </RadioCard.Root>
+    )}
   </Stack>
 );
 

@@ -229,6 +229,16 @@ export const APIS = (baseUrl?: string) => {
         method: 'PATCH',
         pathBase: 'SECURED_API',
       }),
+      INVOICE_STAMP_UPLOAD: api({
+        path: '/invoicing/stamp',
+        method: 'POST',
+        pathBase: 'SECURED_API',
+      }),
+      INVOICE_STAMP_DELETE: api({
+        path: '/invoicing/stamp',
+        method: 'DELETE',
+        pathBase: 'SECURED_API',
+      }),
       UPDATE_LEGAL: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/legal`,
         method: 'PATCH',
