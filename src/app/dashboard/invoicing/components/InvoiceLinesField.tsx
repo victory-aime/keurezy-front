@@ -1,8 +1,14 @@
 'use client';
 
-import { Box, Field, Grid, IconButton, Input, Stack } from '@chakra-ui/react';
-import { BaseButton, BaseFormatNumber, BaseText, Icons, TextVariant } from '_components/custom';
-import { Tooltip } from '_components/ui/tooltip';
+import { Box, Field, Grid, Input, Stack } from '@chakra-ui/react';
+import {
+  BaseButton,
+  BaseFormatNumber,
+  BaseText,
+  Icons,
+  TextVariant,
+  BaseIconButton,
+} from '_components/custom';
 import { ENUM, MODELS } from '_types/*';
 
 export const MAX_LINES = 50;
@@ -125,18 +131,14 @@ export const InvoiceLinesField = ({
               </Box>
               <BaseFormatNumber value={total} currencyCode={ENUM.COMMON.Currency.XOF} />
             </BaseText>
-            <Tooltip content="Retirer la ligne" showArrow disabled={lines.length <= 1}>
-              <IconButton
-                aria-label={`Retirer la ${label}`}
-                size="sm"
-                variant="ghost"
-                colorPalette="red"
-                disabled={lines.length <= 1}
-                onClick={() => onChange(lines.filter((_, i) => i !== index))}
-              >
-                <Icons.Trash aria-hidden />
-              </IconButton>
-            </Tooltip>
+            <BaseIconButton
+              label={`Retirer la ${label}`}
+              colorType="danger"
+              disabled={lines.length <= 1}
+              onClick={() => onChange(lines.filter((_, i) => i !== index))}
+            >
+              <Icons.Trash aria-hidden />
+            </BaseIconButton>
           </Grid>
         );
       })}

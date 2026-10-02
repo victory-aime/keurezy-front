@@ -1,38 +1,11 @@
 'use client';
 
-import { Box, Flex, HStack, IconButton, Stack } from '@chakra-ui/react';
-import type { ReactNode } from 'react';
-import { BaseBadge, BaseText, Icons, TextVariant } from '_components/custom';
-import { Tooltip } from '_components/ui/tooltip';
+import { Box, Flex, HStack, Stack } from '@chakra-ui/react';
+import { BaseBadge, BaseText, Icons, TextVariant, BaseIconButton } from '_components/custom';
 import { MODELS } from '_types/*';
 import { COLOR_ROLES, colorName, FONT_OPTIONS, LAYOUT_OPTIONS } from '_utils/invoice-template';
 
 type Template = MODELS.IInvoiceTemplate;
-
-/** Bouton icône dont le libellé s'affiche au survol (et sert de nom accessible). */
-const ActionIcon = ({
-  label,
-  onClick,
-  danger,
-  children,
-}: {
-  label: string;
-  onClick: () => void;
-  danger?: boolean;
-  children: ReactNode;
-}) => (
-  <Tooltip content={label} showArrow openDelay={150} closeDelay={50}>
-    <IconButton
-      aria-label={label}
-      size="sm"
-      variant="ghost"
-      colorPalette={danger ? 'red' : 'gray'}
-      onClick={onClick}
-    >
-      {children}
-    </IconButton>
-  </Tooltip>
-);
 
 /** Présentation d'un modèle de l'agence, déduite de sa configuration. */
 const customDescription = (config: MODELS.IInvoiceTemplateConfig) => {
@@ -112,23 +85,23 @@ export const TemplateCard = ({
     </Stack>
 
     <HStack gap={1} mt="auto" justifyContent="flex-end">
-      <ActionIcon label="Aperçu" onClick={onPreview}>
+      <BaseIconButton label="Aperçu" onClick={onPreview}>
         <Icons.View aria-hidden />
-      </ActionIcon>
+      </BaseIconButton>
       {isOwner && (
-        <ActionIcon label={template.isDefault ? 'Personnaliser' : 'Modifier'} onClick={onEdit}>
+        <BaseIconButton label={template.isDefault ? 'Personnaliser' : 'Modifier'} onClick={onEdit}>
           <Icons.Edit aria-hidden />
-        </ActionIcon>
+        </BaseIconButton>
       )}
       {isOwner && !isDefaultChoice && (
-        <ActionIcon label="Choisir ce modèle" onClick={onMakeDefault}>
+        <BaseIconButton label="Choisir ce modèle" onClick={onMakeDefault}>
           <Icons.Check aria-hidden />
-        </ActionIcon>
+        </BaseIconButton>
       )}
       {isOwner && !template.isDefault && (
-        <ActionIcon label="Supprimer" onClick={onDelete} danger>
+        <BaseIconButton label="Supprimer" colorType="danger" onClick={onDelete}>
           <Icons.Trash aria-hidden />
-        </ActionIcon>
+        </BaseIconButton>
       )}
     </HStack>
   </Stack>

@@ -1,12 +1,13 @@
 'use client';
 
-import { Flex, For, HStack, IconButton, SimpleGrid, Span, Stack } from '@chakra-ui/react';
+import { Flex, For, HStack, SimpleGrid, Span, Stack } from '@chakra-ui/react';
 import {
   BaseContainer,
   BaseStats,
   BaseStatsProps,
   BaseText,
   Icons,
+  BaseIconButton,
 } from '_components/custom';
 import { NotificationsModule, PropertyModule } from '_store/state-management';
 import { CONSTANTS, ENUM } from '_types/*';
@@ -89,26 +90,24 @@ export const DashboardStats = () => {
 
   const yearSelector = (
     <HStack justify="flex-end" gap={1} width="full" mt={2}>
-      <IconButton
-        aria-label="Année précédente"
+      <BaseIconButton
+        label="Année précédente"
         size="xs"
-        variant="ghost"
         onClick={() => setYear((value) => value - 1)}
       >
         <Icons.ChevronLeft />
-      </IconButton>
+      </BaseIconButton>
       <BaseText fontWeight="semibold" minW="48px" textAlign="center" aria-live="polite">
         {year}
       </BaseText>
-      <IconButton
-        aria-label="Année suivante"
+      <BaseIconButton
+        label="Année suivante"
         size="xs"
-        variant="ghost"
         disabled={year >= currentYear}
         onClick={() => setYear((value) => Math.min(value + 1, currentYear))}
       >
         <Icons.ChevronRight />
-      </IconButton>
+      </BaseIconButton>
     </HStack>
   );
 

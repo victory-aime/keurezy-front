@@ -12,7 +12,7 @@ export const FloatSwitchColorMode = ({ ...props }: IconButtonProps) => {
       right="16px"
       zIndex="1000"
       onClick={toggleColorMode}
-      aria-label="change color-mode"
+      aria-label="Changer le thème (clair ou sombre)"
       borderRadius="50px"
       animation={'bounce'}
       cursor={'pointer'}

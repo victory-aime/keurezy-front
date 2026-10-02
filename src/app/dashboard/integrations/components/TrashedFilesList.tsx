@@ -1,11 +1,12 @@
 'use client';
 
-import { VStack, HStack, Circle, Box, Icon, IconButton } from '@chakra-ui/react';
+import { VStack, HStack, Circle, Box, Icon } from '@chakra-ui/react';
 import {
   BaseText,
   CustomSkeletonLoader,
   DeleteModalAnimation,
   TextVariant,
+  BaseIconButton,
 } from '_components/custom';
 import { getFileIconColor, getFileIcon } from '_hooks/download';
 import { IntegrationsProviderModule } from '_store/state-management';
@@ -75,25 +76,27 @@ export function TrashedFilesList({
                     {getTimeValue(file.modifiedTime!)}
                   </BaseText>
                 </Box>
-                <IconButton
-                  aria-label="Ouvrir dans Google Drive"
+                <BaseIconButton
+                  label="Ouvrir dans Google Drive"
+                  colorType="primary"
+                  variant="surface"
                   size="xs"
-                  colorPalette={'purple'}
                   onClick={() => window.open(file.webViewLink, '_blank')}
                 >
                   <HiOutlineExternalLink size={16} />
-                </IconButton>
-                <IconButton
-                  aria-label="Ouvrir dans Google Drive"
+                </BaseIconButton>
+                <BaseIconButton
+                  label="Supprimer définitivement"
+                  colorType="danger"
+                  variant="surface"
                   size="xs"
-                  colorPalette={'red'}
                   onClick={() => {
                     setSelectedFile(file.fileId);
                     setOpenDelete(true);
                   }}
                 >
                   <HiOutlineTrash />
-                </IconButton>
+                </BaseIconButton>
               </HStack>
             );
           })}

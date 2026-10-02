@@ -15,7 +15,7 @@ export const BaseCheckBoxCard = ({
     <CheckboxCard.Root
       {...rest}
       variant={'outline'}
-      colorPalette={'teal'}
+      colorPalette={'primary'}
       cursor={'pointer'}
       justify={'center'}
     >

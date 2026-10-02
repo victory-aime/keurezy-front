@@ -5,7 +5,6 @@ import {
   Circle,
   HStack,
   Icon,
-  IconButton,
   VStack,
   Stack,
   ProgressCircle,
@@ -16,8 +15,7 @@ import {
   TextVariant,
   BaseUploadMultipleFiles,
   CustomSkeletonLoader,
-  BaseTooltip,
-  Loader,
+  BaseIconButton,
 } from '_components/custom';
 import { useState } from 'react';
 import { HiOutlineExternalLink, HiOutlineTrash } from 'react-icons/hi';
@@ -141,7 +139,7 @@ export const ManageGoogleDrivePanel = ({
                   value={u.progress}
                   fontSize={'xs'}
                   size={'md'}
-                  colorPalette={'purple'}
+                  colorPalette={'primary'}
                 >
                   <ProgressCircle.Circle>
                     <ProgressCircle.Track />
@@ -183,30 +181,25 @@ export const ManageGoogleDrivePanel = ({
                     </BaseText>
                   </Box>
 
-                  <BaseTooltip message={'Ouvrir dans Google Drive'} show>
-                    <IconButton
-                      aria-label="Ouvrir dans Google Drive"
-                      size="xs"
-                      colorPalette={'purple'}
-                      onClick={() => window.open(file.webViewLink, '_blank')}
-                    >
-                      <HiOutlineExternalLink size={16} />
-                    </IconButton>
-                  </BaseTooltip>
-                  {isPending ? (
-                    <Loader loader />
-                  ) : (
-                    <BaseTooltip message={'Mettre dans la corbeille'} show>
-                      <IconButton
-                        aria-label="Supprimer"
-                        size="xs"
-                        colorPalette={'red'}
-                        onClick={() => handleTrashFile(file.fileId)}
-                      >
-                        <HiOutlineTrash size={16} />
-                      </IconButton>
-                    </BaseTooltip>
-                  )}
+                  <BaseIconButton
+                    label="Ouvrir dans Google Drive"
+                    colorType="primary"
+                    variant="surface"
+                    size="xs"
+                    onClick={() => window.open(file.webViewLink, '_blank')}
+                  >
+                    <HiOutlineExternalLink size={16} />
+                  </BaseIconButton>
+                  <BaseIconButton
+                    label="Mettre dans la corbeille"
+                    colorType="danger"
+                    variant="surface"
+                    size="xs"
+                    isLoading={isPending}
+                    onClick={() => handleTrashFile(file.fileId)}
+                  >
+                    <HiOutlineTrash size={16} />
+                  </BaseIconButton>
                 </HStack>
               );
             })}

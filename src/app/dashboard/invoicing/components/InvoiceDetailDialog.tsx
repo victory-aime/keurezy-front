@@ -198,7 +198,7 @@ export const InvoiceDetailDialog = ({
       isOpen={!!invoiceId}
       onChange={((o: boolean) => !o && onClose()) as ModalOpenProps['onChange']}
       title={invoice ? (invoice.number ?? 'Brouillon de facture') : 'Facture'}
-      size="xl"
+      size="full"
       ignoreFooter
     >
       {!invoice || !status ? (
@@ -269,11 +269,7 @@ export const InvoiceDetailDialog = ({
                     <Icons.Edit aria-hidden />
                     Modifier le brouillon
                   </BaseButton>
-                  <BaseButton
-                    variant="ghost"
-                    colorType="danger"
-                    onClick={() => setAction('delete')}
-                  >
+                  <BaseButton colorType="danger" onClick={() => setAction('delete')}>
                     <Icons.Trash aria-hidden />
                     Supprimer le brouillon
                   </BaseButton>

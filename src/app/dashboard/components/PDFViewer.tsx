@@ -3,8 +3,8 @@
 import { Document, Page } from 'react-pdf';
 import { useState } from 'react';
 import '../../lib/pdf-worker';
-import { Box, Flex, IconButton } from '@chakra-ui/react';
-import { BaseText, Icons, Loader } from '_components/custom';
+import { Box, Flex } from '@chakra-ui/react';
+import { BaseText, Icons, Loader, BaseIconButton } from '_components/custom';
 import { downloadFile } from '_hooks/download';
 
 export const PdfViewer = ({ file }: { file: string }) => {
@@ -54,34 +54,42 @@ export const PdfViewer = ({ file }: { file: string }) => {
       >
         {numPages > 1 ? (
           <>
-            <IconButton
-              rounded={'full'}
+            <BaseIconButton
+              label="Page précédente"
+              variant="surface"
+              rounded="full"
               onClick={prevPage}
               disabled={pageNumber === 1}
-              colorPalette={'gray'}
             >
               <Icons.IoIosArrowRoundBack />
-            </IconButton>
-            <IconButton
-              rounded={'full'}
+            </BaseIconButton>
+            <BaseIconButton
+              label="Page suivante"
+              variant="surface"
+              rounded="full"
               onClick={nextPage}
               disabled={pageNumber === numPages}
-              colorPalette={'border'}
             >
               <Icons.ArrowRight />
-            </IconButton>
+            </BaseIconButton>
           </>
         ) : null}
 
-        <IconButton rounded={'full'} colorPalette={'cyan'} onClick={zoomOut}>
+        <BaseIconButton label="Dézoomer" variant="surface" rounded="full" onClick={zoomOut}>
           <Icons.Minus />
-        </IconButton>
-        <IconButton rounded={'full'} colorPalette={'red'} onClick={zoomIn}>
+        </BaseIconButton>
+        <BaseIconButton label="Zoomer" variant="surface" rounded="full" onClick={zoomIn}>
           <Icons.PlusMinus />
-        </IconButton>
-        <IconButton rounded={'full'} onClick={() => downloadFile(file)} colorPalette={'green'}>
+        </BaseIconButton>
+        <BaseIconButton
+          label="Télécharger"
+          colorType="primary"
+          variant="surface"
+          rounded="full"
+          onClick={() => downloadFile(file)}
+        >
           <Icons.Download />
-        </IconButton>
+        </BaseIconButton>
       </Flex>
     </Box>
   );

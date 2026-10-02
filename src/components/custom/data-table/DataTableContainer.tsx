@@ -143,7 +143,7 @@ export const DataTableContainer: FC<TableProps> = ({
                     <Checkbox
                       size={'md'}
                       aria-label="Select all rows"
-                      colorPalette={selection?.length > 0 ? 'purple' : 'gray'}
+                      colorPalette={selection?.length > 0 ? 'primary' : 'gray'}
                       checked={indeterminate ? 'indeterminate' : selection.length > 0}
                       onCheckedChange={(changes) =>
                         setSelection(() => (changes?.checked ? data.map((item) => item.id) : []))
@@ -184,7 +184,7 @@ export const DataTableContainer: FC<TableProps> = ({
                       <Checkbox
                         aria-label="Select item"
                         checked={selection.includes(item.id)}
-                        colorPalette={'purple'}
+                        colorPalette={'primary'}
                         onCheckedChange={(changes) => {
                           setSelection((prev) =>
                             changes.checked

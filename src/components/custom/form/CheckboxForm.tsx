@@ -75,7 +75,7 @@ export const FormCheckbox: FC<CheckBoxProps> = ({
           width={'fit-content'}
           cursor={'pointer'}
           disabled={isReadOnly}
-          colorPalette={field?.value ? 'purple' : isError ? 'red' : 'none'}
+          colorPalette={field?.value ? 'primary' : isError ? 'danger' : 'none'}
           onCheckedChange={({ checked }: { checked: boolean | string }) => {
             setValue(checked);
           }}

@@ -32,7 +32,7 @@ export const DataViewSwitcher = ({
           <IconButton
             aria-label="Table view"
             variant={mode === 'table' ? 'subtle' : 'outline'}
-            colorPalette={mode === 'table' ? 'purple' : 'gray'}
+            colorPalette={mode === 'table' ? 'primary' : 'neutral'}
             onClick={() => onChange('table')}
             border="none"
             rounded="full"
@@ -49,7 +49,7 @@ export const DataViewSwitcher = ({
             aria-label="Grid view"
             variant={mode === 'grid' ? 'subtle' : 'outline'}
             onClick={() => onChange('grid')}
-            colorPalette={mode === 'grid' ? 'purple' : 'gray'}
+            colorPalette={mode === 'grid' ? 'primary' : 'neutral'}
             border="none"
             rounded="full"
             size="sm"

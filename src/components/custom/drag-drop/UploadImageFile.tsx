@@ -69,7 +69,7 @@ export const UploadImageFile = ({
               cursor: isReadOnly ? 'not-allowed' : 'none',
             }}
             cursor="pointer"
-            colorPalette={(previewUrl || avatarImage) && !isImageDeleted ? 'green' : 'none'}
+            colorPalette={(previewUrl || avatarImage) && !isImageDeleted ? 'success' : 'none'}
             image={
               !isImageDeleted
                 ? previewUrl ||

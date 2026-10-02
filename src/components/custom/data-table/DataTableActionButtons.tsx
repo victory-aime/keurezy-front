@@ -1,114 +1,110 @@
-import { HStack, IconButton, Menu, Portal, VStack } from '@chakra-ui/react';
-import { ActionButtonsProps, Loader, Icons, BaseButton, BaseTooltip } from '_components/custom';
-import { VariablesColors } from '_theme/variables';
+import { HStack, Menu, Portal } from '@chakra-ui/react';
+import {
+  ActionButtonsProps,
+  Loader,
+  Icons,
+  BaseButton,
+  BaseIconButton,
+  variantColorType,
+} from '_components/custom';
 import { useTranslation } from 'react-i18next';
 
-const ACTION_CONFIG = {
+/** Icône, libellé et couleur (charte) de chaque action de ligne. */
+const ACTION_CONFIG: Record<
+  string,
+  { tooltip: string; icon: React.ElementType; colorType: variantColorType; aria: string }
+> = {
   delete: {
     tooltip: 'COMMON.DELETE',
     icon: Icons.Trash,
-    bg: 'red',
-    color: 'white',
+    colorType: 'danger',
     aria: 'Supprimer',
   },
   resend: {
     tooltip: 'COMMON.RESEND',
     icon: Icons.SendMail,
-    bg: 'blue',
-    color: 'white',
+    colorType: 'info',
     aria: 'Renvoyer',
   },
   close: {
     tooltip: 'COMMON.CLOSE',
     icon: Icons.Lock,
-    bg: 'orange',
-    color: 'white',
+    colorType: 'warning',
     aria: 'Fermer',
   },
   cancel: {
     tooltip: 'COMMON.CANCEL',
     icon: Icons.Close,
-    bg: 'red',
-    color: 'white',
+    colorType: 'danger',
     aria: 'Annuler',
   },
   edit: {
     tooltip: 'COMMON.EDIT',
     icon: Icons.Edit,
-    bg: 'blue',
-    color: 'white',
+    colorType: 'info',
     aria: 'Modifier',
   },
   view: {
     tooltip: 'COMMON.DETAIL',
     icon: Icons.View,
-    bg: 'gray',
+    colorType: 'neutral',
     aria: 'Voir',
   },
   share: {
     tooltip: 'COMMON.SHARE',
     icon: Icons.Share,
-    bg: 'green',
-    color: 'white',
+    colorType: 'success',
     aria: 'Partager',
   },
   duplicate: {
     tooltip: 'COMMON.DUPLICATE',
     icon: Icons.Copy,
-    bg: 'orange',
-    color: 'white',
+    colorType: 'warning',
     aria: 'Dupliquer',
   },
   payment: {
     tooltip: 'COMMON.PAYMENT',
     icon: Icons.Payment,
-    bg: 'warning',
-    color: 'white',
+    colorType: 'warning',
     aria: 'Payment',
   },
   download: {
     tooltip: 'COMMON.DOWNLOAD',
     icon: Icons.Download,
-    bg: 'success',
-    color: 'white',
+    colorType: 'success',
     aria: 'Download',
   },
   restore: {
     tooltip: 'COMMON.RESTORE',
     icon: Icons.Restore,
-    bg: 'orange',
-    color: 'white',
+    colorType: 'warning',
     aria: 'Restore',
   },
   chat: {
     tooltip: 'Discuter',
     icon: Icons.Chat,
-    bg: 'purple',
-    color: 'white',
+    colorType: 'primary',
     aria: 'chat',
   },
   passkey: {
     tooltip: 'COMMON.PASSKEY',
     icon: Icons.Key,
-    bg: 'purple',
-    color: 'white',
+    colorType: 'primary',
     aria: 'Passkey',
   },
   publish: {
     tooltip: 'COMMON.PUBLISH',
     icon: Icons.Megaphone,
-    bg: 'green',
-    color: 'white',
+    colorType: 'success',
     aria: 'Publish',
   },
   assign: {
     tooltip: 'COMMON.ASSIGN',
     icon: Icons.Assignment,
-    bg: 'yellow',
-    color: 'white',
+    colorType: 'warning',
     aria: 'assign',
   },
-} as const;
+};
 
 export const DataTableActionButtons = <T,>({ actions, item }: ActionButtonsProps<T>) => {
   const { t } = useTranslation();
@@ -118,6 +114,8 @@ export const DataTableActionButtons = <T,>({ actions, item }: ActionButtonsProps
 
     return isShown;
   });
+
+  if (!visibleActions.length) return null;
 
   if (visibleActions.length === 1) {
     const action = visibleActions[0];
@@ -154,17 +152,17 @@ export const DataTableActionButtons = <T,>({ actions, item }: ActionButtonsProps
 
     // Titre propre à l'action s'il est fourni (ex. « Fermer le bien »), sinon libellé générique
     return (
-      <BaseTooltip message={action.title ?? config.tooltip} show>
-        <IconButton
-          onClick={handleClick}
-          disabled={isDisabled || isLoading}
-          colorPalette={config.bg}
-          variant={'surface'}
-          size={'xs'}
-        >
-          {isLoading ? <Loader loader size="xs" /> : <Icon />}
-        </IconButton>
-      </BaseTooltip>
+      <BaseIconButton
+        label={action.title ?? t(config.tooltip)}
+        colorType={config.colorType}
+        variant="surface"
+        size="xs"
+        onClick={handleClick}
+        disabled={isDisabled}
+        isLoading={isLoading}
+      >
+        <Icon />
+      </BaseIconButton>
     );
   }
   return (
@@ -221,24 +219,25 @@ export const DataTableActionButtons = <T,>({ actions, item }: ActionButtonsProps
               return (
                 <Menu.Item key={label} value={label} asChild onClick={handleClick}>
                   <HStack
-                    color={isDisabled ? VariablesColors.grayScale : 'inherit'}
+                    color={isDisabled ? 'fg.muted' : 'inherit'}
                     justifyContent={isLoading ? 'center' : 'flex-start'}
                     width={'full'}
                   >
                     {isLoading ? (
                       <Loader loader size="xs" />
                     ) : (
-                      <IconButton
-                        aria-label={action.title ?? config.aria}
-                        colorPalette={config.bg}
-                        width={'full'}
-                        variant={'surface'}
-                        size={'xs'}
-                        disabled={isDisabled || isLoading}
+                      <BaseButton
+                        colorType={config.colorType}
+                        variant="surface"
+                        size="xs"
+                        width="full"
+                        justifyContent="flex-start"
+                        p={2}
+                        disabled={isDisabled}
+                        leftIcon={<Icon aria-hidden />}
                       >
-                        <Icon />
                         {action.title ?? t(config.tooltip)}
-                      </IconButton>
+                      </BaseButton>
                     )}
                   </HStack>
                 </Menu.Item>

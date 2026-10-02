@@ -402,7 +402,7 @@ export const MainOnboarding = ({
                 <Progress.Root
                   size="sm"
                   value={progress}
-                  colorPalette="orange"
+                  colorPalette="primary"
                   variant="subtle"
                   animated
                 >

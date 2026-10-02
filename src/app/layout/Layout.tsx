@@ -3,8 +3,8 @@
 import { ReactNode } from 'react';
 import { Navbar } from '_component/NavBar';
 import { Footer } from '../components/Footer';
-import { Box, IconButton, VStack } from '@chakra-ui/react';
-import { FloatSwitchColorMode, Icons } from '_components/custom';
+import { Box, VStack } from '@chakra-ui/react';
+import { FloatSwitchColorMode, Icons, BaseIconButton } from '_components/custom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { MotionBox } from '_constants/motion';
 
@@ -72,23 +72,22 @@ export const UserLayout = ({ children }: { children: ReactNode }) => {
               transform="rotate(-90 30 30)"
             />
           </svg>
-          <IconButton
-            aria-label="Scroll to top"
+          <BaseIconButton
+            label="Remonter en haut de la page"
+            colorType="primary"
+            variant="solid"
             onClick={scrollTop}
             position="absolute"
             top="50%"
             left="50%"
             transform="translate(-50%, -50%) rotate(-90deg)"
             borderRadius="full"
-            size="sm"
-            bg="primary.500"
-            color="white"
             _hover={{
               transform: 'translate(-50%, -50%) rotate(-90deg) scale(1.08)',
             }}
           >
             <Icons.ArrowRight />
-          </IconButton>
+          </BaseIconButton>
         </Box>
       </MotionBox>
     </>

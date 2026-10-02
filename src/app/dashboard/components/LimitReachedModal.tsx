@@ -50,7 +50,7 @@ const NearLimitGauge = ({ usage, noun }: { usage: Usage; noun: string }) => (
     <Progress.Root
       value={usage.percentage ?? 0}
       size="sm"
-      colorPalette="orange"
+      colorPalette="warning"
       aria-label={`${usage.used} ${noun} utilisés sur ${usage.limit}`}
     >
       <Progress.Track rounded="full" bg="bg.muted">

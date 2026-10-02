@@ -80,7 +80,7 @@ export const PaginationDataTable: FC<PaginationProps> = ({
                 <IconButton
                   key={page.value}
                   variant={{ base: 'ghost', _selected: 'solid' }}
-                  colorPalette={{ _selected: 'purple' }}
+                  colorPalette={{ _selected: 'primary' }}
                   onClick={() => handleClick(page?.value)}
                 >
                   {page?.value}

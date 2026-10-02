@@ -14,7 +14,7 @@ const paletteOf = (colorType: variantColorType) =>
  * Pleine et discrète gardent un fond ; contour et surface gardent leur bord ; fantôme et texte
  * restent sans fond.
  */
-const disabledStyle = (variant: ButtonProps['variant']): SystemStyleObject => {
+export const disabledStyle = (variant: ButtonProps['variant']): SystemStyleObject => {
   const base: SystemStyleObject = {
     color: 'fg.muted',
     opacity: 1,

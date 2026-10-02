@@ -9,8 +9,8 @@ type Usage = MODELS.IAgencySubscriptionOverview['usage'][number];
 /** Couleur de la jauge : sobre par défaut, accent léger près de la limite (jamais rouge). */
 const PALETTE: Record<MODELS.SubscriptionUsageState, string> = {
   OK: 'primary',
-  NEAR_LIMIT: 'orange',
-  REACHED: 'orange',
+  NEAR_LIMIT: 'warning',
+  REACHED: 'warning',
   UNLIMITED: 'primary',
 };
 

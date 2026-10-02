@@ -1,8 +1,8 @@
 'use client';
 
-import { Box, Flex, IconButton, Image, Text, Textarea } from '@chakra-ui/react';
+import { Box, Flex, Image, Text, Textarea } from '@chakra-ui/react';
 import { useRef, useState, KeyboardEvent, ChangeEvent, useEffect } from 'react';
-import { Icons } from '_components/custom';
+import { Icons, BaseIconButton } from '_components/custom';
 import { toaster } from '_components/ui/toaster';
 import { ChatModule } from '_store/state-management';
 import { ChatInputProps } from '../interface/chat';
@@ -108,16 +108,15 @@ export function ChatInput({ onSend, onTyping, canReply }: ChatInputProps) {
               <Text fontSize="xs" truncate>
                 {file.name}
               </Text>
-              <IconButton
-                aria-label={`Retirer ${file.name}`}
+              <BaseIconButton
+                label={`Retirer ${file.name}`}
                 size="2xs"
-                variant="ghost"
                 position="absolute"
                 right={1}
                 onClick={() => setFiles((current) => current.filter((_, i) => i !== index))}
               >
                 <Icons.Close size={12} />
-              </IconButton>
+              </BaseIconButton>
             </Flex>
           ))}
         </Flex>
@@ -132,16 +131,15 @@ export function ChatInput({ onSend, onTyping, canReply }: ChatInputProps) {
           accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
           onChange={handleFiles}
         />
-        <IconButton
-          aria-label="Joindre des fichiers (PDF, JPG, PNG — 3 max, 2 Mo)"
-          title="PDF, JPG, PNG — 3 fichiers, 2 Mo chacun"
-          variant="ghost"
+        <BaseIconButton
+          label="Joindre des fichiers (PDF, JPG, PNG — 3 max, 2 Mo chacun)"
+          size="md"
           rounded="full"
           disabled={files.length >= CHAT_LIMITS.MAX_FILES}
           onClick={() => fileInputRef.current?.click()}
         >
           <Icons.LuFiles size={18} />
-        </IconButton>
+        </BaseIconButton>
         <Textarea
           ref={textareaRef}
           value={value}
@@ -162,18 +160,17 @@ export function ChatInput({ onSend, onTyping, canReply }: ChatInputProps) {
           overflow="hidden"
           _focus={{ boxShadow: 'none', bg: 'bg.muted', borderColor: 'purple.focusRing' }}
         />
-        <IconButton
-          aria-label="Envoyer"
+        <BaseIconButton
+          label="Envoyer"
+          colorType="primary"
+          variant="solid"
+          size="md"
           onClick={handleSend}
           disabled={!hasContent}
           rounded="full"
-          bg="primary.500"
-          color={'white'}
-          _hover={{ opacity: 0.85 }}
-          _disabled={{ opacity: 0.3, cursor: 'not-allowed' }}
         >
           <Icons.Send size={16} />
-        </IconButton>
+        </BaseIconButton>
       </Flex>
     </Box>
   );

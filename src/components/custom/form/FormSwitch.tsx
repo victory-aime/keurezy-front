@@ -39,7 +39,7 @@ export const FormSwitch: FC<SwitchProps> = ({
           await handleCheckedChange(e);
           onCheckedChange?.(e.checked);
         }}
-        colorPalette={'green'}
+        colorPalette={'success'}
         size={'md'}
         disabled={isLoading || isReadOnly}
       >

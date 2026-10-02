@@ -1,6 +1,6 @@
 import { downloadFile } from '_hooks/download';
-import { BaseDrawer, BaseText, Icons, ModalOpenProps } from '_components/custom';
-import { Box, IconButton } from '@chakra-ui/react';
+import { BaseDrawer, BaseText, Icons, ModalOpenProps, BaseButton } from '_components/custom';
+import { Box } from '@chakra-ui/react';
 import { PdfViewer } from '../../components/PDFViewer';
 
 export const DocumentPreviewModal = ({ isOpen, onChange, data }: ModalOpenProps) => {
@@ -28,15 +28,15 @@ export const DocumentPreviewModal = ({ isOpen, onChange, data }: ModalOpenProps)
               case 'image':
                 return (
                   <Box>
-                    <IconButton
-                      onClick={() => downloadFile(data)}
-                      colorPalette={'green'}
-                      p={1}
+                    <BaseButton
+                      size="sm"
+                      variant="outline"
                       mb={4}
+                      leftIcon={<Icons.Download aria-hidden />}
+                      onClick={() => downloadFile(data)}
                     >
-                      <Icons.Download />
                       Télécharger le fichier
-                    </IconButton>
+                    </BaseButton>
                     <img
                       src={data}
                       style={{

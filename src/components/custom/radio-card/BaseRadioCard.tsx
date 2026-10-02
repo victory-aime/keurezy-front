@@ -9,7 +9,7 @@ export const BaseRadioCard: FC<IRadioCardProps> = ({
   items,
   labelTitle,
   orientation = 'horizontal',
-  colorPalette = 'purple',
+  colorPalette = 'primary',
   onValueChange,
   ...rest
 }) => {

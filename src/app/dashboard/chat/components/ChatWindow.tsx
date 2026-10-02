@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Flex, Float, IconButton } from '@chakra-ui/react';
+import { Box, Flex, Float } from '@chakra-ui/react';
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { ChatModule } from '_store/state-management';
 import { useUserContext } from '_context/user-context';
@@ -15,7 +15,7 @@ import { ChatInput } from './ChatInput';
 import { ChatHeader } from './ChatHeader';
 import { DateSeparator } from './DateSeparator';
 import { useDateSeparators } from '_hooks/chat/useDateSeparator';
-import { Icons, Loader } from '_components/custom';
+import { Icons, Loader, BaseIconButton } from '_components/custom';
 import { ChatWindowProps } from '../interface/chat';
 
 export function ChatWindow({ conversationId, onBack }: ChatWindowProps) {
@@ -170,17 +170,16 @@ export function ChatWindow({ conversationId, onBack }: ChatWindowProps) {
                   {unreadBelowCount > 99 ? '99+' : unreadBelowCount}
                 </Box>
               )}
-              <IconButton
+              <BaseIconButton
+                label="Aller au dernier message"
+                colorType="primary"
+                variant="solid"
                 borderRadius="full"
                 boxShadow="lg"
-                size="sm"
-                colorPalette={'purple'}
-                color={'white'}
                 onClick={() => scrollToBottom()}
-                aria-label="Aller au dernier message"
               >
                 <Icons.ChevronDown size={24} />
-              </IconButton>
+              </BaseIconButton>
             </Flex>
           </Float>
         </Flex>

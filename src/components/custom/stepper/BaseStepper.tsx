@@ -27,7 +27,7 @@ export const BaseStepper: FC<BaseStepperProps> = ({ steps, goNextSteps, linear =
       defaultStep={currentIndex}
       defaultValue={steps[currentIndex]?.stepNumber}
       variant={'solid'}
-      colorPalette={'purple'}
+      colorPalette={'primary'}
       onStepChange={({ step }) => {
         handleStepChange(step);
       }}

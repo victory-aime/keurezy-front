@@ -242,7 +242,7 @@ export const PropertyForm = ({ appartId }: { appartId: string }) => {
                 <VStack gap={2} alignItems={'flex-start'}>
                   <BaseText>Cette propriété est-elle dans un bâtiment ?</BaseText>
                   <BaseRadio
-                    colorPalette="purple"
+                    colorPalette="primary"
                     value={values.hasBatiment ? 'yes' : 'no'}
                     items={[
                       { label: 'Oui', value: 'yes' },

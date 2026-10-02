@@ -1,7 +1,6 @@
 'use client';
 
-import { Badge, Box, Flex, IconButton, Input, InputGroup, Skeleton, Stack } from '@chakra-ui/react';
-import { Tooltip } from '_components/ui/tooltip';
+import { Badge, Box, Flex, Input, InputGroup, Skeleton, Stack } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import {
   BaseBadge,
@@ -69,17 +68,16 @@ const columnsFor = (open: (id: string) => void, agencyId: string): ColumnsDataTa
   { header: 'Statut', accessor: 'fullObject', cell: (i: Item) => <StatusBadges item={i} /> },
   {
     header: '',
-    accessor: 'fullObject',
-    cell: (i: Item) =>
-      i.number ? (
-        <Tooltip content="Télécharger le PDF" showArrow openDelay={150} closeDelay={50}>
-          <IconButton asChild variant="ghost" size="sm" aria-label={`Télécharger ${i.number}`}>
-            <a href={invoicePdfUrl(agencyId, i.id, true)} download={`${i.number}.pdf`}>
-              <Icons.Download />
-            </a>
-          </IconButton>
-        </Tooltip>
-      ) : undefined,
+    accessor: 'actions',
+    actions: [
+      {
+        name: 'download',
+        title: 'Télécharger le PDF',
+        isShown: (i: Item) => !!i.number,
+        // Réponse en pièce jointe : le navigateur télécharge sans quitter la page
+        handleClick: (i: Item) => window.location.assign(invoicePdfUrl(agencyId, i.id, true)),
+      },
+    ],
   },
 ];
 
@@ -134,7 +132,7 @@ export const InvoicesPage = () => {
       border="none"
       gap={6}
     >
-      <Flex justifyContent="space-between" gap={3} wrap="wrap" width="full">
+      <Flex justifyContent="space-between" gap={3} wrap="wrap" width="full" p={4}>
         <InputGroup
           startElement={<Icons.Search aria-hidden />}
           maxW={{ base: 'full', sm: '320px' }}

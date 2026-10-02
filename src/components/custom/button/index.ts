@@ -1,5 +1,6 @@
 import { BaseButton, variantStyles } from './base/baseButton';
 import { ActionsButton } from './actions-button/ActionsButton';
+import { BaseIconButton, type BaseIconButtonProps } from './icon/BaseIconButton';
 import {
   ActionButtonTypes,
   variantColorType,
@@ -7,5 +8,11 @@ import {
   ButtonBaseProps,
 } from './interface/button';
 
-export { BaseButton, ActionsButton, variantStyles };
-export type { ActionButtonTypes, variantColorType, VariantColorStyle, ButtonBaseProps };
+export { BaseButton, BaseIconButton, ActionsButton, variantStyles };
+export type {
+  BaseIconButtonProps,
+  ActionButtonTypes,
+  variantColorType,
+  VariantColorStyle,
+  ButtonBaseProps,
+};
