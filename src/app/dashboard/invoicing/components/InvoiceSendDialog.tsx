@@ -1,11 +1,27 @@
 'use client';
 
-import { Field, Input, Stack, Textarea } from '@chakra-ui/react';
-import { useState } from 'react';
-import { BaseModal, BaseText, Icons, ModalOpenProps, TextVariant } from '_components/custom';
+import { Stack } from '@chakra-ui/react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import {
+  BaseModal,
+  BaseText,
+  FormTextArea,
+  FormTextInput,
+  Icons,
+  ModalOpenProps,
+  TextVariant,
+} from '_components/custom';
 import { MODELS } from '_types/*';
 
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const sendSchema = Yup.object({
+  to: Yup.string()
+    .trim()
+    .required('Indiquez le destinataire.')
+    .email('Adresse e-mail invalide.')
+    .max(254, 'Adresse trop longue.'),
+  message: Yup.string().trim().max(1000, 'Le message ne doit pas dépasser 1 000 caractères.'),
+});
 
 /**
  * Envoi d'une facture émise ou payée par e-mail, PDF joint : destinataire prérempli avec
@@ -21,52 +37,46 @@ export const InvoiceSendDialog = ({
   onClose: () => void;
   onConfirm: (body: { to: string; message?: string }) => void;
   isSubmitting: boolean;
-}) => {
-  const [to, setTo] = useState(invoice.client.email ?? '');
-  const [message, setMessage] = useState('');
-  const valid = EMAIL.test(to.trim());
-  const resend = !!invoice.emails?.length;
-
-  return (
-    <BaseModal
-      isOpen
-      onChange={((o: boolean) => !o && onClose()) as ModalOpenProps['onChange']}
-      title={resend ? 'Renvoyer la facture' : 'Envoyer la facture'}
-      icon={<Icons.Send />}
-      size="sm"
-      buttonCancelTitle="Annuler"
-      buttonSaveTitle="Envoyer"
-      isLoading={isSubmitting}
-      saveDisabled={!valid}
-      onClick={() => valid && onConfirm({ to: to.trim(), message: message.trim() || undefined })}
-    >
-      <Stack gap={4}>
-        <BaseText variant={TextVariant.S}>
-          La facture {invoice.number} est envoyée en PDF. Le client pourra répondre directement à
-          l’agence.
-        </BaseText>
-        <Field.Root required invalid={!!to && !valid}>
-          <Field.Label>Destinataire</Field.Label>
-          <Input
+}) => (
+  <Formik
+    initialValues={{ to: invoice.client.email ?? '', message: '' }}
+    validationSchema={sendSchema}
+    onSubmit={({ to, message }) =>
+      onConfirm({ to: to.trim(), message: message.trim() || undefined })
+    }
+  >
+    {({ handleSubmit }) => (
+      <BaseModal
+        isOpen
+        onChange={((o: boolean) => !o && onClose()) as ModalOpenProps['onChange']}
+        title={invoice.emails?.length ? 'Renvoyer la facture' : 'Envoyer la facture'}
+        icon={<Icons.Send />}
+        size="sm"
+        buttonCancelTitle="Annuler"
+        buttonSaveTitle="Envoyer"
+        isLoading={isSubmitting}
+        onClick={() => handleSubmit()}
+      >
+        <Stack gap={4}>
+          <BaseText variant={TextVariant.S}>
+            La facture {invoice.number} est envoyée en PDF. Le client pourra répondre directement à
+            l’agence.
+          </BaseText>
+          <FormTextInput
+            required
+            name="to"
             type="email"
-            value={to}
-            maxLength={254}
+            label="Destinataire"
             placeholder="client@exemple.sn"
-            onChange={(e) => setTo(e.target.value)}
           />
-          <Field.ErrorText>Adresse e-mail invalide.</Field.ErrorText>
-        </Field.Root>
-        <Field.Root>
-          <Field.Label>Message (facultatif)</Field.Label>
-          <Textarea
-            value={message}
-            maxLength={1000}
-            rows={4}
+          <FormTextArea
+            name="message"
+            label="Message (facultatif)"
             placeholder="Ex. : Merci pour votre confiance."
-            onChange={(e) => setMessage(e.target.value)}
+            maxCharacters={1000}
           />
-        </Field.Root>
-      </Stack>
-    </BaseModal>
-  );
-};
+        </Stack>
+      </BaseModal>
+    )}
+  </Formik>
+);

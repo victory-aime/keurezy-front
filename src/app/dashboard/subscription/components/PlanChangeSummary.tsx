@@ -1,7 +1,15 @@
-import { Box, Field, Flex, Input, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Box, Flex, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Formik } from 'formik';
 import { t } from 'i18next';
 import type { ReactNode } from 'react';
-import { BaseFormatNumber, BaseText, Icons, TextVariant, BaseBadge } from '_components/custom';
+import {
+  BaseBadge,
+  BaseFormatNumber,
+  BaseText,
+  FormTextInput,
+  Icons,
+  TextVariant,
+} from '_components/custom';
 import { ENUM, MODELS } from '_types/*';
 import {
   FEATURE_LABELS,
@@ -212,22 +220,25 @@ export const PlanChangeSummary = ({
           </BaseText>
           {paid && (
             // Design seulement : les codes promo arrivent avec un module ultérieur (aucun appel API)
-            <Field.Root disabled mt={2} maxW="sm">
-              <Flex alignItems="center" gap={2}>
-                <Field.Label mb={0}>Code promo</Field.Label>
+            <Formik initialValues={{ promo: '' }} onSubmit={() => undefined}>
+              <Stack gap={1} mt={2} maxW="sm">
                 <BaseBadge
+                  alignSelf="flex-start"
                   color="neutral"
                   variant="subtle"
                   size="sm"
                   p={1}
                   label="Bientôt disponible"
                 />
-              </Flex>
-              <Input placeholder="Ex. BIENVENUE" size="sm" aria-describedby="promo-soon" />
-              <Field.HelperText id="promo-soon">
-                Les codes promo seront bientôt acceptés ici.
-              </Field.HelperText>
-            </Field.Root>
+                <FormTextInput
+                  name="promo"
+                  label="Code promo"
+                  placeholder="Ex. BIENVENUE"
+                  isDisabled
+                  infoMessage="Les codes promo seront bientôt acceptés ici."
+                />
+              </Stack>
+            </Formik>
           )}
           {paid && (
             <Flex alignItems="center" gap={2} color="fg.muted">

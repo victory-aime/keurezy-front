@@ -1,16 +1,20 @@
 'use client';
 
-import { Box, Field, Input, VStack } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
+import { Formik } from 'formik';
 import { useState } from 'react';
-import { BaseButton, BaseText } from '_components/custom';
+import { BaseButton, BaseText, FormTextInput } from '_components/custom';
 import { useAuthContext } from '_context/auth-context';
 import { useUserContext } from '_context/user-context';
 import { AgencyModule } from '_store/state-management';
 import { agencyCloseImpact } from '_utils/impact';
 import { UserRole } from '../../../../types/enum';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
-import { ExitFeedbackFields, hasExitFeedback } from '../../components/ExitFeedbackFields';
-import { MODELS } from '_types/*';
+import {
+  EXIT_FEEDBACK_INITIAL,
+  ExitFeedbackFields,
+  toExitFeedback,
+} from '../../components/ExitFeedbackFields';
 
 /**
  * Fermeture de l'agence, partagée par Sécurité (« Supprimer mon compte ») et Agence : l'impact
@@ -23,8 +27,6 @@ export const AgencyClosureControl = ({ label }: { label: string }) => {
   const isOwner = authUser?.role === UserRole.OWNER;
   const agencyId = user?.agencyId ?? '';
   const [open, setOpen] = useState(false);
-  const [confirmName, setConfirmName] = useState('');
-  const [feedback, setFeedback] = useState<MODELS.IExitFeedback>({});
 
   // Même clé de cache que la page Agence : la date programmée est partagée
   const { data: agency, refetch: refetchAgency } = AgencyModule.getAgencyInfo({
@@ -38,8 +40,6 @@ export const AgencyClosureControl = ({ label }: { label: string }) => {
 
   const close = () => {
     setOpen(false);
-    setConfirmName('');
-    setFeedback({});
   };
   const { mutateAsync: scheduleClose, isPending: scheduling } = AgencyModule.closeAgencyMutation({
     mutationOptions: {
@@ -89,35 +89,37 @@ export const AgencyClosureControl = ({ label }: { label: string }) => {
       <BaseButton colorType="danger" onClick={() => setOpen(true)}>
         {label}
       </BaseButton>
-      <ActionImpactDialog
-        isOpen={open}
-        onChange={(isOpen: boolean) => !isOpen && close()}
-        title="Fermer l’agence et supprimer le compte"
-        subject={agency?.name}
-        summary={impact ? agencyCloseImpact(impact) : undefined}
-        isLoadingImpact={impactLoading}
-        isSubmitting={scheduling}
-        confirmTitle="Programmer la fermeture"
-        confirmDisabled={!agency?.name || confirmName.trim() !== agency.name}
-        onConfirm={() =>
-          scheduleClose({
-            params: { agencyId, feedback: hasExitFeedback(feedback) ? feedback : undefined },
-          })
-        }
-      >
-        <Field.Root width="full">
-          <Field.Label>
-            Pour confirmer, saisissez le nom de l’agence : <strong>{agency?.name}</strong>
-          </Field.Label>
-          <Input
-            value={confirmName}
-            onChange={(event) => setConfirmName(event.target.value)}
-            autoComplete="off"
-            aria-label="Nom de l’agence"
-          />
-        </Field.Root>
-        <ExitFeedbackFields value={feedback} onChange={setFeedback} />
-      </ActionImpactDialog>
+      {/* Remonté à chaque ouverture : nom et questionnaire repartent de zéro */}
+      {open && (
+        <Formik
+          initialValues={{ confirmName: '', ...EXIT_FEEDBACK_INITIAL }}
+          onSubmit={(values) =>
+            scheduleClose({ params: { agencyId, feedback: toExitFeedback(values) } })
+          }
+        >
+          {({ values, handleSubmit }) => (
+            <ActionImpactDialog
+              isOpen
+              onChange={(isOpen: boolean) => !isOpen && close()}
+              title="Fermer l’agence et supprimer le compte"
+              subject={agency?.name}
+              summary={impact ? agencyCloseImpact(impact) : undefined}
+              isLoadingImpact={impactLoading}
+              isSubmitting={scheduling}
+              confirmTitle="Programmer la fermeture"
+              confirmDisabled={!agency?.name || values.confirmName.trim() !== agency.name}
+              onConfirm={() => handleSubmit()}
+            >
+              <FormTextInput
+                name="confirmName"
+                label={`Pour confirmer, saisissez le nom de l’agence : ${agency?.name ?? ''}`}
+                autoComplete="off"
+              />
+              <ExitFeedbackFields />
+            </ActionImpactDialog>
+          )}
+        </Formik>
+      )}
     </Box>
   );
 };

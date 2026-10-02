@@ -1,7 +1,9 @@
 'use client';
 
-import { Field, Flex, HStack, Input, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Flex, HStack, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Formik } from 'formik';
 import { useState } from 'react';
+import * as Yup from 'yup';
 import {
   BaseButton,
   BaseContainer,
@@ -11,6 +13,7 @@ import {
   ModalOpenProps,
   TextVariant,
   CustomSkeletonLoader,
+  FormTextInput,
 } from '_components/custom';
 import { useAuthContext } from '_context/auth-context';
 import { useUserContext } from '_context/user-context';
@@ -26,6 +29,17 @@ import { useFeatureGuard } from '../../../../hooks/useFeatureGuard';
 
 type Template = MODELS.IInvoiceTemplate;
 
+const SETTINGS_SCHEMA = Yup.object({
+  vatRate: Yup.number()
+    .transform((_, raw) => (raw === '' ? NaN : Number(String(raw).replace(',', '.'))))
+    .typeError('Indiquez un taux entre 0 et 100.')
+    .min(0, 'Indiquez un taux entre 0 et 100.')
+    .max(100, 'Indiquez un taux entre 0 et 100.'),
+  invoicePrefix: Yup.string()
+    .trim()
+    .matches(/^[A-Za-z0-9]{1,8}$/, '1 à 8 lettres ou chiffres, sans espace.'),
+});
+
 /** Réglages de facturation : TVA et préfixe des numéros (owner ; lecture seule pour le staff). */
 const InvoiceSettingsCard = ({
   agencyId,
@@ -38,57 +52,65 @@ const InvoiceSettingsCard = ({
   isOwner: boolean;
   onSaved: () => void;
 }) => {
-  const [vatRate, setVatRate] = useState(String(settings.vatRate));
-  const [prefix, setPrefix] = useState(settings.invoicePrefix);
   const { mutate: save, isPending } = AgencyModule.updateInvoiceSettingsMutation({
     mutationOptions: { onSuccess: onSaved },
   });
-  const vat = Number(vatRate.replace(',', '.'));
-  const vatValid = vatRate.trim() !== '' && vat >= 0 && vat <= 100;
-  const prefixValid = /^[A-Za-z0-9]{1,8}$/.test(prefix);
-  const changed = vat !== settings.vatRate || prefix.toUpperCase() !== settings.invoicePrefix;
 
   return (
-    <Stack gap={4} p={5} rounded="7px" borderWidth="1px" borderColor="border">
-      <Stack gap={0}>
-        <BaseText fontWeight="semibold">Réglages de facturation</BaseText>
-        <BaseText variant={TextVariant.S} color="fg.muted">
-          Appliqués aux nouvelles factures ; une facture émise garde ses réglages.
-        </BaseText>
-      </Stack>
-      <SimpleGrid columns={{ base: 1, sm: 2 }} gap={4}>
-        <Field.Root invalid={!vatValid} disabled={!isOwner}>
-          <Field.Label>Taux de TVA (%)</Field.Label>
-          <Input inputMode="decimal" value={vatRate} onChange={(e) => setVatRate(e.target.value)} />
-          <Field.HelperText>0 % : « TVA non applicable » sur la facture.</Field.HelperText>
-        </Field.Root>
-        <Field.Root invalid={!prefixValid} disabled={!isOwner}>
-          <Field.Label>Préfixe des numéros</Field.Label>
-          <Input
-            value={prefix}
-            maxLength={8}
-            onChange={(e) => setPrefix(e.target.value.toUpperCase())}
-          />
-          <Field.HelperText>
-            Ex. {prefix || 'FAC'}-{new Date().getFullYear()}-0001
-          </Field.HelperText>
-        </Field.Root>
-      </SimpleGrid>
-      {isOwner && (
-        <HStack justifyContent="flex-end">
-          <BaseButton
-            colorType="primary"
-            isLoading={isPending}
-            disabled={!changed || !vatValid || !prefixValid || isPending}
-            onClick={() =>
-              save({ payload: { vatRate: vat, invoicePrefix: prefix }, params: { agencyId } })
-            }
-          >
-            Enregistrer les réglages
-          </BaseButton>
-        </HStack>
+    <Formik
+      initialValues={{ vatRate: String(settings.vatRate), invoicePrefix: settings.invoicePrefix }}
+      validationSchema={SETTINGS_SCHEMA}
+      enableReinitialize
+      onSubmit={({ vatRate, invoicePrefix }) =>
+        save({
+          payload: {
+            vatRate: Number(vatRate.replace(',', '.')),
+            invoicePrefix: invoicePrefix.trim().toUpperCase(),
+          },
+          params: { agencyId },
+        })
+      }
+    >
+      {({ values, dirty, handleSubmit }) => (
+        <Stack gap={4} p={5} rounded="7px" borderWidth="1px" borderColor="border">
+          <Stack gap={0}>
+            <BaseText fontWeight="semibold">Réglages de facturation</BaseText>
+            <BaseText variant={TextVariant.S} color="fg.muted">
+              Appliqués aux nouvelles factures ; une facture émise garde ses réglages.
+            </BaseText>
+          </Stack>
+          <SimpleGrid columns={{ base: 1, sm: 2 }} gap={4}>
+            <FormTextInput
+              name="vatRate"
+              label="Taux de TVA (%)"
+              inputMode="decimal"
+              isDisabled={!isOwner}
+              infoMessage="0 % : « TVA non applicable » sur la facture."
+            />
+            <FormTextInput
+              name="invoicePrefix"
+              label="Préfixe des numéros"
+              maxLength={8}
+              textTransform="uppercase"
+              isDisabled={!isOwner}
+              infoMessage={`Ex. ${values.invoicePrefix.toUpperCase() || 'FAC'}-${new Date().getFullYear()}-0001`}
+            />
+          </SimpleGrid>
+          {isOwner && (
+            <HStack justifyContent="flex-end">
+              <BaseButton
+                colorType="primary"
+                isLoading={isPending}
+                disabled={!dirty || isPending}
+                onClick={() => handleSubmit()}
+              >
+                Enregistrer les réglages
+              </BaseButton>
+            </HStack>
+          )}
+        </Stack>
       )}
-    </Stack>
+    </Formik>
   );
 };
 

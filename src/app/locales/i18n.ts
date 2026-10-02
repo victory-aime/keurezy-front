@@ -9,6 +9,9 @@ i18n.use(initReactI18next).init({
   },
   lng: 'fr',
   fallbackLng: 'fr',
+  // Un seul espace de noms : un « : » dans un libellé passé tel quel (« Motif : … ») ne doit pas
+  // être lu comme un préfixe d'espace de noms (le texte serait tronqué)
+  nsSeparator: false,
   interpolation: {
     escapeValue: false,
   },

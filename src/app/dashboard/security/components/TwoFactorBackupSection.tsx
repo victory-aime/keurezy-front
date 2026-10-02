@@ -1,8 +1,9 @@
 'use client';
 
-import { Box, DownloadTrigger, Field, Input, SimpleGrid, VStack } from '@chakra-ui/react';
+import { Box, DownloadTrigger, SimpleGrid, VStack } from '@chakra-ui/react';
+import { Formik } from 'formik';
 import { useState } from 'react';
-import { BaseButton, BaseModal, BaseText, Icons } from '_components/custom';
+import { BaseButton, BaseModal, BaseText, FormTextInput, Icons } from '_components/custom';
 import { UserModule } from '_store/state-management';
 import { backupCodesRegenerateImpact } from '_utils/impact';
 import { handleApiError } from '_utils/handleApiError';
@@ -24,7 +25,6 @@ export const TwoFactorBackupSection = ({
   onAddPasskey: () => void;
 }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [password, setPassword] = useState('');
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [newCodes, setNewCodes] = useState<string[] | null>(null);
 
@@ -32,12 +32,9 @@ export const TwoFactorBackupSection = ({
   const remaining = data?.remaining ?? 0;
   const low = remaining <= LOW_CODES;
 
-  const closeConfirm = () => {
-    setConfirmOpen(false);
-    setPassword('');
-  };
+  const closeConfirm = () => setConfirmOpen(false);
 
-  const regenerate = async () => {
+  const regenerate = async (password: string) => {
     setIsRegenerating(true);
     const { data: result, error } = await authClient.twoFactor.generateBackupCodes({ password });
     setIsRegenerating(false);
@@ -97,27 +94,31 @@ export const TwoFactorBackupSection = ({
         </Box>
       )}
 
-      <ActionImpactDialog
-        isOpen={confirmOpen}
-        onChange={(open: boolean) => !open && closeConfirm()}
-        title="Régénérer les codes de secours"
-        summary={backupCodesRegenerateImpact(remaining)}
-        isSubmitting={isRegenerating}
-        confirmTitle="Régénérer"
-        confirmColor="primary"
-        confirmDisabled={!password}
-        onConfirm={regenerate}
-      >
-        <Field.Root width="full">
-          <Field.Label>Confirmez avec votre mot de passe</Field.Label>
-          <Input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            autoComplete="current-password"
-          />
-        </Field.Root>
-      </ActionImpactDialog>
+      {/* Remonté à chaque ouverture : le mot de passe ne reste pas en mémoire */}
+      {confirmOpen && (
+        <Formik initialValues={{ password: '' }} onSubmit={({ password }) => regenerate(password)}>
+          {({ values, handleSubmit }) => (
+            <ActionImpactDialog
+              isOpen={confirmOpen}
+              onChange={(open: boolean) => !open && closeConfirm()}
+              title="Régénérer les codes de secours"
+              summary={backupCodesRegenerateImpact(remaining)}
+              isSubmitting={isRegenerating}
+              confirmTitle="Régénérer"
+              confirmColor="primary"
+              confirmDisabled={!values.password}
+              onConfirm={() => handleSubmit()}
+            >
+              <FormTextInput
+                name="password"
+                type="password"
+                label="Confirmez avec votre mot de passe"
+                autoComplete="current-password"
+              />
+            </ActionImpactDialog>
+          )}
+        </Formik>
+      )}
 
       <BaseModal
         isOpen={!!newCodes}

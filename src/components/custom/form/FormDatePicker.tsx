@@ -28,6 +28,7 @@ export const FormDatePicker = memo(
     isDisabledPassDates,
     isDisabledWeekDates,
     minDate,
+    maxDate,
     ...rest
   }: FormDatePickerFieldProps) => {
     const { t } = useTranslation();
@@ -66,6 +67,7 @@ export const FormDatePicker = memo(
       [field.value],
     );
     const minSelectableDate = useMemo(() => (minDate ? parseDate(minDate) : undefined), [minDate]);
+    const maxSelectableDate = useMemo(() => (maxDate ? parseDate(maxDate) : undefined), [maxDate]);
     const bounds = useMemo(
       () => ({ min: parseDate(startMonth), max: parseDate(endMonth) }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,8 +81,9 @@ export const FormDatePicker = memo(
         (isDisabledPassDates
           ? disabledPastDates(date)
           : !!isDisabledWeekDates && disabledWeekends(date)) ||
-        (!!minSelectableDate && date.compare(minSelectableDate) < 0),
-      [isDisabledPassDates, isDisabledWeekDates, minSelectableDate],
+        (!!minSelectableDate && date.compare(minSelectableDate) < 0) ||
+        (!!maxSelectableDate && date.compare(maxSelectableDate) > 0),
+      [isDisabledPassDates, isDisabledWeekDates, minSelectableDate, maxSelectableDate],
     );
 
     const formatDate = useCallback((date: DateValue) => {

@@ -114,6 +114,8 @@ interface FormDatePickerFieldProps extends DatePickerRootProps {
   endMonth?: Date;
   /** Premier jour sélectionnable (AAAA-MM-JJ) : les jours antérieurs sont grisés, la navigation reste libre. */
   minDate?: string | null;
+  /** Dernier jour sélectionnable (AAAA-MM-JJ), ex. une date de paiement jamais future */
+  maxDate?: string | null;
   required?: boolean;
 }
 

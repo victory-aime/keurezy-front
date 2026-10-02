@@ -1,6 +1,8 @@
 'use client';
 
-import { Box, Field, Flex, Grid, Input, NativeSelect, Stack, Textarea } from '@chakra-ui/react';
+import { Box, createListCollection, Flex, Grid, Stack } from '@chakra-ui/react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import { useState } from 'react';
 import {
   BaseBadge,
@@ -14,6 +16,9 @@ import {
   TextVariant,
   ToastStatus,
   CustomSkeletonLoader,
+  FormDatePicker,
+  FormSelect,
+  FormTextArea,
 } from '_components/custom';
 import { AgencyModule } from '_store/state-management';
 import { ENUM, MODELS } from '_types/*';
@@ -40,6 +45,14 @@ const Money = ({ value }: { value: number }) => (
   <BaseFormatNumber value={value} currencyCode={ENUM.COMMON.Currency.XOF} />
 );
 
+const CANCEL_SCHEMA = Yup.object({
+  reason: Yup.string()
+    .trim()
+    .required('Indiquez le motif de l’annulation.')
+    .min(3, '3 caractères au moins.')
+    .max(500, 'Le motif ne doit pas dépasser 500 caractères.'),
+});
+
 const Row = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <Flex justifyContent="space-between" gap={4} alignItems="baseline">
     <BaseText as="dt" variant={TextVariant.S} color="fg.muted" flexShrink={0}>
@@ -51,75 +64,78 @@ const Row = ({ label, children }: { label: string; children: React.ReactNode }) 
   </Flex>
 );
 
+const PAYMENT_METHOD_LIST = createListCollection({ items: PAYMENT_METHODS });
+
 /** Paiement reçu : date (ni future, ni avant l'émission) et moyen. */
 const PayDialog = ({
   invoice,
-  open,
   onClose,
   onConfirm,
   isSubmitting,
 }: {
   invoice: MODELS.IInvoice;
-  open: boolean;
   onClose: () => void;
   onConfirm: (body: { paidAt: string; method: MODELS.InvoicePaymentMethod }) => void;
   isSubmitting: boolean;
 }) => {
   const today = isoDay();
   const min = invoice.issuedAt?.slice(0, 10);
-  const [paidAt, setPaidAt] = useState(today);
-  const [method, setMethod] = useState<MODELS.InvoicePaymentMethod>('BANK_TRANSFER');
-  const valid = !!paidAt && paidAt <= today && (!min || paidAt >= min);
+  const schema = Yup.object({
+    paidAt: Yup.string()
+      .required('Indiquez la date du paiement.')
+      .test(
+        'range',
+        `Entre l’émission (${min ? shortDate(min) : ''}) et aujourd’hui.`,
+        (v) => !!v && v.slice(0, 10) <= today && (!min || v.slice(0, 10) >= min),
+      ),
+    method: Yup.array().of(Yup.string()).min(1, 'Choisissez le moyen de paiement.'),
+  });
   return (
-    <BaseModal
-      isOpen={open}
-      onChange={((o: boolean) => !o && onClose()) as ModalOpenProps['onChange']}
-      title="Marquer comme payée"
-      icon={<Icons.Check />}
-      size="sm"
-      buttonCancelTitle="Annuler"
-      buttonSaveTitle="Enregistrer le paiement"
-      isLoading={isSubmitting}
-      saveDisabled={!valid}
-      onClick={() => valid && onConfirm({ paidAt, method })}
+    <Formik
+      initialValues={{ paidAt: today, method: ['BANK_TRANSFER'] as string[] }}
+      validationSchema={schema}
+      onSubmit={({ paidAt, method }) =>
+        onConfirm({
+          paidAt: paidAt.slice(0, 10),
+          method: method[0] as MODELS.InvoicePaymentMethod,
+        })
+      }
     >
-      <Stack gap={4}>
-        <BaseText variant={TextVariant.S}>
-          Facture {invoice.number} · <Money value={invoice.totals.ttc} />
-        </BaseText>
-        <Field.Root required invalid={!valid}>
-          <Field.Label>Date du paiement</Field.Label>
-          <Input
-            type="date"
-            value={paidAt}
-            max={today}
-            min={min}
-            onChange={(e) => setPaidAt(e.target.value)}
-          />
-          {!valid && (
-            <Field.ErrorText>
-              Entre l’émission ({min && shortDate(min)}) et aujourd’hui.
-            </Field.ErrorText>
-          )}
-        </Field.Root>
-        <Field.Root required>
-          <Field.Label>Moyen de paiement</Field.Label>
-          <NativeSelect.Root>
-            <NativeSelect.Field
-              value={method}
-              onChange={(e) => setMethod(e.target.value as MODELS.InvoicePaymentMethod)}
-            >
-              {PAYMENT_METHODS.map((m) => (
-                <option key={m.value} value={m.value}>
-                  {m.label}
-                </option>
-              ))}
-            </NativeSelect.Field>
-            <NativeSelect.Indicator />
-          </NativeSelect.Root>
-        </Field.Root>
-      </Stack>
-    </BaseModal>
+      {({ handleSubmit, setFieldValue }) => (
+        <BaseModal
+          isOpen
+          onChange={((o: boolean) => !o && onClose()) as ModalOpenProps['onChange']}
+          title="Marquer comme payée"
+          icon={<Icons.Check />}
+          size="sm"
+          buttonCancelTitle="Annuler"
+          buttonSaveTitle="Enregistrer le paiement"
+          isLoading={isSubmitting}
+          onClick={() => handleSubmit()}
+        >
+          <Stack gap={4}>
+            <BaseText variant={TextVariant.S}>
+              Facture {invoice.number} · <Money value={invoice.totals.ttc} />
+            </BaseText>
+            <FormDatePicker
+              required
+              name="paidAt"
+              label="Date du paiement"
+              minDate={min}
+              maxDate={today}
+            />
+            <FormSelect
+              required
+              name="method"
+              label="Moyen de paiement"
+              listItems={PAYMENT_METHOD_LIST}
+              setFieldValue={setFieldValue}
+              isClearable={false}
+            />
+          </Stack>
+        </BaseModal>
+      )}
+    </Formik>
   );
 };
 
@@ -146,7 +162,6 @@ export const InvoiceDetailDialog = ({
   // Lecture seule sans `manage_invoices` ; quota mensuel contrôlé avant d'ouvrir l'émission
   const canManage = usePermissions().hasPermission(AppPermissions.INVOICES.MANAGE);
   const { guard, limitModal } = useFeatureGuard('manage_invoices');
-  const [reason, setReason] = useState('');
   const { data: invoice, refetch } = AgencyModule.getInvoiceQueries({
     params: { agencyId, id: invoiceId ?? '' },
     queryOptions: { enabled: !!invoiceId, refetchOnMount: 'always' },
@@ -164,7 +179,6 @@ export const InvoiceDetailDialog = ({
       onSuccess: () => {
         const done = action;
         setAction(null);
-        setReason('');
         onChanged();
         if (done === 'delete') return onClose();
         refetch();
@@ -325,35 +339,39 @@ export const InvoiceDetailDialog = ({
             onConfirm={() => run()}
           />
           {invoice.number && (
-            <ActionImpactDialog
-              isOpen={action === 'cancel'}
-              onChange={closeAction}
-              title="Annuler cette facture"
-              subject={invoice.number}
-              summary={invoiceCancelImpact({
-                number: invoice.number,
-                ttc: invoice.totals.ttc,
-                paid: invoice.status === 'PAID',
-              })}
-              isSubmitting={isPending}
-              confirmTitle="Annuler la facture"
-              confirmDisabled={reason.trim().length < 3}
-              onConfirm={() => run({ reason: reason.trim() })}
+            <Formik
+              initialValues={{ reason: '' }}
+              validationSchema={CANCEL_SCHEMA}
+              onSubmit={({ reason }) => {
+                run({ reason: reason.trim() });
+              }}
             >
-              <Field.Root required>
-                <Field.Label>Motif de l’annulation</Field.Label>
-                <Textarea
-                  value={reason}
-                  maxLength={500}
-                  rows={3}
-                  placeholder="Ex. : montant erroné, facture remplacée"
-                  onChange={(e) => setReason(e.target.value)}
-                />
-                <Field.HelperText>
-                  Conservé avec la facture (3 caractères au moins).
-                </Field.HelperText>
-              </Field.Root>
-            </ActionImpactDialog>
+              {({ handleSubmit }) => (
+                <ActionImpactDialog
+                  isOpen={action === 'cancel'}
+                  onChange={closeAction}
+                  title="Annuler cette facture"
+                  subject={invoice.number!}
+                  summary={invoiceCancelImpact({
+                    number: invoice.number!,
+                    ttc: invoice.totals.ttc,
+                    paid: invoice.status === 'PAID',
+                  })}
+                  isSubmitting={isPending}
+                  confirmTitle="Annuler la facture"
+                  onConfirm={() => handleSubmit()}
+                >
+                  <FormTextArea
+                    required
+                    name="reason"
+                    label="Motif de l’annulation"
+                    placeholder="Ex. : montant erroné, facture remplacée"
+                    helperMessage="Conservé avec la facture (3 caractères au moins)."
+                    maxCharacters={500}
+                  />
+                </ActionImpactDialog>
+              )}
+            </Formik>
           )}
           {action === 'send' && (
             <InvoiceSendDialog
@@ -366,7 +384,6 @@ export const InvoiceDetailDialog = ({
           {action === 'pay' && (
             <PayDialog
               invoice={invoice}
-              open
               onClose={() => setAction(null)}
               onConfirm={(body) => run(body)}
               isSubmitting={isPending}

@@ -87,9 +87,7 @@ const FormTextArea: FC<FormTextAreaProps> = ({
       {infoMessage || helperMessage ? (
         <Flex p={1} gap={2}>
           <HiOutlineInformationCircle size={18} color={isError ? 'red' : 'none'} />
-          <Field.HelperText>
-            {infoMessage ? infoMessage : helperMessage ? null : ''}
-          </Field.HelperText>
+          <Field.HelperText>{t(infoMessage || helperMessage || '')}</Field.HelperText>
         </Flex>
       ) : null}
       {isError && (

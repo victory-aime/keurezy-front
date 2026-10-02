@@ -1,4 +1,5 @@
 'use client';
+import { Formik } from 'formik';
 
 import { Flex } from '@chakra-ui/react';
 import { useState } from 'react';
@@ -15,7 +16,11 @@ import { MODELS } from '_types/*';
 import { subscriptionCancelImpact } from '_utils/impact';
 import { ActionImpactDialog } from '../../components/ActionImpactDialog';
 import { isFreePlan } from '_utils/subscription';
-import { ExitFeedbackFields, hasExitFeedback } from '../../components/ExitFeedbackFields';
+import {
+  EXIT_FEEDBACK_INITIAL,
+  ExitFeedbackFields,
+  toExitFeedback,
+} from '../../components/ExitFeedbackFields';
 
 type Subscription = NonNullable<MODELS.IAgencySubscriptionOverview['subscription']>;
 
@@ -37,12 +42,10 @@ export const CancelSubscription = ({
   onChanged,
 }: CancelSubscriptionProps) => {
   const [open, setOpen] = useState(false);
-  const [feedback, setFeedback] = useState<MODELS.IExitFeedback>({});
   const [step, setStep] = useState<'impact' | 'feedback'>('impact');
   const closeDialog = () => {
     setOpen(false);
     setStep('impact');
-    setFeedback({});
   };
 
   const { data: impact, isLoading: impactLoading } =
@@ -118,25 +121,34 @@ export const CancelSubscription = ({
         onConfirm={() => setStep('feedback')}
       />
       {/* Étape 2 : questionnaire facultatif, puis résiliation */}
-      <BaseModal
-        isOpen={open && step === 'feedback'}
-        onChange={onDialogChange}
-        title="Avant de partir"
-        description="Étape 2 sur 2 · Facultatif : vos réponses nous aident à nous améliorer."
-        size="md"
-        icon={<Icons.Chat />}
-        buttonCancelTitle=""
-        buttonRejectTitle="Passer et résilier"
-        colorRejectButton="neutral"
-        onReject={() => confirmCancel(undefined)}
-        buttonSaveTitle="Envoyer et résilier"
-        colorSaveButton="danger"
-        saveDisabled={!hasExitFeedback(feedback)}
-        onClick={() => confirmCancel(feedback)}
-        isLoading={cancelling}
-      >
-        <ExitFeedbackFields value={feedback} onChange={setFeedback} />
-      </BaseModal>
+      {open && step === 'feedback' && (
+        <Formik
+          initialValues={EXIT_FEEDBACK_INITIAL}
+          onSubmit={(values) => confirmCancel(toExitFeedback(values))}
+        >
+          {({ values, handleSubmit }) => (
+            <BaseModal
+              isOpen
+              onChange={onDialogChange}
+              title="Avant de partir"
+              description="Étape 2 sur 2 · Facultatif : vos réponses nous aident à nous améliorer."
+              size="md"
+              icon={<Icons.Chat />}
+              buttonCancelTitle=""
+              buttonRejectTitle="Passer et résilier"
+              colorRejectButton="neutral"
+              onReject={() => confirmCancel(undefined)}
+              buttonSaveTitle="Envoyer et résilier"
+              colorSaveButton="danger"
+              saveDisabled={!toExitFeedback(values)}
+              onClick={() => handleSubmit()}
+              isLoading={cancelling}
+            >
+              <ExitFeedbackFields />
+            </BaseModal>
+          )}
+        </Formik>
+      )}
     </>
   );
 };

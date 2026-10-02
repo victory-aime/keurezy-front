@@ -1,10 +1,11 @@
 'use client';
 
-import { Box, Flex, Input, InputGroup } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
+import { Formik } from 'formik';
 import { useEffect, useMemo, useState } from 'react';
 import { ChatModule } from '_store/state-management';
 import { useUserContext } from '_context/user-context';
-import { Icons, BaseText } from '_components/custom';
+import { Icons, BaseText, FormTextInput } from '_components/custom';
 import { Avatar } from '_components/ui/avatar';
 import { useThemeColors } from '_theme/useThemeColors';
 import { formatConversationDate } from 'rise-core-frontend';
@@ -72,16 +73,18 @@ export function ConversationList({ activeConversationId, onSelect }: Conversatio
           </BaseText>
         </Flex>
 
-        <InputGroup startElement={<Icons.Search size={16} />}>
-          <Input
-            size="sm"
-            borderRadius="10px"
+        <Formik initialValues={{ search }} onSubmit={() => undefined}>
+          <FormTextInput
+            name="search"
+            type="search"
             placeholder="Client ou bien…"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
             aria-label="Rechercher une conversation"
+            leftAccessory={<Icons.Search size={16} />}
+            onChangeFunction={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setSearch(event.target.value)
+            }
           />
-        </InputGroup>
+        </Formik>
 
         <Flex gap={2} role="radiogroup">
           {(
