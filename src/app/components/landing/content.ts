@@ -7,7 +7,12 @@ import { Icons, NavIcons } from '_components/custom';
  * aucun chiffre inventé, aucun avis client (voir docs/landing-redesign/proposition.md).
  */
 
-export const ANCHORS = { features: 'fonctionnalites', pricing: 'tarifs', faq: 'faq' } as const;
+export const ANCHORS = {
+  video: 'video',
+  features: 'fonctionnalites',
+  pricing: 'tarifs',
+  faq: 'faq',
+} as const;
 
 export const TRUST_ITEMS: { icon: IconType; label: string }[] = [
   { icon: Icons.Wallet, label: 'Wave, Orange Money, Mobile Money' },

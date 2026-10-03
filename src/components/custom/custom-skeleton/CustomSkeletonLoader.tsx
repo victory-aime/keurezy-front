@@ -40,7 +40,7 @@ export const CustomSkeletonLoader: FunctionComponent<CustomSkeletonLoaderProps> 
   const PacksCard = (
     <SimpleGrid columns={{ base: 2, sm: 4 }} width="full">
       {Array.from({ length: tableRows }, (_, i) => (
-        <Skeleton borderRadius="7px" height={height} variant={variant} />
+        <Skeleton key={`pack-${i}`} borderRadius="7px" height={height} variant={variant} />
       ))}
     </SimpleGrid>
   );

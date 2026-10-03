@@ -24,7 +24,7 @@ import { getAppNotifPreference } from '../../../helpers/push-notif';
 export const ProfileInfo = () => {
   const { t } = useTranslation();
   const { session } = useAuthContext();
-  const { colorMode, setColorMode } = useColorMode();
+  const { colorPreference, setColorMode } = useColorMode();
   const { primaryColor } = useAppTheme();
   const { enableNotifications, disableNotifications, isPending } = usePushNotificationsContext();
   const [enabled, setEnabled] = useState(
@@ -62,7 +62,7 @@ export const ProfileInfo = () => {
         email: currentUser?.email,
         id: currentUser?.id,
         theme_color: themeColor!,
-        theme_mode: colorMode,
+        theme_mode: colorPreference,
       },
     });
   };
@@ -85,7 +85,7 @@ export const ProfileInfo = () => {
         twoFactorEnabled: currentUser?.twoFactorEnabled,
         status: currentUser?.status ?? ENUM.COMMON.Status.ACTIVE,
       });
-      setColorMode((currentUser?.theme_mode as ColorMode) ?? colorMode);
+      setColorMode((currentUser?.theme_mode as ColorMode) ?? colorPreference);
     }
     if (currentUser?.theme_color) {
       setThemeColor(currentUser?.theme_color);
@@ -172,7 +172,7 @@ export const ProfileInfo = () => {
               >
                 <AppearanceThemeSelector
                   themeColor={currentColor}
-                  initialMode={colorMode}
+                  initialMode={colorPreference}
                   onChange={(color) => setColorMode(color)}
                 />
               </ProfileForm>

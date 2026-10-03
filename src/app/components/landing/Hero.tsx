@@ -116,9 +116,14 @@ export const Hero = () => (
                 Créer mon agence gratuitement
               </BaseButton>
             </Link>
-            <Link href={`#${ANCHORS.pricing}`}>
-              <BaseButton size="lg" variant="outline" width={{ base: 'full', sm: 'auto' }}>
-                Voir les offres
+            <Link href={`#${ANCHORS.video}`}>
+              <BaseButton
+                size="lg"
+                variant="outline"
+                width={{ base: 'full', sm: 'auto' }}
+                leftIcon={<Icons.VoicePlay aria-hidden />}
+              >
+                Voir la vidéo · 20 s
               </BaseButton>
             </Link>
           </Flex>

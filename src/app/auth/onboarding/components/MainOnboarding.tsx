@@ -11,11 +11,11 @@ import {
   GlobalLoader,
   Icons,
   TextVariant,
+  BrandLogo,
 } from '_components/custom';
 import { useRouter } from 'next/navigation';
 import { StepUserAccount } from './StepUserAccount';
 import { StepBusiness } from './StepBusiness';
-import { ASSETS } from '_assets/images';
 import { APP_ROUTES } from '_config/routes';
 import { ENUM, MODELS } from '_types/*';
 import { OnboardFinish } from './FinalStep';
@@ -36,10 +36,8 @@ import {
 } from '../constants/onboard';
 import { StorageKey } from '_constants/StorageKeys';
 import { MotionBox } from '_constants/motion';
-import { useColorMode } from '_components/ui/color-mode';
 import { StepPlanSelection } from './StepPlanSelection';
 import { useAgencyCheck } from '_context/agency-context';
-import Image from 'next/image';
 import Link from 'next/link';
 import { clientRedirect } from '_utils/client-navigate';
 import { isFreePlan } from '_utils/subscription';
@@ -63,7 +61,6 @@ export const MainOnboarding = ({
   payment?: string;
 }) => {
   const { isCheckingName, nameAlreadyExists } = useAgencyCheck();
-  const { colorMode } = useColorMode();
   const navigate = useRouter();
   const {
     data: session,
@@ -404,12 +401,7 @@ export const MainOnboarding = ({
         >
           <Flex maxW="6xl" mx="auto" px={4} h="64px" align="center" justify="space-between">
             <Link href={APP_ROUTES.ROOT}>
-              <Image
-                src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
-                alt="logo"
-                width={180}
-                height={180}
-              />
+              <BrandLogo width={160} priority alt="Keurezy, retour à l’accueil" />
             </Link>
 
             <HStack gap={4}>

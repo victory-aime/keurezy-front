@@ -28,6 +28,7 @@
     "@better-auth/passkey": "~1.6.33",
     "@chakra-ui/charts": "^3.33.0",
     "@chakra-ui/react": "^3.33.0",
+    "@emotion/cache": "11.14.0",
     "@emotion/react": "^11.14.0",
     "@serwist/next": "^9.5.11",
     "axios": "1.20.0",

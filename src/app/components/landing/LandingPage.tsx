@@ -9,6 +9,7 @@ import { Hero } from './Hero';
 import { MobileApp } from './MobileApp';
 import { Audiences, BeforeAfter, TrustStrip } from './Positioning';
 import { VerifiedAgency } from './VerifiedAgency';
+import { VideoSection } from './VideoSection';
 
 /** Page d'accueil (structure : docs/landing-redesign/proposition.md). */
 export const LandingPage = () => (
@@ -17,6 +18,7 @@ export const LandingPage = () => (
     <UserLayout flush>
       <Hero />
       <TrustStrip />
+      <VideoSection />
       <Audiences />
       <BeforeAfter />
       <Features />

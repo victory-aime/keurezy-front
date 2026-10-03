@@ -1,10 +1,8 @@
 'use client';
 
 import { Box, Flex, useBreakpointValue } from '@chakra-ui/react';
-import { BaseButton, BaseTooltip, Icons } from '_components/custom';
+import { BaseButton, BaseTooltip, Icons, BrandLogo } from '_components/custom';
 import { MobileSidebar } from './components/MobileSidebar';
-import { ASSETS } from '_assets/images';
-import Image from 'next/image';
 import { SideBarProps } from './types';
 import {
   PropertyModule,
@@ -200,16 +198,7 @@ export const Sidebar = ({
             borderBottom="1px solid"
             borderColor={colorMode === 'light' ? 'gray.200' : 'gray.900'}
           >
-            <Image
-              src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
-              alt="logo"
-              width={200}
-              height={200}
-              style={{
-                width: 'auto',
-                height: 'auto',
-              }}
-            />
+            <BrandLogo width={170} priority />
           </Flex>
 
           {/* LINKS */}

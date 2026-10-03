@@ -17,6 +17,10 @@ export function ColorModeProvider(props: ColorModeProviderProps) {
       defaultTheme="system"
       enableColorScheme
       enableSystem
+      // React 19 avertit quand un <script> est rendu côté client. Le script anti-flash n'est utile
+      // qu'au rendu serveur : côté client il devient inerte (le type diffère, mais next-themes
+      // pose suppressHydrationWarning sur la balise).
+      scriptProps={{ type: typeof window === 'undefined' ? 'text/javascript' : 'text/plain' }}
       {...props}
     />
   );
@@ -25,19 +29,36 @@ export function ColorModeProvider(props: ColorModeProviderProps) {
 export type ColorMode = 'light' | 'dark' | 'system';
 
 export interface UseColorModeReturn {
+  /** Thème réellement appliqué (« light » ou « dark »), jamais « system » */
   colorMode: ColorMode;
+  /** Choix de l'utilisateur, « system » compris (sélecteur d'apparence) */
+  colorPreference: ColorMode;
   resolvedColorMode: string;
   setColorMode: (colorMode: ColorMode) => void;
   toggleColorMode: () => void;
 }
 
+/** `true` après le premier rendu côté navigateur (le thème appliqué n'est pas connu du serveur). */
+const subscribeNoop = () => () => {};
+const useHydrated = () =>
+  React.useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
+
 export function useColorMode(): UseColorModeReturn {
   const { resolvedTheme, theme, setTheme } = useTheme();
+  const hydrated = useHydrated();
   const toggleColorMode = () => {
     setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
   };
   return {
-    colorMode: theme as ColorMode,
+    // Thème réellement appliqué (`theme` vaut « system » quand l'utilisateur suit son appareil).
+    // Avant l'hydratation, valeur fixe identique au rendu serveur : pas d'écart d'hydratation.
+    // Pour un style, préférer `_dark` / les jetons du thème, appliqués sans attendre le JS.
+    colorMode: (hydrated ? (resolvedTheme ?? 'light') : 'light') as ColorMode,
+    colorPreference: (hydrated ? (theme ?? 'system') : 'system') as ColorMode,
     resolvedColorMode: resolvedTheme as 'light' | 'dark',
     setColorMode: setTheme,
     toggleColorMode,

@@ -33,11 +33,18 @@ const PropertyPhoto = ({ variant = 'sea' }: { variant?: 'sea' | 'villa' }) => (
       </linearGradient>
     </defs>
     <rect width="320" height="180" fill={`url(#sky-${variant})`} />
+    <g fill="#ffffff" opacity="0.8">
+      <ellipse cx="200" cy="30" rx="22" ry="7" />
+      <ellipse cx="215" cy="26" rx="14" ry="7" />
+      <ellipse cx="110" cy="22" rx="16" ry="5" />
+    </g>
     <circle cx={variant === 'sea' ? 262 : 70} cy="42" r="18" fill="#ffe08a" opacity="0.9" />
     {variant === 'sea' ? (
       <>
         <rect y="132" width="320" height="48" fill="#3a9bd5" />
         <rect y="132" width="320" height="4" fill="#ffffff" opacity="0.5" />
+        <rect y="150" width="320" height="30" fill="#e9d8b4" />
+        <ellipse cx="160" cy="152" rx="120" ry="4" fill="#000000" opacity="0.12" />
         <rect x="70" y="40" width="120" height="112" rx="3" fill="#f4efe6" />
         <rect x="70" y="40" width="120" height="10" fill="#e3d9c8" />
         {[0, 1, 2, 3].map((row) =>
@@ -106,6 +113,37 @@ const PhoneFrame = ({ children, ...rest }: { children: ReactNode } & BoxProps) =
     aria-hidden
     {...rest}
   >
+    {/* Boutons latéraux : volume à gauche, verrouillage à droite */}
+    {[
+      { side: 'left', top: '110px', h: '26px' },
+      { side: 'left', top: '150px', h: '44px' },
+      { side: 'left', top: '204px', h: '44px' },
+      { side: 'right', top: '160px', h: '64px' },
+    ].map((button) => (
+      <Box
+        key={`${button.side}-${button.top}`}
+        position="absolute"
+        top={button.top}
+        {...{ [button.side]: '-3px' }}
+        w="3px"
+        h={button.h}
+        rounded="2px"
+        bg="gray.700"
+      />
+    ))}
+    {/* Reflet sur la vitre */}
+    <Box
+      position="absolute"
+      inset="9px"
+      rounded="38px"
+      pointerEvents="none"
+      zIndex={3}
+      bgGradient="to-br"
+      gradientFrom="whiteAlpha.200"
+      gradientVia="transparent"
+      gradientTo="transparent"
+      opacity={0.5}
+    />
     <Box
       position="relative"
       height="full"
@@ -166,7 +204,7 @@ const PhoneFrame = ({ children, ...rest }: { children: ReactNode } & BoxProps) =
 );
 
 const Tiny = ({ children, ...rest }: { children: ReactNode } & BoxProps) => (
-  <BaseText fontSize="10px" lineHeight="1.3" {...rest}>
+  <BaseText fontSize="10px" lineHeight="short" {...rest}>
     {children}
   </BaseText>
 );
@@ -476,6 +514,126 @@ const ChatScreen = () => (
   </Flex>
 );
 
+/** Août 2026 commence un samedi (index 5, semaine du lundi au dimanche). */
+const AUGUST_OFFSET = 5;
+const BOOKED = [5, 6, 7, 8, 9, 10];
+const SELECTED = [12, 13, 14, 15];
+
+/** Écran 3 : réservation, avec les dates déjà prises bloquées. */
+const BookingScreen = () => (
+  <Flex direction="column" flex={1} minH={0}>
+    <HStack gap="8px" px="14px" py="8px">
+      <Box color="fg.muted">
+        <Icons.ChevronLeft size={16} />
+      </Box>
+      <BaseText fontSize="13px" fontWeight="bold" flex={1}>
+        Réserver
+      </BaseText>
+      <Circle size="26px" bg="bg.muted" color="red.500">
+        <Icons.Heart size={12} />
+      </Circle>
+    </HStack>
+
+    <HStack gap="8px" mx="14px" p="8px" rounded="12px" borderWidth="1px" borderColor="border">
+      <Box w="46px" h="38px" rounded="8px" overflow="hidden" flexShrink={0}>
+        <PropertyPhoto />
+      </Box>
+      <Stack gap={0} minW={0} flex={1}>
+        <Tiny fontWeight="semibold" truncate>
+          Appartement F3 vue mer
+        </Tiny>
+        <HStack gap="3px">
+          <Tiny color="fg.muted">Keur Immo</Tiny>
+          <VerifiedMark />
+        </HStack>
+      </Stack>
+      <Tiny fontWeight="bold" color="primary.fg">
+        45 000 XOF
+      </Tiny>
+    </HStack>
+
+    <Stack gap="6px" px="14px" pt="12px" flex={1} minH={0}>
+      <Flex justifyContent="space-between" alignItems="center">
+        <BaseText fontSize="12px" fontWeight="bold">
+          Août 2026
+        </BaseText>
+        <HStack gap="6px" color="fg.muted">
+          <Icons.ChevronLeft size={12} />
+          <Icons.ChevronRight size={12} />
+        </HStack>
+      </Flex>
+      <Grid templateColumns="repeat(7, 1fr)" rowGap="4px" textAlign="center">
+        {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((day, index) => (
+          <Tiny key={index} color="fg.subtle" fontWeight="semibold">
+            {day}
+          </Tiny>
+        ))}
+        {Array.from({ length: AUGUST_OFFSET }, (_, index) => (
+          <Box key={`empty-${index}`} />
+        ))}
+        {Array.from({ length: 31 }, (_, index) => {
+          const day = index + 1;
+          const booked = BOOKED.includes(day);
+          const selected = SELECTED.includes(day);
+          const edge = day === SELECTED[0] || day === SELECTED[SELECTED.length - 1];
+          return (
+            <Flex
+              key={day}
+              justifyContent="center"
+              bg={selected && !edge ? 'primary.subtle' : undefined}
+            >
+              <Circle
+                size="24px"
+                fontSize="10px"
+                fontWeight={selected ? 'bold' : 'medium'}
+                bg={edge ? 'primary.solid' : undefined}
+                color={
+                  edge ? 'primary.contrast' : booked ? 'fg.subtle' : selected ? 'primary.fg' : 'fg'
+                }
+                textDecoration={booked ? 'line-through' : undefined}
+              >
+                {day}
+              </Circle>
+            </Flex>
+          );
+        })}
+      </Grid>
+      <HStack gap="10px" pt="2px">
+        <HStack gap="4px">
+          <Circle size="7px" bg="primary.solid" />
+          <Tiny color="fg.muted">Vos dates</Tiny>
+        </HStack>
+        <HStack gap="4px">
+          <Tiny color="fg.subtle" textDecoration="line-through">
+            12
+          </Tiny>
+          <Tiny color="fg.muted">Déjà réservé</Tiny>
+        </HStack>
+      </HStack>
+    </Stack>
+
+    <Stack gap="8px" px="14px" pt="8px" pb="22px" borderTopWidth="1px" borderColor="border">
+      <Flex justifyContent="space-between" alignItems="baseline">
+        <Tiny color="fg.muted">3 nuits · 12 → 15 août</Tiny>
+        <BaseText fontSize="13px" fontWeight="bold">
+          135 000 XOF
+        </BaseText>
+      </Flex>
+      <Flex
+        justifyContent="center"
+        py="9px"
+        rounded="12px"
+        bg="primary.solid"
+        color="primary.contrast"
+        fontSize="11px"
+        fontWeight="semibold"
+      >
+        Demander la réservation
+      </Flex>
+    </Stack>
+  </Flex>
+);
+
 const StoreButton = ({ store, caption }: { store: string; caption: string }) => (
   <HStack
     gap={3}
@@ -504,7 +662,7 @@ const StoreButton = ({ store, caption }: { store: string; caption: string }) => 
 export const MobileApp = () => (
   <LandingSection muted overflow="hidden">
     <Grid
-      templateColumns={{ base: '1fr', lg: '1fr 1.2fr' }}
+      templateColumns={{ base: '1fr', xl: '0.8fr 1.2fr' }}
       gap={{ base: 10, lg: 12 }}
       alignItems="center"
     >
@@ -537,31 +695,39 @@ export const MobileApp = () => (
       </Box>
 
       <Reveal>
-        <Flex
-          justifyContent="center"
-          alignItems="flex-start"
-          position="relative"
-          minH={{ lg: '600px' }}
-          pt={{ lg: 4 }}
-        >
+        <Flex justifyContent="center" alignItems="flex-start" position="relative" pt={{ lg: 4 }}>
+          {/* Réservation, à gauche, en retrait */}
+          <MotionBox
+            display={{ base: 'none', md: 'block' }}
+            mr="-72px"
+            mt="56px"
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+          >
+            <PhoneFrame transform="rotate(-5deg) scale(0.88)" transformOrigin="right center">
+              <BookingScreen />
+            </PhoneFrame>
+          </MotionBox>
+          {/* Recherche, au centre, au premier plan */}
           <MotionBox
             position="relative"
             zIndex={1}
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <PhoneFrame>
+            <PhoneFrame shadow="0 40px 80px -24px rgba(0,0,0,0.55)">
               <SearchScreen />
             </PhoneFrame>
           </MotionBox>
+          {/* Messagerie, à droite, en retrait */}
           <MotionBox
             display={{ base: 'none', md: 'block' }}
-            ml="-24px"
-            mt="44px"
+            ml="-72px"
+            mt="56px"
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
           >
-            <PhoneFrame transform="rotate(4deg)">
+            <PhoneFrame transform="rotate(5deg) scale(0.88)" transformOrigin="left center">
               <ChatScreen />
             </PhoneFrame>
           </MotionBox>

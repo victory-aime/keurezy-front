@@ -3,12 +3,9 @@
 import { Center, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { ReactNode } from 'react';
-import Image from 'next/image';
-import { ASSETS } from '_assets/images';
 import { motion } from 'framer-motion';
 import { MotionBox, MotionVStack } from '_constants/motion';
-import { useColorMode } from '_components/ui/color-mode';
-import { FloatSwitchColorMode, BaseText } from '_components/custom';
+import { FloatSwitchColorMode, BaseText, BrandLogo } from '_components/custom';
 import { AnimatedCheckmark } from '../onboarding/components/AnimatedCheck';
 
 export const AuthBoxContainer = ({
@@ -24,7 +21,6 @@ export const AuthBoxContainer = ({
   withAnimatedCheckmark?: boolean;
   animatedType?: 'success' | 'error';
 }) => {
-  const { colorMode } = useColorMode();
   const { t } = useTranslation();
 
   return (
@@ -58,13 +54,7 @@ export const AuthBoxContainer = ({
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.4 }}
           >
-            <Image
-              src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
-              width={220}
-              height={220}
-              loading={'lazy'}
-              alt="logo"
-            />
+            <BrandLogo width={220} priority />
           </motion.div>
 
           <BaseText fontSize="xl" textAlign="center">

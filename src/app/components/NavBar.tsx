@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { BaseButton, BaseIconButton, BaseText, Icons } from '_components/custom';
+import { BaseButton, BaseIconButton, BaseText, Icons, BrandLogo } from '_components/custom';
 import { Box, Flex, Stack, Container, useBreakpointValue } from '@chakra-ui/react';
-import Image from 'next/image';
-import { ASSETS } from '_assets/images';
 import { useRouter } from 'next/navigation';
 import { APP_ROUTES } from '_config/routes';
 import { MotionBox } from '_constants/motion';
-import { useColorMode } from '_components/ui/color-mode';
 import { ANCHORS } from './landing/content';
 
 /** Ancres de la page d'accueil (préfixées par « / » pour fonctionner depuis les autres pages publiques). */
@@ -18,7 +15,6 @@ const NAV_LINKS = [
   { href: `/#${ANCHORS.faq}`, label: 'FAQ' },
 ];
 export const Navbar = () => {
-  const { colorMode } = useColorMode();
   const router = useRouter();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isOpen, setIsOpen] = useState(false);
@@ -43,12 +39,7 @@ export const Navbar = () => {
       >
         <Flex alignItems={'center'} justifyContent={'space-between'} width={'full'}>
           <Link href={APP_ROUTES.ROOT}>
-            <Image
-              src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
-              alt="Keurezy, retour à l’accueil"
-              width={200}
-              height={200}
-            />
+            <BrandLogo width={170} priority alt="Keurezy, retour à l’accueil" />
           </Link>
 
           <Flex

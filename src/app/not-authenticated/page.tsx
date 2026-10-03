@@ -1,20 +1,22 @@
 'use client';
 
 import { Card, Center, Flex, VStack } from '@chakra-ui/react';
-import Image from 'next/image';
-import { BaseButton, BaseIcon, BaseText, FloatSwitchColorMode } from '_components/custom';
+import {
+  BaseButton,
+  BaseIcon,
+  BaseText,
+  FloatSwitchColorMode,
+  BrandLogo,
+} from '_components/custom';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
 import { VariablesColors } from '_theme/variables';
 import { FaLock } from 'react-icons/fa6';
 import { APP_ROUTES } from '_config/routes';
-import { ASSETS } from '_assets/images';
-import { useColorMode } from '_components/ui/color-mode';
 import { hexToRGB } from '_theme/colors';
 import Link from 'next/link';
 
 export default function UnauthorizedPage() {
-  const { colorMode } = useColorMode();
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -22,12 +24,7 @@ export default function UnauthorizedPage() {
     <Flex direction="column" minH="100vh">
       <Flex width={'full'} p={4} justifyContent={'space-between'}>
         <Link href={APP_ROUTES.ROOT}>
-          <Image
-            src={colorMode === 'light' ? ASSETS.LOGO : ASSETS.LOGO_DARK}
-            width={200}
-            height={200}
-            alt="logo"
-          />
+          <BrandLogo width={200} priority alt="Keurezy, retour à l’accueil" />
         </Link>
 
         <BaseButton

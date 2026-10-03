@@ -30,3 +30,4 @@ export * from './tag';
 export * from './radio';
 export * from './utils';
 export * from './agenda';
+export * from './logo';

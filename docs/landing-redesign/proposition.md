@@ -171,3 +171,53 @@ Les cinq lots ont été livrés ensemble.
 ### À faire de ton côté
 - Compléter dans la politique de confidentialité l'identité de l'éditeur et l'adresse de contact, puis la faire relire, comme les CGU.
 - Remplacer les maquettes mobiles par de vraies captures et activer les liens des stores à la publication de l'application.
+
+## Itération 2 (2026-10-03)
+### Corrections
+- [x] **Hydratation.** Les deux causes sont corrigées.
+  - **Styles Emotion écrits en ligne pendant le rendu serveur.** Un registre Emotion (`components/ui/emotion-registry.tsx`) collecte désormais les styles et les injecte dans le `<head>`. Cela demande `@emotion/cache`, ajouté en dépendance directe : même version, déjà présente via `@emotion/react`.
+  - **`<script>` de next-themes rendu côté client avec React 19.** Côté client, il devient inerte (`type="text/plain"`).
+- [x] **Thème clair ou sombre.** `useColorMode().colorMode` renvoyait `"system"` quand l'utilisateur suit son appareil. Les 40 comparaisons `colorMode === 'light'` se trompaient alors, d'où par exemple le mauvais logo.
+  - Le hook renvoie maintenant le thème appliqué, avec une valeur fixe jusqu'à l'hydratation pour éviter tout écart serveur/client.
+  - `colorPreference` garde le choix brut (`system` compris), pour le sélecteur d'apparence du profil.
+- [x] **Logos.** Nouveau composant `BrandLogo` dans `components/custom`, utilisé aux 5 endroits.
+  - Les deux versions du logo sont rendues et la bonne est choisie en CSS (`_dark`), avec ses vraies proportions.
+- [x] **Clés manquantes** dans `CustomSkeletonLoader`.
+- [x] **Code mort supprimé** : `FloatContactUs`, `ThinkBoxModal`, `onboarding/constants/style.ts`.
+
+### Maquettes
+- [x] **Tableau de bord**, partagé avec l'onboarding avec la même API. Il reprend l'écran réel :
+  - navigation par groupes (Accueil, Patrimoine, Activité, Facturation) ;
+  - indicateurs Propriétés, Revenus du mois, Taux d'occupation, Réservations ;
+  - courbe des revenus mensuels animée ;
+  - occupation par type ;
+  - activité récente.
+- [x] **Application mobile** : trois écrans au lieu de deux.
+  - Recherche au premier plan, réservation à gauche, messagerie à droite.
+  - L'écran de réservation montre un calendrier d'août 2026 : dates réservées barrées, séjour choisi, total, « Demander la réservation ».
+  - Châssis plus réaliste : boutons latéraux, reflet de la vitre, illustrations enrichies.
+
+### Vidéo motion design
+- [x] **`PromoVideo`** : 9:16, 19,5 s, animée en code (aucun fichier à charger), aux couleurs de la charte (violet #673AB6, or #E7B008, turquoise #00B3A8) et avec le vrai logo.
+- [x] **Sept scènes** : logo et promesse ; le problème (Excel, WhatsApp, carnets, Word) ; biens et annonces ; réservations sans double location ; prospects et messagerie ; paiement Wave, Orange Money, Mobile Money et factures ; CTA « Créer mon agence gratuitement ».
+- [x] **Lecteur** :
+  - lecture automatique à l'apparition, sauf si l'utilisateur a choisi de réduire les animations ;
+  - pause, reprise et « Rejouer » ;
+  - progression par scène, façon story.
+- [x] **Section « Keurezy, c'est quoi ? »** placée sous la bande factuelle, et bouton « Voir la vidéo · 20 s » dans le hero.
+- [x] **Route `/promo`** (non indexée) : la vidéo seule, plein écran, sans commandes, à enregistrer pour les réseaux sociaux.
+  - Pas de ffmpeg ni de Chrome sans interface sur la machine : pas d'export MP4 automatique.
+- **Adresse affichée à la fin** : `keurezy.onrender.com`, l'URL publique actuelle, définie dans la constante `PROMO_URL`. À remplacer par le nom de domaine définitif.
+- **Vérifié dans le navigateur** :
+  - bureau et mobile en 375 px, sans débordement ;
+  - les 7 scènes ;
+  - `/promo` en 540 × 960 ;
+  - aucune erreur console au chargement à froid.
+- **Tests et build** : 116 tests, build OK.
+
+### Enregistrer la vidéo en MP4
+1. Ouvrir `/promo` dans une fenêtre de navigateur haute, et lancer l'enregistrement d'écran (QuickTime : Fichier › Nouvel enregistrement de l'écran, zone sélectionnée sur la vidéo).
+2. Cliquer sur « Démarrer ». Un double-clic sur la vidéo la rejoue.
+3. Recadrer et exporter en 1080 × 1920.
+
+Autre option : installer ffmpeg pour automatiser l'export.
