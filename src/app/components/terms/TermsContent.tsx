@@ -1,6 +1,8 @@
 import { Stack } from '@chakra-ui/react';
 import { BaseText } from '_components/custom';
 
+export type LegalSection = { id: string; title: string; paragraphs: string[] };
+
 /** Version affichée et acceptée à l'inscription : à changer à chaque modification du texte. */
 export const TERMS_VERSION = '1.0';
 export const TERMS_DATE = '3 octobre 2026';
@@ -9,7 +11,7 @@ export const TERMS_DATE = '3 octobre 2026';
  * Conditions générales d'utilisation de Keurezy. Texte de départ, à faire relire par un juriste
  * avant la mise en production (mentions de la société éditrice à compléter).
  */
-export const TERMS_SECTIONS: { id: string; title: string; paragraphs: string[] }[] = [
+export const TERMS_SECTIONS: LegalSection[] = [
   {
     id: 'objet',
     title: '1. Objet',
@@ -111,9 +113,16 @@ export const TERMS_SECTIONS: { id: string; title: string; paragraphs: string[] }
 ];
 
 /** Articles des CGU : page publique et fenêtre de l'inscription. */
-export const TermsArticles = ({ headingAs = 'h2' }: { headingAs?: 'h2' | 'h3' }) => (
+export const TermsArticles = ({
+  headingAs = 'h2',
+  sections = TERMS_SECTIONS,
+}: {
+  headingAs?: 'h2' | 'h3';
+  /** Par défaut les CGU ; la politique de confidentialité passe ses propres sections */
+  sections?: LegalSection[];
+}) => (
   <Stack gap={8} minW={0}>
-    {TERMS_SECTIONS.map((section) => (
+    {sections.map((section) => (
       <Stack as="section" key={section.id} id={section.id} gap={3} scrollMarginTop="96px">
         <BaseText as={headingAs} fontSize={headingAs === 'h2' ? 'xl' : 'lg'} fontWeight="semibold">
           {section.title}

@@ -8,7 +8,14 @@ import { FloatSwitchColorMode, Icons, BaseIconButton } from '_components/custom'
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { MotionBox } from '_constants/motion';
 
-export const UserLayout = ({ children }: { children: ReactNode }) => {
+/** `flush` : sections collées les unes aux autres (page d'accueil, fonds alternés). */
+export const UserLayout = ({
+  children,
+  flush = false,
+}: {
+  children: ReactNode;
+  flush?: boolean;
+}) => {
   // Scroll progress (0 → 1)
   const { scrollYProgress } = useScroll();
 
@@ -39,8 +46,9 @@ export const UserLayout = ({ children }: { children: ReactNode }) => {
         alignItems={'center'}
         justifyContent={'flex-start'}
         width={'full'}
-        gap={{ base: 6, sm: 12 }}
-        py={{ base: 12, sm: 14 }}
+        gap={flush ? 0 : { base: 6, sm: 12 }}
+        pt={{ base: 12, sm: 14 }}
+        pb={flush ? 0 : { base: 12, sm: 14 }}
       >
         {children}
       </VStack>

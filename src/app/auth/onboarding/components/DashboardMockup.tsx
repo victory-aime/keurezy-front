@@ -36,7 +36,7 @@ export const DashboardMockup = ({
   const kpis = [
     {
       label: 'Revenus',
-      value: `${(rent * properties).toLocaleString()}${currency}`,
+      value: `${(rent * properties).toLocaleString('fr-FR')} ${currency}`,
       icon: Icons.CreditCard,
       trend: '+12%',
     },
