@@ -12,6 +12,10 @@ const ONBOARD_STEP = { ACCOUNT: 0, VERIFY: 1, BUSINESS: 2, PLAN: 3, DONE: 4 } as
 const onboardInitialValues: {
   account: MODELS.IAuthSignUp;
   otp: string;
+  /** Code promo accepté à l'étape « Plan » (revérifié par le backend) */
+  promoCode: string;
+  /** Le code accepté couvre tout le prix : pas de redirection vers le paiement */
+  promoFree: boolean;
   business: MODELS.ICreateAgency;
   plan: {
     planId: string;
@@ -24,6 +28,8 @@ const onboardInitialValues: {
     password: '',
   },
   otp: '',
+  promoCode: '',
+  promoFree: false,
   business: {
     acceptTerms: false,
     address: '',

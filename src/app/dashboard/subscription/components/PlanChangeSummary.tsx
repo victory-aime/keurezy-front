@@ -1,15 +1,7 @@
 import { Box, Flex, SimpleGrid, Stack } from '@chakra-ui/react';
-import { Formik } from 'formik';
 import { t } from 'i18next';
 import type { ReactNode } from 'react';
-import {
-  BaseTag,
-  BaseFormatNumber,
-  BaseText,
-  FormTextInput,
-  Icons,
-  TextVariant,
-} from '_components/custom';
+import { BaseFormatNumber, BaseText, Icons, TextVariant } from '_components/custom';
 import { ENUM, MODELS } from '_types/*';
 import {
   FEATURE_LABELS,
@@ -19,6 +11,7 @@ import {
   type PlanFeatureLimit,
 } from '_utils/subscription';
 import { DifferenceChip } from './PlanChooser';
+import { PromoCodeField } from './PromoCodeField';
 
 /** Une colonne « aujourd'hui » ou « après » : plan, prix, limites. */
 const PlanColumn = ({
@@ -93,6 +86,9 @@ interface PlanChangeSummaryProps {
   keep: Record<string, string[]>;
   /** Le plan visé est le Gratuit (ni paiement, ni échéance) */
   targetFree?: boolean;
+  /** Vérifie un code promo côté serveur : message d'erreur, ou `null` si accepté */
+  onApplyPromo?: (code: string) => Promise<string | null>;
+  onRemovePromo?: () => void;
 }
 
 /**
@@ -106,6 +102,8 @@ export const PlanChangeSummary = ({
   target,
   keep,
   targetFree = false,
+  onApplyPromo,
+  onRemovePromo,
 }: PlanChangeSummaryProps) => {
   const changes = planDifferences(current.limits, target.limits);
   const gains = changes.filter((c) => c.tone === 'gain');
@@ -199,12 +197,29 @@ export const PlanChangeSummary = ({
           <BaseText variant={TextVariant.M} fontWeight="semibold">
             À payer aujourd’hui
           </BaseText>
-          <BaseText variant={TextVariant.XL} fontWeight="bold">
-            <BaseFormatNumber
-              value={paid ? quote.amount : 0}
-              currencyCode={quote.currency as ENUM.COMMON.Currency}
-            />
-          </BaseText>
+          <Flex alignItems="baseline" gap={2}>
+            {paid && quote.amountBeforePromo !== undefined && (
+              <BaseText variant={TextVariant.S} color="fg.muted" textDecoration="line-through">
+                <BaseFormatNumber
+                  value={quote.amountBeforePromo}
+                  currencyCode={quote.currency as ENUM.COMMON.Currency}
+                />
+              </BaseText>
+            )}
+            <BaseText
+              key={quote.amount}
+              variant={TextVariant.XL}
+              fontWeight="bold"
+              animationName="fade-in"
+              animationDuration="moderate"
+              _motionReduce={{ animation: 'none' }}
+            >
+              <BaseFormatNumber
+                value={paid ? quote.amount : 0}
+                currencyCode={quote.currency as ENUM.COMMON.Currency}
+              />
+            </BaseText>
+          </Flex>
         </Flex>
         <Stack gap={1}>
           <BaseText variant={TextVariant.S} color="fg.muted">
@@ -218,27 +233,17 @@ export const PlanChangeSummary = ({
                       : 'Le nouveau plan sera à renouveler à cette date.'
                   }`}
           </BaseText>
-          {paid && (
-            // Design seulement : les codes promo arrivent avec un module ultérieur (aucun appel API)
-            <Formik initialValues={{ promo: '' }} onSubmit={() => undefined}>
-              <Stack gap={1} mt={2} maxW="sm">
-                <BaseTag
-                  alignSelf="flex-start"
-                  colorPalette="neutral"
-                  variant="subtle"
-                  size="sm"
-                  p={1}
-                  label="Bientôt disponible"
-                />
-                <FormTextInput
-                  name="promo"
-                  label="Code promo"
-                  placeholder="Ex. BIENVENUE"
-                  isDisabled
-                  infoMessage="Les codes promo seront bientôt acceptés ici."
-                />
-              </Stack>
-            </Formik>
+          {paid && onApplyPromo && onRemovePromo && (
+            <PromoCodeField
+              applied={quote.promo}
+              discountLabel={
+                quote.promo
+                  ? `- ${new Intl.NumberFormat('fr-FR').format(quote.promo.discount)} F CFA`
+                  : undefined
+              }
+              onApply={onApplyPromo}
+              onRemove={onRemovePromo}
+            />
           )}
           {paid && (
             <Flex alignItems="center" gap={2} color="fg.muted">

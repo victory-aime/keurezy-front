@@ -16,3 +16,15 @@
 - code faux, puis renvoi du code ;
 - reprise après déconnexion (e-mail non vérifié, puis vérifié) ;
 - paiement en UAT.
+
+# Audit de sécurité : codes promo (P1 à P3)
+
+| Menace | Mesure |
+|---|---|
+| Montant falsifié par le client | Le front n'envoie que le code. Le montant est recalculé par le backend (`resolvePromo` puis `evaluatePromo`) au devis **et** au paiement, puis figé dans la transaction. Le webhook compare le montant réglé au montant figé. |
+| Énumération des codes | Codes inconnus et désactivés donnent la même erreur. Limitation à 15 essais par minute sur les routes qui acceptent un code. Codes de 3 à 32 caractères, normalisés. |
+| Réutilisation | Une utilisation par compte (contrainte unique `promoCodeId, userId`) et une par paiement (`paymentTransactionId` unique). Le refus vient de la règle, la base garantit le reste. |
+| Course entre deux paiements | L'utilisation est enregistrée au paiement confirmé, dans sa transaction et de façon idempotente. Le plafond peut être dépassé d'une unité en cas de paiements simultanés : c'est accepté, un paiement réglé n'est jamais refusé. |
+| Remise de 100 % détournée | Le changement passe par le même chemin qu'un paiement (statut PENDING, puis application unique). Le reçu porte « Aucun montant à régler ». La référence `promo_…` ne peut pas être confondue avec une commande NabooPay. |
+| Création de codes | Script local (accès à la base requis) ou routes `SUPER_ADMIN` (`AuthGuard`, `MiddlewareGuard`). Valeurs bornées : DTO, fonction de création et contrainte `CHECK` en base. Un code n'est jamais supprimé, seulement désactivé. |
+| Fuite par le reçu | Seuls le code et la remise sont lus dans les métadonnées. |

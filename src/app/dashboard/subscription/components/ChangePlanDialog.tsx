@@ -26,6 +26,7 @@ import { ENUM, MODELS } from '_types/*';
 import { canRenew, isFreePlan, keepFitsLimits, type PlanFeatureLimit } from '_utils/subscription';
 import { PlanChangeStepper, PLAN_CHANGE_STEPS } from './PlanChangeStepper';
 import { PlanChangeSummary } from './PlanChangeSummary';
+import { promoErrorMessage } from './PromoCodeField';
 import { limitsOf, PlanChooser, priceOn } from './PlanChooser';
 import { QuoteReview } from './QuoteReview';
 
@@ -110,7 +111,25 @@ export const ChangePlanDialog = ({
     params: { agencyId, planId: planId ?? '', billingCycle: cycle },
     queryOptions: { enabled: open && step >= 1 && !!planId },
   });
-  const quote = quoteQuery.data;
+  const baseQuote = quoteQuery.data;
+  // Devis avec le code promo accepté ; remis à zéro dès que le plan ou le cycle change
+  const [promoQuote, setPromoQuote] = useState<MODELS.ISubscriptionQuote | null>(null);
+  useEffect(() => setPromoQuote(null), [planId, cycle, open]);
+  const quote = promoQuote ?? baseQuote;
+
+  const { mutateAsync: quoteWithPromo } = AgencyModule.subscriptionPromoQuoteMutation({});
+  const applyPromo = async (promoCode: string) => {
+    if (!planId) return 'Choisissez d’abord un plan.';
+    try {
+      const next = await quoteWithPromo({
+        payload: { agencyId, planId, billingCycle: cycle, promoCode },
+      });
+      setPromoQuote(next as MODELS.ISubscriptionQuote);
+      return null;
+    } catch (error) {
+      return promoErrorMessage(error);
+    }
+  };
 
   // Surplus : on présélectionne les premiers éléments dans la limite (l'owner ajuste ensuite).
   // Sans ça, « rien gardé » passerait sans que l'owner ait choisi.
@@ -140,7 +159,7 @@ export const ChangePlanDialog = ({
   const idempotencyKey = useMemo(
     () => crypto.randomUUID(),
     // Nouvelle intention dès que la demande change ; identique pour une nouvelle tentative
-    [planId, cycle, JSON.stringify(keep), open],
+    [planId, cycle, JSON.stringify(keep), open, promoQuote?.promo?.code],
   );
 
   const { mutate: checkout, isPending: paying } = AgencyModule.subscriptionCheckoutMutation({
@@ -193,9 +212,16 @@ export const ChangePlanDialog = ({
       billingCycle: cycle,
       keep: quote.excess.map(({ feature }) => ({ feature, ids: keep[feature] ?? [] })),
     };
-    // Downgrade, ou passage immédiat au Gratuit après expiration : rien à payer
-    if (quote.kind === 'DOWNGRADE' || quote.amount === 0) schedule({ payload: target });
-    else checkout({ payload: { target, idempotencyKey } });
+    // Downgrade, ou passage immédiat au Gratuit après expiration : rien à payer. Un code promo
+    // à 100 % passe par le checkout : le backend applique alors le changement sans paiement.
+    if (quote.kind === 'DOWNGRADE' || (baseQuote?.amount ?? 0) === 0) schedule({ payload: target });
+    else
+      checkout({
+        payload: {
+          target: { ...target, ...(promoQuote?.promo && { promoCode: promoQuote.promo.code }) },
+          idempotencyKey,
+        },
+      });
   };
 
   const targetPricing = selectedPlan ? priceOn(selectedPlan, cycle) : undefined;
@@ -249,6 +275,8 @@ export const ChangePlanDialog = ({
     return (
       <PlanChangeSummary
         quote={quote}
+        onApplyPromo={applyPromo}
+        onRemovePromo={() => setPromoQuote(null)}
         keep={keep}
         current={{
           name: t(`SUBSCRIPTION.PLANS.${subscription.plan.name}`),

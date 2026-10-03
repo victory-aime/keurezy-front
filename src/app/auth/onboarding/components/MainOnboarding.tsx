@@ -23,6 +23,7 @@ import { Formik } from 'formik';
 import { authClient } from '../../../lib/auth-client';
 import { handleApiError } from '_utils/handleApiError';
 import { StepVerifyEmail } from './StepVerifyEmail';
+import { OnboardingPromo } from './OnboardingPromo';
 import { AgencyModule, CommonModule } from '_store/state-management';
 import { AgencyNameWatcher } from '../../components/AgencyNameWatcher';
 import {
@@ -125,10 +126,13 @@ export const MainOnboarding = ({
       { component: () => <StepBusiness initialDocUrls={[]} />, blocking: true },
       {
         component: () => (
-          <StepPlanSelection
-            allPacks={allPacks ?? []}
-            value={{ selectedPlanId: planId!, billingCycle }}
-          />
+          <>
+            <StepPlanSelection
+              allPacks={allPacks ?? []}
+              value={{ selectedPlanId: planId!, billingCycle }}
+            />
+            <OnboardingPromo allPacks={allPacks ?? []} />
+          </>
         ),
         blocking: true,
       },
@@ -231,7 +235,7 @@ export const MainOnboarding = ({
   const completeOnboarding = async () => {
     try {
       setIsLoading(true);
-      const { business, plan } = formikRef.current.values;
+      const { business, plan, promoCode } = formikRef.current.values;
       const payload: MODELS.ICreateAgency = {
         name: business.name,
         email: business.email,
@@ -240,6 +244,7 @@ export const MainOnboarding = ({
         phone: business.phone,
         acceptTerms: business.acceptTerms,
         plan: { planId: plan?.planId, billingCycle: plan?.paymentMode },
+        ...(promoCode && { promoCode }),
       };
       const formData = new FormData();
       formData.append('data', JSON.stringify(payload));
@@ -305,8 +310,10 @@ export const MainOnboarding = ({
       if (step === ONBOARD_STEP.PLAN) {
         const plan = formikRef.current?.values?.plan;
         const selectedPlan = allPacks?.find((p: any) => p.id === plan?.planId);
-        // Payant : confirmation avant la redirection ; Gratuit : création directe
-        if (!isFreePlan(selectedPlan)) setOpenAgreePayment(true);
+        // Payant : confirmation avant la redirection ; Gratuit, ou code promo à 100 % : création
+        // directe (le backend crée l'agence sans paiement)
+        const nothingToPay = isFreePlan(selectedPlan) || formikRef.current?.values?.promoFree;
+        if (!nothingToPay) setOpenAgreePayment(true);
         else await completeOnboarding();
         return;
       }

@@ -53,11 +53,11 @@ export class AgencyService extends BaseApi {
     );
   }
   /** Devis d'un changement de plan ou d'un renouvellement (owner uniquement). */
-  subscription_quote({ agencyId, planId, billingCycle }: MODELS.ISubscriptionTarget) {
+  subscription_quote({ agencyId, planId, billingCycle, promoCode }: MODELS.ISubscriptionTarget) {
     return this.apiService.invoke(
       this.applicationContext.getApiConfig().AGENCY.SUBSCRIPTION_QUOTE,
       {},
-      { params: { agencyId, planId, billingCycle } },
+      { params: { agencyId, planId, billingCycle, ...(promoCode && { promoCode }) } },
     );
   }
   /**

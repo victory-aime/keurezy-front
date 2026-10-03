@@ -23,4 +23,17 @@ const getPaymentStatusQueries = (
   });
 };
 
-export { getAllPacksQueries, getPaymentStatusQueries };
+/** Aperçu d'un code promo à l'inscription (étape « Plan »). */
+const onboardingPromoMutation = (
+  args: QUERIES.MutationPayload<
+    { planId: string; billingCycle: string; promoCode: string },
+    { amount: number; amountBeforePromo: number; promo: { code: string; discount: number } }
+  >,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.COMMON_KEYS.GET_PAYMENT_STATUS, 'promo'],
+    mutationFn: ({ payload }) => commonServiceInstance().onboardingPromo(payload!),
+    options: args.mutationOptions,
+  });
+
+export { getAllPacksQueries, getPaymentStatusQueries, onboardingPromoMutation };

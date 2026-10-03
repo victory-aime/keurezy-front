@@ -93,6 +93,16 @@ const getSubscriptionQuoteQueries = (
   });
 };
 
+/** Devis avec un code promo : vérifié à la demande (« Appliquer »), refus explicite sinon. */
+const subscriptionPromoQuoteMutation = (
+  args: QUERIES.MutationPayload<MODELS.ISubscriptionTarget, MODELS.ISubscriptionQuote>,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.SUBSCRIPTION_QUOTE, 'promo'],
+    mutationFn: ({ payload }) => agencyServiceInstance().subscription_quote(payload!),
+    options: args.mutationOptions,
+  });
+
 /** Statut d'un paiement d'abonnement (suivi au retour de NabooPay). */
 const getSubscriptionPaymentQueries = (
   args: QUERIES.QueryPayload<
@@ -453,6 +463,7 @@ export {
   getAgencySubscriptionInfo,
   getAgencySubscriptionQueries,
   getSubscriptionQuoteQueries,
+  subscriptionPromoQuoteMutation,
   getSubscriptionPaymentQueries,
   getSubscriptionPaymentsQueries,
   getSubscriptionLimitsQueries,

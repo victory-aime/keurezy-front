@@ -5,6 +5,7 @@ interface ICreateAgency {
   address?: string;
   description?: string;
   email?: string;
+  promoCode?: string;
   phone?: string;
   acceptTerms?: boolean;
   documents?: File[];
@@ -155,6 +156,9 @@ interface ISubscriptionQuote {
   effectiveAt: string;
   newPeriodEnd: string;
   excess: { feature: string; limit: number; used: number; items: ISubscriptionExcessItem[] }[];
+  /** Code promo appliqué : `amount` est alors le montant remisé */
+  promo?: { code: string; discount: number };
+  amountBeforePromo?: number;
 }
 
 /** Plan et cycle visés. */
@@ -163,6 +167,8 @@ interface ISubscriptionTarget {
   planId: string;
   billingCycle: BillingCycle;
   keep?: SubscriptionKeep;
+  /** Code promo (vérifié et appliqué par le backend) */
+  promoCode?: string;
 }
 
 /** `POST agency/subscription/checkout` */

@@ -557,6 +557,13 @@ export const APIS = (baseUrl?: string) => {
           showResponse: false,
         }),
       },
+      // Aperçu d'un code promo à l'étape « Plan » de l'inscription (session)
+      ONBOARDING_PROMO: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/onboarding/promo`,
+        pathBase: 'SECURED_API',
+        method: 'GET',
+        showResponse: false,
+      }),
       // Suivi du paiement d'inscription : réservé à son auteur (session)
       POLLING_STATUS: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/onboarding/status`,

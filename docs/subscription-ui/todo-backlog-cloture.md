@@ -22,17 +22,17 @@ Un commit local par tâche, et un audit de sécurité par module.
 - [x] **O3** [Audit de sécurité](./security-audit-onboarding.md) et `CHANGES.md` (section 63).
 
 ## P : codes promo
-- [ ] **P1 [back]**
+- [x] **P1 [back]** (commit backend `7e50646`)
   - Migration `promo_code` et `promo_redemption`.
   - Validation (fonction pure et tests).
   - `promoCode` dans le devis et le checkout ; utilisation comptée au paiement confirmé, de façon idempotente.
   - Reçu avec la remise.
-- [ ] **P2 [back]**
+- [x] **P2 [back]**
   - Script `promo:create`.
   - Routes admin (créer, lister, désactiver).
   - Route `promo/check` avec limitation de débit.
-- [ ] **P3 [web]** Champ code promo actif (récapitulatif et inscription).
-- [ ] **P4** Audit de sécurité.
+- [x] **P3 [web]** Champ code promo actif (récapitulatif et inscription). Code à 100 % : pas de redirection vers le paiement.
+- [x] **P4** [Audit de sécurité](./security-audit-onboarding.md#audit-de-sécurité--codes-promo-p1-à-p3).
 
 ## R : relances après expiration
 - [ ] **R1 [back]**
