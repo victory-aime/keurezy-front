@@ -28,3 +28,13 @@
 | Remise de 100 % détournée | Le changement passe par le même chemin qu'un paiement (statut PENDING, puis application unique). Le reçu porte « Aucun montant à régler ». La référence `promo_…` ne peut pas être confondue avec une commande NabooPay. |
 | Création de codes | Script local (accès à la base requis) ou routes `SUPER_ADMIN` (`AuthGuard`, `MiddlewareGuard`). Valeurs bornées : DTO, fonction de création et contrainte `CHECK` en base. Un code n'est jamais supprimé, seulement désactivé. |
 | Fuite par le reçu | Seuls le code et la remise sont lus dans les métadonnées. |
+
+# Audit de sécurité : relances et alertes (R1, B1)
+
+| Point | Mesure |
+|---|---|
+| Envois en double | Les relances réclament leur palier (`lastExpiryReminder`) avant l'émission : un job relancé ou une seconde instance n'envoient rien de plus. |
+| Destinataires | Les relances vont à l'owner de l'agence, seulement si l'agence n'est ni fermée ni en cours de fermeture. Elles ne partent pas après une résiliation choisie. |
+| Contenu des alertes | Commande, identifiant d'agence et montants seulement : ni nom, ni e-mail, ni données de paiement. HTML échappé et version texte. |
+| Inondation de la boîte d'alertes | Webhook : seuil de 3 échecs sur une heure, puis au plus une alerte par heure. Le compteur est en mémoire (une seule instance) ; c'est une limite connue, notée `ponytail:`. |
+| Configuration | Sans `KEUREZY_OPS_EMAIL`, rien n'est envoyé et l'anomalie reste dans les journaux. La variable est signalée au démarrage. |
