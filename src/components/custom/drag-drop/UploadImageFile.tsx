@@ -11,7 +11,6 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useFileUploadErrors } from './useFileUploadErrors';
-import { convertUrlsToFiles } from 'rise-core-frontend';
 import { BaseRatio } from '_components/custom';
 import { HiX } from 'react-icons/hi';
 import { UploadImageFileProps } from './interface/upload';
@@ -21,6 +20,8 @@ export const UploadImageFile = ({
   avatarImage,
   handleDeleteAvatar,
   isReadOnly,
+  ratio,
+  contain,
 }: UploadImageFileProps) => {
   const { t } = useTranslation();
   const [previewUrl, setPreviewUrl] = useState<string>();
@@ -30,14 +31,8 @@ export const UploadImageFile = ({
     onValidFiles: (files) => getFileUploaded(files[0] || undefined),
   });
 
-  useEffect(() => {
-    if (avatarImage && fileUpload.acceptedFiles.length === 0) {
-      convertUrlsToFiles(avatarImage).then((file) => {
-        fileUpload.setFiles([...file]);
-      });
-    }
-  }, [avatarImage]);
-
+  // L'image enregistrée (`avatarImage`) s'affiche telle quelle : la convertir en fichier la
+  // ferait renvoyer comme un nouveau fichier à chaque enregistrement.
   useEffect(() => {
     if (fileUpload.acceptedFiles.length > 0) {
       setIsImageDeleted(false);
@@ -69,6 +64,13 @@ export const UploadImageFile = ({
               cursor: isReadOnly ? 'not-allowed' : 'none',
             }}
             cursor="pointer"
+            ratio={ratio}
+            bg={contain ? 'bg.subtle' : undefined}
+            rounded="7px"
+            transition="box-shadow 0.2s, transform 0.2s"
+            _hover={{ boxShadow: 'md' }}
+            _motionReduce={{ transition: 'none' }}
+            style={contain ? { objectFit: 'contain', padding: '12px' } : undefined}
             colorPalette={(previewUrl || avatarImage) && !isImageDeleted ? 'success' : 'none'}
             image={
               !isImageDeleted
@@ -104,7 +106,8 @@ export const UploadImageFile = ({
             )}
           </For>
         )}
-        {(previewUrl || avatarImage) && !isImageDeleted && (
+        {/* Retrait de l'image enregistrée : seulement si l'écran sait la supprimer */}
+        {(previewUrl || (avatarImage && handleDeleteAvatar)) && !isImageDeleted && (
           <>
             {isReadOnly ? null : (
               <Float

@@ -4,7 +4,7 @@ type Legal = MODELS.IAgencyLegal;
 
 /** Libellés des informations légales (note de vérification, formulaire). */
 export const LEGAL_FIELD_LABELS: Record<
-  Exclude<keyof Legal, 'bankName' | 'bankAccount' | 'mobileMoneyNumber'>,
+  Exclude<keyof Legal, 'bankName' | 'bankAccount' | 'mobileMoneyNumber' | `${string}ProofUrl`>,
   string
 > = {
   companyName: 'Raison sociale',
@@ -21,6 +21,47 @@ export const BANK_FIELD_LABELS = {
   bankAccount: 'RIB ou IBAN',
   mobileMoneyNumber: 'Numéro Wave ou Orange Money',
 } as const;
+
+/** Pièces justificatives : ce que chacune prouve et comment l'obtenir. */
+export const LEGAL_PROOFS: {
+  kind: MODELS.LegalProofKind;
+  field: 'legalFormProofUrl' | 'nineaProofUrl' | 'rccmProofUrl';
+  label: string;
+  proves: string;
+}[] = [
+  {
+    kind: 'LEGAL_FORM',
+    field: 'legalFormProofUrl',
+    label: 'Statuts de la société',
+    proves: 'Raison sociale et forme juridique',
+  },
+  { kind: 'NINEA', field: 'nineaProofUrl', label: 'Attestation NINEA', proves: 'NINEA' },
+  { kind: 'RCCM', field: 'rccmProofUrl', label: 'Extrait du RCCM', proves: 'RCCM' },
+];
+
+/** Libellé d'un élément manquant (champ ou pièce) dans la note de vérification. */
+export const missingLabel = (key: string): string =>
+  LEGAL_FIELD_LABELS[key as keyof typeof LEGAL_FIELD_LABELS] ??
+  LEGAL_PROOFS.find((proof) => proof.field === key)?.label ??
+  key;
+
+export const PROOF_MAX_BYTES = 5 * 1024 * 1024;
+export const PROOF_ACCEPT = ['application/pdf', 'image/png', 'image/jpeg'];
+
+/** Contrôle avant envoi (le backend revérifie le contenu) : message d'erreur, ou `null`. */
+export function proofFileError(file: { type: string; size: number }): string | null {
+  if (!PROOF_ACCEPT.includes(file.type)) return 'Fichier PDF, PNG ou JPEG uniquement.';
+  if (file.size > PROOF_MAX_BYTES) return 'Fichier de 5 Mo au plus.';
+  return null;
+}
+
+/** Nom lisible d'un fichier Cloudinary (« ninea-3f2a….pdf » → « ninea.pdf »). */
+export function proofFileName(url: string): string {
+  const name = decodeURIComponent(url.split('/').pop()?.split('?')[0] ?? '');
+  return (
+    name.replace(/-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i, '') || 'document'
+  );
+}
 
 export const LEGAL_FORMS: { value: MODELS.LegalForm; label: string }[] = [
   { value: 'SARL', label: 'SARL' },

@@ -292,6 +292,16 @@ export const APIS = (baseUrl?: string) => {
         method: 'DELETE',
         pathBase: 'SECURED_API',
       }),
+      LEGAL_PROOF_UPLOAD: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/legal/proof`,
+        method: 'POST',
+        pathBase: 'SECURED_API',
+      }),
+      LEGAL_PROOF_DELETE: api({
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/legal/proof`,
+        method: 'DELETE',
+        pathBase: 'SECURED_API',
+      }),
       UPDATE_LEGAL: api({
         path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/legal`,
         method: 'PATCH',

@@ -10,6 +10,7 @@ import {
   FormPhonePicker,
   Icons,
   BaseText,
+  TextVariant,
   useBaseFileUpload,
 } from '_components/custom';
 import { Formik, FormikValues } from 'formik';
@@ -80,7 +81,8 @@ export const AgencyInfo = () => {
       }
     });
     formData.append('agencyId', String(agency?.id));
-    if (values?.agencyLogo) {
+    // Logo : seulement un nouveau fichier (l'URL enregistrée reste telle quelle)
+    if (values?.agencyLogo instanceof File) {
       formData.append('agencyLogo', values.agencyLogo);
     }
     await updateAgency({ payload: formData as MODELS.IUpdateAgency });
@@ -138,14 +140,29 @@ export const AgencyInfo = () => {
                 mt={5}
                 flexDirection={{ base: 'column', md: 'row' }}
               >
-                <Flex width={{ base: 'full', md: '1/4' }}>
+                <VStack
+                  width={{ base: 'full', md: '220px' }}
+                  maxW={{ base: '240px', md: 'none' }}
+                  alignSelf={{ base: 'center', md: 'flex-start' }}
+                  flexShrink={0}
+                  gap={2}
+                  alignItems="stretch"
+                >
+                  <BaseText fontWeight="semibold">Logo</BaseText>
+                  {/* Logo entier, sans recadrage ; un clic le remplace */}
                   <BaseUploadImageFile
-                    getFileUploaded={(files) => setFieldValue('agencyLogo', files)}
-                    handleDeleteAvatar={() => {}}
-                    avatarImage={undefined}
+                    getFileUploaded={(file) => setFieldValue('agencyLogo', file)}
+                    avatarImage={agency?.agencyLogo}
                     messageInfo={errors?.agencyLogo}
+                    isLoading={loadInfo}
+                    ratio={1}
+                    contain
                   />
-                </Flex>
+                  <BaseText variant={TextVariant.XS} color="fg.muted">
+                    Cliquez sur l’image pour la remplacer. PNG, JPEG ou WebP, 2 Mo max. Pris en
+                    compte à l’enregistrement.
+                  </BaseText>
+                </VStack>
 
                 <VStack width={'full'} gap={4} alignItems="flex-start">
                   <FormTextInput name="name" label="PROFILE.NAME" isLoading={loadInfo} />

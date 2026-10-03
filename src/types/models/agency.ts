@@ -67,6 +67,9 @@ interface IAgency {
   bankName?: string | null;
   bankAccount?: string | null;
   mobileMoneyNumber?: string | null;
+  legalFormProofUrl?: string | null;
+  nineaProofUrl?: string | null;
+  rccmProofUrl?: string | null;
 }
 
 type LegalForm = 'SARL' | 'SUARL' | 'SA' | 'SAS' | 'SASU' | 'GIE' | 'INDIVIDUAL' | 'OTHER';
@@ -82,7 +85,14 @@ interface IAgencyLegal {
   rccm: string | null;
   billingAddress: string | null;
   billingEmail: string | null;
+  /** Pièces justificatives (PNG, JPEG ou PDF) : requises pour la vérification */
+  legalFormProofUrl?: string | null;
+  nineaProofUrl?: string | null;
+  rccmProofUrl?: string | null;
 }
+
+/** Pièce justificative : statuts (forme juridique), attestation NINEA, extrait RCCM. */
+type LegalProofKind = 'LEGAL_FORM' | 'NINEA' | 'RCCM';
 
 interface IAgencyLegalUpdate {
   legal: IAgencyLegal;
@@ -316,4 +326,5 @@ export type {
   IAgencyLegal,
   IAgencyLegalUpdate,
   LegalForm,
+  LegalProofKind,
 };

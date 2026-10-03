@@ -199,6 +199,21 @@ const invoiceStampMutation = (
     options: args.mutationOptions,
   });
 
+/** Envoie (ou retire, sans fichier) une pièce justificative ; la réponse dit ce qui manque. */
+const legalProofMutation = (
+  args: QUERIES.MutationPayload<
+    File | undefined,
+    MODELS.IAgencyLegalUpdate,
+    { agencyId: string; kind: MODELS.LegalProofKind }
+  >,
+) =>
+  QUERIES.useCustomMutation({
+    mutationKey: [Constants.AGENCY_KEYS.LEGAL_PROOF],
+    mutationFn: ({ payload, params }) =>
+      agencyServiceInstance().legal_proof(params!.agencyId, params!.kind, payload ?? undefined),
+    options: args.mutationOptions,
+  });
+
 /** Factures de l'agence, une page à la fois. */
 const getInvoicesQueries = (
   args: QUERIES.QueryPayload<MODELS.IInvoiceList, undefined, MODELS.IInvoiceListParams>,
@@ -427,6 +442,7 @@ export {
   deleteInvoiceTemplateMutation,
   updateInvoiceSettingsMutation,
   invoiceStampMutation,
+  legalProofMutation,
   getInvoicesQueries,
   getInvoiceQueries,
   getInvoiceableBookingsQueries,

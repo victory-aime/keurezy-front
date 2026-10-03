@@ -20,6 +20,10 @@ interface UploadImageFileProps {
   isReadOnly?: boolean;
   isLoading?: boolean;
   messageInfo?: string;
+  /** Proportions de l'aperçu (16/9 par défaut ; 1 pour un logo) */
+  ratio?: number;
+  /** Image entière, sans recadrage (logo) */
+  contain?: boolean;
 }
 
 export type { MultipleFilesUploadProps, BaseUploadFilesProps, UploadImageFileProps };

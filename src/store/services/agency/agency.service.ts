@@ -179,6 +179,15 @@ export class AgencyService extends BaseApi {
     data.append('stamp', file);
     return this.apiService.invoke(config.INVOICE_STAMP_UPLOAD, data, { params: { agencyId } });
   }
+  /** Pièce justificative d'une information légale ; sans fichier, la retire (owner). */
+  legal_proof(agencyId: string, kind: MODELS.LegalProofKind, file?: File) {
+    const config = this.applicationContext.getApiConfig().AGENCY;
+    const params = { params: { agencyId, kind } };
+    if (!file) return this.apiService.invoke(config.LEGAL_PROOF_DELETE, {}, params);
+    const data = new FormData();
+    data.append('file', file);
+    return this.apiService.invoke(config.LEGAL_PROOF_UPLOAD, data, params);
+  }
   /** Factures de l'agence (paginées, filtrées par statut ou recherche). */
   invoices({ agencyId, ...query }: MODELS.IInvoiceListParams) {
     const params = Object.fromEntries(

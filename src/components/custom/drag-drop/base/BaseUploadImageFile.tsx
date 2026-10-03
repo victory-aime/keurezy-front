@@ -14,6 +14,8 @@ export const BaseUploadImageFile = ({
   isReadOnly,
   handleDeleteAvatar,
   messageInfo,
+  ratio,
+  contain,
 }: UploadImageFileProps) => {
   return (
     <React.Fragment>
@@ -32,6 +34,8 @@ export const BaseUploadImageFile = ({
             avatarImage={avatarImage}
             handleDeleteAvatar={handleDeleteAvatar}
             isReadOnly={isReadOnly}
+            ratio={ratio}
+            contain={contain}
           />
           {messageInfo && (
             <Flex gap={2} alignItems={'center'} color={VariablesColors.red}>
