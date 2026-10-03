@@ -1,6 +1,13 @@
 import * as Yup from 'yup';
 import { phoneSchema } from './phone';
 
+/** Code à 6 chiffres reçu par e-mail (vérification de l'adresse avant l'agence). */
+export const onboardVerifyEmailSchema = Yup.object({
+  otp: Yup.string()
+    .matches(/^\d{6}$/, 'Saisissez les 6 chiffres reçus par e-mail')
+    .required('Saisissez les 6 chiffres reçus par e-mail'),
+});
+
 export const onboardUserAccountSchema = Yup.object({
   account: Yup.object({
     name: Yup.string().required('Le nom est obligatoire'),

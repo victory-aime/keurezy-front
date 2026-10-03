@@ -20,10 +20,13 @@ import { APP_ROUTES } from '_config/routes';
 import { ENUM, MODELS } from '_types/*';
 import { OnboardFinish } from './FinalStep';
 import { Formik } from 'formik';
-import { useAuth } from '_hooks/useAuth';
+import { authClient } from '../../../lib/auth-client';
+import { handleApiError } from '_utils/handleApiError';
+import { StepVerifyEmail } from './StepVerifyEmail';
 import { AgencyModule, CommonModule } from '_store/state-management';
 import { AgencyNameWatcher } from '../../components/AgencyNameWatcher';
 import {
+  ONBOARD_STEP,
   TOTAL_ONBOARD_STEPS,
   getMessage,
   onboardInitialValues,
@@ -41,6 +44,15 @@ import Link from 'next/link';
 import { clientRedirect } from '_utils/client-navigate';
 import { isFreePlan } from '_utils/subscription';
 
+/** Message d'erreur Better Auth lisible (repli générique). */
+const authMessage = (error: { message?: string } | null | undefined, fallback: string) =>
+  error?.message || fallback;
+
+/**
+ * Inscription d'une agence, « compte d'abord » : 1) compte, 2) e-mail vérifié par un code,
+ * 3) agence, 4) plan, 5) fin. Le compte et la session existent avant l'agence : aucun mot de
+ * passe ne transite par le paiement. Un utilisateur connecté sans agence reprend où il en était.
+ */
 export const MainOnboarding = ({
   planId,
   billingCycle,
@@ -50,18 +62,21 @@ export const MainOnboarding = ({
   billingCycle?: ENUM.BillingCycle;
   payment?: string;
 }) => {
-  const { login } = useAuth();
   const { isCheckingName, nameAlreadyExists } = useAgencyCheck();
   const { colorMode } = useColorMode();
   const navigate = useRouter();
-  const [step, setStep] = useState(0);
+  const {
+    data: session,
+    isPending: sessionPending,
+    refetch: refetchSession,
+  } = authClient.useSession();
+  const [step, setStep] = useState<number>(ONBOARD_STEP.ACCOUNT);
   const [direction, setDirection] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isValidatingPayment, setIsValidatingPayment] = useState(false);
   const [openAgreePayment, setOpenAgreePayment] = useState(false);
-  const [initialDocUrls, setInitialDocUrls] = useState<string[] | undefined>([]);
-  const [enabledPolling, setEnabledPolling] = useState(true);
   const [orderId, setOrderId] = useState<string | null>(null);
+  const resumed = useRef(false);
   const formikRef = useRef<any>(null);
 
   const { mutateAsync: verifiedAgencyName } = AgencyModule.checkNameMutation({});
@@ -69,42 +84,45 @@ export const MainOnboarding = ({
   const { mutateAsync: createAgency } = AgencyModule.createAgencyMutation({
     mutationOptions: {
       onSuccess: async (data) => {
-        // cas subscription → redirection paiement
+        // Plan payant → paiement NabooPay ; le retour reprend ici (?payment=…)
         if (data?.checkout_url) {
+          localStorage.setItem(StorageKey.ONBOARD_PENDING_FORM, data.order_id);
           clientRedirect(data.checkout_url);
-          localStorage.setItem(StorageKey.ONBOARD_PENDING_FORM, data?.order_id);
-          setOrderId(data?.order_id);
           return;
         }
-        // plan Gratuit → agence créée tout de suite
-        await login({
-          email: formikRef.current.values.account.email,
-          password: formikRef.current.values.account.password,
-        }).then(() => {
-          setStep(TOTAL_ONBOARD_STEPS - 1);
-          setIsValidatingPayment(false);
-        });
+        // Plan Gratuit → agence créée : la session porte désormais le rôle OWNER
+        await refetchSession();
+        goTo(ONBOARD_STEP.DONE);
       },
     },
   });
   const { data: paymentStatus } = CommonModule.getPaymentStatusQueries({
     params: { orderId: orderId! },
     queryOptions: {
-      enabled: !!orderId && enabledPolling,
-      refetchInterval: (data: any) => {
-        if (data?.local_status === 'PAID') return false;
-        return 3000;
-      },
+      enabled: !!orderId && !!session?.user,
+      refetchInterval: (query: any) =>
+        ['PAID', 'FAILED', 'CANCELLED'].includes(query?.state?.data?.local_status) ? false : 3000,
     },
   });
+
+  const goTo = (target: number) => {
+    setDirection(target > step ? 1 : -1);
+    setStep(target);
+  };
 
   const stepsConfig = useMemo(
     () => [
       { component: () => <StepUserAccount />, blocking: true },
       {
-        component: () => <StepBusiness initialDocUrls={initialDocUrls} />,
+        component: () => (
+          <StepVerifyEmail
+            email={session?.user?.email ?? formikRef.current?.values?.account?.email ?? ''}
+            onResend={sendCode}
+          />
+        ),
         blocking: true,
       },
+      { component: () => <StepBusiness initialDocUrls={[]} />, blocking: true },
       {
         component: () => (
           <StepPlanSelection
@@ -116,77 +134,116 @@ export const MainOnboarding = ({
       },
       { component: () => <OnboardFinish />, blocking: false },
     ],
-    [allPacks, planId, billingCycle],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [allPacks, planId, billingCycle, session?.user?.email],
   );
 
+  // Reprise : un utilisateur connecté reprend à l'étape qui manque (une seule fois)
+  useEffect(() => {
+    if (sessionPending || resumed.current || payment) return;
+    resumed.current = true;
+    const user = session?.user;
+    if (!user) return;
+    if (user.role === 'OWNER' || user.role === 'AGENT') {
+      navigate.replace(APP_ROUTES.DASHBOARD);
+      return;
+    }
+    formikRef.current?.setFieldValue('account.email', user.email);
+    formikRef.current?.setFieldValue('account.name', user.name);
+    setStep(user.emailVerified ? ONBOARD_STEP.BUSINESS : ONBOARD_STEP.VERIFY);
+  }, [session, sessionPending, payment]);
+
+  // Retour du paiement : suivi par la route authentifiée, jusqu'au statut final
+  useEffect(() => {
+    if (!payment) return;
+    setStep(ONBOARD_STEP.PLAN);
+    setIsValidatingPayment(true);
+    setOrderId(localStorage.getItem(StorageKey.ONBOARD_PENDING_FORM));
+  }, [payment]);
+
+  useEffect(() => {
+    if (!paymentStatus) return;
+    const { local_status, naboo_status } = paymentStatus;
+    if (local_status === 'PAID') {
+      localStorage.removeItem(StorageKey.ONBOARD_PENDING_FORM);
+      setIsValidatingPayment(false);
+      refetchSession();
+      setStep(ONBOARD_STEP.DONE);
+    } else if (local_status === 'FAILED' || naboo_status === 'cancelled') {
+      setIsValidatingPayment(false);
+      BaseToast({
+        title: 'Paiement non validé',
+        description: 'Votre agence n’a pas été créée. Vous pouvez choisir un plan à nouveau.',
+      });
+    }
+  }, [paymentStatus]);
+
+  /** Envoie (ou renvoie) le code de vérification à l'adresse du compte. */
+  async function sendCode(): Promise<boolean> {
+    const email = session?.user?.email ?? formikRef.current?.values?.account?.email;
+    const { error } = await authClient.emailOtp.sendVerificationOtp({
+      email,
+      type: 'email-verification',
+    });
+    if (error) {
+      handleApiError({ status: error.status, message: authMessage(error, 'Envoi impossible.') });
+      return false;
+    }
+    return true;
+  }
+
+  /** Étape 1 : crée le compte (sans session tant que l'e-mail n'est pas vérifié), envoie le code. */
+  const createAccount = async () => {
+    const { name, email, password } = formikRef.current.values.account;
+    const { error } = await authClient.signUp.email({ name, email, password });
+    if (error) {
+      handleApiError({
+        status: error.status,
+        message:
+          error.code === 'USER_ALREADY_EXISTS' ||
+          error.code === 'USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL'
+            ? 'Un compte existe déjà avec cet e-mail : connectez-vous pour reprendre votre inscription.'
+            : authMessage(error, 'Création du compte impossible.'),
+      });
+      return false;
+    }
+    return sendCode();
+  };
+
+  /** Étape 2 : vérifie le code ; la session s'ouvre (ou on se connecte avec le mot de passe saisi). */
+  const verifyCode = async () => {
+    const { account, otp } = formikRef.current.values;
+    const email = session?.user?.email ?? account.email;
+    const { error } = await authClient.emailOtp.verifyEmail({ email, otp });
+    if (error) {
+      formikRef.current.setFieldError('otp', authMessage(error, 'Code invalide ou expiré.'));
+      return false;
+    }
+    const { data } = await authClient.getSession();
+    if (!data?.user && account.password) {
+      await authClient.signIn.email({ email, password: account.password });
+    }
+    await refetchSession();
+    return true;
+  };
+
+  /** Étape 4 : inscription de l'agence (Gratuit : créée ; payant : lien de paiement). */
   const completeOnboarding = async () => {
     try {
       setIsLoading(true);
-      const values = formikRef.current?.values;
-
-      const formData = new FormData();
-      const business = values?.business;
-      const account = values?.account;
-      const plan = values?.plan;
-
+      const { business, plan } = formikRef.current.values;
       const payload: MODELS.ICreateAgency = {
         name: business.name,
-        username: account.name,
-        userEmail: account.email,
-        password: account.password,
         email: business.email,
         description: business.description,
         address: business.address,
         phone: business.phone,
         acceptTerms: business.acceptTerms,
-        plan: {
-          planId: plan?.planId,
-          billingCycle: plan?.paymentMode,
-        },
+        plan: { planId: plan?.planId, billingCycle: plan?.paymentMode },
       };
-
-      formData.append('data', JSON.stringify(payload));
-
-      if (business.documents?.length > 0) {
-        business.documents.forEach((file: File) => {
-          formData.append('documents', file);
-        });
-      }
-
-      await createAgency({
-        payload: { data: formData as MODELS.ICreateAgency },
-      });
-    } catch (error) {
-      console.error('Onboarding failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const completeOnboardingFree = async () => {
-    try {
-      setIsLoading(true);
-      const values = formikRef.current?.values;
-      const business = values?.business;
-      const account = values?.account;
-      const plan = values?.plan;
-
       const formData = new FormData();
-      formData.append(
-        'data',
-        JSON.stringify({
-          name: business.name,
-          username: account.name,
-          userEmail: account.email,
-          password: account.password,
-          email: business.email,
-          address: business.address,
-          phone: business.phone,
-          description: business.description,
-          acceptTerms: business.acceptTerms,
-          plan: { planId: plan?.planId, billingCycle: plan?.paymentMode },
-        }),
-      );
+      formData.append('data', JSON.stringify(payload));
+      (business.documents ?? []).forEach((file: File) => formData.append('documents', file));
       await createAgency({ payload: { data: formData as MODELS.ICreateAgency } });
     } finally {
       setIsLoading(false);
@@ -237,41 +294,49 @@ export const MainOnboarding = ({
       }
     }
 
-    // Step 2 — choix du plan
-    if (step === 2) {
-      const plan = formikRef.current?.values?.plan;
-      const selectedPlan = allPacks?.find((p: any) => p.id === plan?.planId);
+    setIsLoading(true);
+    try {
+      // Compte : déjà créé si l'utilisateur est connecté (reprise)
+      if (step === ONBOARD_STEP.ACCOUNT && !session?.user) {
+        if (!(await createAccount())) return;
+      }
+      if (step === ONBOARD_STEP.VERIFY && !(await verifyCode())) return;
 
-      if (!isFreePlan(selectedPlan)) {
-        // Ouvrir la modale de confirmation avant de rediriger
-        setOpenAgreePayment(true);
+      if (step === ONBOARD_STEP.PLAN) {
+        const plan = formikRef.current?.values?.plan;
+        const selectedPlan = allPacks?.find((p: any) => p.id === plan?.planId);
+        // Payant : confirmation avant la redirection ; Gratuit : création directe
+        if (!isFreePlan(selectedPlan)) setOpenAgreePayment(true);
+        else await completeOnboarding();
         return;
       }
 
-      // Plan Gratuit → création directe sans paiement
-      await completeOnboardingFree();
-      return;
+      if (step === ONBOARD_STEP.DONE) {
+        localStorage.setItem(StorageKey.ENABLED_GUIDED_TOUR, 'true');
+        navigate.push(APP_ROUTES.DASHBOARD);
+        return;
+      }
+      goTo(step + 1);
+    } finally {
+      setIsLoading(false);
     }
-
-    if (step === TOTAL_ONBOARD_STEPS - 1) {
-      localStorage.setItem(StorageKey.ENABLED_GUIDED_TOUR, 'true');
-      navigate.push(APP_ROUTES.DASHBOARD);
-      return;
-    }
-
-    setDirection(1);
-    setStep((s) => s + 1);
   };
 
+  // Retour en arrière : jamais avant la vérification une fois le compte créé, ni après la fin
+  const firstReachable = session?.user
+    ? session.user.emailVerified
+      ? ONBOARD_STEP.BUSINESS
+      : ONBOARD_STEP.VERIFY
+    : ONBOARD_STEP.ACCOUNT;
+
   const prevStep = () => {
-    if (step === TOTAL_ONBOARD_STEPS - 1) return; // 🔒 sécurité
-    setDirection(-1);
-    setStep((s) => Math.max(0, s - 1));
+    if (step === ONBOARD_STEP.DONE || step <= firstReachable) return;
+    goTo(step - 1);
   };
 
   const goToStep = async (i: number) => {
-    // 🔒 Si on est au step final, plus aucune navigation autorisée
-    if (step === TOTAL_ONBOARD_STEPS - 1) return;
+    // Pas de navigation après la fin, ni vers une étape déjà franchie côté serveur
+    if (step === ONBOARD_STEP.DONE || i < firstReachable || i > step) return;
     const allowed = await canNavigateToStep(i);
     if (!allowed) return;
     setDirection(i > step ? 1 : -1);
@@ -280,62 +345,6 @@ export const MainOnboarding = ({
 
   const progress = ((step + 1) / TOTAL_ONBOARD_STEPS) * 100;
   const CurrentStep = useMemo(() => stepsConfig[step].component, [stepsConfig, step]);
-
-  useEffect(() => {
-    if (!payment) return;
-    setIsValidatingPayment(true);
-    setStep(2);
-    setOrderId(localStorage.getItem(StorageKey.ONBOARD_PENDING_FORM));
-
-    if (paymentStatus) {
-      const { local_status, naboo_status } = paymentStatus;
-      const restoredAllValues: typeof onboardInitialValues = {
-        account: {
-          email: paymentStatus?.data?.userEmail!,
-          name: paymentStatus?.data?.username!,
-          password: paymentStatus?.data?.password!,
-        },
-        business: {
-          acceptTerms: paymentStatus?.data?.acceptTerms,
-          description: paymentStatus?.data?.description,
-          address: paymentStatus?.data?.address,
-          email: paymentStatus?.data?.agencyEmail,
-          name: paymentStatus?.data?.agencyName,
-          phone: paymentStatus?.data?.phone,
-        },
-        plan: {
-          paymentMode: paymentStatus?.data?.billingCycle!,
-          planId: paymentStatus?.data?.planId!,
-        },
-      };
-
-      setInitialDocUrls(paymentStatus?.data?.documents);
-      formikRef.current?.setValues(restoredAllValues);
-
-      // 🟢 SUCCESS
-      if (local_status === 'PAID') {
-        setEnabledPolling(false);
-        login({
-          email: restoredAllValues?.account.email,
-          password: restoredAllValues?.account.password,
-        }).then(() => {
-          localStorage.removeItem(StorageKey.ONBOARD_PENDING_FORM);
-          setIsValidatingPayment(false);
-          setStep(TOTAL_ONBOARD_STEPS - 1);
-        });
-      }
-
-      // 🔴 FAILED
-      if (local_status === 'FAILED' || naboo_status === 'cancelled') {
-        setIsValidatingPayment(false);
-        setEnabledPolling(false);
-        BaseToast({
-          title: 'Paiement échoué',
-          description: 'Votre paiement n’a pas été validé.',
-        });
-      }
-    }
-  }, [paymentStatus, payment]);
 
   return (
     <Formik

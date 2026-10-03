@@ -14,7 +14,9 @@ export class UserService extends BaseApi {
   }
 
   backup_codes_remaining() {
-    return this.apiService.invoke(this.applicationContext.getApiConfig().USER.BACKUP_CODES_REMAINING);
+    return this.apiService.invoke(
+      this.applicationContext.getApiConfig().USER.BACKUP_CODES_REMAINING,
+    );
   }
   passkey_session_list() {
     return this.apiService.invoke(this.applicationContext.getApiConfig().USER.PASSKEY_SESSION);

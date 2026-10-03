@@ -1,12 +1,17 @@
 import { ENUM, MODELS, VALIDATION } from '_types/*';
 
-const TOTAL_ONBOARD_STEPS = 4;
+const TOTAL_ONBOARD_STEPS = 5;
 
 // const onboardStepLabels = ['Introduction', 'Découverte', 'Compte', 'Agence', 'Plan', 'Terminé'];
-const onboardStepLabels = ['Compte', 'Agence', 'Plan', 'Terminé'];
+// Compte d'abord : l'e-mail est vérifié (code) avant de créer l'agence
+const onboardStepLabels = ['Compte', 'Vérification', 'Agence', 'Plan', 'Terminé'];
+
+/** Index des étapes, pour ne pas dépendre de nombres magiques. */
+const ONBOARD_STEP = { ACCOUNT: 0, VERIFY: 1, BUSINESS: 2, PLAN: 3, DONE: 4 } as const;
 
 const onboardInitialValues: {
   account: MODELS.IAuthSignUp;
+  otp: string;
   business: MODELS.ICreateAgency;
   plan: {
     planId: string;
@@ -18,6 +23,7 @@ const onboardInitialValues: {
     email: '',
     password: '',
   },
+  otp: '',
   business: {
     acceptTerms: false,
     address: '',
@@ -39,10 +45,11 @@ const slideVariants = {
 };
 
 const onboardStepValidationSchemas = [
-  VALIDATION.ONBOARD.onboardUserAccountSchema, // step 1
-  VALIDATION.ONBOARD.onboardUserAgencySchema, // step 2
-  VALIDATION.ONBOARD.onboardUserAgencySelectPlanSchema, // step 3
-  null, // final step
+  VALIDATION.ONBOARD.onboardUserAccountSchema,
+  VALIDATION.ONBOARD.onboardVerifyEmailSchema,
+  VALIDATION.ONBOARD.onboardUserAgencySchema,
+  VALIDATION.ONBOARD.onboardUserAgencySelectPlanSchema,
+  null, // fin
 ];
 
 const getMessage = (local_status: string, naboo_status: string) => {
@@ -81,6 +88,7 @@ const getMessage = (local_status: string, naboo_status: string) => {
 };
 
 export {
+  ONBOARD_STEP,
   TOTAL_ONBOARD_STEPS,
   onboardInitialValues,
   onboardStepValidationSchemas,

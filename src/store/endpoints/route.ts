@@ -557,9 +557,10 @@ export const APIS = (baseUrl?: string) => {
           showResponse: false,
         }),
       },
+      // Suivi du paiement d'inscription : réservé à son auteur (session)
       POLLING_STATUS: api({
-        path: `${APIS_ROUTES_MODULES_PATH.COMMON.GLOBAL_ROUTES}/polling`,
-        pathBase: 'UNSECURED_API',
+        path: `${APIS_ROUTES_MODULES_PATH.AGENCY}/onboarding/status`,
+        pathBase: 'SECURED_API',
         method: 'GET',
         showResponse: false,
       }),

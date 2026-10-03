@@ -52,8 +52,8 @@ Vérification commune à chaque tâche :
 ## Checkpoint : ton test manuel (nouvel invité, ancien membre, lien expiré, code faux)
 
 ## T6 : nettoyage et audit
-- [ ] **Manuel (toi)** : retirer la variable `password` du modèle d'e-mail d'invitation dans Resend.
+- [x] **Manuel (toi)** : retirer la variable `password` du modèle d'e-mail d'invitation dans Resend (fait le 2026-10-03 ; le backend ne l'envoie plus).
 - [x] `security-audit.md` (skill `security-and-hardening`) et `CHANGES.md` du backend.
 
 ## T7 [back] : contraction (au moins 7 jours après le déploiement)
-- [ ] Migration `13_drop_invitation_temp_password`, et suppression de `encryptPassword`/`decryptPassword` s'ils n'ont plus d'usage.
+- [x] Migration `15_drop_invitation_temp_password` (numéro final). `encryptPassword`/`decryptPassword` restent utilisés par l'inscription payante : retirés avec la correction du polling (backlog abonnement, section 3).
