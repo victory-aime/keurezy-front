@@ -1,6 +1,7 @@
-import { Box, Circle, Flex, HStack, SimpleGrid, Stack, VStack } from '@chakra-ui/react';
+import { Box, chakra, Circle, Flex, HStack, SimpleGrid, Stack, VStack } from '@chakra-ui/react';
+import { useState } from 'react';
+import { TermsDialog } from '../../../components/terms/TermsDialog';
 import { useFormikContext } from 'formik';
-import Link from 'next/link';
 import {
   BaseText,
   FormCheckbox,
@@ -9,7 +10,6 @@ import {
   Icons,
   TextVariant,
 } from '_components/custom';
-import { APP_ROUTES } from '_config/routes';
 import { MotionBox } from '_constants/motion';
 import { useAgencyCheck } from '_context/agency-context';
 import { MODELS } from '_types/*';
@@ -34,7 +34,8 @@ const NEXT_STEPS = [
  */
 export const StepBusiness = () => {
   const { isCheckingName } = useAgencyCheck();
-  const { values } = useFormikContext<{
+  const [termsOpen, setTermsOpen] = useState(false);
+  const { values, setFieldValue } = useFormikContext<{
     account: MODELS.IAuthSignUp;
     business: MODELS.ICreateAgency;
   }>();
@@ -99,19 +100,29 @@ export const StepBusiness = () => {
               label={
                 <>
                   J’accepte les{' '}
-                  <Link
-                    href={APP_ROUTES.TERMS_OF_USE}
-                    target="_blank"
-                    rel="noopener"
-                    style={{ textDecoration: 'underline' }}
+                  <chakra.button
+                    type="button"
+                    textDecoration="underline"
+                    color="primary.fg"
+                    fontWeight="medium"
+                    onClick={(event: React.MouseEvent) => {
+                      // Ouvre la fenêtre sans cocher la case
+                      event.preventDefault();
+                      setTermsOpen(true);
+                    }}
                   >
                     conditions générales d’utilisation de Keurezy
-                  </Link>
+                  </chakra.button>
                 </>
               }
             />
           </Stack>
         </OnboardCardWrapper>
+        <TermsDialog
+          open={termsOpen}
+          onOpenChange={setTermsOpen}
+          onAccept={() => setFieldValue('business.acceptTerms', true)}
+        />
       </VStack>
 
       <Box>

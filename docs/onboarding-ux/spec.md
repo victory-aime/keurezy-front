@@ -47,3 +47,15 @@
 ## À faire de ton côté
 - Compléter dans les CGU les mentions de l’éditeur (raison sociale, NINEA, RCCM, siège) et l’adresse de contact, puis faire relire le texte.
 - Tester connecté : inscription interrompue, puis connexion (fenêtre), puis reprise.
+
+## Itération 2 (2026-10-03)
+- [x] **Étape 4.** Elle utilise le même `PlanChooser` que le changement de plan du tableau de bord, donc les mêmes correctifs : bascule mensuel/annuel, cartes radio accessibles, plans triés par prix, limites lisibles.
+  - `PlanChooser` accepte maintenant l'absence de plan actuel (ni comparaison, ni étiquette « Plan actuel »), et un emplacement `beforeCards`.
+  - L'ancienne grille de l'inscription (`BaseCheckBoxCard`) est retirée de cette étape.
+- [x] **Code promo visible.** Une barre de récapitulatif collante, placée entre la bascule et les cartes, affiche le plan choisi et son prix.
+  - Pour un plan payant, le champ « Code promo » est sur la même ligne.
+  - Code accepté : prix barré, nouveau prix en vert, pastille du code.
+  - `PromoCodeField` gagne un mode `compact`.
+- [x] **CGU dans une fenêtre.** Dialog Chakra (`BaseModal`, `scrollBehavior="inside"`), avec « Fermer » et « J’accepte les conditions », qui coche la case.
+  - Texte partagé avec la page publique (`components/terms/TermsContent.tsx`).
+- Vérifié dans le navigateur : barre et champ au-dessus des cartes, sélection d’un plan, fenêtre des CGU et case cochée par « J’accepte ». Tests 116, build OK.

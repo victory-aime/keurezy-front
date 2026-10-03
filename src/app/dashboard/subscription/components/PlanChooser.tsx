@@ -1,6 +1,6 @@
 import { Box, Flex, RadioCard, SegmentGroup, Separator, SimpleGrid, Stack } from '@chakra-ui/react';
 import { t } from 'i18next';
-import { useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { BaseFormatNumber, BaseTag, BaseText, Icons, TextVariant } from '_components/custom';
 import { ENUM, MODELS } from '_types/*';
 import {
@@ -75,12 +75,15 @@ const SelectionDot = ({ checked }: { checked: boolean }) => (
 
 interface PlanChooserProps {
   plans: Plan[];
-  currentPlanId: string;
-  currentCycle: ENUM.BillingCycle | null;
+  /** Plan actuel ; absent à l'inscription (ni comparaison, ni « Plan actuel ») */
+  currentPlanId?: string | null;
+  currentCycle?: ENUM.BillingCycle | null;
   billingCycle: ENUM.BillingCycle;
   onCycleChange: (cycle: ENUM.BillingCycle) => void;
   selectedPlanId: string | null;
   onSelect: (planId: string) => void;
+  /** Entre la bascule du cycle et les cartes (récapitulatif et code promo à l'inscription) */
+  beforeCards?: ReactNode;
 }
 
 /**
@@ -96,6 +99,7 @@ export const PlanChooser = ({
   onCycleChange,
   selectedPlanId,
   onSelect,
+  beforeCards,
 }: PlanChooserProps) => {
   const currentLimits = limitsOf(plans.find((p) => p.id === currentPlanId));
 
@@ -137,7 +141,7 @@ export const PlanChooser = ({
                 <Flex alignItems="center" gap={1.5}>
                   Annuel
                   {yearlyDiscount ? (
-                    <Box as="span" fontSize="xs" fontWeight="semibold" color="green.fg">
+                    <Box as="span" fontSize="xs" fontWeight="semibold" color="success.fg">
                       −{yearlyDiscount} %
                     </Box>
                   ) : null}
@@ -147,6 +151,8 @@ export const PlanChooser = ({
           ]}
         />
       </SegmentGroup.Root>
+
+      {beforeCards}
 
       <RadioCard.Root
         value={selectedPlanId}
@@ -162,7 +168,8 @@ export const PlanChooser = ({
             // Le Gratuit n'a pas de cycle : il est le plan actuel sur les deux
             const isCurrent = isCurrentPlan && (free || billingCycle === currentCycle);
             const limits = limitsOf(plan);
-            const changes = isCurrentPlan ? [] : planDifferences(currentLimits, limits);
+            const changes =
+              !currentPlanId || isCurrentPlan ? [] : planDifferences(currentLimits, limits);
 
             return (
               <RadioCard.Item

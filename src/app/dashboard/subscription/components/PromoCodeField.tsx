@@ -36,6 +36,7 @@ export const PromoCodeField = ({
   onApply,
   onRemove,
   discountLabel,
+  compact = false,
 }: {
   applied?: { code: string } | null;
   /** Renvoie un message d'erreur, ou `null` si le code est accepté */
@@ -43,13 +44,15 @@ export const PromoCodeField = ({
   onRemove: () => void;
   /** Remise formatée (« - 5 000 F CFA ») */
   discountLabel?: string;
+  /** Sur une ligne, sans libellé visible (barre de récapitulatif) */
+  compact?: boolean;
 }) => {
   if (applied) {
     return (
       <Flex
         alignItems="center"
         gap={2}
-        mt={2}
+        mt={compact ? 0 : 2}
         animationName="fade-in"
         animationDuration="moderate"
         _motionReduce={{ animation: 'none' }}
@@ -82,11 +85,17 @@ export const PromoCodeField = ({
       }}
     >
       {({ handleSubmit, isSubmitting }) => (
-        <Stack gap={1} mt={2} maxW="sm">
+        <Stack gap={1} mt={compact ? 0 : 2} maxW="sm" width="full">
           <HStack alignItems="flex-start" gap={2}>
-            <FormTextInput name="code" label="Code promo" placeholder="Ex. BIENVENUE" />
+            <FormTextInput
+              name="code"
+              label={compact ? undefined : 'Code promo'}
+              aria-label="Code promo"
+              placeholder={compact ? 'Code promo' : 'Ex. BIENVENUE'}
+              leftAccessory={compact ? <Icons.Ticket /> : undefined}
+            />
             <BaseButton
-              mt="26px"
+              mt={compact ? 0 : '26px'}
               variant="outline"
               colorType="primary"
               isLoading={isSubmitting}

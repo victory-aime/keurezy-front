@@ -23,7 +23,6 @@ import { Formik } from 'formik';
 import { authClient } from '../../../lib/auth-client';
 import { handleApiError } from '_utils/handleApiError';
 import { StepVerifyEmail } from './StepVerifyEmail';
-import { OnboardingPromo } from './OnboardingPromo';
 import { AgencyModule, CommonModule } from '_store/state-management';
 import { AgencyNameWatcher } from '../../components/AgencyNameWatcher';
 import {
@@ -126,13 +125,10 @@ export const MainOnboarding = ({
       { component: () => <StepBusiness />, blocking: true },
       {
         component: () => (
-          <>
-            <StepPlanSelection
-              allPacks={allPacks ?? []}
-              value={{ selectedPlanId: planId!, billingCycle }}
-            />
-            <OnboardingPromo allPacks={allPacks ?? []} />
-          </>
+          <StepPlanSelection
+            allPacks={allPacks ?? []}
+            value={{ selectedPlanId: planId!, billingCycle }}
+          />
         ),
         blocking: true,
       },
