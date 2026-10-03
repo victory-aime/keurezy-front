@@ -3,8 +3,12 @@ import { phoneSchema } from './phone';
 
 /** Code à 6 chiffres reçu par e-mail (vérification de l'adresse avant l'agence). */
 export const onboardVerifyEmailSchema = Yup.object({
-  otp: Yup.string()
-    .matches(/^\d{6}$/, 'Saisissez les 6 chiffres reçus par e-mail')
+  otp: Yup.array()
+    .test(
+      'totp-complete',
+      'Saisissez les 6 chiffres reçus par e-mail',
+      (value) => Array.isArray(value) && value.length === 6 && value.every((v) => /^\d$/.test(v)),
+    )
     .required('Saisissez les 6 chiffres reçus par e-mail'),
 });
 
@@ -36,13 +40,7 @@ export const onboardUserAgencySchema = Yup.object({
       .required("l'addresse est obligatoire")
       .min(4, "l'addresse ne doit au moins avoir 4 caractères")
       .max(100, "l'addresse ne doit pas depasser 100 caractères"),
-    description: Yup.string()
-      .required('Description obligatoire')
-      .min(20, 'la description ne doit au moins avoir 20 caractères'),
     phone: phoneSchema(),
-    documents: Yup.array()
-      .of(Yup.mixed<File>().required())
-      .min(1, 'Au moins un document est requis'),
     acceptTerms: Yup.boolean().oneOf([true], 'Vous devez accepter les conditions'),
   }),
 });

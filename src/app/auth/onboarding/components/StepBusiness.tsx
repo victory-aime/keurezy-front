@@ -1,250 +1,160 @@
+import { Box, Circle, Flex, HStack, SimpleGrid, Stack, VStack } from '@chakra-ui/react';
+import { useFormikContext } from 'formik';
+import Link from 'next/link';
 import {
-  Box,
-  VStack,
-  Flex,
-  HStack,
-  useBreakpointValue,
-  FileUploadRootProvider,
-} from '@chakra-ui/react';
-import {
-  Icons,
-  FormTextInput,
-  FormPhonePicker,
-  FormTextArea,
   BaseText,
   FormCheckbox,
-  BaseUploadMultipleFiles,
-  useBaseFileUpload,
+  FormPhonePicker,
+  FormTextInput,
+  Icons,
+  TextVariant,
 } from '_components/custom';
-import { hexToRGB } from '_theme/colors';
-import { useFormikContext } from 'formik';
-import { DashboardMockup } from './DashboardMockup';
-import { OnboardCardWrapper } from './OnboardCardWrapper';
-import { VariablesColors } from '_theme/variables';
-import { HiInformationCircle } from 'react-icons/hi2';
-import { DirectLive } from './DirectLive';
-import { GridContainer } from './GridContainer';
-import { MODELS } from '_types/*';
+import { APP_ROUTES } from '_config/routes';
 import { MotionBox } from '_constants/motion';
 import { useAgencyCheck } from '_context/agency-context';
+import { MODELS } from '_types/*';
+import { DashboardMockup } from './DashboardMockup';
+import { DirectLive } from './DirectLive';
+import { GridContainer } from './GridContainer';
+import { OnboardCardWrapper } from './OnboardCardWrapper';
 
-export const StepBusiness = ({ initialDocUrls }: { initialDocUrls?: string[] }) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
+/** Ce qui se passe après l'inscription : la vérification se prépare sur la page Agence. */
+const NEXT_STEPS = [
+  { icon: Icons.Rocket, text: 'Votre espace est prêt dès la fin de l’inscription.' },
+  {
+    icon: Icons.Paper,
+    text: 'Sur la page Agence, joignez vos statuts, votre attestation NINEA et votre extrait RCCM.',
+  },
+  { icon: Icons.Shield, text: 'Keurezy vérifie votre agence : le badge rassure vos clients.' },
+];
+
+/**
+ * Étape 3 « Agence » : l'essentiel seulement (nom, e-mail, téléphone, adresse) et les conditions.
+ * Description et pièces justificatives se complètent ensuite sur la page Agence.
+ */
+export const StepBusiness = () => {
   const { isCheckingName } = useAgencyCheck();
-  const { values, setFieldValue, errors } = useFormikContext<{
+  const { values } = useFormikContext<{
     account: MODELS.IAuthSignUp;
     business: MODELS.ICreateAgency;
   }>();
-  const fileUpload = useBaseFileUpload();
 
   return (
-    <FileUploadRootProvider value={fileUpload}>
-      <GridContainer alignItems="start">
-        <VStack gap={6} align="stretch">
-          <VStack gap={2} align="flex-start">
-            <Flex
-              bgColor={hexToRGB('tertiary', 0.1)}
-              color={'tertiary.500'}
-              borderRadius="full"
-              px={3}
-              py={1}
-              alignItems="center"
-              gap={1}
-            >
-              <Icons.Target size={11} />
-              Agence
-            </Flex>
-            <BaseText as="h2" fontSize={{ base: '2xl', sm: '3xl', lg: '4xl' }} fontWeight={'bold'}>
-              Parlez-nous de votre Agence
-            </BaseText>
-            <BaseText
-              fontSize="inherit"
-              bgClip={'text'}
-              gradientFrom={'primary.400'}
-              gradientVia={'primary.500'}
-              gradientTo={'tertiary.500'}
-              bgGradient={'to-r'}
-              color={'transparent'}
-            >
-              Le tableau de bord reflète instantanément vos choix
-            </BaseText>
-          </VStack>
-
-          <OnboardCardWrapper>
-            <VStack gap={5} align="stretch">
-              <HStack width={'full'} gap={2}>
-                <FormTextInput
-                  required
-                  name="business.name"
-                  label="Société"
-                  placeholder="Nom de votre société"
-                  isVerified={isCheckingName}
-                />
-                <FormTextInput
-                  required
-                  name="business.email"
-                  label="Email"
-                  placeholder="Email de votre agence"
-                />
-              </HStack>
-
-              <FormTextArea
-                required
-                name="business.description"
-                label="Description"
-                placeholder="----"
-                maxCharacters={500}
-              />
-              <HStack width={'full'} flexDirection={{ base: 'column-reverse', md: 'row-reverse' }}>
-                <FormPhonePicker
-                  required
-                  name="business.phone"
-                  label="Telephone"
-                  listAvailableCountries={['sn']}
-                />
-                <FormTextInput
-                  required
-                  name="business.address"
-                  placeholder="Dakar, Saint-Louis"
-                  label="Addresse"
-                />
-              </HStack>
-
-              <BaseUploadMultipleFiles
-                getFilesUploaded={(files) => setFieldValue('business.documents', files)}
-                initialImageUrls={initialDocUrls}
-                label={
-                  <Flex fontSize={'sm'} alignItems={'center'} gap={2}>
-                    <Icons.Paper />
-                    <BaseText fontSize={'sm'}>Documents justificatifs(obligatoire)</BaseText>
-                  </Flex>
-                }
-                messageInfo={errors?.business?.documents as any}
-              />
-              {isMobile && (
-                <VStack gap={2} alignItems={'flex-start'}>
-                  <Flex alignItems={'center'} gap={1} color={VariablesColors.secondary}>
-                    <HiInformationCircle />
-                    <BaseText>
-                      Veuillez fournir des documents officiels, lisibles et valides.
-                    </BaseText>
-                  </Flex>
-                  <BaseText fontSize={'sm'} color={'gray.500'}>
-                    Afin de valider la création de votre agence immobilière, nous vous demandons de
-                    fournir des documents officiels permettant de vérifier l'identité et l'existence
-                    légale de votre structure.
-                    <br />
-                    <br />
-                    Les documents acceptés peuvent inclure :
-                    <br />
-                    • Registre de commerce (RCCM) ou équivalent
-                    <br />
-                    • Attestation d'immatriculation fiscale
-                    <br />
-                    • Pièce d'identité du représentant légal
-                    <br />
-                    • Tout document officiel attestant de l'activité immobilière
-                    <br />
-                    <br />
-                    Ces informations sont strictement confidentielles et utilisées uniquement dans
-                    le cadre de la vérification de votre agence.
-                  </BaseText>
-                </VStack>
-              )}
-
-              <FormCheckbox
-                name="business.acceptTerms"
-                label={"J'accepte les conditions d'utilisation et la Politique de confidentialité"}
-              />
-            </VStack>
-          </OnboardCardWrapper>
+    <GridContainer alignItems="start">
+      <VStack gap={6} align="stretch">
+        <VStack gap={2} align="flex-start">
+          <Flex
+            bg="tertiary.subtle"
+            color="tertiary.fg"
+            borderRadius="full"
+            px={3}
+            py={1}
+            alignItems="center"
+            gap={1}
+          >
+            <Icons.Target size={11} aria-hidden />
+            Agence
+          </Flex>
+          <BaseText as="h2" fontSize={{ base: '2xl', sm: '3xl', lg: '4xl' }} fontWeight="bold">
+            Parlez-nous de votre agence
+          </BaseText>
+          <BaseText color="fg.muted">
+            L’essentiel pour démarrer : le reste se complète depuis votre tableau de bord.
+          </BaseText>
         </VStack>
 
-        <Box>
-          <DirectLive />
+        <OnboardCardWrapper>
+          <Stack gap={5}>
+            <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+              <FormTextInput
+                required
+                name="business.name"
+                label="Nom de l’agence"
+                placeholder="Keur Immo"
+                isVerified={isCheckingName}
+              />
+              <FormTextInput
+                required
+                name="business.email"
+                label="E-mail de l’agence"
+                type="email"
+                placeholder="contact@keur-immo.sn"
+              />
+              <FormPhonePicker
+                required
+                name="business.phone"
+                label="Téléphone"
+                listAvailableCountries={['sn']}
+              />
+              <FormTextInput
+                required
+                name="business.address"
+                label="Adresse"
+                placeholder="Rue 10, Dakar"
+                leftAccessory={<Icons.MapPin />}
+              />
+            </SimpleGrid>
+            <FormCheckbox
+              name="business.acceptTerms"
+              label={
+                <>
+                  J’accepte les{' '}
+                  <Link
+                    href={APP_ROUTES.TERMS_OF_USE}
+                    target="_blank"
+                    rel="noopener"
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    conditions générales d’utilisation de Keurezy
+                  </Link>
+                </>
+              }
+            />
+          </Stack>
+        </OnboardCardWrapper>
+      </VStack>
 
-          {/* Wrapper RELATIVE obligatoire */}
-          <Box position="relative">
-            {/* Mockup */}
-            <MotionBox
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-            >
-              <MotionBox
-                animate={{ y: [0, -6, 0] }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              >
-                <DashboardMockup
-                  userName={values?.account.name ?? 'Jean Dupont'}
-                  company={values?.business.name}
-                  properties={200}
-                  rent={3000}
-                  location={'Paris'}
-                  animated
-                />
-              </MotionBox>
-            </MotionBox>
+      <Box>
+        <DirectLive />
+        <MotionBox
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <DashboardMockup
+            userName={values?.account.name || 'Jean Dupont'}
+            company={values?.business.name}
+            properties={200}
+            rent={3000}
+            location="Dakar"
+            animated
+          />
+        </MotionBox>
 
-            {/* Floating Info Card */}
-            <MotionBox
-              display={{ base: 'none', sm: 'block' }}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.7, ease: 'easeOut' }}
-              position="absolute"
-              width={'full'}
-              bottom="-70%"
-              left="0%"
-              zIndex={20}
-            >
+        {/* Et ensuite ? Les étapes apparaissent l'une après l'autre */}
+        <OnboardCardWrapper mt={6} p={5}>
+          <Stack gap={3}>
+            <BaseText fontWeight="semibold">Et ensuite ?</BaseText>
+            {NEXT_STEPS.map(({ icon: Icon, text }, index) => (
               <MotionBox
-                animate={{ y: [0, -8, 0] }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
+                key={text}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + index * 0.15, duration: 0.4 }}
               >
-                <OnboardCardWrapper p={4} shadow="xl" borderColor={'secondary.500'}>
-                  <VStack gap={2} alignItems={'flex-start'} width={'full'}>
-                    <Flex alignItems={'center'} gap={1} color={VariablesColors.secondary}>
-                      <HiInformationCircle />
-                      <BaseText>
-                        Veuillez fournir des documents officiels, lisibles et valides.
-                      </BaseText>
-                    </Flex>
-                    <BaseText fontSize={'sm'} color={'gray.500'}>
-                      Afin de valider la création de votre agence immobilière, nous vous demandons
-                      de fournir des documents officiels permettant de vérifier l'identité et
-                      l'existence légale de votre structure.
-                      <br />
-                      <br />
-                      Les documents acceptés peuvent inclure :
-                      <br />
-                      • Registre de commerce (RCCM) ou équivalent
-                      <br />
-                      • Attestation d'immatriculation fiscale
-                      <br />
-                      • Pièce d'identité du représentant légal
-                      <br />
-                      • Tout document officiel attestant de l'activité immobilière
-                      <br />
-                      <br />
-                      Ces informations sont strictement confidentielles et utilisées uniquement dans
-                      le cadre de la vérification de votre agence.
-                    </BaseText>
-                  </VStack>
-                </OnboardCardWrapper>
+                <HStack alignItems="flex-start" gap={3}>
+                  <Circle size="8" flexShrink={0} bg="primary.subtle" color="primary.fg">
+                    <Icon aria-hidden />
+                  </Circle>
+                  <BaseText variant={TextVariant.S} color="fg.muted" pt={1}>
+                    {text}
+                  </BaseText>
+                </HStack>
               </MotionBox>
-            </MotionBox>
-          </Box>
-        </Box>
-      </GridContainer>
-    </FileUploadRootProvider>
+            ))}
+          </Stack>
+        </OnboardCardWrapper>
+      </Box>
+    </GridContainer>
   );
 };

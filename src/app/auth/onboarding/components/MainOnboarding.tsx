@@ -123,7 +123,7 @@ export const MainOnboarding = ({
         ),
         blocking: true,
       },
-      { component: () => <StepBusiness initialDocUrls={[]} />, blocking: true },
+      { component: () => <StepBusiness />, blocking: true },
       {
         component: () => (
           <>
@@ -218,7 +218,10 @@ export const MainOnboarding = ({
   const verifyCode = async () => {
     const { account, otp } = formikRef.current.values;
     const email = session?.user?.email ?? account.email;
-    const { error } = await authClient.emailOtp.verifyEmail({ email, otp });
+    const { error } = await authClient.emailOtp.verifyEmail({
+      email,
+      otp: otp.join(''),
+    });
     if (error) {
       formikRef.current.setFieldError('otp', authMessage(error, 'Code invalide ou expiré.'));
       return false;
@@ -239,7 +242,6 @@ export const MainOnboarding = ({
       const payload: MODELS.ICreateAgency = {
         name: business.name,
         email: business.email,
-        description: business.description,
         address: business.address,
         phone: business.phone,
         acceptTerms: business.acceptTerms,
@@ -248,7 +250,6 @@ export const MainOnboarding = ({
       };
       const formData = new FormData();
       formData.append('data', JSON.stringify(payload));
-      (business.documents ?? []).forEach((file: File) => formData.append('documents', file));
       await createAgency({ payload: { data: formData as MODELS.ICreateAgency } });
     } finally {
       setIsLoading(false);
@@ -335,6 +336,11 @@ export const MainOnboarding = ({
       ? ONBOARD_STEP.BUSINESS
       : ONBOARD_STEP.VERIFY
     : ONBOARD_STEP.ACCOUNT;
+
+  // Accueil depuis la première étape (pas encore de compte), sinon étape précédente accessible
+  const canGoBack =
+    step !== ONBOARD_STEP.DONE &&
+    ((step === ONBOARD_STEP.ACCOUNT && !session?.user) || step > firstReachable);
 
   const prevStep = () => {
     if (step === ONBOARD_STEP.DONE || step <= firstReachable) return;
@@ -503,13 +509,18 @@ export const MainOnboarding = ({
         {/* Footer */}
         <Box as="footer" borderTop="1px solid" borderColor="inherit" position="sticky" bottom={0}>
           <Flex maxW="6xl" mx="auto" px={4} h="80px" align="center" justify="space-between">
-            <BaseButton
-              variant="outline"
-              onClick={() => (step === 0 ? navigate.push(APP_ROUTES.ROOT) : prevStep())}
-              leftIcon={<Icons.IoIosArrowRoundBack size={16} />}
-            >
-              <Span display={{ base: 'none', sm: 'inline' }}>Précédent</Span>
-            </BaseButton>
+            {/* Retour masqué quand aucune étape précédente n'est accessible (compte créé, fin) */}
+            {canGoBack ? (
+              <BaseButton
+                variant="outline"
+                onClick={() => (step === 0 ? navigate.push(APP_ROUTES.ROOT) : prevStep())}
+                leftIcon={<Icons.IoIosArrowRoundBack size={16} />}
+              >
+                <Span display={{ base: 'none', sm: 'inline' }}>Précédent</Span>
+              </BaseButton>
+            ) : (
+              <Box minW="40px" aria-hidden />
+            )}
 
             <HStack gap={1.5}>
               {Array.from({ length: TOTAL_ONBOARD_STEPS }).map((_, i) => (

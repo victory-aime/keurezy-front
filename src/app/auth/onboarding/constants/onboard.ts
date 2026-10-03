@@ -33,8 +33,6 @@ const onboardInitialValues: {
   business: {
     acceptTerms: false,
     address: '',
-    description: '',
-    documents: [],
     name: '',
     phone: '',
   },
