@@ -1,12 +1,12 @@
 'use client';
 
-import { Box, chakra, Circle, Flex, HStack, Stack } from '@chakra-ui/react';
+import { Box, chakra, Circle, Flex, HStack, Stack, VStack } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import {
-  BaseBadge,
   BaseButton,
   BaseIconButton,
   BaseModal,
+  BaseTag,
   BaseText,
   Icons,
   ModalOpenProps,
@@ -101,6 +101,7 @@ export const LegalProofCard = ({
       borderColor={dragging ? 'primary.solid' : url ? 'success.border' : 'border.emphasized'}
       bg={dragging ? 'primary.subtle' : url ? 'bg' : 'bg.subtle'}
       transition="border-color 0.2s, background-color 0.2s"
+      width={'full'}
       aria-busy={isPending}
       {...appear}
       {...dropHandlers}
@@ -120,12 +121,10 @@ export const LegalProofCard = ({
             Justifie : {proof.proves}
           </BaseText>
         </Stack>
-        <BaseBadge
-          size="sm"
+        <BaseTag
           variant="subtle"
-          color={url ? 'success' : 'warning'}
+          colorPalette={url ? 'success' : 'warning'}
           label={url ? 'Fournie' : 'À joindre'}
-          flexShrink={0}
         />
       </Flex>
 
@@ -252,10 +251,12 @@ export const LegalProofsGrid = ({
   onPreview: (url: string) => void;
   onSaved: () => void;
 }) => (
-  <Box
-    display="grid"
-    gridTemplateColumns="repeat(auto-fit, minmax(min(100%, 240px), 1fr))"
+  <VStack
+    //display="grid"
+    //gridTemplateColumns="repeat(auto-fit, minmax(min(100%, 240px), 1fr))"
     gap={3}
+    width={'full'}
+    alignItems={'flex-start'}
   >
     {LEGAL_PROOFS.map((proof) => (
       <LegalProofCard
@@ -269,5 +270,5 @@ export const LegalProofsGrid = ({
         onSaved={onSaved}
       />
     ))}
-  </Box>
+  </VStack>
 );

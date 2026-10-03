@@ -59,7 +59,7 @@ interface IAgency {
   /** Informations légales encore manquantes (vide = complètes) */
   legalMissing?: (keyof IAgencyLegal)[];
   companyName?: string | null;
-  legalForm?: LegalForm | null;
+  legalForm?: LegalForm | string[] | any;
   ninea?: string | null;
   rccm?: string | null;
   billingAddress?: string | null;
@@ -79,12 +79,12 @@ interface IAgencyLegal {
   bankName?: string | null;
   bankAccount?: string | null;
   mobileMoneyNumber?: string | null;
-  companyName: string | null;
-  legalForm: LegalForm | null;
-  ninea: string | null;
-  rccm: string | null;
-  billingAddress: string | null;
-  billingEmail: string | null;
+  companyName?: string | null;
+  legalForm?: LegalForm | string[];
+  ninea?: string | null;
+  rccm?: string | null;
+  billingAddress?: string | null;
+  billingEmail?: string | null;
   /** Pièces justificatives (PNG, JPEG ou PDF) : requises pour la vérification */
   legalFormProofUrl?: string | null;
   nineaProofUrl?: string | null;

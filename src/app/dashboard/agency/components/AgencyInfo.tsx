@@ -1,42 +1,30 @@
 'use client';
 
-import { chakra, VStack, HStack, Flex, FileUploadRootProvider } from '@chakra-ui/react';
-import {
-  FormTextInput,
-  BaseButton,
-  BaseUploadImageFile,
-  BaseContainer,
-  FormTextArea,
-  FormPhonePicker,
-  Icons,
-  BaseText,
-  TextVariant,
-  useBaseFileUpload,
-} from '_components/custom';
-import { Formik, FormikValues } from 'formik';
-import { t } from 'i18next';
-import { ProfileForm } from '../../profile/components/ProfileForm';
+import { BaseTabs, Icons } from '_components/custom';
+import { FormikValues } from 'formik';
 import { AgencyModule } from '_store/state-management';
-import { ENUM, MODELS, VALIDATION } from '_types/';
+import { ENUM, MODELS } from '_types/';
 import { useEffect, useState } from 'react';
 import { useGlobalLoader } from '_context/loaderContext';
 import { DocumentPreviewModal } from './DocumentPreviewModal';
 import { useUserContext } from '_context/user-context';
-import { ACCEPTED_TYPES } from '_components/custom/drag-drop/constant/constants';
 import { useAuthContext } from '_context/auth-context';
 import { UserRole } from '../../../../types/enum';
-import { AgencyClosureControl } from './AgencyClosureControl';
-import { AgencyLegalSection } from './AgencyLegalSection';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { AppPermissions } from '_utils/app-permissions';
+import { AgencyProfile } from './AgencyProfile';
+import { LegalInformations } from './LegalInformations';
+import { AgencyRegistration } from './AgencyRegistration';
+import { AgencyDanger } from './AgencyDanger';
+import { AgencyFacturation } from './AgencyFacturation';
 
+/**
+ * Page Agence en vue divisée : les sections à gauche (onglets verticaux), la section choisie à
+ * droite. Sur petit écran, les onglets passent en haut.
+ */
 export const AgencyInfo = () => {
   const { user } = useUserContext();
-  const { showLoader, hideLoader } = useGlobalLoader();
-  const fileUpload = useBaseFileUpload({
-    accept: ACCEPTED_TYPES,
-    maxFiles: 1,
-  });
+  const { hideLoader } = useGlobalLoader();
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const { user: authUser } = useAuthContext();
@@ -107,157 +95,79 @@ export const AgencyInfo = () => {
     }
   }, [agency]);
 
+  const isPending = agency?.status === ENUM.COMMON.Status.PENDING;
+  const legalMissing = agency?.legalMissing?.length ?? 0;
+  const documents = agency?.documents ?? [];
+
   return (
-    <Formik
-      enableReinitialize
-      initialValues={initialAgencyValues}
-      onSubmit={(values) => {
-        showLoader();
-        handleUpdateAgency(values);
-      }}
-      validationSchema={VALIDATION.AGENCY_VALIDATION.updateAgencyValidationSchema}
-    >
-      {({ values, handleSubmit, setFieldValue, errors }) => {
-        return (
-          <FileUploadRootProvider value={fileUpload}>
-            <BaseContainer
-              gap={8}
-              title="Informations de l'agence"
-              description={
-                canEdit
-                  ? 'Modifiez et mettez à jour les informations publiques de votre agence.'
-                  : 'Informations publiques de votre agence, en lecture seule : leur modification demande la permission « Modifier le profil de l’agence ».'
-              }
-              loader={loadInfo}
-              border={'none'}
-            >
-              <chakra.fieldset
-                disabled={!canEdit}
-                display="flex"
-                minW={0}
-                width={'full'}
-                gap={5}
-                mt={5}
-                flexDirection={{ base: 'column', md: 'row' }}
-              >
-                <VStack
-                  width={{ base: 'full', md: '220px' }}
-                  maxW={{ base: '240px', md: 'none' }}
-                  alignSelf={{ base: 'center', md: 'flex-start' }}
-                  flexShrink={0}
-                  gap={2}
-                  alignItems="stretch"
-                >
-                  <BaseText fontWeight="semibold">Logo</BaseText>
-                  {/* Logo entier, sans recadrage ; un clic le remplace */}
-                  <BaseUploadImageFile
-                    getFileUploaded={(file) => setFieldValue('agencyLogo', file)}
-                    avatarImage={agency?.agencyLogo}
-                    messageInfo={errors?.agencyLogo}
-                    isLoading={loadInfo}
-                    ratio={1}
-                    contain
-                  />
-                  <BaseText variant={TextVariant.XS} color="fg.muted">
-                    Cliquez sur l’image pour la remplacer. PNG, JPEG ou WebP, 2 Mo max. Pris en
-                    compte à l’enregistrement.
-                  </BaseText>
-                </VStack>
+    <>
+      <BaseTabs
+        title="Agence"
+        description="Gérez votre agence section par section : profil, informations légales, documents."
+        variant="line"
+        width="full"
+        items={[
+          {
+            label: 'Profil public',
+            icon: <Icons.Office aria-hidden />,
+            content: (
+              <AgencyProfile
+                canEdit={canEdit}
+                initialAgencyValues={initialAgencyValues}
+                handleUpdateAgency={handleUpdateAgency}
+                agency={agency}
+                loadInfo={loadInfo}
+                isPending={isPending}
+              />
+            ),
+          },
+          {
+            label: 'Informations',
+            icon: <Icons.Shield aria-hidden />,
+            totalItems: legalMissing,
+            totalItemsLabelColor: legalMissing > 0 ? 'warning' : 'success',
+            totalItemsLabelTitle: legalMissing > 0 ? `${legalMissing}` : 'Verifiée',
+            content: (
+              <LegalInformations
+                agency={agency}
+                isOwner={isOwner}
+                refetchAgencyInfo={refetchAgencyInfo}
+              />
+            ),
+          },
 
-                <VStack width={'full'} gap={4} alignItems="flex-start">
-                  <FormTextInput name="name" label="PROFILE.NAME" isLoading={loadInfo} />
-
-                  <FormTextArea
-                    name="description"
-                    label="Description de l’agence"
-                    placeholder="Présentez brièvement votre agence, ses services ou sa spécialité."
-                    maxCharacters={500}
-                  />
-
-                  <HStack width="full" gap={4} flexDirection={{ base: 'column', md: 'row' }}>
-                    <FormTextInput
-                      name="address"
-                      label="Adresse de l'agence"
-                      leftAccessory={<Icons.MapPin />}
-                    />
-
-                    <FormPhonePicker
-                      name="phone"
-                      label="Téléphone professionnel"
-                      listAvailableCountries={['sn']}
-                    />
-                  </HStack>
-                </VStack>
-              </chakra.fieldset>
-
-              <ProfileForm
-                title="Status de l'agence"
-                description="Le statut détermine la visibilité de votre agence sur la plateforme. Tant que votre agence est en attente de validation, elle ne sera pas visible par les autres utilisateurs."
-                activeBadge={true}
-                status={values?.status}
-              >
-                {values?.status === ENUM.COMMON.Status.PENDING
-                  ? 'Votre agence est actuellement en cours de validation. Elle sera visible dès qu’elle aura été approuvée.'
-                  : 'Votre agence est active et visible par les utilisateurs de la plateforme.'}
-              </ProfileForm>
-              {agency && (
-                <AgencyLegalSection
-                  agency={agency}
-                  isOwner={isOwner}
-                  onSaved={() => refetchAgencyInfo()}
-                />
-              )}
-              <ProfileForm
-                title="Documents de l'agence"
-                description="Consultez les documents officiels de votre agence (contrats, certificats, pièces administratives, etc.). Ces informations sont affichées à titre informatif."
-              >
-                <VStack gap={3} alignItems={'flex-start'} width={'full'}>
-                  {values.documents?.map((doc, idx) => (
-                    <Flex
-                      key={idx}
-                      width={'full'}
-                      p={2}
-                      border="1px solid"
-                      borderColor="border"
-                      borderRadius="md"
-                      align="center"
-                      justify="space-between"
-                      _hover={{ bgColor: 'bg.muted' }}
-                      onClick={() => handleOpenDoc(doc)}
-                      cursor={'pointer'}
-                    >
-                      <HStack>
-                        <Icons.Paper />
-                        <BaseText fontSize="sm">{getFileNameFromUrl(doc)}</BaseText>
-                      </HStack>
-                      <Icons.View size={16} />
-                    </Flex>
-                  ))}
-                </VStack>
-              </ProfileForm>
-              {isOwner && (
-                <ProfileForm
-                  title="PROFILE.DANGER_ZONE.TITLE"
-                  description="Cette section regroupe des actions sensibles pouvant impacter définitivement votre compte. Merci de procéder avec prudence."
-                  borderColor="red"
-                  borderWidth={1.5}
-                  borderRadius="7px"
-                >
-                  <AgencyClosureControl label={t('Fermer définitivement l’agence')} />
-                </ProfileForm>
-              )}
-            </BaseContainer>
-            {canEdit && (
-              <Flex width="full" alignItems="flex-end" justifyContent="flex-end">
-                <BaseButton colorType="success" onClick={() => handleSubmit()}>
-                  {t('Sauvegarder les changements')}
-                </BaseButton>
-              </Flex>
-            )}
-            <DocumentPreviewModal onChange={setIsOpen} isOpen={isOpen} data={selectedDoc} />
-          </FileUploadRootProvider>
-        );
-      }}
-    </Formik>
+          ...(isOwner
+            ? [
+                {
+                  label: 'Facturation',
+                  icon: <Icons.Payment aria-hidden />,
+                  content: <AgencyFacturation agency={agency} onSaved={refetchAgencyInfo} />,
+                },
+              ]
+            : []),
+          {
+            label: 'Documents',
+            icon: <Icons.Paper aria-hidden />,
+            content: (
+              <AgencyRegistration
+                documents={documents}
+                handleOpenDoc={handleOpenDoc}
+                getFileNameFromUrl={getFileNameFromUrl}
+              />
+            ),
+          },
+          ...(isOwner
+            ? [
+                {
+                  label: 'Zone sensible',
+                  icon: <Icons.Warn aria-hidden />,
+                  content: <AgencyDanger />,
+                },
+              ]
+            : []),
+        ]}
+      />
+      <DocumentPreviewModal onChange={setIsOpen} isOpen={isOpen} data={selectedDoc} />
+    </>
   );
 };

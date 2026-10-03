@@ -16,6 +16,7 @@ export const BaseUploadImageFile = ({
   messageInfo,
   ratio,
   contain,
+  showBorder,
 }: UploadImageFileProps) => {
   return (
     <React.Fragment>
@@ -36,6 +37,7 @@ export const BaseUploadImageFile = ({
             isReadOnly={isReadOnly}
             ratio={ratio}
             contain={contain}
+            showBorder={showBorder}
           />
           {messageInfo && (
             <Flex gap={2} alignItems={'center'} color={VariablesColors.red}>

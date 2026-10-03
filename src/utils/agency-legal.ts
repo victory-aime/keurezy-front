@@ -90,6 +90,14 @@ export function changesIdentity(current: Partial<Legal>, next: Partial<Legal>): 
   );
 }
 
+// Seuls les champs remplis partent (un champ vide n'efface rien côté serveur)
+export const toPayload = ({ legalForm, ...values }: MODELS.IAgencyLegal): Partial<Legal> => ({
+  ...(Object.fromEntries(
+    Object.entries(values).filter(([, v]) => v != null && v.trim() !== ''),
+  ) as Partial<Legal>),
+  ...(legalForm && legalForm[0] && { legalForm: legalForm[0] as MODELS.LegalForm }),
+});
+
 export type VerificationState = 'VERIFIED' | 'PENDING' | 'INCOMPLETE';
 
 /** État affiché par la note de la page Agence. */

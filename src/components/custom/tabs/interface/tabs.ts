@@ -1,5 +1,5 @@
 import { TabsRootProps, TabsValueChangeDetails } from '@chakra-ui/react';
-import { ActionButtonTypes } from '_components/custom/button';
+import { ActionButtonTypes, variantColorType } from '_components/custom/button';
 import { ReactNode } from 'react';
 
 interface TabsProps extends TabsRootProps {
@@ -8,6 +8,9 @@ interface TabsProps extends TabsRootProps {
     tabIndex?: number;
     icon?: ReactNode;
     content?: ReactNode | string | any;
+    totalItems?: number;
+    totalItemsLabelColor?: variantColorType;
+    totalItemsLabelTitle?: string;
   }[];
   title?: string;
   redirectLink?: () => void;

@@ -68,3 +68,16 @@ Les URL Cloudinary sont publiques mais impossibles à deviner, comme les documen
 | Front | Aperçu limité aux URL renvoyées par le backend ; contrôle du type et de la taille avant envoi (confort, le backend fait foi). |
 | Limite | URL Cloudinary publiques mais non devinables, comme les documents de l'inscription. Diffusion signée (`authenticated` + URL à durée limitée, déjà utilisée par le chat) à prévoir si besoin. |
 
+
+## Vue divisée de la page Agence (demande du 2026-10-03)
+Les informations étaient trop condensées sur une seule page. La page passe en onglets `BaseTabs`, sections à gauche et contenu à droite.
+- **Onglets** :
+  - Profil public : statut, logo, nom, description, coordonnées, bouton d'enregistrement ;
+  - Informations légales : pastille « Vérifiée » ou nombre d'éléments manquants ;
+  - Documents de l'inscription ;
+  - Zone sensible : fermeture de l'agence, owner seulement.
+- **Panneau** : chaque onglet affiche un titre, une explication et son contenu ; plus de colonne de description à moitié vide.
+- **Petit écran** (sous `lg`) : les onglets passent en haut, avec défilement horizontal.
+- **`BaseTabs`** :
+  - gère `orientation="vertical"` : liste de 280 px, collante, avec sous-titre et pastille par onglet ;
+  - le libellé des onglets inactifs utilise `fg.muted` au lieu de `gray.400`.

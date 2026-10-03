@@ -24,6 +24,7 @@ interface UploadImageFileProps {
   ratio?: number;
   /** Image entière, sans recadrage (logo) */
   contain?: boolean;
+  showBorder?: boolean;
 }
 
 export type { MultipleFilesUploadProps, BaseUploadFilesProps, UploadImageFileProps };

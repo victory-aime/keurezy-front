@@ -34,3 +34,33 @@ export const updateAgencyValidationSchema = Yup.object().shape({
     .min(20, 'la description ne doit au moins avoir 20 caractères'),
   phone: phoneSchema(),
 });
+
+/** Mêmes formats que le backend (qui revalide) ; tous facultatifs à l'enregistrement. */
+export const agencyLegalInfoValidations = Yup.object({
+  companyName: Yup.string().trim().min(3, '3 caractères minimum').max(150),
+  ninea: Yup.string()
+    .transform((v) => v?.replace(/\s+/g, '').toUpperCase())
+    .matches(/^[0-9A-Z]{7,14}$/, {
+      message: '7 à 14 chiffres ou lettres',
+      excludeEmptyString: true,
+    }),
+  rccm: Yup.string()
+    .transform((v) => v?.replace(/\s+/g, '').toUpperCase())
+    .matches(/^[0-9A-Z][0-9A-Z./-]{5,39}$/, {
+      message: 'Format attendu : SN-DKR-2020-B-12345',
+      excludeEmptyString: true,
+    }),
+});
+
+export const agencyFacturationValidations = Yup.object({
+  billingAddress: Yup.string().trim().min(5, '5 caractères minimum').max(255),
+  billingEmail: Yup.string().trim().email('E-mail invalide'),
+  bankName: Yup.string().trim().min(2, '2 caractères minimum').max(100),
+  bankAccount: Yup.string()
+    .trim()
+    .matches(/^[0-9A-Za-z ]{10,40}$/, {
+      message: '10 à 40 chiffres ou lettres',
+      excludeEmptyString: true,
+    }),
+  mobileMoneyNumber: phoneSchema(),
+});

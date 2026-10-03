@@ -22,6 +22,7 @@ export const UploadImageFile = ({
   isReadOnly,
   ratio,
   contain,
+  showBorder,
 }: UploadImageFileProps) => {
   const { t } = useTranslation();
   const [previewUrl, setPreviewUrl] = useState<string>();
@@ -66,6 +67,8 @@ export const UploadImageFile = ({
             cursor="pointer"
             ratio={ratio}
             bg={contain ? 'bg.subtle' : undefined}
+            border={`1.5px ${showBorder ? 'dashed' : 'none'}`}
+            borderColor={'gray.300'}
             rounded="7px"
             transition="box-shadow 0.2s, transform 0.2s"
             _hover={{ boxShadow: 'md' }}
