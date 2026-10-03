@@ -49,7 +49,7 @@ Ordre de réalisation : `onboarding` d'abord (faille de sécurité), puis `promo
 - `POST secured/agency/create` (session obligatoire ; la route n'est plus anonyme) :
   - **E-mail vérifié** obligatoire : sinon `403 EMAIL_NOT_VERIFIED`.
   - L'utilisateur ne doit être ni owner, ni staff, ni client de l'application mobile (profil `Client`) : sinon `409 ALREADY_ONBOARDED` ou `409 CLIENT_ACCOUNT`.
-  - Un seul paiement d'inscription en attente par utilisateur : un nouvel envoi remplace le précédent, qui ne sera pas traité.
+  - Plusieurs paiements d'inscription peuvent être ouverts. Le premier payé crée l'agence ; un second payé ne crée rien, il est journalisé et une alerte part à l'équipe pour remboursement.
   - Limitation de débit : celle de l'inscription (`SIGNUP_THROTTLE`).
   - **Gratuit** : owner, rôle OWNER, agence (avec ses documents) et abonnement, dans une seule transaction.
   - **Payant** : transaction NabooPay de type `ONBOARDING`. Les métadonnées gardent `userId` et les informations de l'agence, **jamais de mot de passe**.
@@ -81,14 +81,17 @@ Ordre de réalisation : `onboarding` d'abord (faille de sécurité), puis `promo
 | `kinds` | Types de paiement concernés : `ONBOARDING`, `UPGRADE`, `RENEWAL`, `REACTIVATION` (vide = tous) |
 | `startsAt`, `endsAt` | Fenêtre de validité (`endsAt` facultatif) |
 | `maxRedemptions` | Nombre total d'utilisations (facultatif) |
-| `maxPerAgency` | Utilisations par agence (défaut 1) |
-| `durationCycles` | Nombre de périodes remisées (défaut 1 : la remise ne s'applique qu'au paiement en cours) |
 | `isActive` | Désactivation sans suppression |
 
-Table `promo_redemption` : `promoCodeId`, `agencyId` (ou `userId` à l'inscription), `paymentTransactionId` (unique), `discountXOF`, `createdAt`.
+Table `promo_redemption` : `promoCodeId`, `userId` (le compte qui paie), `agencyId`, `paymentTransactionId` (unique), `discountXOF`, `createdAt`.
+
+**Simplifications retenues à l'implémentation** :
+- une seule utilisation par compte (contrainte unique), au lieu d'un `maxPerAgency` réglable ;
+- la remise ne porte que sur le paiement en cours : pas de `durationCycles` ;
+- la vérification passe par le devis (`GET subscription/quote?promoCode=`) et, à l'inscription, par `GET secured/agency/onboarding/promo`, au lieu d'une route `promo/check` séparée.
 
 ### Règles
-- **Validation** côté backend uniquement : `POST secured/agency/subscription/promo/check` renvoie le devis remisé ou une erreur précise :
+- **Validation** côté backend uniquement : le devis renvoie le montant remisé ou une erreur précise :
   - `PROMO_NOT_FOUND`, `PROMO_EXPIRED`, `PROMO_NOT_APPLICABLE` (plan, cycle ou type de paiement), `PROMO_EXHAUSTED`, `PROMO_ALREADY_USED`.
   - Limitation de débit stricte, pour empêcher l'énumération des codes.
 - **Devis** (`quoteChange`) et **checkout** acceptent `promoCode`. Le montant est recalculé côté serveur et vaut au moins 0 XOF.

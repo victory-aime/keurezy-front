@@ -25,21 +25,21 @@
 - **Note visible sur la page Agence** pour l'expliquer, avec la liste des informations manquantes.
 - Ces informations alimentent les factures (section 1).
 
-## 3. Refonte de l'onboarding
+## 3. Refonte de l'onboarding (terminé : [spec](./spec-backlog-cloture.md#1-onboarding--le-compte-dabord))
 - Nouveau parcours d'inscription d'agence.
 - Inclut l'inscription au **plan Gratuit sans paiement**.
 - **Limiter les inscriptions au Gratuit** (limitation de débit, e-mail vérifié avant activation) : sans paiement, des créations d'agence en masse sont possibles.
 - Corrige la faille de `GET unsecured/common/polling`, qui renvoie le mot de passe déchiffré à qui connaît l'`orderId`. Tâche déjà ouverte.
 
-## 4. Codes promo et remises (activation)
+## 4. Codes promo et remises (terminé : [spec](./spec-backlog-cloture.md#2-promo-codes))
 - Règles de remise : pourcentage ou montant, durée, plans concernés, date limite, nombre d'utilisations.
 - Validation côté backend et application dans le devis (`quoteChange`). Le champ du récapitulatif, aujourd'hui désactivé, devient fonctionnel.
 - Définir qui crée et valide les codes (sans back-office : par un script ou une configuration, à décider).
 
-## 5. Relances après expiration
+## 5. Relances après expiration (terminé)
 - E-mails J+3 et J+15 après l'expiration, avec un lien vers la réactivation.
 
-## 6. Qualité et exploitation
+## 6. Qualité et exploitation (terminé : scénarios backend, alertes par e-mail)
 - Tests de bout en bout des parcours : upgrade, downgrade, renouvellement, réactivation, blocage et alerte de limite.
 - Alerte technique sur les échecs répétés du webhook NabooPay.
 - **Paiements inférieurs au devis** : notification interne à l'équipe Keurezy (aucun écran d'administration prévu).

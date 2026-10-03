@@ -35,12 +35,21 @@ Un commit local par tâche, et un audit de sécurité par module.
 - [x] **P4** [Audit de sécurité](./security-audit-onboarding.md#audit-de-sécurité--codes-promo-p1-à-p3).
 
 ## R : relances après expiration
-- [ ] **R1 [back]**
+- [x] **R1 [back]** (commit backend `935d22f`)
   - Colonne `lastExpiryReminder`.
   - Cron J+3 et J+15, un envoi par palier, remis à zéro à la réactivation.
   - Tests.
 
 ## B : exploitation
-- [ ] **B1 [back]** Service d'alertes internes (`KEUREZY_OPS_EMAIL`, intervalle minimal entre deux alertes) : webhook en échec, paiement inférieur au devis. Tests.
-- [ ] **B2 [back]** Scénarios de bout en bout des parcours d'abonnement.
-- [ ] **B3** Mise à jour du backlog (sections 3 à 6 terminées).
+- [x] **B1 [back]** (commit backend `fada064`) Service d'alertes internes (`KEUREZY_OPS_EMAIL`, intervalle minimal entre deux alertes) : webhook en échec, paiement inférieur au devis. Tests.
+- [x] **B2 [back]** Scénarios de bout en bout des parcours d'abonnement (commit backend `3e8c8a2`).
+- [x] **B3** Mise à jour du backlog (sections 3 à 6 terminées).
+
+## Reste à faire de ton côté
+- **Migrations 26 à 29 en UAT**, avec la base réactivée : `npm run migrate:deploy:uat`.
+- **`KEUREZY_OPS_EMAIL`** à renseigner en dev, en UAT et en prod.
+- **Navigateur** :
+  - inscription Gratuit complète : compte, code reçu, agence ;
+  - reprise après déconnexion ;
+  - code promo dans le changement de plan et à l'inscription.
+- **UAT** : paiements NabooPay réels, avec un code partiel puis un code à 100 %.
