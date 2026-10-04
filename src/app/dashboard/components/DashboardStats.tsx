@@ -1,14 +1,7 @@
 'use client';
 
-import { Flex, For, HStack, SimpleGrid, Span, Stack } from '@chakra-ui/react';
-import {
-  BaseContainer,
-  BaseStats,
-  BaseStatsProps,
-  BaseText,
-  Icons,
-  BaseIconButton,
-} from '_components/custom';
+import { Flex, For, SimpleGrid, Span, Stack, VStack } from '@chakra-ui/react';
+import { BaseContainer, BaseStats, BaseStatsProps, BaseText, Icons } from '_components/custom';
 import { NotificationsModule, PropertyModule } from '_store/state-management';
 import { CONSTANTS, ENUM } from '_types/*';
 import { OccupationRateByType } from './OccupationRateByType';
@@ -88,29 +81,6 @@ export const DashboardStats = () => {
       row.propertyType) as MODELS.IOccupationRateStats['propertyType'],
   }));
 
-  const yearSelector = (
-    <HStack justify="flex-end" gap={1} width="full" mt={2}>
-      <BaseIconButton
-        label="Année précédente"
-        size="xs"
-        onClick={() => setYear((value) => value - 1)}
-      >
-        <Icons.ChevronLeft />
-      </BaseIconButton>
-      <BaseText fontWeight="semibold" minW="48px" textAlign="center" aria-live="polite">
-        {year}
-      </BaseText>
-      <BaseIconButton
-        label="Année suivante"
-        size="xs"
-        disabled={year >= currentYear}
-        onClick={() => setYear((value) => Math.min(value + 1, currentYear))}
-      >
-        <Icons.ChevronRight />
-      </BaseIconButton>
-    </HStack>
-  );
-
   return (
     <BaseContainer
       title="Tableau de bord"
@@ -125,47 +95,50 @@ export const DashboardStats = () => {
       }
       border={'none'}
     >
-      {/* Créations autorisées : un seul point d'entrée, en haut, filtré par permissions */}
       <Flex width={'full'} justifyContent={'flex-end'}>
         <CreateMenu />
       </Flex>
-      <SimpleGrid data-tour="kpis" columns={2} mt={10} width={'full'} gap={3}>
-        <For each={stats}>
-          {(stat, i) => (
-            <Flex key={i}>
-              <BaseStats key={i} {...stat} isLoading={propertiesLoad} />
-            </Flex>
-          )}
-        </For>
-      </SimpleGrid>
+      <VStack gap={8}>
+        <SimpleGrid data-tour="kpis" columns={2} mt={10} width={'full'} gap={3}>
+          <For each={stats}>
+            {(stat, i) => (
+              <Flex key={i}>
+                <BaseStats key={i} {...stat} isLoading={propertiesLoad} />
+              </Flex>
+            )}
+          </For>
+        </SimpleGrid>
 
-      <Flex width={'full'} gap={3} flexDir={{ base: 'column', sm: 'row' }} data-tour="charts">
-        <MonthlyRevenueAreaChart
-          data={monthlyRevenue ?? []}
-          isLoading={revenueLoad}
-          toolbar={yearSelector}
-        />
-        <OccupationRateByType data={occupationData} isLoading={occupationLoad} />
-      </Flex>
-      <BaseContainer
-        title="Activite recente"
-        data-tour="activity"
-        withActionButtons
-        actionsButtonProps={{
-          validateTitle: `Voir plus ${allActivities?.length}`,
-          onClick: () => router.push(DASHBOARD_ROUTES.NOTIFICATION),
-        }}
-      >
-        <Stack mt={{ base: '0', sm: '30px' }} width={'full'}>
-          <RenderNotifications
-            refetchNotificationList={refetchNotificationList}
-            list={allActivities ?? []}
-            isLoading={notificationLoad}
-            isSlice
-            displayLength={4}
+        <Flex width={'full'} gap={3} flexDir={{ base: 'column', sm: 'row' }} data-tour="charts">
+          <MonthlyRevenueAreaChart
+            data={monthlyRevenue ?? []}
+            isLoading={revenueLoad}
+            year={year}
+            onYearChange={setYear}
           />
-        </Stack>
-      </BaseContainer>
+          <OccupationRateByType data={occupationData} isLoading={occupationLoad} />
+        </Flex>
+        <BaseContainer
+          title="Activite recente"
+          data-tour="activity"
+          withActionButtons
+          actionsButtonProps={{
+            validatePermission: allActivities && allActivities?.length > 0,
+            validateTitle: `Voir plus ${allActivities?.length}`,
+            onClick: () => router.push(DASHBOARD_ROUTES.NOTIFICATION),
+          }}
+        >
+          <Stack mt={{ base: '0', sm: '30px' }} width={'full'}>
+            <RenderNotifications
+              refetchNotificationList={refetchNotificationList}
+              list={allActivities ?? []}
+              isLoading={notificationLoad}
+              isSlice
+              displayLength={4}
+            />
+          </Stack>
+        </BaseContainer>
+      </VStack>
     </BaseContainer>
   );
 };

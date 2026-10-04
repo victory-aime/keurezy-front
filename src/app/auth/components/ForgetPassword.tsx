@@ -65,10 +65,7 @@ export const ForgetPassword = ({ token }: { token: string }) => {
         title={'Ce lien a expiré ou a déjà été utilisé'}
         description={<BaseText>Aucun souci, vous pouvez en demander un nouveau.</BaseText>}
       >
-        <BaseButton
-          width={'full'}
-          onClick={() => router.replace(APP_ROUTES.AUTH.RESET_PASSWORD)}
-        >
+        <BaseButton width={'full'} onClick={() => router.replace(APP_ROUTES.AUTH.RESET_PASSWORD)}>
           Recevoir un nouveau lien
         </BaseButton>
       </AuthBoxContainer>

@@ -14,7 +14,7 @@ import {
   FormOtpInput,
   FormTextInput,
   Icons,
-  KeurezyLogoAnimation,
+  KeurezyLoader,
 } from '_components/custom';
 import { APP_ROUTES } from '_config/routes';
 import { useWindowSize } from '_hooks/useWindowSize';
@@ -131,7 +131,7 @@ export const AcceptInvitation = ({ params: token }: { params: string }) => {
   }
 
   if (isLoading || !preview) {
-    return <KeurezyLogoAnimation isExiting={false} onAnimationComplete={() => {}} />;
+    return <KeurezyLoader visible />;
   }
 
   if (step === 'success') {

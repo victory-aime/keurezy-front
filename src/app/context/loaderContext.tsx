@@ -1,15 +1,22 @@
 'use client';
 
-import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from 'react';
-import { KeurezyLogoAnimation } from '_components/custom';
-
-type LoaderState = 'hidden' | 'showing' | 'exiting';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+import { KeurezyLoader, type KeurezyLoaderMessage } from '_components/custom';
 
 type LoaderContextType = {
-  showLoader: () => void;
+  /** Affiche le loader Keurezy, avec un message facultatif (« Connexion en cours… ») */
+  showLoader: (message?: KeurezyLoaderMessage) => void;
   hideLoader: () => void;
   isLoading: boolean;
-  withLoader: <T>(fn: () => Promise<T>) => Promise<T>;
+  withLoader: <T>(fn: () => Promise<T>, message?: KeurezyLoaderMessage) => Promise<T>;
 };
 
 const LoaderContext = createContext<LoaderContextType | undefined>(undefined);
@@ -17,40 +24,48 @@ const LoaderContext = createContext<LoaderContextType | undefined>(undefined);
 interface LoaderProviderProps {
   children: ReactNode;
   /**
-   * Minimum ms the loader stays visible.
-   * Prevents jarring flash on fast responses.
-   * @default 1800
+   * Durée minimale d'affichage (ms) une fois le loader visible : évite un clignotement quand la
+   * réponse est très rapide, sans faire attendre l'utilisateur.
+   * @default 500
    */
   minDuration?: number;
 }
 
-export function LoaderProvider({ children, minDuration = 2000 }: LoaderProviderProps) {
-  const [loaderState, setLoaderState] = useState<LoaderState>('hidden');
+export function LoaderProvider({ children, minDuration = 500 }: LoaderProviderProps) {
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState<KeurezyLoaderMessage | null>(null);
+  const shownAt = useRef(0);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const stateRef = useRef<LoaderState>('hidden');
-
-  const setPhase = (next: LoaderState) => {
-    stateRef.current = next;
-    setLoaderState(next);
-  };
-
-  const showLoader = useCallback(() => {
-    if (stateRef.current !== 'hidden') return;
-    setPhase('showing');
+  const showLoader = useCallback((next?: KeurezyLoaderMessage) => {
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    hideTimer.current = null;
+    setMessage(next ?? null);
+    setVisible((current) => {
+      if (!current) shownAt.current = Date.now();
+      return true;
+    });
   }, []);
 
   const hideLoader = useCallback(() => {
-    if (stateRef.current === 'hidden') return;
-    setPhase('exiting');
-  }, []);
+    const remaining = Math.max(0, minDuration - (Date.now() - shownAt.current));
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => {
+      hideTimer.current = null;
+      setVisible(false);
+    }, remaining);
+  }, [minDuration]);
 
-  const handleDone = useCallback(() => {
-    setPhase('hidden');
-  }, []);
+  useEffect(
+    () => () => {
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+    },
+    [],
+  );
 
   const withLoader = useCallback(
-    async <T,>(fn: () => Promise<T>): Promise<T> => {
-      showLoader();
+    async <T,>(fn: () => Promise<T>, next?: KeurezyLoaderMessage): Promise<T> => {
+      showLoader(next);
       try {
         return await fn();
       } finally {
@@ -60,18 +75,10 @@ export function LoaderProvider({ children, minDuration = 2000 }: LoaderProviderP
     [showLoader, hideLoader],
   );
 
-  const isLoading = loaderState !== 'hidden';
-
   return (
-    <LoaderContext.Provider value={{ showLoader, hideLoader, isLoading, withLoader }}>
+    <LoaderContext.Provider value={{ showLoader, hideLoader, isLoading: visible, withLoader }}>
       {children}
-      {loaderState !== 'hidden' && (
-        <KeurezyLogoAnimation
-          isExiting={loaderState === 'exiting'}
-          onAnimationComplete={handleDone}
-          minDuration={minDuration}
-        />
-      )}
+      <KeurezyLoader visible={visible} message={message} onExited={() => setMessage(null)} />
     </LoaderContext.Provider>
   );
 }

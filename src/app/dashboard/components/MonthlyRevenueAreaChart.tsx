@@ -7,26 +7,29 @@ import {
   BaseContainer,
   BaseFormatNumber,
   CustomSkeletonLoader,
+  FormYearPicker,
   TextVariant,
 } from '_components/custom';
 import { NoDataAnimation } from '_components/custom/data-table/NoDataAnimation';
 import { BiLineChart } from 'react-icons/bi';
 import { MODELS } from '_types/*';
-import { ReactNode } from 'react';
 import { monthLabel } from '_utils/revenue';
+import { Formik } from 'formik';
 
 /**
  * Revenus locatifs d'une année (réservations) : reçu = séjours terminés, restant = séjours
- * confirmés à venir, attendu = les deux. `toolbar` accueille le sélecteur d'année.
+ * confirmés à venir, attendu = les deux. L'année se choisit dans l'en-tête (`FormYearPicker`).
  */
 export const MonthlyRevenueAreaChart = ({
   data,
   isLoading,
-  toolbar,
+  year,
+  onYearChange,
 }: {
   data: MODELS.IMonthlyRevenueStats[];
   isLoading?: boolean;
-  toolbar?: ReactNode;
+  year: number;
+  onYearChange: (year: number) => void;
 }) => {
   const { t } = useTranslation();
 
@@ -46,10 +49,6 @@ export const MonthlyRevenueAreaChart = ({
     ],
   });
 
-  if (isLoading) {
-    return <CustomSkeletonLoader type={'LINE_CHART'} width={'full'} />;
-  }
-
   // Aucune réservation confirmée ni terminée sur l'année : état vide plutôt qu'une courbe à zéro
   const isEmpty = !chartData?.length || chartData.every((d) => d.expected === 0);
 
@@ -57,16 +56,27 @@ export const MonthlyRevenueAreaChart = ({
     <BaseContainer
       title={'Suivi des revenus locatifs'}
       textVariant={TextVariant.M}
-      loader={isLoading}
       icon={<BiLineChart />}
       iconColor={'success'}
       rounded={'2xl'}
       width={'full'}
       numberOfLines={2}
       p={4}
+      isForm
+      formComponent={
+        // Pas de bouton : chaque année choisie recharge le graphique
+        <Formik initialValues={{ year }} onSubmit={() => {}}>
+          <FormYearPicker
+            name="year"
+            onChangeFunc={(next) => next && next !== year && onYearChange(next)}
+          />
+        </Formik>
+      }
     >
-      {toolbar}
-      {isEmpty ? (
+      {isLoading ? (
+        // Le squelette reste dans le cadre : l'en-tête et le choix de l'année ne disparaissent pas
+        <CustomSkeletonLoader type={'LINE_CHART'} width={'full'} />
+      ) : isEmpty ? (
         <NoDataAnimation />
       ) : (
         <Chart.Root chart={chart} maxH="md" mt={'30px'}>

@@ -132,7 +132,7 @@ export const PlanChooser = ({
         <SegmentGroup.Items
           flex="1"
           justifyContent="center"
-          _checked={{ bgColor: 'primary.500' }}
+          _checked={{ bgColor: 'primary.500', color: 'white' }}
           items={[
             { value: 'MONTHLY', label: 'Mensuel' },
             {

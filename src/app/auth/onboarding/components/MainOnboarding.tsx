@@ -8,7 +8,7 @@ import {
   BaseText,
   BaseToast,
   FloatSwitchColorMode,
-  GlobalLoader,
+  KeurezyLoader,
   Icons,
   TextVariant,
   BrandLogo,
@@ -370,24 +370,14 @@ export const MainOnboarding = ({
     >
       <Flex direction="column" minH="100vh">
         <AgencyNameWatcher verifiedAgencyName={verifiedAgencyName} />
-        {isValidatingPayment && (
-          <GlobalLoader
-            loader
-            renderSpinnerContent={
-              <>
-                <BaseText color="white" variant={TextVariant.H3}>
-                  {getMessage(paymentStatus?.local_status!, paymentStatus?.naboo_status!).title}
-                </BaseText>
-                <BaseText color="white">
-                  {
-                    getMessage(paymentStatus?.local_status!, paymentStatus?.naboo_status!)
-                      .description
-                  }
-                </BaseText>
-              </>
-            }
-          />
-        )}
+        <KeurezyLoader
+          visible={isValidatingPayment}
+          message={
+            isValidatingPayment
+              ? getMessage(paymentStatus?.local_status!, paymentStatus?.naboo_status!)
+              : null
+          }
+        />
 
         {/* Header */}
         <Box

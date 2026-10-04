@@ -10,6 +10,7 @@ import { FormOtpInput } from './FormOtpInput';
 import { FormPhonePicker } from './FormPhonePicker';
 import { FormDatePicker } from './FormDatePicker';
 import { FormErrorFocus } from './FormErrorFocus';
+import { FormYearPicker } from './FormYearPicker';
 export {
   FormTextArea,
   FormTextInput,
@@ -23,5 +24,6 @@ export {
   FormPhonePicker,
   FormDatePicker,
   FormErrorFocus,
+  FormYearPicker,
 };
 export * from './utils';

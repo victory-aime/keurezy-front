@@ -122,6 +122,23 @@ interface FormDatePickerFieldProps extends DatePickerRootProps {
   required?: boolean;
 }
 
+interface FormYearPickerProps {
+  name: string;
+  label?: string;
+  placeholder?: string;
+  required?: boolean;
+  isDisabled?: boolean;
+  isReadOnly?: boolean;
+  isLoading?: boolean;
+  /** Première année sélectionnable (par défaut 2020) */
+  minYear?: number;
+  /** Dernière année sélectionnable (par défaut l'année en cours) */
+  maxYear?: number;
+  /** Appelé à chaque choix, après la mise à jour du champ Formik */
+  onChangeFunc?: (year: number | null) => void;
+  width?: string;
+}
+
 interface FormDateTimePickerProps extends DatePickerRootProps, FormDatePickerFieldProps {
   stopPropagation?: boolean;
 }
@@ -158,6 +175,7 @@ export type {
   SwitchProps,
   FormColorPickerProps,
   FormDatePickerFieldProps,
+  FormYearPickerProps,
   TimeInputProps,
   OtpInputProps,
   PhoneInputProps,

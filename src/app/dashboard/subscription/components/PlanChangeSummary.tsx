@@ -86,8 +86,7 @@ interface PlanChangeSummaryProps {
   keep: Record<string, string[]>;
   /** Le plan visé est le Gratuit (ni paiement, ni échéance) */
   targetFree?: boolean;
-  /** Vérifie un code promo côté serveur : message d'erreur, ou `null` si accepté */
-  onApplyPromo?: (code: string) => Promise<string | null>;
+  /** Retire le code promo appliqué au choix du plan (saisi à l'étape 1) */
   onRemovePromo?: () => void;
 }
 
@@ -102,7 +101,6 @@ export const PlanChangeSummary = ({
   target,
   keep,
   targetFree = false,
-  onApplyPromo,
   onRemovePromo,
 }: PlanChangeSummaryProps) => {
   const changes = planDifferences(current.limits, target.limits);
@@ -233,7 +231,8 @@ export const PlanChangeSummary = ({
                       : 'Le nouveau plan sera à renouveler à cette date.'
                   }`}
           </BaseText>
-          {paid && onApplyPromo && onRemovePromo && (
+          {/* Le code se saisit au choix du plan ; ici, seulement le code appliqué */}
+          {paid && quote.promo && onRemovePromo && (
             <PromoCodeField
               applied={quote.promo}
               discountLabel={
@@ -241,7 +240,7 @@ export const PlanChangeSummary = ({
                   ? `- ${new Intl.NumberFormat('fr-FR').format(quote.promo.discount)} F CFA`
                   : undefined
               }
-              onApply={onApplyPromo}
+              onApply={async () => null}
               onRemove={onRemovePromo}
             />
           )}

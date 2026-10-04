@@ -1,22 +1,15 @@
-import { Box, Flex, Stack, VStack } from '@chakra-ui/react';
+import { Box, Flex, VStack } from '@chakra-ui/react';
 import { useFormikContext } from 'formik';
-import { t } from 'i18next';
 import { useEffect, useState } from 'react';
-import {
-  BaseFormatNumber,
-  BaseText,
-  CustomSkeletonLoader,
-  Icons,
-  TextVariant,
-} from '_components/custom';
+import { BaseText, CustomSkeletonLoader, Icons } from '_components/custom';
 import { CommonModule } from '_store/state-management';
 import { ENUM, MODELS } from '_types/*';
-import { isFreePlan } from '_utils/subscription';
 import { PlanChooser, priceOn } from '../../../dashboard/subscription/components/PlanChooser';
+import { promoErrorMessage } from '../../../dashboard/subscription/components/PromoCodeField';
 import {
-  PromoCodeField,
-  promoErrorMessage,
-} from '../../../dashboard/subscription/components/PromoCodeField';
+  type AppliedPromo,
+  PlanSummaryBar,
+} from '../../../dashboard/subscription/components/PlanSummaryBar';
 
 type Plan = MODELS.COMMON.ISubscriptionPlan;
 
@@ -26,30 +19,21 @@ interface PlanValues {
   promoFree?: boolean;
 }
 
-const xof = (value: number) => (
-  <BaseFormatNumber value={value} currencyCode={'XOF' as ENUM.COMMON.Currency} />
-);
-
 /**
- * Récapitulatif placé au-dessus des cartes (donc visible tout de suite) : plan choisi, prix, et
- * code promo vérifié par le backend. Le code accepté est gardé dans le formulaire et revérifié à
- * la création de l'agence.
+ * Barre récapitulative de l'inscription : composant partagé avec le changement de plan, avec ici
+ * la vérification du code par la route d'onboarding. Le code accepté est gardé dans le
+ * formulaire et revérifié à la création de l'agence.
  */
-const PlanSummaryBar = ({ plan, cycle }: { plan: Plan | undefined; cycle: ENUM.BillingCycle }) => {
+const OnboardingSummaryBar = ({
+  plan,
+  cycle,
+}: {
+  plan: Plan | undefined;
+  cycle: ENUM.BillingCycle;
+}) => {
   const { setFieldValue } = useFormikContext<PlanValues>();
-  const [applied, setApplied] = useState<{ code: string; discount: number; amount: number } | null>(
-    null,
-  );
+  const [applied, setApplied] = useState<AppliedPromo | null>(null);
   const { mutateAsync: check } = CommonModule.onboardingPromoMutation({});
-  const pricing = plan ? priceOn(plan, cycle) : undefined;
-  const free = isFreePlan(plan);
-
-  // Autre plan ou autre cycle : le code est à revérifier
-  useEffect(() => {
-    setApplied(null);
-    setFieldValue('promoCode', '');
-    setFieldValue('promoFree', false);
-  }, [plan?.id, cycle]);
 
   const clear = () => {
     setApplied(null);
@@ -57,94 +41,34 @@ const PlanSummaryBar = ({ plan, cycle }: { plan: Plan | undefined; cycle: ENUM.B
     setFieldValue('promoFree', false);
   };
 
-  return (
-    <Flex
-      position="sticky"
-      top="72px"
-      zIndex={2}
-      gap={4}
-      p={4}
-      rounded="7px"
-      borderWidth="1px"
-      borderColor={plan ? 'primary.solid' : 'border'}
-      bg="bg"
-      boxShadow={plan ? 'md' : 'none'}
-      alignItems={{ base: 'stretch', md: 'center' }}
-      justifyContent="space-between"
-      flexDirection={{ base: 'column', md: 'row' }}
-      transition="border-color 0.2s, box-shadow 0.2s"
-      _motionReduce={{ transition: 'none' }}
-    >
-      <Stack gap={0} minW={0}>
-        <BaseText variant={TextVariant.XS} color="fg.muted">
-          {plan ? 'Plan choisi' : 'Aucun plan choisi'}
-        </BaseText>
-        {plan ? (
-          <Flex alignItems="baseline" gap={2} wrap="wrap">
-            <BaseText fontWeight="semibold">{t(`SUBSCRIPTION.PLANS.${plan.name}`)}</BaseText>
-            <BaseText variant={TextVariant.S} color="fg.muted">
-              ·
-            </BaseText>
-            {free ? (
-              <BaseText fontWeight="semibold">Gratuit, sans paiement</BaseText>
-            ) : (
-              pricing && (
-                <>
-                  {applied && (
-                    <BaseText
-                      variant={TextVariant.S}
-                      color="fg.muted"
-                      textDecoration="line-through"
-                    >
-                      {xof(pricing.price)}
-                    </BaseText>
-                  )}
-                  <BaseText
-                    key={applied?.amount ?? pricing.price}
-                    fontWeight="bold"
-                    color={applied ? 'success.fg' : undefined}
-                    animationName="fade-in"
-                    animationDuration="moderate"
-                    _motionReduce={{ animation: 'none' }}
-                  >
-                    {xof(applied?.amount ?? pricing.price)}
-                  </BaseText>
-                  <BaseText variant={TextVariant.S} color="fg.muted">
-                    {cycle === 'YEARLY' ? '/ an' : '/ mois'}
-                  </BaseText>
-                </>
-              )
-            )}
-          </Flex>
-        ) : (
-          <BaseText variant={TextVariant.S}>Sélectionnez une offre ci-dessous.</BaseText>
-        )}
-      </Stack>
+  // Autre plan ou autre cycle : le code est à revérifier
+  useEffect(clear, [plan?.id, cycle]);
 
-      {plan && !free && (
-        <Box flexShrink={0} width={{ base: 'full', md: 'auto' }} minW={{ md: '320px' }}>
-          <PromoCodeField
-            compact
-            applied={applied}
-            discountLabel={applied ? 'appliqué' : undefined}
-            onApply={async (promoCode) => {
-              try {
-                const result = await check({
-                  payload: { planId: plan.id, billingCycle: cycle, promoCode },
-                });
-                setApplied({ ...result.promo, amount: result.amount });
-                setFieldValue('promoCode', result.promo.code);
-                setFieldValue('promoFree', result.amount === 0);
-                return null;
-              } catch (error) {
-                return promoErrorMessage(error);
-              }
-            }}
-            onRemove={clear}
-          />
-        </Box>
-      )}
-    </Flex>
+  return (
+    <PlanSummaryBar
+      plan={plan}
+      cycle={cycle}
+      applied={applied}
+      onRemovePromo={clear}
+      onApplyPromo={async (promoCode) => {
+        if (!plan) return 'Choisissez d’abord un plan.';
+        try {
+          const result = await check({
+            payload: { planId: plan.id, billingCycle: cycle, promoCode },
+          });
+          setApplied({
+            code: result.promo.code,
+            amount: result.amount,
+            amountBeforePromo: priceOn(plan, cycle)?.price ?? result.amount,
+          });
+          setFieldValue('promoCode', result.promo.code);
+          setFieldValue('promoFree', result.amount === 0);
+          return null;
+        } catch (error) {
+          return promoErrorMessage(error);
+        }
+      }}
+    />
   );
 };
 
@@ -203,7 +127,7 @@ export const StepPlanSelection = ({
           onCycleChange={changeCycle}
           selectedPlanId={values.plan?.planId || null}
           onSelect={(planId) => setFieldValue('plan.planId', planId)}
-          beforeCards={<PlanSummaryBar plan={selected} cycle={cycle} />}
+          beforeCards={<OnboardingSummaryBar plan={selected} cycle={cycle} />}
         />
       )}
 

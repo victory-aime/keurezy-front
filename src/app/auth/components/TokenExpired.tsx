@@ -47,10 +47,7 @@ export const TokenExpired = () => {
       >
         {({ dirty, isValid, handleSubmit }) => (
           <VStack gap={2}>
-            <FormTextInput
-              name={'email'}
-              placeholder={'FORM.EMAIL_PLACEHOLDER'}
-            />
+            <FormTextInput name={'email'} placeholder={'FORM.EMAIL_PLACEHOLDER'} />
             <BaseButton
               isLoading={isSendingEmailVerification}
               width={'full'}

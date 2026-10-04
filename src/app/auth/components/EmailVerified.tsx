@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { BaseButton, BaseText, Icons, KeurezyLogoAnimation } from '_components/custom';
+import { BaseButton, BaseText, Icons, KeurezyLoader } from '_components/custom';
 import { VerificationState } from '../auth.types';
 import { resolveState } from '../resolve-state';
 import { TokenExpired } from './TokenExpired';
@@ -47,9 +47,7 @@ export const EmailVerified = ({ params }: { params: string }) => {
 
   return (
     <main>
-      {state === 'loading' && (
-        <KeurezyLogoAnimation isExiting={state !== 'loading'} onAnimationComplete={() => {}} />
-      )}
+      <KeurezyLoader visible={state === 'loading'} />
       {state === 'success' && (
         <Center h={'100vh'}>
           <VStack maxW={'5xl'} mx={'auto'} spaceY={8} position={'relative'} overflow={'hidden'}>

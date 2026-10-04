@@ -5,7 +5,7 @@ import {
   BaseModal,
   BaseText,
   Icons,
-  KeurezyLogoAnimation,
+  KeurezyLoader,
   ModalOpenProps,
   TextVariant,
 } from '_components/custom';
@@ -16,7 +16,6 @@ import { useRouter } from 'next/navigation';
 
 export default function RedirectAfterLogin() {
   const { data: session, isPending } = authClient.useSession();
-  const [url, setUrl] = useState<string>('');
   // Compte sans agence : inscription interrompue, on prévient avant de l'y ramener
   const [unfinished, setUnfinished] = useState(false);
   const router = useRouter();
@@ -33,8 +32,8 @@ export default function RedirectAfterLogin() {
       setUnfinished(true);
       return;
     }
-    const dashboardUrl = roleToDashboardMap[session.user.role];
-    setUrl(dashboardUrl ?? APP_ROUTES.ROOT);
+    // Le loader reste affiché jusqu'à l'arrivée sur le tableau de bord
+    router.replace(roleToDashboardMap[session.user.role] ?? APP_ROUTES.ROOT);
   }, [session, isPending]);
 
   const leave = (async (open: boolean) => {
@@ -45,10 +44,7 @@ export default function RedirectAfterLogin() {
 
   return (
     <>
-      <KeurezyLogoAnimation
-        isExiting={!isPending && !unfinished}
-        onAnimationComplete={() => url && router.replace(url)}
-      />
+      <KeurezyLoader visible={!unfinished} />
       <BaseModal
         isOpen={unfinished}
         onChange={leave}

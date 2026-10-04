@@ -84,10 +84,7 @@ export const ForgetPassInitRequest = () => {
           >
             {({ handleSubmit, isValid }) => (
               <VStack gap={2} alignItems={'flex-start'}>
-                <FormTextInput
-                  name={'email'}
-                  placeholder={'FORM.EMAIL_PLACEHOLDER'}
-                />
+                <FormTextInput name={'email'} placeholder={'FORM.EMAIL_PLACEHOLDER'} />
                 <BaseButton
                   width={'full'}
                   onClick={() => handleSubmit()}

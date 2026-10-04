@@ -26,6 +26,7 @@ import { ENUM, MODELS } from '_types/*';
 import { canRenew, isFreePlan, keepFitsLimits, type PlanFeatureLimit } from '_utils/subscription';
 import { PlanChangeStepper, PLAN_CHANGE_STEPS } from './PlanChangeStepper';
 import { PlanChangeSummary } from './PlanChangeSummary';
+import { PlanSummaryBar } from './PlanSummaryBar';
 import { promoErrorMessage } from './PromoCodeField';
 import { limitsOf, PlanChooser, priceOn } from './PlanChooser';
 import { QuoteReview } from './QuoteReview';
@@ -250,6 +251,24 @@ export const ChangePlanDialog = ({
             onCycleChange={changeCycle}
             selectedPlanId={planId}
             onSelect={setPlanId}
+            beforeCards={
+              // Code promo vérifié dès le choix du plan : le devis remisé sert aux étapes suivantes
+              <PlanSummaryBar
+                plan={selectedPlan}
+                cycle={cycle}
+                applied={
+                  promoQuote?.promo
+                    ? {
+                        code: promoQuote.promo.code,
+                        amount: promoQuote.amount,
+                        amountBeforePromo: promoQuote.amountBeforePromo ?? promoQuote.amount,
+                      }
+                    : null
+                }
+                onApplyPromo={isSameAsCurrent && !canLeaveChoose ? undefined : applyPromo}
+                onRemovePromo={() => setPromoQuote(null)}
+              />
+            }
           />
         </Stack>
       );
@@ -275,7 +294,6 @@ export const ChangePlanDialog = ({
     return (
       <PlanChangeSummary
         quote={quote}
-        onApplyPromo={applyPromo}
         onRemovePromo={() => setPromoQuote(null)}
         keep={keep}
         current={{
