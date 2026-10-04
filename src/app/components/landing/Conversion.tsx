@@ -1,4 +1,4 @@
-import { Box, Circle, Flex, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Box, Circle, Flex, HStack, SimpleGrid, Skeleton, Stack } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import {
   CustomSkeletonLoader,
   Icons,
   TextVariant,
+  BaseIcon,
 } from '_components/custom';
 import { APP_ROUTES } from '_config/routes';
 import { CommonModule } from '_store/state-management';
@@ -45,9 +46,9 @@ export const Steps = () => (
             borderColor="border"
           >
             <Flex justifyContent="space-between" alignItems="center">
-              <Circle size="12" bg="primary.subtle" color="primary.fg">
+              <BaseIcon boxSize="12" color="primary.solid">
                 <Icon size={20} aria-hidden />
-              </Circle>
+              </BaseIcon>
               <BaseText
                 fontSize="3xl"
                 fontWeight="extrabold"
@@ -97,7 +98,7 @@ export const Pricing = () => {
             </Link>
           </Stack>
         ) : !plans.length ? (
-          <CustomSkeletonLoader type="PRODUCT_LIST_CARD" tableRows={1} />
+          <CustomSkeletonLoader type="PRODUCT_LIST_CARD" width={'full'} height={'400px'} />
         ) : (
           <PlanChooser
             plans={plans}

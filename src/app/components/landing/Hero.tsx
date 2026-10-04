@@ -61,11 +61,7 @@ const FloatingCard = ({
 
 export const Hero = () => (
   <LandingSection pt={{ base: 16, md: 24 }} overflow="hidden">
-    <Grid
-      templateColumns={{ base: '1fr', lg: '1fr 1.1fr' }}
-      gap={{ base: 12, lg: 16 }}
-      alignItems="center"
-    >
+    <Grid templateColumns={{ base: '1fr', lg: '1fr 2fr' }} gap={{ base: 12, lg: 10 }}>
       <MotionBox
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -131,7 +127,7 @@ export const Hero = () => (
           <Flex as="ul" gap={{ base: 2, sm: 5 }} wrap="wrap" listStyleType="none">
             {REASSURANCE.map((item) => (
               <HStack as="li" key={item} gap={1.5} color="fg.muted">
-                <Box color="success.fg" aria-hidden>
+                <Box color="tertiary.500" aria-hidden>
                   <Icons.DoubleCheck />
                 </Box>
                 <BaseText variant={TextVariant.S} color="inherit">

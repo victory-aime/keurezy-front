@@ -176,7 +176,7 @@ export const DashboardMockup = ({
         >
           <Icons.Lock size={10} />
           <BaseText fontSize="10px" color="inherit">
-            keurezy.onrender.com/dashboard
+            {process.env.NEXT_PUBLIC_URL}/dashboard
           </BaseText>
         </HStack>
         <Box w="42px" />

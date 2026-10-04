@@ -1,5 +1,5 @@
 import { Box, Circle, Flex, Grid, HStack, Stack, Tabs } from '@chakra-ui/react';
-import { BaseAccordion, BaseBadge, BaseText, Icons, TextVariant } from '_components/custom';
+import { BaseAccordion, BaseTag, BaseText, Icons, TextVariant } from '_components/custom';
 import { ANCHORS, FEATURES, type Feature } from './content';
 import { LandingSection, SectionHeading } from './Section';
 
@@ -74,7 +74,9 @@ const FeaturePreview = ({ preview }: { preview: Feature['preview'] }) => (
               {row.meta}
             </BaseText>
           </Stack>
-          {row.tag && <BaseBadge variant="subtle" color={row.tag.color} label={row.tag.label} />}
+          {row.tag && (
+            <BaseTag variant="surface" colorPalette={row.tag.color} label={row.tag.label} />
+          )}
         </Flex>
       ))}
     </Stack>

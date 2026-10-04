@@ -38,9 +38,15 @@ export const CustomSkeletonLoader: FunctionComponent<CustomSkeletonLoaderProps> 
   );
 
   const PacksCard = (
-    <SimpleGrid columns={{ base: 2, sm: 4 }} width="full">
-      {Array.from({ length: tableRows }, (_, i) => (
-        <Skeleton key={`pack-${i}`} borderRadius="7px" height={height} variant={variant} />
+    <SimpleGrid columns={{ base: 2, sm: 4 }} gap={4} width="full">
+      {Array.from({ length: count }, (_, i) => (
+        <Skeleton
+          key={`pack-${i}`}
+          borderRadius="7px"
+          width={width}
+          height={height}
+          variant={variant}
+        />
       ))}
     </SimpleGrid>
   );

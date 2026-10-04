@@ -1,5 +1,5 @@
 import { Box, Circle, Flex, Grid, HStack, SimpleGrid, Stack } from '@chakra-ui/react';
-import { BaseBadge, BaseText, Icons, TextVariant } from '_components/custom';
+import { BaseTag, BaseText, Icons, TextVariant, BaseIcon } from '_components/custom';
 import { AUDIENCES, PAINS, TRUST_ITEMS } from './content';
 import { LandingSection, Reveal, SectionHeading } from './Section';
 
@@ -25,9 +25,9 @@ export const TrustStrip = () => (
     >
       {TRUST_ITEMS.map(({ icon: Icon, label }) => (
         <HStack as="li" key={label} gap={3} justifyContent={{ lg: 'center' }}>
-          <Circle size="9" bg="primary.subtle" color="primary.fg" flexShrink={0}>
+          <BaseIcon boxSize="9" color="primary.500" flexShrink={0}>
             <Icon aria-hidden />
-          </Circle>
+          </BaseIcon>
           <BaseText variant={TextVariant.S} fontWeight="medium">
             {label}
           </BaseText>
@@ -54,21 +54,21 @@ export const Audiences = () => (
             p={{ base: 6, md: 8 }}
             rounded="2xl"
             borderWidth="1px"
-            borderColor={soon ? 'border' : 'primary.muted'}
-            bg={soon ? 'bg.subtle' : 'bg'}
+            borderColor={soon ? 'warning.500' : 'primary.muted'}
+            bg={soon ? 'bg.muted' : 'bg'}
             borderStyle={soon ? 'dashed' : 'solid'}
           >
             <Flex justifyContent="space-between" alignItems="flex-start" gap={3}>
-              <Circle
-                size="12"
-                bg={soon ? 'bg.muted' : 'primary.subtle'}
-                color={soon ? 'fg.muted' : 'primary.fg'}
+              <BaseIcon
+                boxSize="12"
+                bg={soon ? 'warning' : 'primary'}
+                color={soon ? 'warning.solid' : 'primary.solid'}
               >
                 <Icon size={20} aria-hidden />
-              </Circle>
-              <BaseBadge
-                variant="subtle"
-                color={soon ? 'warning' : 'success'}
+              </BaseIcon>
+              <BaseTag
+                variant="surface"
+                colorPalette={soon ? 'warning' : 'primary'}
                 label={soon ? 'Bientôt disponible' : 'Disponible'}
               />
             </Flex>
@@ -87,7 +87,7 @@ export const Audiences = () => (
                   alignItems="flex-start"
                   color={soon ? 'fg.muted' : 'fg'}
                 >
-                  <Box color={soon ? 'fg.subtle' : 'success.fg'} pt={0.5} aria-hidden>
+                  <Box color={soon ? 'warning.500' : 'primary.fg'} pt={0.5} aria-hidden>
                     <Icons.DoubleCheck />
                   </Box>
                   <BaseText variant={TextVariant.S} color="inherit">
@@ -137,7 +137,7 @@ export const BeforeAfter = () => (
             overflow="hidden"
           >
             <HStack gap={3} p={{ base: 4, md: 6 }} alignItems="flex-start" color="fg.muted">
-              <Box color="danger.fg" pt={0.5} flexShrink={0}>
+              <Box color="danger.solid" pt={0.5} flexShrink={0}>
                 <Icons.Close aria-label="Sans Keurezy" />
               </Box>
               <BaseText color="inherit">{before}</BaseText>
@@ -151,7 +151,7 @@ export const BeforeAfter = () => (
               borderLeftWidth={{ base: 0, md: '1px' }}
               borderColor="border"
             >
-              <Box color="success.fg" pt={0.5} flexShrink={0}>
+              <Box color="success.solid" pt={0.5} flexShrink={0}>
                 <Icons.DoubleCheck aria-label="Avec Keurezy" />
               </Box>
               <BaseText fontWeight="medium">{after}</BaseText>

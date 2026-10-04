@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, type BoxProps, Flex, HStack, Stack } from '@chakra-ui/react';
+import { AspectRatio, Box, type BoxProps, Flex, HStack, Stack } from '@chakra-ui/react';
 import { AnimatePresence, useInView, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,6 +10,7 @@ import { Icons, NavIcons } from '_components/custom';
 import { APP_ROUTES } from '_config/routes';
 import { MotionBox } from '_constants/motion';
 import { VariablesColors } from '_theme/variables';
+import { PhoneFrame } from './MobileApp';
 
 /*
  * Vidéo motion design (9:16, 19,5 s) : ce qu'est Keurezy, ses fonctionnalités phares, puis un
@@ -27,9 +28,6 @@ const C = {
   white: '#ffffff',
   mist: 'rgba(255,255,255,0.72)',
 };
-
-/** Adresse affichée à la fin : URL publique actuelle, à changer avec le nom de domaine définitif. */
-export const PROMO_URL = 'keurezy.onrender.com';
 
 /** Durée de chaque scène, en secondes (total : 19,5 s). */
 const SCENES = [2.6, 2.8, 3, 3, 2.8, 2.6, 2.7];
@@ -468,8 +466,8 @@ const SceneCta = ({ interactive }: { interactive: boolean }) => {
       color={C.ink}
       px="8cqw"
       py="3.6cqw"
-      rounded="full"
-      fontSize="5cqw"
+      rounded="3cqw"
+      fontSize="4cqw"
       fontWeight="extrabold"
       boxShadow={`0 0 0 2cqw ${C.gold}33`}
     >
@@ -513,14 +511,12 @@ const SceneCta = ({ interactive }: { interactive: boolean }) => {
       </In>
       <In delay={1.2}>
         <T size={3.6} color={C.mist} fontWeight="semibold" letterSpacing="wide">
-          {PROMO_URL}
+          {process.env.NEXT_PUBLIC_URL}
         </T>
       </In>
     </Stack>
   );
 };
-
-/* ---------- Lecteur ---------- */
 
 /**
  * Lecteur de la vidéo : lecture automatique quand le cadre devient visible (sauf si
@@ -579,7 +575,7 @@ export const PromoVideo = ({ bare = false, ...rest }: { bare?: boolean } & BoxPr
     <SceneCta key="cta" interactive={!bare} />,
   ];
   const started = playing || elapsed > 0;
-
+  /* `21/9`, `16/9`, `9/16`, `4/3`, `1.85/1`*/
   return (
     <Box
       ref={frameRef}
@@ -587,10 +583,11 @@ export const PromoVideo = ({ bare = false, ...rest }: { bare?: boolean } & BoxPr
       aria-roledescription="vidéo"
       aria-label="Keurezy en 20 secondes : présentation et fonctionnalités phares"
       position="relative"
-      aspectRatio="9 / 16"
-      width="full"
+      height={'full'}
+      width={'full'}
+      aspectRatio={9 / 16}
       overflow="hidden"
-      rounded={bare ? 0 : '6cqw'}
+      rounded={bare ? 0 : '2cqw'}
       bg={C.ink}
       color={C.white}
       fontFamily="var(--font-lato), sans-serif"
@@ -634,7 +631,7 @@ export const PromoVideo = ({ bare = false, ...rest }: { bare?: boolean } & BoxPr
       {/* Progression, une barre par scène (façon story) */}
       <HStack
         position="absolute"
-        top="5cqw"
+        top="10cqw"
         left="9cqw"
         right="9cqw"
         gap="1.2cqw"
@@ -704,6 +701,7 @@ export const PromoVideo = ({ bare = false, ...rest }: { bare?: boolean } & BoxPr
             gap="2cqw"
             px="4cqw"
             py="2cqw"
+            mb={'2cqw'}
             rounded="full"
             bg="rgba(255,255,255,0.14)"
             backdropFilter="blur(8px)"

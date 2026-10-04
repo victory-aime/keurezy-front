@@ -1,6 +1,6 @@
 import { Box, type BoxProps, Circle, Flex, Grid, HStack, Stack } from '@chakra-ui/react';
 import type { ReactNode } from 'react';
-import { BaseText, Icons, NavIcons, TextVariant } from '_components/custom';
+import { BaseText, Icons, NavIcons, TextVariant, BaseIcon } from '_components/custom';
 import { MotionBox } from '_constants/motion';
 import { LandingSection, Reveal, SectionHeading } from './Section';
 
@@ -98,7 +98,7 @@ const PropertyPhoto = ({ variant = 'sea' }: { variant?: 'sea' | 'villa' }) => (
 );
 
 /** Châssis de téléphone : bords arrondis, îlot, barre d'état et barre d'accueil. */
-const PhoneFrame = ({ children, ...rest }: { children: ReactNode } & BoxProps) => (
+export const PhoneFrame = ({ children, ...rest }: { children: ReactNode } & BoxProps) => (
   <Box
     width="270px"
     height="560px"
@@ -634,15 +634,23 @@ const BookingScreen = () => (
   </Flex>
 );
 
-const StoreButton = ({ store, caption }: { store: string; caption: string }) => (
+const StoreButton = ({
+  store,
+  caption,
+  bg = 'primary.fg',
+}: {
+  store: string;
+  caption: string;
+  bg: string;
+}) => (
   <HStack
     gap={3}
     px={4}
     py={2}
     rounded="lg"
-    bg="gray.900"
+    width="full"
+    bg={bg}
     color="white"
-    _dark={{ bg: 'gray.100', color: 'gray.900' }}
     opacity={0.9}
     aria-label={`${store} : bientôt disponible`}
   >
@@ -676,17 +684,17 @@ export const MobileApp = () => (
         <Stack as="ul" gap={3} listStyleType="none" mt={{ base: -4, md: -6 }} mb={8}>
           {APP_POINTS.map(({ icon: Icon, text }) => (
             <HStack as="li" key={text} gap={3}>
-              <Circle size="9" bg="primary.subtle" color="primary.fg" flexShrink={0}>
+              <BaseIcon boxSize="9" color="primary.solid" flexShrink={0}>
                 <Icon aria-hidden />
-              </Circle>
+              </BaseIcon>
               <BaseText variant={TextVariant.S}>{text}</BaseText>
             </HStack>
           ))}
         </Stack>
         <Stack gap={2}>
-          <Flex gap={3} wrap="wrap">
-            <StoreButton store="App Store" caption="Bientôt sur l’" />
-            <StoreButton store="Google Play" caption="Bientôt sur" />
+          <Flex gap={3}>
+            <StoreButton store="App Store" caption="Bientôt sur" bg="primary.solid" />
+            <StoreButton store="Google Play" caption="Bientôt sur" bg="secondary.solid" />
           </Flex>
           <BaseText variant={TextVariant.XS} color="fg.muted">
             L’application est en cours de développement.

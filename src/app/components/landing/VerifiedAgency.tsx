@@ -1,5 +1,5 @@
 import { Box, Circle, Flex, Grid, HStack, Stack } from '@chakra-ui/react';
-import { BaseBadge, BaseText, Icons, TextVariant } from '_components/custom';
+import { BaseTag, BaseIcon, BaseText, Icons, TextVariant } from '_components/custom';
 import { LandingSection, Reveal, SectionHeading } from './Section';
 
 const PROOFS = [
@@ -38,9 +38,12 @@ const AgencyCard = () => (
           <BaseText fontSize="xl" fontWeight="bold">
             Keur Immo
           </BaseText>
-          <BaseBadge variant="subtle" color="success">
-            <Icons.Shield /> Agence vérifiée
-          </BaseBadge>
+          <BaseTag
+            variant="surface"
+            colorPalette="success"
+            label={'Agence vérifiée'}
+            icon={<Icons.Shield />}
+          />
         </HStack>
         <HStack gap={1} color="fg.muted">
           <Icons.MapPin />
@@ -112,9 +115,9 @@ export const VerifiedAgency = () => (
           {PROOFS.map((proof, index) => (
             <Reveal as="li" key={proof.title} delay={index * 0.1}>
               <HStack gap={4} alignItems="flex-start">
-                <Circle size="10" bg="success.subtle" color="success.fg" flexShrink={0}>
+                <BaseIcon boxSize="10" color="warning.solid" flexShrink={0}>
                   <Icons.Paper aria-hidden />
-                </Circle>
+                </BaseIcon>
                 <Stack gap={0}>
                   <BaseText fontWeight="semibold">{proof.title}</BaseText>
                   <BaseText variant={TextVariant.S} color="fg.muted">

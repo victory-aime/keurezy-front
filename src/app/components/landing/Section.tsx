@@ -19,7 +19,7 @@ export const LandingSection = ({
     scrollMarginTop="72px"
     {...rest}
   >
-    <Container maxW="7xl" px={{ base: 4, sm: 8 }}>
+    <Container maxW="8xl" px={{ base: 4, sm: 8 }}>
       {children}
     </Container>
   </Box>
